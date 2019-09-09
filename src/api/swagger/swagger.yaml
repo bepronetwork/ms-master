@@ -1,0 +1,1684 @@
+swagger: "2.0"
+info:
+  version: "0.3.6"
+  title: BetProtocol API
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /ecosystem/all : 
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Register User Data
+      operationId: getEcosystemData
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /ecosystem/games/casino : 
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Register User Data
+      operationId: getCasinoGames
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/register:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Register User Data
+      operationId: registAdmin
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AdminRegisterRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/auth:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Login User
+      operationId: authAdmin
+      description: Login Admin Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AuthAdminRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/login:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Login User
+      operationId: loginAdmin
+      description: Login Admin Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AdminLoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/login/2fa:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Login User
+      operationId: loginAdmin2FA
+      description: Login Admin Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/Admin2FALoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/2fa/set:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Setup 2fa
+      operationId: setAdmin2FA
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AdminSet2FARequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/register:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Register User Data
+      operationId: registUser
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/UserRegisterRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/login:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Login User
+      operationId: loginUser
+      description: Login User Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/UserLoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/bets: 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      - bets
+      summary: Get all Bets for the User
+      operationId: getBets
+      description: Get all Bets for the User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserBetsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/summary:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Get Summary Data for User
+      operationId: userSummary
+      description: Get Summary Data for User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserSummaryRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/updateWallet: 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Update Wallet Amount for the User
+      operationId: updateWallet
+      description: Update Wallet Amount for the User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateUserWalletRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/finalizeWithdraw:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Request for User Finalize Withdraw
+      operationId: finalizeWithdraw
+      description: Request Finalize Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserFinalizeWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/create:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Create a App
+      operationId: createApp
+      description: Create a App for the user defined
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCreationRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/summary:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Summary Data for App
+      operationId: summary
+      description: Get Summary Data for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppSummaryRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/games/editTableLimit:
+    x-swagger-router-controller: game
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit
+      operationId: editGameTableLimit
+      description: Change Table Limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGameEditTableLimit'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/games/editEdge:
+    x-swagger-router-controller: game
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit
+      operationId: editGameEdge
+      description: Change Table Limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGameEditEdge'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/get/auth:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Data for App
+      operationId: getAppAuth
+      description: Get Summary Data for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Data for App
+      operationId: getApp
+      description: Get Summary Data for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/transactions:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Summary Data for App
+      operationId: getTransactions
+      description: Get Summary Data for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppTransactionsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/finalizeWithdraw:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Request for App Finalize Withdraw
+      operationId: finalizeAppWithdraw
+      description: Request Finalize Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppFinalizeWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/services/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Services to Company
+      operationId: addServices
+      description: Add Services to Company
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppServicesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/updateWallet: 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Update Wallet Amount for the App
+      operationId: updateWalletApp
+      description: Update Wallet Amount for the App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAppWalletRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/lastBets:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Lasts Bets for App
+      operationId: getLastBets
+      description: Get Lasts Bets for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppLastBetsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/biggestBetWinners:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Lasts Bets for App
+      operationId: getBiggestBetWinners
+      description: Get Lasts Bets for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppBiggestWinnersRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/biggestUserWinners:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Lasts Bets for App
+      operationId: getBiggestUserWinners
+      description: Get Lasts Bets for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppBiggestWinnersRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/popularNumbers:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Lasts Bets for App
+      operationId: getPopularNumbers
+      description: Get Lasts Bets for App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppPopularNumbersRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/addBlockchainInformation:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Blockchain Information into the Setup
+      operationId: addBlockchainInformation
+      description: Add Blockchain Information into the Setup
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppBlockchainInformationRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/games/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit
+      operationId: addGame
+      description: Change Table Limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddGameRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/games/getAll:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      - games
+      summary: Get all Games for the App defined
+      operationId: getGames
+      description: Get all Games for the App defined
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: game
+          description: Game Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetGamesFromAppRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/games/bet/place:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - bet
+      summary: Place a Bet
+      operationId: createBet
+      description: Place a Bet for User Selected
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: bet
+          description: Bet Information
+          required: true
+          schema:
+            $ref: '#/definitions/PlaceBetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/games/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - game
+      summary: Get a game
+      operationId: getGame
+      description: Get a Game Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: bet
+          description: Game Information
+          required: true
+          schema:
+            $ref: '#/definitions/GameGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+  
+# complex objects have schema definitions
+definitions:
+  AdminRegisterRequest : 
+    type: object
+    required:
+      - username
+      - name             
+      - email    
+      - password 
+    properties:
+      username:
+        type : string
+        format: username
+        example: "Jamy_234"
+        minLength: 1
+        maxLength: 40
+        description: |
+          Unique identifier of the user, besides the ID
+      name:
+        type : string
+        example: "James Rockforth"
+        minLength: 1
+        maxLength: 40
+        description: |
+          User Real Name
+      email:
+        type : string
+        example: "jamy@gmail.com"
+        minLength: 1
+        maxLength: 40
+        description: |
+          User Email
+      password:
+        type : string
+        example: "wer$regr9cnw8238"
+        minLength: 1
+        description: |
+         Password Hashed
+  UserRegisterRequest: 
+    type: object
+    required:
+      - username
+      - name             
+      - email
+      - address 
+      - app            
+    properties:
+      username:
+        type : string
+        format: username
+        example: "Jamy_234"
+        minLength: 1
+        description: |
+          Unique identifier of the user, besides the ID
+      name:
+        type : string
+        format: name
+        example: "James Rockforth"
+        minLength: 1
+        description: |
+          User Real Name
+      email:
+        type : string
+        format: email
+        example: "jamy@gmail.com"
+        minLength: 1
+        description: |
+          User Email
+      app:
+        type : string
+        example: "9a7yfg8sd7fygs87"
+        minLength: 1
+        description: |
+          App Id
+      address:
+        type : string
+        example: 0x98g2giqehr9vn8342
+        minLength: 1
+        description: |
+          User Address
+  AdminLoginRequest : 
+    type: object
+    required:
+      - username
+      - password 
+    properties:
+      username:
+        type : string
+        format: username
+        example: "Jamy_234"
+        minLength: 1
+        description: |
+          Unique identifier of the user, besides the ID
+      password:
+        type : string
+        format: password
+        example: "$ufhfwhe)#9grwg"
+        minLength: 1
+        description: |
+          User Password Encrypted
+  AdminSet2FARequest : 
+    type: object
+    required : 
+      - admin
+      - 2fa_token
+      - 2fa_secret
+    properties:
+      admin:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Admin Id
+      2fa_token:
+        type : string
+        example: "765075"
+        minLength: 1
+        description: |
+          Token Prior to the set of 2FA
+      2fa_secret:
+        type : string
+        example: "XDQXYCP5AC6FA32FQXDGJSPBIDYNKK5W"
+        minLength: 1
+        description: |
+          Secret Token 2FA
+  Admin2FALoginRequest : 
+    type: object
+    required : 
+      - 2fa_token
+    properties:
+      2fa_token:
+        type : string
+        format: username
+        example: "765075"
+        minLength: 1
+        description: |
+          Token to Unlock Login Data
+  UserLoginRequest: 
+    type: object
+    required:
+      - username
+      - password 
+      - app
+    properties:
+      username:
+        type : string
+        format: username
+        example: "Jamy_234"
+        minLength: 1
+        description: |
+          Unique identifier of the user, besides the ID
+      password:
+        type : string
+        format: password
+        example: "$ufhfwhe)#9grwg"
+        minLength: 1
+        description: |
+          User Password Encrypted
+      app:
+        type : string
+        example: 53vi230283vv234fg2v37243
+        description: |
+          Unique identifier of the App Id
+  UserSummaryRequest:
+    type: object
+    required:
+      - type
+      - user
+    properties:
+      type:
+        type : string
+        format: name
+        example: "Revenue"
+        minLength: 1
+        maxLength: 20
+        description: |
+          Type of Summary Data
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  AppGameEditEdge : 
+    type: object
+    required:
+      - app
+      - game
+      - edge
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      game:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Game id
+      edge:
+        type : number
+        example: 3245
+        description: |
+          New Edge
+  AppGameEditTableLimit : 
+    type: object
+    required:
+      - app
+      - game
+      - tableLimit
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      game:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Game id
+      tableLimit:
+        type : number
+        example: 3245
+        description: |
+          New Table Limit
+  AppGetRequest:
+    type: object
+    required:
+      - app
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+  AppCreationRequest:
+    type: object
+    required:
+      - name
+      - description
+      - marketType
+      - metadataJSON
+      - admin_id
+    properties:
+      name:
+        type : string
+        format: name
+        example: "Bet.pt"
+        description: |
+          App Name
+      address:
+        type : string
+        example: "0x239847523487rehweiru"
+        description: |
+          App Address Management 
+      description :
+        type : string
+        format: description
+        example: "A betting App with the goals"
+        description: |
+          App Description
+      marketType:
+        type : integer
+        format: int32
+        example: 3
+        description: |
+          Market Mapping Number
+      metadataJSON:
+        type : string
+        example: "{}"
+        description: |
+          Metadata JSON Object
+      admin_id :
+        type : string
+        example: "Admin Id"
+        description: |
+          Admin Id
+  GameGetRequest:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type : string
+        format: name
+        example: "34534sdvxcvxvxcvst"
+        description: |
+          Game Id
+  AppTransactionsRequest:
+    type: object
+    required:
+      - app
+      - filters
+    properties:
+      app:
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      filters :
+        type : array
+        items:
+          type: object
+          properties:
+            function:
+              type: string
+            data:
+              type: string
+  AppPopularNumbersRequest : 
+    type: object
+    required:
+      - app
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      size :
+        type : number
+        example : 10
+        description: |
+          size
+  AppLastBetsRequest : 
+    type: object
+    required:
+      - app
+      - size
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      size :
+        type : number
+        example : 50
+        description: |
+          size
+  AppBiggestWinnersRequest : 
+    type: object
+    required:
+      - app
+      - size
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      size :
+        type : number
+        example : 50
+        description: |
+          size
+  AppFinalizeWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - address
+      - tokenAmount
+      - transactionHash
+      - withdraw_id
+    properties:
+      tokenAmount:
+        type : number
+        example: 203
+        description: |
+          New User Balance for User
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      address :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      transactionHash :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          Transaction Hash
+      withdraw_id :
+        type : string
+        format: name
+        example: "53746tcuhn324"
+        description: |
+          Withdraw Id
+  UpdateAppWalletRequest : 
+    type: object
+    required:
+      - app
+      - amount
+      - transactionHash
+    properties:
+      amount:
+        type : number
+        example: 203
+        description: |
+          Amount added or taken from Wallet
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      transactionHash :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          Transaction Hash
+  UserFinalizeWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - user
+      - address
+      - signature
+      - tokenAmount
+      - transactionHash
+      - withdraw_id
+    properties:
+      tokenAmount:
+        type : number
+        example: 203
+        description: |
+          New User Balance for User
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User ID
+      address :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      signature :
+        type : object
+        description: |
+          User Signature 
+      transactionHash :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          Transaction Hash
+      withdraw_id :
+        type : string
+        format: name
+        example: "65f76st8vdsb3181"
+        description: |
+            Withdraw Id
+  UserBetsRequest : 
+    type: object
+    required:
+      - user
+      - size
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  UpdateUserWalletRequest : 
+    type: object
+    required:
+      - user
+      - amount
+      - transactionHash
+      - app
+    properties:
+      amount:
+        type : number
+        example: 203
+        description: |
+          Amount added or taken from Wallet
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      transactionHash :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          Transaction Hash
+  AppSummaryRequest:
+    type: object
+    required:
+      - type
+      - app
+    properties:
+      type:
+        type : string
+        format: name
+        example: "Bet.pt"
+        minLength: 1
+        maxLength: 20
+        description: |
+          App Name
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      periodicity :
+        type : string
+        format: name
+        example: "Weekly"
+        description: |
+         Periodicity of Data
+  AppAddGameRequest : 
+    type: object
+    required:
+      - app
+      - game
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      game :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Game ID
+  AppServicesRequest : 
+    type: object
+    required:
+      - app
+      - services
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      services :
+        type : array
+        items:
+          type: integer
+        example: '[101, 201]'
+        description: |
+         Services ID
+  AppBlockchainInformationRequest : 
+    type: object
+    required:
+      - app
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      currencyTicker : 
+        type : string
+        example: "DAI"
+        description: |
+           Currency Ticker for the Address
+      platformAddress :
+        type : string
+        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
+        description: |
+          Blockchain Address for the Platform 
+      platformTokenAddress :
+        type : string
+        example: "0xdf9ac1406CDd80D1be443f61ba0acAA3da80027F"
+        description: |
+          Token Address for the Platform
+      platformBlockchain :
+        type : string
+        example: "eth"
+        description: |
+          Blockchain reduce name
+      decimals :
+        type : number
+        example: 18
+        description: |
+          Blockchain Contract Decimal Reading 
+      authorizedAddress : 
+        type : string
+        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
+        description: |
+          Address that will be used to Update States on the Platform
+      address :
+        type : string
+        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
+        description: |
+          Address that will be used for deposit and withdrawals
+  AuthAdminRequest : 
+    type: object
+    required:
+      - admin
+    properties:
+      admin:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          Admin Id
+  GetGamesFromAppRequest : 
+    type: object
+    required:
+      - app
+    properties:
+      app:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          App Id
+  PlaceBetRequest:
+    type: object
+    required:
+      - user
+      - app
+      - game
+      - result
+      - nonce
+    properties:
+      user:
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          User Id
+      app :
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          App Id
+      game :
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Game Id
+      nonce :
+        type : number
+        example: 3453456
+        description: |
+          Nonce
+      result :
+        type : array
+        items:
+          type: object
+          properties:
+            place :
+              type: number
+            value :
+              type: number
+  GeneralResponse : 
+    type: object
+    required:
+      - data
+      - meta            
+    properties:
+      data:
+        type : object
+        format: data
+        description: |
+          Unique identifier of the user, besides the ID
+      meta:
+        type : object
+        format: meta
+        description: |
+          User Real Name
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
