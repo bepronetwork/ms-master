@@ -123,19 +123,19 @@ class CasinoLogic{
                     break;
                 };
                 case 'wheel_simple' : {
-                    var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.key));
-                    if(!el){
+                    let multiplier = resultSpace[el.place].multiplier;
+                    maxWin = parseFloat(el.value)/parseFloat(multiplier);
+                    /* Default Logic */
+                    if(maxWin == 0){
                         // Lost
                         isWon = false;
-                        winAmount = 0
+                        winAmount = 0;
                     }else{
+                        // Won
                         isWon = true;
-                        let multiplier = resultSpace[el.place].multiplier;
-                        maxWin = parseFloat(el.value)/parseFloat(multiplier);
-                        /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
                         winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
-                    }   
+                    }
                     break;
                 };
                 case 'coinflip_simple' : {
@@ -251,8 +251,7 @@ class CasinoLogic{
                 };
                 case 'wheel_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
-                    let { maxWin, probability, place, value } = userResultSpace.reduce( (object, result) => {
-                        let probability = resultSpace[result.place].probability;
+                    let { maxWin } = userResultSpace.reduce( (object, result) => {
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
                         if(maxWin > object.maxWin){
@@ -326,7 +325,7 @@ class CasinoLogic{
             }
             return {
                 possibleWinAmount : winAmount, 
-                fee : Numbers.toFloat(Numbers.toFloat(totalBetAmount)*houseEdge/100),
+                fee : Numbers.toFloat(Numbers.toFloat(Math.abs(totalBetAmount))*houseEdge/100),
                 totalBetAmount : Numbers.toFloat(totalBetAmount)
             }
         }catch(err){
