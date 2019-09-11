@@ -101,7 +101,7 @@ class CasinoLogic{
      * @param {Int} houseEdge 
      */
 
-    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game}){
+    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount}){
         try{
             var winAmount, totalBetAmount, isWon, maxWin;
 
@@ -124,11 +124,9 @@ class CasinoLogic{
                 };
                 case 'wheel_simple' : {
                     var el = outcomeResultSpace;
-                    console.log(resultSpace);
-                    console.log(el);
-                    console.log(resultSpace[el.key])
                     let multiplier = resultSpace[el.key].multiplier;
-                    maxWin = parseFloat(el.value)/parseFloat(multiplier);
+                    maxWin = parseFloat(totalBetAmount)/parseFloat(multiplier);
+                    console.log(maxWin)
                     /* Default Logic */
                     if(maxWin == 0){
                         // Lost
