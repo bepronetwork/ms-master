@@ -31,7 +31,8 @@ const processActions = {
 		let normalized = {
 			formType           	: params.formType,
             probability         : params.probability,     
-            metadataJSON        : params.metadataJSON
+            metadataJSON        : params.metadataJSON,
+            multiplier          : params.multiplier
 		}
 
 		return normalized;
@@ -52,7 +53,6 @@ const processActions = {
   
 const progressActions = {
 	__register : async (params) => {
-
         let resultSpace = await self.save(params);
         return resultSpace;
 	}

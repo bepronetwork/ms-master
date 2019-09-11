@@ -122,6 +122,22 @@ class CasinoLogic{
                     }   
                     break;
                 };
+                case 'wheel_simple' : {
+                    var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.key));
+                    if(!el){
+                        // Lost
+                        isWon = false;
+                        winAmount = 0
+                    }else{
+                        isWon = true;
+                        let multiplier = resultSpace[el.place].multiplier;
+                        maxWin = parseFloat(el.value)/parseFloat(multiplier);
+                        /* Default Logic */
+                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
+                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    }   
+                    break;
+                };
                 case 'coinflip_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.index));
                     if(!el){
@@ -224,6 +240,27 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, probability : 0, place : 0, value : 0});
+                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
+                        if(item.value <= 0){ throw throwError('BAD_BET')}
+                        return acc+item.value;
+                    }, 0))
+                    let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
+                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    break;
+                };
+                case 'wheel_simple' : {
+                    /* Calculate Multipliers on Odd (Example Roulette) */
+                    let { maxWin, probability, place, value } = userResultSpace.reduce( (object, result) => {
+                        let probability = resultSpace[result.place].probability;
+                        let multiplier = resultSpace[result.place].multiplier;
+                        let maxWin = parseFloat(result.value)*parseFloat(multiplier);
+                        if(maxWin > object.maxWin){
+                            return {maxWin,  multiplier, place : result.place, value : result.value};
+                        }else{
+                            return object;
+                        }
+                    }, {maxWin : 0, place : 0, value : 0});
                     totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
