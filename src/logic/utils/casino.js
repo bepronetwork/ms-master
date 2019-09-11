@@ -125,7 +125,8 @@ class CasinoLogic{
                 case 'wheel_simple' : {
                     var el = outcomeResultSpace;
                     let multiplier = resultSpace[el.key].multiplier;
-                    maxWin = parseFloat(totalBetAmount)/parseFloat(multiplier);
+                    console.log(totalBetAmount);
+                    maxWin = parseFloat(totalBetAmount)*parseFloat(multiplier);
                     console.log(maxWin)
                     /* Default Logic */
                     if(maxWin == 0){
