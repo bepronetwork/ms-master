@@ -286,7 +286,7 @@
             }
         }
     },
-    "3"     :  {
+    "3" :  {
         "name" : "Linear Dice",
         "type" : "Linear Dice",
         "isValid" : true,

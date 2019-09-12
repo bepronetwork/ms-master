@@ -403,7 +403,7 @@ class ErrorManager {
                         break;
                     }
                     /* Verify if possibleWinAmount is less or equal than 0 */
-                    if(bet.possibleWinAmount <= 0){
+                    if(bet.possibleWinAmount < 0){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }

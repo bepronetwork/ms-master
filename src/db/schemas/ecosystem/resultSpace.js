@@ -8,6 +8,7 @@ ResultSpaceSchema.prototype.name = 'ResultSpace';
 ResultSpaceSchema.prototype.schema = {
     formType                    : {type: String, required : true},  
     probability                 : {type: Number, required : true},
+    multiplier                  : {type: Number, required : false},
     metadataJSON                : {type : JSON, required : false}    
 }
 

@@ -101,7 +101,7 @@ class CasinoLogic{
      * @param {Int} houseEdge 
      */
 
-    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game}){
+    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount}){
         try{
             var winAmount, totalBetAmount, isWon, maxWin;
 
@@ -120,6 +120,25 @@ class CasinoLogic{
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
                         winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
                     }   
+                    break;
+                };
+                case 'wheel_simple' : {
+                    var el = outcomeResultSpace;
+                    let multiplier = resultSpace[el.key].multiplier;
+                    console.log(totalBetAmount);
+                    maxWin = parseFloat(totalBetAmount)*parseFloat(multiplier);
+                    console.log(maxWin)
+                    /* Default Logic */
+                    if(maxWin == 0){
+                        // Lost
+                        isWon = false;
+                        winAmount = 0;
+                    }else{
+                        // Won
+                        isWon = true;
+                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
+                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    }
                     break;
                 };
                 case 'coinflip_simple' : {
@@ -233,6 +252,26 @@ class CasinoLogic{
                     winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
                     break;
                 };
+                case 'wheel_simple' : {
+                    /* Calculate Multipliers on Odd (Example Roulette) */
+                    let { maxWin } = userResultSpace.reduce( (object, result) => {
+                        let multiplier = resultSpace[result.place].multiplier;
+                        let maxWin = parseFloat(result.value)*parseFloat(multiplier);
+                        if(maxWin > object.maxWin){
+                            return {maxWin,  multiplier, place : result.place, value : result.value};
+                        }else{
+                            return object;
+                        }
+                    }, {maxWin : 0, place : 0, value : 0});
+                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
+                        if(item.value <= 0){ throw throwError('BAD_BET')}
+                        return acc+item.value;
+                    }, 0))
+                    let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
+                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    break;
+                };
                 case 'coinflip_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let probability = userResultSpace.reduce( (acc, result) => {
@@ -289,7 +328,7 @@ class CasinoLogic{
             }
             return {
                 possibleWinAmount : winAmount, 
-                fee : Numbers.toFloat(Numbers.toFloat(totalBetAmount)*houseEdge/100),
+                fee : Numbers.toFloat(Numbers.toFloat(Math.abs(totalBetAmount))*houseEdge/100),
                 totalBetAmount : Numbers.toFloat(totalBetAmount)
             }
         }catch(err){

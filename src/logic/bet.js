@@ -45,6 +45,7 @@ const betResolvingActions = {
         var { winAmount, isWon, totalBetAmount } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
+            totalBetAmount : params.betAmount,
             outcomeResultSpace : outcomeResultSpace,
             houseEdge : params.edge,
             game : params.gameMetaName

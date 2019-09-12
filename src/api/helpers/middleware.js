@@ -2,7 +2,7 @@ import { PUBLIC_KEY, PRIVATE_KEY } from '../../config';
 
 const jwt   = require('jsonwebtoken');
 // use 'utf8' to get string instead of byte array  (512 bit key)
-var privateKEY  = new String("-----BEGIN RSA PRIVATE KEY-----\n" + PRIVATE_KEY + "\n-----END RSA PRIVATE KEY-----").trim();;
+var privateKEY  = new String("-----BEGIN RSA PRIVATE KEY-----\n" + PRIVATE_KEY + "\n-----END RSA PRIVATE KEY-----").trim();
 var publicKEY  =  new String("-----BEGIN PUBLIC KEY-----\n" + PUBLIC_KEY + "\n-----END PUBLIC KEY-----").trim();
 
 class Middleware{
