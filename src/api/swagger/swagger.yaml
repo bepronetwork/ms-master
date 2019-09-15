@@ -1397,16 +1397,9 @@ definitions:
     required:
       - app
       - user
-      - address
-      - tokenAmount
       - transactionHash
       - withdraw_id
     properties:
-      tokenAmount:
-        type : number
-        example: 203
-        description: |
-          New User Balance for User
       app :
         type : string
         format : name
@@ -1419,12 +1412,6 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           User ID
-      address :
-        type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
-        description: |
-          User Address
       transactionHash :
         type : string
         format: name
