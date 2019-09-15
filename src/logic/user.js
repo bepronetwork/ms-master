@@ -40,6 +40,7 @@ const processActions = {
         var input_params = params;
         let normalized = {};
         let user = await __private.db.findUser(params.username);     
+        if(!user){throwError('USER_NOT_EXISTENT')}
         var app = user.app_id; 
         var user_in_app = (app._id == params.app);
 
