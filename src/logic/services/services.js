@@ -67,7 +67,7 @@ function fromExponential(x) {
   }
 
 
-async function verifytransactionHashDepositUser(blockchain, transactionHash, amount, platformAddress, decimals){
+async function verifytransactionHashDepositUser(blockchain, transactionHash, platformAddress, decimals){
     try{
 
         /* Get Information of this transactionHash */
@@ -101,18 +101,15 @@ async function verifytransactionHashDepositUser(blockchain, transactionHash, amo
         }
 
         /* Verify if the Token Amount is the same */
-        if(
-            Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
-            != Numbers.toSmartContractDecimals(new Number(amount), decimals)){
-            throw false;
-        }
-
+        let amount = Numbers.fromDecimals(Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)), decimals);
+    
         /* Verify if Transaction was Succeded */
         // TO DO 
 
         return {
             isValid : true,
-            from :  res_transaction.from 
+            from :  res_transaction.from,
+            amount
         };
 
     }catch(err){
