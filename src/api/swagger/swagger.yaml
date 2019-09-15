@@ -1398,7 +1398,6 @@ definitions:
       - app
       - user
       - address
-      - signature
       - tokenAmount
       - transactionHash
       - withdraw_id
@@ -1426,10 +1425,6 @@ definitions:
         example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
         description: |
           User Address
-      signature :
-        type : object
-        description: |
-          User Signature 
       transactionHash :
         type : string
         format: name
