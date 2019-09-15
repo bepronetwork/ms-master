@@ -116,8 +116,8 @@ const processActions = {
             if(!user){throwError('USER_NOT_EXISTENT')}
 
             /* Verify if the transactionHash was created */
-            let { isValid, from } = await verifytransactionHashDepositUser(
-                app.blockchain, params.transactionHash, params.amount, 
+            let { isValid, from, amount } = await verifytransactionHashDepositUser(
+                app.blockchain, params.transactionHash, 
                 app.platformAddress , app.decimals)
                 
             /* Verify if this transactionHashs was already added */
@@ -141,7 +141,7 @@ const processActions = {
                 transactionHash     : params.transactionHash,
                 from                : from,
                 currencyTicker      : app.currencyTicker,
-                amount              : Numbers.toFloat(params.amount),
+                amount              : Numbers.toFloat(amount),
                 isValid
             }
 
