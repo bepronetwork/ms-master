@@ -125,9 +125,24 @@ class CasinoLogic{
                 case 'wheel_simple' : {
                     var el = outcomeResultSpace;
                     let multiplier = resultSpace[el.key].multiplier;
-                    console.log(totalBetAmount);
                     maxWin = parseFloat(totalBetAmount)*parseFloat(multiplier);
-                    console.log(maxWin)
+                    /* Default Logic */
+                    if(maxWin == 0){
+                        // Lost
+                        isWon = false;
+                        winAmount = 0;
+                    }else{
+                        // Won
+                        isWon = true;
+                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
+                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    }
+                    break;
+                };
+                case 'wheel_variation_1' : {
+                    var el = outcomeResultSpace;
+                    let multiplier = resultSpace[el.key].multiplier;
+                    maxWin = parseFloat(totalBetAmount)*parseFloat(multiplier);
                     /* Default Logic */
                     if(maxWin == 0){
                         // Lost
@@ -204,7 +219,7 @@ class CasinoLogic{
                     break;
                 };
                 default : { 
-                    throw new Error('Internal Server Error')
+                    throw new Error('Game Not Fully Integrated')
                 }
             }
 
@@ -253,6 +268,26 @@ class CasinoLogic{
                     break;
                 };
                 case 'wheel_simple' : {
+                    /* Calculate Multipliers on Odd (Example Roulette) */
+                    let { maxWin } = userResultSpace.reduce( (object, result) => {
+                        let multiplier = resultSpace[result.place].multiplier;
+                        let maxWin = parseFloat(result.value)*parseFloat(multiplier);
+                        if(maxWin > object.maxWin){
+                            return {maxWin,  multiplier, place : result.place, value : result.value};
+                        }else{
+                            return object;
+                        }
+                    }, {maxWin : 0, place : 0, value : 0});
+                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
+                        if(item.value <= 0){ throw throwError('BAD_BET')}
+                        return acc+item.value;
+                    }, 0))
+                    let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
+                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    break;
+                };
+                case 'wheel_variation_1' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin } = userResultSpace.reduce( (object, result) => {
                         let multiplier = resultSpace[result.place].multiplier;
@@ -323,7 +358,7 @@ class CasinoLogic{
                     break;
                 };
                 default : { 
-                    throw new Error('Internal Server Error')
+                    throw new Error('Game Not Fully Integrated')
                 }
             }
             return {
