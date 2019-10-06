@@ -20,12 +20,13 @@ import {
 import faker from 'faker';
 import chai from 'chai';
 import models from '../models';
-import { detectValidationErrors, generateEthAccountWithTokensAndEthereum } from './utils';
+import { detectValidationErrors } from '../utils';
 
 import { Logger } from '../../src/helpers/logger';
 import { getNonce } from '../lib';
 import CasinoContract from '../logic/eth/CasinoContract';
 import Numbers from '../logic/services/numbers';
+import { generateEthAccountWithTokensAndEthereum } from '../utils/eth';
 
 const expect = chai.expect;
 

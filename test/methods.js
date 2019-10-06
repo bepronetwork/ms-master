@@ -4,45 +4,37 @@ import account from './logic/eth/models/account';
 import CasinoContract from './logic/eth/CasinoContract';
 import { globalsTest } from './GlobalsTest';
 
-const config = {
-    headers : {
-        "Content-Type" : "application/json"
-    }
-}
-
 module.exports = {
-    async registerUser(params, bearerToken) {
-        return request(global.app)
+    async registerUser(params) {
+        return request(global.server)
         .post('/api/users/register')
-        .set("authorization", "Bearer " + bearerToken)
         .send(params)
         .then(res => res.body)
-        
-    },
-    async loginUser(params, bearerToken) {
-        return request(global.app)
-        .post('/api/users/login')
-        .set("authorization", "Bearer " + bearerToken)
-        .send(params)
-        .then(res => res.body)
-        
+
     },
     async registerAdmin(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/admins/register')
         .send(params)
         .then(res => res.body)
         
     },
     async loginAdmin(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/admins/login')
         .send(params)
         .then(res => res.body)
         
     },
+    async loginUser(params) {
+        return request(global.server)
+        .post('/api/users/login')
+        .send(params)
+        .then(res => res.body)
+
+    },
     async authAdmin(params, bearerToken, payload) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/admins/auth')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -51,14 +43,14 @@ module.exports = {
         
     },
     async loginAdmin2FA(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/admins/login/2fa')
         .send(params)
         .then(res => res.body)
         
     },
     async setAdmin2FA(params, bearerToken, payload) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/admins/2fa/set')
         .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
         .send(params)
@@ -66,20 +58,20 @@ module.exports = {
         
     },
     async registerApp(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/create').send(params)
         .then(res => res.body)
         
     },
     async getApp(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/get')
         .send(params)
         .then(res => res.body)
         
     },
     async getAppAuth(params, bearerToken, payload) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/get/auth')
         .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
         .send(params)
@@ -87,7 +79,7 @@ module.exports = {
         
     },
     async getGames(params, bearerToken, payload) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/getAll')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -96,7 +88,7 @@ module.exports = {
         
     },
     async getAppSummary(params, bearerToken, payload) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/summary')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -105,7 +97,7 @@ module.exports = {
         
     },
     async addAppServices(params, bearerToken, payload) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/services/add')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -124,7 +116,7 @@ module.exports = {
         }
     },
     async getTransactions(params, bearerToken) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/transactions')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -132,31 +124,31 @@ module.exports = {
         
     },
     async getAppLastBets(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/lastBets')
         .send(params)
         .then(res => {return res.body})
     },
     async getAppBiggestBetWinners(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/biggestBetWinners')
         .send(params)
         .then(res => {return res.body})
     },
     async getAppBiggestUserWinners(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/biggestUserWinners')
         .send(params)
         .then(res => {return res.body})
     },
     async getAppPopularNumbers(params) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/popularNumbers')
         .send(params)
         .then(res => {return res.body})
     },
     async getUser(id, bearerToken) {
-        return request(global.app)
+        return request(global.server)
         .post('/api/users/${id}/info')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -164,7 +156,7 @@ module.exports = {
         
     },
     async createGame(params, bearerToken){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/add')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -172,7 +164,7 @@ module.exports = {
         
     },
     async getUserBets(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/users/bets')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -181,7 +173,7 @@ module.exports = {
         
     },
     async createEvent(params, bearerToken){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/events/add')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -189,7 +181,7 @@ module.exports = {
         
     },
     async placeBet(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/bet/place')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -198,7 +190,7 @@ module.exports = {
         
     },
     async editTableLimit(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/editTableLimit')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -207,7 +199,7 @@ module.exports = {
         
     },
     async editGameEdge(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/editEdge')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -216,7 +208,7 @@ module.exports = {
         
     },
     async resolveEvent(params, bearerToken){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/events/resolve')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -224,7 +216,7 @@ module.exports = {
         
     },
     async addBlockchainInformation(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/addBlockchainInformation/')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -233,7 +225,7 @@ module.exports = {
         
     },
     async updateAppWallet(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/updateWallet')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -242,7 +234,7 @@ module.exports = {
         
     },
     async updateUserWallet(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/users/updateWallet')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -251,7 +243,7 @@ module.exports = {
         
     },
     async requestWithdraw(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/users/requestWithdraw')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -260,7 +252,7 @@ module.exports = {
         
     },
     async finalizeWithdraw(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/users/finalizeWithdraw')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -269,7 +261,7 @@ module.exports = {
         
     },
     async cancelAppWithdraw(params, bearerToken){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/cancelWithdraw')
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
@@ -277,16 +269,15 @@ module.exports = {
         
     },
     async requestAppWithdraw(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/requestWithdraw')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
-        .then(res => {return res.body})
-        
+        .then(res => {return res.body})    
     },
     async finalizeAppWithdraw(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/finalizeWithdraw')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
@@ -295,22 +286,29 @@ module.exports = {
         
     },
     async getEcosystemData(params){
-        return request(global.app)
+        return request(global.server)
         .get('/api/ecosystem/all')
         .send(params)
         .then(res => {return res.body})
         
     },
     async getEcosystemCasinoGames(params){
-        return request(global.app)
+        return request(global.server)
         .get('/api/ecosystem/games/casino')
         .send(params)
         .then(res => {return res.body})
-        
     },
     async addGame(params, bearerToken, payload){
-        return request(global.app)
+        return request(global.server)
         .post('/api/app/games/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async editAffiliateStructure(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/affiliate/edit')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

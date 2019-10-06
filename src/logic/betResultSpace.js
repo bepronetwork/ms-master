@@ -110,8 +110,8 @@ class BetResultSpaceLogic extends LogicComponent {
                 }
                 
 			}
-		}catch(report){
-			throw `Failed to validate BetResultSpace schema: BetResultSpace \n See Stack Trace : ${report}`;
+		}catch(err){
+			throw err;
 		}
 	}
 
@@ -140,8 +140,8 @@ class BetResultSpaceLogic extends LogicComponent {
 				};
 				
 			}
-		}catch(report){
-			throw `Failed to validate : BetResultSpace \n See Stack Trace : ${report}`;
+		}catch(err){
+			throw err;
 		}
 	}
 }

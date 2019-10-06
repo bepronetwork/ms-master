@@ -22,7 +22,6 @@ class Markets{
                 }
             }
         }catch(err){
-            console.log(err)
             throw err;
         }
     }

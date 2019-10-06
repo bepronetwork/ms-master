@@ -13,7 +13,7 @@ import {
     pipeline_popular_numbers
 } from './pipelines/app';
 
-import { populate_app } from './populates';
+import { populate_app_all, populate_app_affiliates } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 
 
@@ -160,7 +160,7 @@ class AppRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -175,7 +175,7 @@ class AppRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -190,7 +190,7 @@ class AppRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -205,22 +205,26 @@ class AppRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
-    findAppById(_id){ 
+    findAppById(_id, populate_type=populate_app_all){
+        switch(populate_type){
+            case 'affiliates' : { populate_type = populate_app_affiliates; break; }
+        }
+        
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
-                .populate(populate_app)
+                .populate(populate_type)
                 .exec( (err, App) => {
                     if(err) { reject(err)}
                     resolve(App);
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -234,7 +238,7 @@ class AppRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -248,6 +252,22 @@ class AppRepository extends MongoComponent{
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (true);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async editAffiliateSetup(app_id, affiliate_id){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id }, 
+                { $set : { "affiliateSetup" : affiliate_id } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
                 }
             )
         }catch(err){
@@ -271,7 +291,7 @@ class AppRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -331,7 +351,7 @@ class AppRepository extends MongoComponent{
         });
     }
 
-    getAll = async() => {
+    async getAll(){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.find().lean().populate(foreignKeys)
             .exec( (err, docs) => {

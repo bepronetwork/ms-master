@@ -11,7 +11,8 @@ import faker from 'faker';
 import chai from 'chai';
 import Security from '../../src/controllers/Security/Security';
 import models from '../models';
-import { detectValidationErrors } from './utils';
+import { detectValidationErrors } from '../utils';
+
 
 const expect = chai.expect;
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));

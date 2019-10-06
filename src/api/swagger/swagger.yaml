@@ -480,6 +480,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/affiliate/edit : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit
+      operationId: editAffiliateStructure
+      description: Change Table Limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditAffiliateStructure'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/games/editEdge:
     x-swagger-router-controller: game
     post:
@@ -1009,7 +1039,7 @@ definitions:
       - name             
       - email
       - address 
-      - app            
+      - app       
     properties:
       username:
         type : string
@@ -1032,6 +1062,10 @@ definitions:
         minLength: 1
         description: |
           User Email
+      affiliateLink:
+        type : string
+        example: "Affiliate Link"
+        minLength: 1
       app:
         type : string
         example: "9a7yfg8sd7fygs87"
@@ -1195,6 +1229,33 @@ definitions:
         example: 3245
         description: |
           New Table Limit
+  AppEditAffiliateStructure : 
+    type: object
+    required:
+      - app
+      - structures
+      - affiliateTotalCut
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      structures:
+        type : array
+        items:
+          type: object
+          properties:
+            level:
+              type: number
+            percentageOnLoss:
+              type: number
+      affiliateTotalCut:
+        type : number
+        example: 3245
+        description: |
+          Total Affiliate Cut (0-1)
   AppGetRequest:
     type: object
     required:

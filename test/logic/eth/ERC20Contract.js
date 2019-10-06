@@ -67,13 +67,17 @@ class ERC20TokenContract{
     }
 
     async transferTokenAmount({fromAccount, toAddress, tokenAmount, decimals}){
-        let amountWithDecimals = Numbers.toSmartContractDecimals(tokenAmount, decimals);
-        let data = self.contract.getContract().methods.transfer(
-            toAddress,
-            amountWithDecimals
-        ).encodeABI(); 
-        let res = await self.contract.send(fromAccount.getAccount(), data);  
-        return res;
+        try{
+            let amountWithDecimals = Numbers.toSmartContractDecimals(tokenAmount, decimals);
+            let data = self.contract.getContract().methods.transfer(
+                toAddress,
+                amountWithDecimals
+            ).encodeABI(); 
+            let res = await self.contract.send(fromAccount.getAccount(), data);  
+            return res;
+        }catch(err){
+            throw err;
+        }
     }
 
     async getTokenAmount(address){

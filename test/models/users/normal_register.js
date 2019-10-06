@@ -9,7 +9,8 @@ const normal_register = (address, app_id, options={}) => {
         age : Math.floor(Math.random() * 60) + 18,
         app : app_id,
         password : 'test123',
-        user_external_id : '{{random.uuid}}'
+        user_external_id : '{{random.uuid}}',
+        affiliateLink : options.affiliateLink
     }
 }
 
