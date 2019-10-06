@@ -67,12 +67,7 @@ context('User Testing', async () =>  {
                     let response = await registerUser(userPostData);
                     USER_ID = response.data.message._id;
                     return;
-                },
-                loginUser : async () => {
-                    let res =  await loginUser(userPostData);
-                    USER_ADDRESS = res.data.message.address;
-                    USER_BEARER_TOKEN = res.data.message.bearerToken;
-                },
+                }
             }
             try{
                 await runSetup(calls);

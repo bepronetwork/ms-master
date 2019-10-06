@@ -249,6 +249,18 @@ async function finalizeAppWithdraw (req, res) {
 	}
 }
 
+async function editAffiliateStructure (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editAffiliateStructure();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 /**
  *
  * @param {*} req
@@ -276,6 +288,7 @@ export {
     getBiggestBetWinners,
     getBiggestUserWinners,
     addGame,
+    editAffiliateStructure,
     getGame,
     getGames,
     createBet,

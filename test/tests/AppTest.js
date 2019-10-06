@@ -32,7 +32,7 @@ const delay = require('delay');
 import models from '../models';
 
 import { getNonce } from '../lib';
-import { detectValidationErrors } from './utils';
+import { detectValidationErrors } from '../utils';
 import { getRandom } from '../utils/math';
 import Random from '../tools/Random';
 import Numbers from '../logic/services/numbers';
@@ -83,6 +83,7 @@ context('App Testing', async () =>  {
                 await runSetup(calls);
                 return expect(true).to.equal(true);      
             }catch(err){
+                console.log(err)
                 console.log("Error")
             }
         })()
@@ -100,8 +101,8 @@ context('App Testing', async () =>  {
             let response_user_register = await registerUser(userPostData);
             USER_ID = response_user_register.data.message._id;
 
-            let res_user_login =  await loginUser(userPostData);
-            USER_ADDRESS = res_user_login.data.message.address;
+            let res_user_loginUser = await loginUser(userPostData);
+            USER_ADDRESS = res_user_loginUser.data.message.address;
 
             expect(response.data.status).to.equal(200);
         }));
@@ -118,6 +119,8 @@ context('App Testing', async () =>  {
         it('should Get App Data Auth', mochaAsync(async () => {
             let get_app_model = models.apps.get_app(APP_ID);
             let res = await getAppAuth(get_app_model, BEARER_TOKEN, {id : APP_ID});
+            /* Set app Global Variable for Further Test */
+            global.test.app = res.data.message;
             expect(res.data.status).to.equal(200);
         })); 
 
@@ -388,9 +391,9 @@ context('App Testing', async () =>  {
 
             it('should allow deposit for the User', mochaAsync(async () => {
 
-                let res_user_login =  await loginUser(userPostData);
-                USER_BEARER_TOKEN = res_user_login.data.message.bearerToken;
-                USER_ID = res_user_login.data.message.id;
+                let res_user_loginUserin =  await loginUser(userPostData);
+                USER_BEARER_TOKEN = res_user_loginUserin.data.message.bearerToken;
+                USER_ID = res_user_loginUserin.data.message.id;
 
                 const USER_DEPOSIT_AMOUNT = CONST.user.DEPOSIT_AMOUNT;
                 const NONCE = getNonce();
@@ -764,25 +767,23 @@ context('App Testing', async () =>  {
 
 
 async function digestBetResult({user, res, previousBalance}){
-    const { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, delta} = res.data.message;
+    const { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta} = res.data.message;
     let { USER_BALANCE } = await getUserAuth(user);
 
     if(isWon){
         // Confirm delta is positive
-        expect(delta).to.be.greaterThan(0);
+        expect(user_delta).to.be.greaterThan(0);
         // Confirm Win Amount is Positive
         expect(winAmount).to.be.greaterThan(0);
-        // Confirm Win Amount equals BetAmount*odd - edge
-        expect(Numbers.toFloat((betAmount*(1/parseFloat(parseFloat(outcomeResultSpace.probability).toFixed(4)))) - fee)).to.be.equal(Numbers.toFloat(winAmount));
         // Confirm New User Balance is equal to previous plus delta
-        expect(USER_BALANCE).to.be.equal(Numbers.toFloat(previousBalance+delta));
+        expect(USER_BALANCE).to.be.equal(Numbers.toFloat(previousBalance+user_delta));
     }else{
         // Confirm delta is negative
-        expect(delta).to.be.lessThan(0);
+        expect(user_delta).to.be.lessThan(0);
         // Confirm Win Amount is 0
         expect(winAmount).to.be.equal(0);
         // Confirm New User Balance is equal to previous plus delta
-        expect(USER_BALANCE).to.be.equal(Numbers.toFloat(previousBalance+delta));
+        expect(USER_BALANCE).to.be.equal(Numbers.toFloat(previousBalance+user_delta));
     }
     return true;
 }

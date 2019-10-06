@@ -46,8 +46,8 @@ class contract{
 
     async send(account, byteCode, value='0x0', options, callback){   
         if(!options){options = {gasPrice : 20000000000, gas : 4000000}}
-        if(!options.gasPrice){options.gasPrice = 20000000000} ;
-        if(!options.gas){options.gas  = 4000000} ;
+        if(!options.gasPrice){options.gasPrice = 2000000000} ;
+        if(!options.gas){options.gas  = 400000} ;
         const { gasPrice, gas } = options;
 
         let tx = {
@@ -58,7 +58,6 @@ class contract{
             gas : gas,
             value: value ? value : '0x0'
         }
-                
         let result = await account.signTransaction(tx);
         return new Promise ( (resolve, reject) => {
             this.web3.eth.sendSignedTransaction(result.rawTransaction)

@@ -52,7 +52,7 @@ const processActions = {
 			}
 			return normalized;
 		}catch(err){
-			console.log(err)
+			throw err;
 		}
 	}
 }
@@ -75,7 +75,7 @@ const progressActions = {
 				type : 'wallet'
 			};
 		}catch(err){
-			console.log(err)
+			throw err;
 		}
 	},
 	__confirmDeposit : async (params) => {

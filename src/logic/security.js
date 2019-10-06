@@ -48,7 +48,7 @@ const progressActions = {
 				type : 'security'
 			};
 		}catch(err){
-			console.log(err)
+			throw err;
 		}
 	}
 }

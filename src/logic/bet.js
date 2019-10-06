@@ -1,20 +1,12 @@
-
-
-
-const _ = require('lodash');
+import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
-import BetsRepository from '../db/repos/bet';
 import CasinoLogicSingleton from './utils/casino';
-import codes from './categories/codes';
-
-import { isCasino } from './markets/betSystems';
-import Numbers from './services/numbers';
 import { BetResultSpace } from '../models';
 import { throwError } from '../controllers/Errors/ErrorManager';
-import { Logger } from '../helpers/logger';
+import { getAffiliatesReturn } from './utils/affiliates';
 
  
 let error = new ErrorManager();
@@ -93,20 +85,23 @@ const processActions = {
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
             let app = user.app_id;
-            // Tests
-            if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
-            var user_in_app = (app._id == params.app);
-            var delta;
 
+            /* No Mapping Error Verification */
+            if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
             if(!game){throwError('GAME_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
-            if(params.nonce <= 10340){throwError('BAD_NONCE')}
-
-            let appPlayBalance = Numbers.toFloat(app.wallet.playBalance);
-            let userBalance = Numbers.toFloat(user.wallet.playBalance);
+            
+            var affiliateReturns = [], totalAffiliateReturn = 0;
+            var user_delta, app_delta;
+            var user_in_app = (app._id == params.app);
+            let appPlayBalance = parseFloat(app.wallet.playBalance);
+            let userBalance = parseFloat(user.wallet.playBalance);
             let resultBetted = CasinoLogicSingleton.normalizeBet(params.result);
             var serverSeed = CryptographySingleton.generateSeed();
             var clientSeed = CryptographySingleton.generateSeed();
+            const { affiliateLink } = user;
+            const isUserAffiliated = (affiliateLink != null && !_.isEmpty(affiliateLink))
+            
             /* Verify if Withdrawing Mode is ON - User */
             let isUserWithdrawingAPI = user.isWithdrawing;
             /* Verify if Withdrawing Mode is ON - App */
@@ -120,9 +115,11 @@ const processActions = {
                 game : game.metaName
             }); 
 
+            /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
+
             /* Get Bet Result */
-            let { isWon,  winAmount, outcomeResultSpace} = betResolvingActions.auto({
+            let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
                 serverSeed : serverSeed,
                 clientSeed : clientSeed,
                 nonce : params.nonce,
@@ -134,20 +131,43 @@ const processActions = {
             });
 
             if(isWon){
-                delta = Numbers.toFloat(Math.abs(winAmount) - Math.abs(totalBetAmount));
+                /* User Won Bet */
+                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
+                user_delta = parseFloat(delta);
+                app_delta = parseFloat(-delta);
             }else{
-                delta = Numbers.toFloat(-Math.abs(totalBetAmount));
+                /* User Lost Bet */
+                user_delta = parseFloat(-Math.abs(totalBetAmount));
+
+                if(isUserAffiliated){
+                    /* Get Amounts and Affiliate Cuts */
+                    var affiliateReturnResponse = getAffiliatesReturn({
+                        affiliateLink : affiliateLink,
+                        lostAmount : totalBetAmount
+                    })
+                    /* Map */
+                    affiliateReturns = affiliateReturnResponse.affiliateReturns;
+                    totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
+                }
+               
+                /* Set App Cut without Affiliate Return */
+                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
             }
 
-            var possibleWinBalance = Numbers.toFloat(possibleWinAmount + userBalance);            
+            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);            
             // If Casino Existent
             //var jackpotGame = app.games.find(game => game.metaName === 'jackpot_auto')
-            //let hasJackpot = jackpotGame ? true : false;            
+            //let hasJackpot = jackpotGame ? true : false;    
+
             let normalized = {
                 user_in_app,
                 isUserWithdrawingAPI,
                 isAppWithdrawingAPI,
-                delta,
+                user_delta,
+                app_delta,
+                isUserAffiliated,
+                affiliateReturns,
+                totalAffiliateReturn,
                 tableLimit                      :   game.tableLimit,
                 user                            :   user._id, 				    
                 app                             :   app._id,
@@ -201,12 +221,13 @@ const processActions = {
   
 const progressActions = {
     __auto : async (params) => {
-
+        
+        const { isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet } = params;
         /* Save all ResultSpaces */
-        let dependentObjects = Object.keys(params.result).map( async key => {
-            let resultSpaceObject = new BetResultSpace(params.result[key]);
-            return await resultSpaceObject.register();
-        });
+        let dependentObjects = Object.keys(result).map( async key => 
+            await (new BetResultSpace(result[key])).register()
+        );
+
         let betResultSpacesIds = await Promise.all(dependentObjects);
         // Generate new Params Setup
 
@@ -217,11 +238,17 @@ const progressActions = {
         }
         /* Save Bet */
         let bet = await self.save(params);
-
 		/* Update PlayBalance */
-        await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.delta);
+        await WalletsRepository.prototype.updatePlayBalance(wallet, user_delta);
         /* Update App PlayBalance */
-        await WalletsRepository.prototype.updatePlayBalance(params.appWallet, -params.delta);
+        await WalletsRepository.prototype.updatePlayBalance(appWallet, app_delta);
+        /* Update Balance of Affiliates */
+        if(isUserAffiliated){
+            let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
+                return await WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
+            })
+            await Promise.all(userAffiliatedWalletsPromises);
+        }
         
 		/* Add Bet to User Profile */
 		await UsersRepository.prototype.addBet(params.user, bet);

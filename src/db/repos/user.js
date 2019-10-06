@@ -22,7 +22,7 @@ import { throwError } from '../../controllers/Errors/ErrorManager';
  */
 
 
-const foreignKeys = ['wallet', 'app_id', 'withdraws', 'deposits'];
+const foreignKeys = ['wallet', 'app_id', 'withdraws', 'deposits', 'affiliate'];
 
 class UsersRepository extends MongoComponent{
 
@@ -65,7 +65,7 @@ class UsersRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
    
@@ -73,7 +73,7 @@ class UsersRepository extends MongoComponent{
     findUser(username){
         return new Promise( (resolve, reject) => {
             UsersRepository.prototype.schema.model.findOne({'username' : username})
-            .populate(foreignKeys)
+            .populate(populate_user)
             .lean()
             .exec( (err, user) => {
                 if(err) {reject(err)}
@@ -115,13 +115,26 @@ class UsersRepository extends MongoComponent{
                 { $push: { "bets" : bet } },
                 (err, item) => {
                     if(err){reject(err)}
-                    resolve(true);
+                    resolve(item);
                 }
             )
         });
     }
 
-    getAll = async() => {
+    setAffiliateLink(user_id, affiliateLinkId){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: user_id },
+                { $set: { "affiliateLink" : affiliateLinkId} },
+                { 'new': true })
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
+    async getAll(){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find().lean().populate(foreignKeys)
             .exec( (err, docs) => {
@@ -135,7 +148,7 @@ class UsersRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findByIdAndUpdate(
-                    _id,
+                    { _id: _id },
                     { $set: { "isWithdrawing" : state} }) 
                     .exec( (err, item) => {
                         if(err){reject(err)}
@@ -168,7 +181,6 @@ class UsersRepository extends MongoComponent{
                 });
             })
         }catch(err){
-            console.log(err);
             throw err;
         }
         

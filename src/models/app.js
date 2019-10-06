@@ -3,6 +3,7 @@ import ModelComponent from './modelComponent';
 import {AppRepository} from '../db/repos';
 import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
+import { AffiliateSetup } from '.';
 
 class App extends ModelComponent{
 
@@ -18,7 +19,15 @@ class App extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Wallet(params)
+                    new Wallet(params),
+                    new AffiliateSetup({...params, 
+                        structures : [
+                            {
+                                level : 1,
+                                percentageOnLoss : 0.02
+                            }
+                        ]
+                    })
                 ]
             }
             );
@@ -255,6 +264,20 @@ class App extends ModelComponent{
     async editGameEdge(){
         try{
             return await this.process('EditGameEdge');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async editAffiliateStructure(){
+        try{
+            return await this.process('EditAffiliateStructure');
         }catch(err){
             throw err;
         }

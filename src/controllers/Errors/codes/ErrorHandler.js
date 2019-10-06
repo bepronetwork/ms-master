@@ -53,7 +53,10 @@ ErrorHandler.prototype.KEYS =  {
     'WRONG_2FA_TOKEN'                       : "036",
     'USER_HAS_2FA'                          : "037",
     'APP_ALREADY_EXISTENT'                  : "038",
-    'ERROR_TRANSACTION'                     : "039"
+    'ERROR_TRANSACTION'                     : "039",
+    'AFFILIATE_RETURN_NOT_VALID'            : "040",
+    'AFFILIATE_NOT_EXISTENT'                : "041",
+    'ERROR_AFFILIATE_EDIT'                  : "042"
 }; 
 
 

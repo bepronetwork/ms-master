@@ -6,24 +6,24 @@ import ERC20TokenContract from "./logic/eth/ERC20Contract";
 
 let ETH_NETWORK = __config.default.eth.network;
 
-const CONSTANTS = {
-    net : ETH_NETWORK,
-    key : __config.default.eth.keys.home,
-    eth_url : __config.default.eth.url,
-    casino        : interfaces.casino
+const constants = {
+    net             : ETH_NETWORK,
+    key             : __config.default.eth.keys.home,
+    eth_url         : __config.default.eth.url,
+    casino          : interfaces.casino,
+    tokenDecimals   : 18
 }
-
-Object.assign(global, CONSTANTS);
 
 class GlobalsTest{
     constructor(){
-        this.web3 = new Web3(new Web3.providers.HttpProvider(CONSTANTS.eth_url));
+        this.constants = constants;
+        this.web3 = new Web3(new Web3.providers.HttpProvider(constants.eth_url));
     }
 
     getCasinoContract(address, tokenAddress){
         return new CasinoContract({
             web3 : this.web3,
-            contractDeployed : CONSTANTS.casino,
+            contractDeployed : constants.casino,
             erc20TokenContract : tokenAddress,
             contractAddress : address
         })
@@ -33,7 +33,7 @@ class GlobalsTest{
         let erc20Contract = new ERC20TokenContract({
             web3 : this.web3,
             contractAddress : tokenAddress,
-            accountPrivateKey : CONSTANTS.key
+            accountPrivateKey : constants.key
         })
 
         erc20Contract.__assert(
@@ -49,7 +49,7 @@ class GlobalsTest{
     newCasinoContract(params){
         return new CasinoContract({
             web3 : this.web3,
-            contractDeployed : CONSTANTS.casino,
+            contractDeployed : constants.casino,
             erc20TokenContract : params.tokenAddress,
             tokenTransferAmount : params.tokenTransferAmount
         })
