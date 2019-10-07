@@ -134,6 +134,19 @@ class UsersRepository extends MongoComponent{
         });
     }
 
+    setAffiliate(user_id, affiliateId){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: user_id },
+                { $set: { "affiliate" : affiliateId} },
+                { 'new': true })
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     async getAll(){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find().lean().populate(foreignKeys)

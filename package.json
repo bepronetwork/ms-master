@@ -13,7 +13,8 @@
         "md-docs": "swagger-markdown -i api/swagger/swagger.yaml",
         "generate-docs": "docsify init docs",
         "swagger": "swagger project edit",
-        "generate-result-space": "node scripts/createResultSpace"
+        "generate-result-space": "node scripts/createResultSpace",  
+        "scripts" : "babel-node scripts --nopresets es2015,stage-2"
     },
     "dependencies": {
         "abi-decoder": "^1.2.0",
