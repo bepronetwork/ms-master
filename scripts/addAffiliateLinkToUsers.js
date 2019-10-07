@@ -30,6 +30,8 @@ class AddAffiliateLinkToUsers{
 
                     await UsersRepository.prototype.setAffiliateLink(user._id, affiliateLinkObject._id);
                     await AffiliateLinkRepository.prototype.setAffiliate(affiliateLinkObject._id, affiliate);
+                    await UsersRepository.prototype.setAffiliate(user._id, affiliate);
+
                 }catch(err){
                     console.log("user fail")
                 }
