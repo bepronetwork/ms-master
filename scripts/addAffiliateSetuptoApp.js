@@ -17,7 +17,6 @@ class AddAffiliateSetupToApp{
             console.log("start")
             /* Add Affiliate Setup to Apps */
             var app_all = await AppRepository.prototype.getAll();
-            console.log(app_all[0]);
             // start the progress bar with a total value of 200 and start value of 0
             bar1.start(app_all.length, 0);
             for( var i = 0; i < app_all.length; i++){

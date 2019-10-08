@@ -93,6 +93,7 @@ const progressActions = {
 	__register : async (params) => {
 
         const { parentAffiliatedLinks, app_id } = params;
+       
         /* Save all ResultSpaces */
         let dependentObjects = Object.keys(parentAffiliatedLinks).map( async key => 
             await (new AffiliateLink({...parentAffiliatedLinks[key], notSaveParents : true, app_id})).register()
@@ -106,6 +107,7 @@ const progressActions = {
 
         return {
             ...affiliateLink._doc,
+            parentAffiliatedLinks,
             type : 'affiliateLink'
         };
        
