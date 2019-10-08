@@ -38,6 +38,19 @@ class AffiliateRepository extends MongoComponent{
         });
     }
 
+    async addAffiliateLinkChild(_id, affiliate_link){
+        return new Promise( (resolve,reject) => {
+            AffiliateRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: _id, bets : {$nin : [affiliate_link] } }, 
+                { $push: { "affiliatedLinks" : affiliate_link } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        })
+    }
+
     getAll = async() => {
         return new Promise( (resolve,reject) => {
             AffiliateRepository.prototype.schema.model.find().lean().populate()

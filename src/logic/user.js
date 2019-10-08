@@ -5,7 +5,7 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { UsersRepository, AppRepository, WalletsRepository, DepositRepository, WithdrawRepository, AffiliateLinkRepository } from '../db/repos';
+import { UsersRepository, AppRepository, WalletsRepository, DepositRepository, WithdrawRepository, AffiliateLinkRepository, AffiliateRepository } from '../db/repos';
 import Numbers from './services/numbers';
 import { verifytransactionHashDepositUser, verifytransactionHashWithdrawUser } from './services/services';
 import { Deposit, Withdraw, AffiliateLink } from '../models';
@@ -284,7 +284,12 @@ const progressActions = {
             await UsersRepository.prototype.setAffiliateLink(user._id, affiliateLinkObject._id);
             /* Add Affiliate to Affiliate Link */ 
             await AffiliateLinkRepository.prototype.setAffiliate(affiliateLinkObject._id, affiliate);
+            /* Add Afiliate Link to Parent Affiliates */
+            let promisesId = affiliateLinkObject.parentAffiliatedLinks.map( async paf => 
+                await AffiliateRepository.prototype.addAffiliateLinkChild(paf.affiliate, affiliateLinkObject._id)    
+            )
 
+            await Promise.all(promisesId);
             /* Add to App */
             await AppRepository.prototype.addUser(params.app_id, user);
             user = await UsersRepository.prototype.findUserById(user._id);
