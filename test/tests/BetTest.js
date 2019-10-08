@@ -13,7 +13,7 @@ import faker from 'faker';
 import chai from 'chai';
 import models from '../models';
 import { create_bet } from '../models/bets';
-import { detectValidationErrors } from './utils';
+import { detectValidationErrors } from '../utils';
 import { getRandom } from '../utils/math';
 
 const expect = chai.expect;
@@ -167,21 +167,6 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             expect(res.data.status).to.equal(12);
-        }));
-
-        it('shouldn´t be able to bet - bad nonce', mochaAsync(async () => {
-            let create_bet_model = { 
-                game: GAMES[0]._id,
-                user: USER_ID,
-                app: APP_ID,
-                nonce: -123,
-                result: [{
-                    place: 0, value: 0.01
-                }]
-            }
-            var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
-            detectValidationErrors(res);
-            expect(res.data.status).to.equal(28);
         }));
 
         it('shouldn´t be able to bet - empty result', mochaAsync(async () => {

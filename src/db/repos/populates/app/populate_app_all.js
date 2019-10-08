@@ -1,5 +1,5 @@
 
-let populate_app = [
+let populate_app_all = [
     {
         path : 'wallet',
         model : 'Wallet',
@@ -31,7 +31,19 @@ let populate_app = [
         path : 'deposits',
         model : 'Deposit',
         select : { '__v': 0}
+    },
+    {   
+        path : 'affiliateSetup',
+        model : 'AffiliateSetup',
+        select : { '__v': 0},
+        populate : [
+            {
+                path : 'affiliateStructures',
+                model : 'AffiliateStructure',
+                select : { '__v': 0}
+            }
+        ]
     }
 ] 
 
-export default populate_app;
+export default populate_app_all;

@@ -30,7 +30,9 @@ class CasinoContract{
                 erc20TokenContract,
                 ...params
             }
-        }catch(err){console.log(err)}
+        }catch(err){
+            throw err;
+        }
       
     }
 
@@ -48,7 +50,7 @@ class CasinoContract{
                 transactionHash : response.transactionHash
             };
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
     
@@ -56,7 +58,7 @@ class CasinoContract{
         try{
             return await self.contract.getContract().methods.authorized(address).call();
         }catch(err){
-            console.log(err);
+            throw err;
         }   
     }
 
@@ -72,8 +74,7 @@ class CasinoContract{
         try{
             return Numbers.fromSmartContractTimeToMinutes(await self.contract.getContract().methods.releaseTime().call());
         }catch(err){
-            console.log(err)
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -104,8 +105,7 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.contract.getContract().methods.balances(address).call());
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -113,8 +113,7 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.contract.getContract().methods.totalPlayerBalance().call());
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -123,16 +122,14 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.contract.getContract().methods.maxDeposit().call());
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
     async getTotalLiquidity(){
         try{
             return fromBigNumberToInteger(await self.erc20TokenContract.getTokenAmount(this.getAddress()));
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 

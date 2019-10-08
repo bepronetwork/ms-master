@@ -1,8 +1,8 @@
 import {UserLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {UsersRepository} from '../db/repos';
-import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
+import { Affiliate, Wallet, AffiliateLink } from '.';
 
 class User extends ModelComponent{
 
@@ -18,7 +18,8 @@ class User extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Wallet(params)
+                    new Wallet(params),
+                    new Affiliate(params)
                 ]
             }
             );

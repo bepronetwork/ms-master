@@ -247,6 +247,50 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.EDIT_TABLE_NOT_VALID));
                     break;
                 };
+                case 'EditAffiliateStructure' : {
+                    // Verify App
+                    if(typeof object == 'undefined' || Object.is(object, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT));
+                    }
+                    // Verify if Affiliate Amount is Wrong
+                    if(parseFloat(object.affiliateTotalCut) <= 0 || parseFloat(object.affiliateTotalCut) > 1){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ERROR_AFFILIATE_EDIT))
+                    }
+                    // Verify if Structures amount is higher than 10
+                    if(object.structures.length > 10 || object.structures.length < 1){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ERROR_AFFILIATE_EDIT))
+                    }
+                    var levels = [], sumPercentageOnLoss = 0;
+                    object.structures.map( structure => {
+                        // Verify if all levels are present
+                        if( Number.isNaN(structure.level) 
+                            || (structure.level < 1)                                // Less than 1
+                            || (structure.level > object.structures.length)                 // Higher than Structure size
+                            || (structure.level !== parseInt(structure.level, 10))  // Is Integer
+                            || (levels.find(e => e == structure.level))             // Verify that it has all levels present
+                        ){
+                            libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ERROR_AFFILIATE_EDIT))
+                        }
+                     
+                        // Verify if the percentageOnLoss for each is right
+                        if( Number.isNaN(structure.percentageOnLoss) 
+                            || (structure.percentageOnLoss <= 0)
+                            || (structure.percentageOnLoss > 1)                                             // Less than 0
+                            || (structure.percentageOnLoss !== parseFloat(structure.percentageOnLoss))    // Is Integer
+                        ){
+                            libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ERROR_AFFILIATE_EDIT))
+                        }
+                        
+                        levels.push(structure.level);
+                        sumPercentageOnLoss += structure.percentageOnLoss;
+                        // Verify if all percentageOnLoss sumed is equal to total cut
+                    });
+                    // Verify if all percentageOnLoss Sum Amount is equal to desired amount
+                    if(sumPercentageOnLoss !== object.affiliateTotalCut){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ERROR_AFFILIATE_EDIT))
+                    }
+                    break;
+                };
                 case 'AddGame' : {
                     // Verify App
                     if(typeof object == 'undefined' || Object.is(object, null))
@@ -373,6 +417,59 @@ class ErrorManager {
         }
     }
 
+    affiliateLink = function (affiliateLink, type){
+        try{
+            switch(type){
+                case 'Register' : {  
+                    if(typeof affiliateLink == 'undefined' || Object.is(affiliateLink, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                }
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    affiliate = function (object, type){
+        try{
+            switch(type){
+                case 'Register' : {  
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                }
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    affiliateSetup = function (object, type){
+        try{
+            switch(type){
+                case 'Register' : {  
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                }
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    affiliateStructure = function (object, type){
+        try{
+            switch(type){
+                case 'Register' : {  
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                }
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     security = function (security, type){
         try{
             switch(type){
@@ -387,6 +484,7 @@ class ErrorManager {
             throw err
         }
     }
+    
 
     bet = function (bet, type){
         try{
@@ -397,8 +495,8 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
                         break;
                     }
-                    /* Verify if betAmount is less or equal than 0 */
-                    if(bet.betAmount <= 0){
+                    /* Verify if betAmount is less or equal than 0.01 */
+                    if(bet.betAmount < 0.01){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
@@ -433,6 +531,14 @@ class ErrorManager {
                     }
                     if(bet.isUserWithdrawingAPI || bet.isAppWithdrawingAPI)
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WITHDRAW_IN_PLACE));
+                    /* Verify if Affiliate Return is higher than total Bet Amount Lost Amount */
+                    if(bet.totalAffiliateReturn > bet.betAmount){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
+                    }
+                    /* Verify if when Bet is Lost the total Affiliate Return + App Cut equals User Lost */
+                    if(!bet.isWon && ( (bet.totalAffiliateReturn + bet.app_delta) != Math.abs(bet.user_delta))){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
+                    }
                     break;
                 }
             }

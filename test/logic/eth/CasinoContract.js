@@ -30,7 +30,9 @@ class CasinoContract{
                 erc20TokenContract,
                 ...params
             }
-        }catch(err){console.log(err)}
+        }catch(err){
+            throw err
+        }
       
     }
 
@@ -48,7 +50,7 @@ class CasinoContract{
                 transactionHash : response.transactionHash
             };
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -60,7 +62,7 @@ class CasinoContract{
             let res =  await self.contract.send(self.account.getAccount(), data);
             return res;
         }catch(err){
-            console.log(err);
+            throw err;
         }   
     }
     
@@ -68,7 +70,7 @@ class CasinoContract{
         try{
             return await self.contract.getContract().methods.authorized(address).call();
         }catch(err){
-            console.log(err);
+            throw err;
         }   
     }
 
@@ -95,7 +97,6 @@ class CasinoContract{
             let res = await self.erc20TokenContract.getABI().send(self.account.getAccount(), data, null, options, callback);
             return res;
         }catch(err){
-            console.log(err)
             throw new Error(`Possibly the Owner Account Address : ${self.account.getAddress()} does not have ${tokenAmount} Tokens to send to the Contract (Providing Liquidity)`)
         }   
     }
@@ -105,7 +106,7 @@ class CasinoContract{
             let balance = await self.account.getBalance();
             if(balance < 0.1){throw new Error(`Lack of Funds - Add more Funds to Address : ${self.account.getAddress()} to complete Testing`)}
         }catch(err){
-            console.log(err);
+            throw err;
         }
     }
 
@@ -129,8 +130,7 @@ class CasinoContract{
         try{
             return Numbers.fromSmartContractTimeToMinutes(await self.contract.getContract().methods.releaseTime().call());
         }catch(err){
-            console.log(err)
-            return 'N/A';
+            throw err
         }
     }
 
@@ -146,7 +146,6 @@ class CasinoContract{
             let response = await self.contract.send(self.account.getAccount(), data);  
             return response;   
         }catch(err){
-            console.log(err);
             throw err;
         }   
     }
@@ -159,7 +158,6 @@ class CasinoContract{
             let response = await self.contract.send(self.account.getAccount(), data);  
             return response;   
         }catch(err){
-            console.log(err);
             throw err;
         }   
     }
@@ -174,7 +172,6 @@ class CasinoContract{
             let response = await self.contract.send(self.account.getAccount(), data);
             return response;  
         }catch(err){
-            console.log(err);
             throw err;
         }
     }
@@ -206,8 +203,7 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.contract.getContract().methods.balances(address).call());
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -215,8 +211,7 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.contract.getContract().methods.totalPlayerBalance().call());
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -225,8 +220,7 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.contract.getContract().methods.maxDeposit().call());
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -236,7 +230,7 @@ class CasinoContract{
             let data = self.contract.getContract().methods.changeMaxWithdrawal(amountWithDecimals).encodeABI(); 
             return await self.contract.send(self.account.getAccount(), data);  
         }catch(err){
-            console.log(err)
+            throw err
         }
     }
 
@@ -246,7 +240,7 @@ class CasinoContract{
             let data = self.contract.getContract().methods.changeMaxDeposit(amountWithDecimals).encodeABI(); 
             return await self.contract.send(self.account.getAccount(), data);  
         }catch(err){
-            console.log(err)
+            throw err
         }
     }
 
@@ -254,8 +248,7 @@ class CasinoContract{
         try{
             return fromBigNumberToInteger(await self.erc20TokenContract.getTokenAmount(this.getAddress()));
         }catch(err){
-            console.log(err);
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -268,7 +261,7 @@ class CasinoContract{
             ).encodeABI(); 
             return await self.contract.send(self.account.getAccount(), data);  
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 
@@ -281,7 +274,6 @@ class CasinoContract{
             let response = await self.contract.send(self.account.getAccount(), data);
             return response;  
         }catch(err){
-            console.log(err);
             throw err;
         }
     }
@@ -303,7 +295,6 @@ class CasinoContract{
                 self.authorizedAddress,                     // Authorized Address
                 self.account.getAddress()              // Owner Address
             ];
-
             let res = await self.contract.deploy(
                 self.account.getAccount(), 
                 self.contract.getABI(), 
@@ -312,7 +303,6 @@ class CasinoContract{
             self.contractAddress = res.contractAddress;
             return res;
         }catch(err){
-            console.log(err)
             throw err;
         }
     }
@@ -325,7 +315,7 @@ class CasinoContract{
         try{
             return await self.contract.getContract().methods.paused().call();
         }catch(err){
-            return 'N/A';
+            throw err;
         }
     }
 
@@ -348,7 +338,7 @@ class CasinoContract{
     }
 
 
-    async depositFunds({amount, nonce}){
+    async depositFunds({amount}){
         try{
             await this.allowWithdrawalFromContract({amount});
             let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
@@ -357,7 +347,7 @@ class CasinoContract{
             ).encodeABI(); 
             return await self.contract.send(self.account.getAccount(), data);  
         }catch(err){
-            console.log(err)
+            throw err
         }
     }
 
@@ -383,7 +373,7 @@ class CasinoContract{
             })
             return true;
         }catch(err){
-            console.log(err)
+            throw err
         }
     }
 }

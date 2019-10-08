@@ -55,7 +55,7 @@ class DepositRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 

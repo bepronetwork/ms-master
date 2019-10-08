@@ -87,6 +87,10 @@ let outputs = {
             "licensesId"            : object.licensesId,
             "countriesAvailable"    : object.countriesAvailable,
             "games"                 : object.games,
+            "affiliateSetup"        : object.affiliateSetup,
+            "wallet"    : {
+                "playBalance" : object.wallet.playBalance
+            },
         }
     },
     user : (object) => {
@@ -97,12 +101,16 @@ let outputs = {
             "name"      : object.name,
             "address"   : object.address,
             "wallet"    : {
-                "playBalance" : object.wallet.playBalance
+                "playBalance" : object.wallet.playBalance,
+                "affiliateBalance"  : object.affiliate.wallet.playBalance,
             },
             "withdraws" : object.withdraws,
             "bearerToken" : object.bearerToken,
             "deposits"  : object.deposits,
-            "verifiedAccounts" : object.verifiedAccount
+            "verifiedAccounts" : object.verifiedAccount,
+            "affiliateId"  : object.affiliateLink._id,
+            "affilateLinkInfo" : object.affiliateLink,
+            "affiliateInfo" : object.affiliate
         }
     },
     deposit : (object) => {

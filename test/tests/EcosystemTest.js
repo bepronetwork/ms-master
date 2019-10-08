@@ -4,7 +4,7 @@ import {
 } from '../methods';
 
 import chai from 'chai';
-import { detectValidationErrors } from './utils';
+import { detectValidationErrors } from '../utils';
 
 const expect = chai.expect;
 

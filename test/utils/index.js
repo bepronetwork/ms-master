@@ -1,5 +1,6 @@
-import account from "../../logic/eth/models/account";
-import { globalsTest } from "../../GlobalsTest";
+import account from "../logic/eth/models/account";
+import { globalsTest } from "../GlobalsTest";
+import faker from 'faker';
 
 const detectValidationErrors = (res) => {
     if(res.message == 'Validation errors'){
@@ -20,7 +21,20 @@ const generateEthAccountWithTokensAndEthereum = async ({tokenAddress, tokenAmoun
     return acc;
 }
 
+
+const mochaAsync = (fn) => {
+    return done => {
+        fn.call().then(done, err => {
+            done(err);
+        });
+    };
+};
+
+const genData = (data) => JSON.parse(faker.fake(JSON.stringify(data)));
+
 export {
+    genData,
     detectValidationErrors,
+    mochaAsync,
     generateEthAccountWithTokensAndEthereum
 }

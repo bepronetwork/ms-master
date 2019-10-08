@@ -73,7 +73,7 @@ class WithdrawRepository extends MongoComponent{
                 });
             });
         }catch(err){
-            console.log(err)
+            throw err;
         }
     }
 

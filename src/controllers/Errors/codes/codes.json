@@ -158,5 +158,17 @@
     "039" : {
         "key" : "ERROR_TRANSACTION",
         "message"   : "Transaction Error"
+    },
+    "040" : {
+        "key" : "AFFILIATE_RETURN_NOT_VALID",
+        "message"   : "Affiliate Return Not Valid"
+    },
+    "041" : {
+        "key" : "AFFILIATE_NOT_EXISTENT",
+        "message"   : "Affiliate Link Not Valid"
+    },
+    "042" : {
+        "key" : "ERROR_AFFILIATE_EDIT",
+        "message"   : "Affiliate Structure Edit is Invalid"
     }
 }

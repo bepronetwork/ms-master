@@ -12,7 +12,7 @@ import Numbers from './logic/services/numbers';
 const testConfig = require('./config/config').default;
 const expect = chai.expect;
 global.mocha = new Mocha({});
-global.app = app;
+global.server = app;
 global.web3 = new Web3(new Web3.providers.HttpProvider((testConfig.eth.url)));
 
 export const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
@@ -53,7 +53,8 @@ global.userAccount = CONST.userAccount;
 global.masterAccount =  new account(global.web3, global.web3.eth.accounts.privateKeyToAccount(MASTER_PK))
 
 global.managerAccount = '0x22Ee8Ed6a08A7c97ECfDBFeaFF0F868f1b6fF0F4';
-
+global.CONSTANTS = CONST;
+global.test = {}
 /* BOILERPLATES FOR TYPES */
 
 var BOILERPLATES = {
@@ -106,11 +107,11 @@ const runTests = async () => {
                     let APP_TOKEN_AMOUNT =  Numbers.fromDecimals(await erc20Contract.getTokenAmount(global.ownerAccount.getAddress()), 18);
                     let MASTER_TOKEN_AMOUNT =  Numbers.fromDecimals(await erc20Contract.getTokenAmount(global.masterAccount.getAddress()), 18);
 
-                    if(USER_ETH_AMOUNT < 0.2){
+                    if(USER_ETH_AMOUNT < 0.5){
                         throw new Error(`ETH is less than 0.2 for User \nPlease recharge ETH for Address : ${global.userAccount.getAddress()}`)
                     }
 
-                    if(APP_ETH_AMOUNT < 0.2){
+                    if(APP_ETH_AMOUNT < 0.5){
                         throw new Error(`ETH is less than 0.2 for App Owner \nPlease recharge ETH for Address : ${global.ownerAccount.getAddress()}`)
                     }
 
@@ -118,13 +119,12 @@ const runTests = async () => {
                         throw new Error(`ETH is less than 1 for Master \nPlease recharge ETH for Address : ${global.masterAccount.getAddress()}`)
                     }
 
-
                     if(USER_TOKEN_AMOUNT < 50){
                         throw new Error(`Tokens are less than 50 for User \nPlease recharge Tokens for Address : ${global.userAccount.getAddress()}`)
                     }
 
                     if(APP_TOKEN_AMOUNT < 50){
-                        throw new Error(`Tokens are less than 50 for User \nPlease recharge Tokens for Address : ${global.userAccount.getAddress()}`)
+                        throw new Error(`Tokens are less than 50 for User \nPlease recharge Tokens for Address : ${global.ownerAccount.getAddress()}`)
                     }
 
                     if(MASTER_TOKEN_AMOUNT < 50){
@@ -142,6 +142,7 @@ const runTests = async () => {
     })();
 
     mocha.addFile('./test/tests/AppTest.js');
+    mocha.addFile('./test/tests/AffiliatesTest.js');
     mocha.addFile('./test/tests/EcosystemTest.js');
     mocha.addFile('./test/tests/AdminTest.js');
     mocha.addFile('./test/tests/BetTest.js');

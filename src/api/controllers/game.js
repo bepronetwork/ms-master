@@ -13,7 +13,6 @@ async function editGameTableLimit (req, res) {
         let data = await app.editGameTableLimit();
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
-        console.log(err)
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -26,7 +25,6 @@ async function editGameEdge(req, res) {
         let data = await app.editGameEdge();
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
-        console.log(err)
         MiddlewareSingleton.respondError(res, err);
 	}
 }
