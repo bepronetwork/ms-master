@@ -275,6 +275,22 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    async setIntegrationsId(app_id, integrations_id){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id }, 
+                { $set : { "integrations" : integrations_id } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
+
   
     findUserByExternalId(app_id, user_external_id){
         try{

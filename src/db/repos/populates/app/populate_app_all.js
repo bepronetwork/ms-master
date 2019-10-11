@@ -1,3 +1,4 @@
+import { populate_integrations_all } from "../integrations";
 
 let populate_app_all = [
     {
@@ -43,7 +44,13 @@ let populate_app_all = [
                 select : { '__v': 0}
             }
         ]
-    }
+    },
+    {
+        path : 'integrations',
+        model : 'Integrations',
+        select : { '__v': 0 },
+        populate : populate_integrations_all
+    },
 ] 
 
 export default populate_app_all;

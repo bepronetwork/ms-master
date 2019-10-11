@@ -3,7 +3,7 @@ import ModelComponent from './modelComponent';
 import {AppRepository} from '../db/repos';
 import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
-import { AffiliateSetup } from '.';
+import { AffiliateSetup, Integrations } from '.';
 
 class App extends ModelComponent{
 
@@ -27,7 +27,8 @@ class App extends ModelComponent{
                                 percentageOnLoss : 0.02
                             }
                         ]
-                    })
+                    }),
+                    new Integrations(params)
                 ]
             }
             );
@@ -278,6 +279,20 @@ class App extends ModelComponent{
     async editAffiliateStructure(){
         try{
             return await this.process('EditAffiliateStructure');
+        }catch(err){
+            throw err;
+        }
+    }
+
+      /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async editIntegration(){
+        try{
+            return await this.process('EditIntegration');
         }catch(err){
             throw err;
         }

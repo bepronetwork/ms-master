@@ -540,6 +540,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/integrations/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Integration
+      operationId: editIntegration
+      description: Change Integration Info
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditIntegration'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/get/auth:
     x-swagger-router-controller: app
     post:
@@ -1229,6 +1259,41 @@ definitions:
         example: 3245
         description: |
           New Table Limit
+  AppEditIntegration : 
+    type: object
+    required:
+      - app
+      - publicKey
+      - privateKey
+      - integration_id
+      - integration_type
+      - isActive
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      publicKey:
+        type : string
+        format: name
+        example: "gw293847ncv2"
+      privateKey:
+        type : string
+        format: name
+        example: "354ybv45y345y3b45yb345yb345"
+      integration_type:
+        type : string
+        format: name
+        example: "chat"
+      integration_id:
+        type : string
+        format: name
+        example: "3456g334"
+      isActive : 
+        type : boolean
+        example: true
   AppEditAffiliateStructure : 
     type: object
     required:

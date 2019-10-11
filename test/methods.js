@@ -60,7 +60,7 @@ module.exports = {
     async registerApp(params) {
         return request(global.server)
         .post('/api/app/create').send(params)
-        .then(res => res.body)
+        .then(res => {return res.body})
         
     },
     async getApp(params) {
@@ -201,6 +201,15 @@ module.exports = {
     async editGameEdge(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editEdge')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+        
+    },
+    async editAppIntegration(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/integrations/edit')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

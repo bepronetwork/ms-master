@@ -15,11 +15,15 @@ import Affiliate from './affiliate';
 import AffiliateLink from './affiliateLink';
 import AffiliateStructure from './affiliateStructure';
 import AffiliateSetup from './affiliateSetup';
+import Integrations from './integrations';
+import Chat from './chat';
 
 export {
     User,
+    Chat,
     Wallet,
     Deposit,
+    Integrations,
     Game,
     Affiliate,
     AffiliateSetup,

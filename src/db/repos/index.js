@@ -19,8 +19,12 @@ import AffiliateRepository from './affiliate';
 import AffiliateLinkRepository from './affiliateLink';
 import AffiliateStructureRepository from './affiliateStructure';
 import AffiliateSetupRepository from './affiliateSetup';
+import IntegrationsRepository from './integrations';
+import ChatRepository from './chat';
 
 export{
+    ChatRepository,
+    IntegrationsRepository,
     AffiliateLinkRepository,
     AffiliateRepository,
     AffiliateSetupRepository,

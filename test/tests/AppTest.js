@@ -19,6 +19,7 @@ import {
     editTableLimit,
     placeBet,
     getGames,
+    editAppIntegration,
     getAppAuth,
     getAppLastBets,
     addGame,
@@ -62,7 +63,7 @@ const CONST = global.CONST;
 
 context('App Testing', async () =>  {
     var ADMIN_ID, APP_ID, BEARER_TOKEN, PLATFORM_TOKEN_ADDRESS, PLATFORM_BLOCKCHAIN, PLATFORM_ADDRESS,ADMIN_BEARER_TOKEN, TOTAL_APP_LIQUIDITY_DEX,
-        TRANSACTION_TOKEN_TRANSFER_HASH, GAMES, USER_ID, USER_ADDRESS, USER_BEARER_TOKEN, ECOSYSTEM_GAMES, CASINO_CONTRACT;
+        TRANSACTION_TOKEN_TRANSFER_HASH, GAMES, USER_ID, USER_ADDRESS, USER_BEARER_TOKEN, ECOSYSTEM_GAMES, CASINO_CONTRACT, APP;
     var userPostData;
     it('🍳(setup)🍳', mochaAsync(async () => {
         await (async () => {
@@ -119,6 +120,7 @@ context('App Testing', async () =>  {
         it('should Get App Data Auth', mochaAsync(async () => {
             let get_app_model = models.apps.get_app(APP_ID);
             let res = await getAppAuth(get_app_model, BEARER_TOKEN, {id : APP_ID});
+            APP = res.data.message
             /* Set app Global Variable for Further Test */
             global.test.app = res.data.message;
             expect(res.data.status).to.equal(200);
@@ -197,6 +199,21 @@ context('App Testing', async () =>  {
         })); 
 
        
+    });
+
+    context('Integrations - Chat', async () => {
+        it('should update the integration info from app', mochaAsync(async () => {
+            let postData = {
+                app : APP_ID,
+                isActive : true,
+                integration_id : APP.integrations.chat._id,
+                publicKey : 'w934m8phxhjk',
+                privateKey : 'cghpdjgz89t9c8pp79bcmx2ed3j97sqvccge8m3p9ze7kmsck7t5a7ws4wd94675',
+                integration_type : 'live_chat'
+            }
+            let res = await editAppIntegration(postData, BEARER_TOKEN, {id : APP_ID});
+            expect(res.data.status).to.equal(200);
+        })); 
     });
 
     context('Game Integration - European Roulette', async () => {
@@ -753,7 +770,7 @@ context('App Testing', async () =>  {
             expect(res.data.status).to.equal(200);
         }));
 
-        /* 
+        
         it('All Data', mochaAsync(async () => {
             console.log("\nApp ID : " + APP_ID);
             console.log("Admin ID : " + ADMIN_ID);
@@ -761,7 +778,7 @@ context('App Testing', async () =>  {
             console.log("Platform Address : " + PLATFORM_ADDRESS);
             console.log("Token Address : " + PLATFORM_TOKEN_ADDRESS);
         }));
-        */
+        
     }));   
 });
 
