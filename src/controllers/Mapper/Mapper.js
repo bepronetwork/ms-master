@@ -51,6 +51,11 @@ let outputs = {
             "platformBlockchain"    : object.platformBlockchain,
             "platformTokenAddress"  : object.platformTokenAddress,
             "licensesId"            : object.licensesId,
+            "integrations"          : {
+                "chat" : {
+                    "publicKey" :  object.integrations.chat ? object.integrations.chat.publicKey : ''
+                }
+            },
             "countriesAvailable"    : object.countriesAvailable,
             "games"                 : object.games ? object.games.map( game => {
                 return {
