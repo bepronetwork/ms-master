@@ -1,7 +1,7 @@
 /* Stream Chat */
 import { StreamChat } from 'stream-chat';
 
-export async function getIntegrationsInfo({integrations, user_id}){
+export function getIntegrationsInfo({integrations, user_id}){
     var response = {};
     const { chat } = integrations;
     const { publicKey, privateKey } = chat;
