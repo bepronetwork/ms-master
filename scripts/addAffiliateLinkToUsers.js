@@ -16,7 +16,6 @@ class AddAffiliateLinkToUsers{
         try{
             /* Add Affiliate Setup to Apps */
             var users_all = await UsersRepository.prototype.getAll();
-            console.log(users_all.length)
             // start the progress bar with a total value of 200 and start value of 0
             bar1.start(users_all.length, 0);
             for( var i = 0; i < users_all.length; i++){   

@@ -261,6 +261,18 @@ async function editAffiliateStructure (req, res) {
 	}
 }
 
+async function editIntegration (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editIntegration();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 /**
  *
  * @param {*} req
@@ -296,6 +308,7 @@ export {
     getTransactions,
     resolveBet,
     summary,
+    editIntegration,
     finalizeAppWithdraw,
     getLastBets,
     addServices,

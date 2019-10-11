@@ -56,7 +56,8 @@ ErrorHandler.prototype.KEYS =  {
     'ERROR_TRANSACTION'                     : "039",
     'AFFILIATE_RETURN_NOT_VALID'            : "040",
     'AFFILIATE_NOT_EXISTENT'                : "041",
-    'ERROR_AFFILIATE_EDIT'                  : "042"
+    'ERROR_AFFILIATE_EDIT'                  : "042",
+    'BAD_REQUEST'                           : "043",
 }; 
 
 

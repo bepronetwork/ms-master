@@ -16,11 +16,15 @@ import AffiliateLogic from './affiliate';
 import AffiliateLinkLogic from './affiliateLink';
 import AffiliateStructureLogic from './affiliateStructure';
 import AffiliateSetupLogic from './affiliateSetup';
+import IntegrationsLogic from './integrations';
+import ChatLogic from './chat';
 
 export {
     UserLogic,
     EventsLogic,
     AppLogic,
+    IntegrationsLogic,
+    ChatLogic,
     AffiliateLinkLogic,
     AffiliateSetupLogic,
     AffiliateLogic,

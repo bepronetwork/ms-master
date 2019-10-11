@@ -1,3 +1,4 @@
+import { populate_integrations_all } from "./integrations";
 
 let populate_user = [
     {
@@ -14,7 +15,13 @@ let populate_user = [
                 path : 'wallet',
                 model : 'Wallet',
                 select : { '__v': 0}
-            }
+            },
+            {
+                path : 'integrations',
+                model : 'Integrations',
+                select : { '__v': 0},
+                populate : populate_integrations_all
+            },
         ]
     },
     {

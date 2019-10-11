@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository } from '../db/repos';
+import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDepositApp, verifytransactionHashWithdrawApp } from './services/services';
@@ -37,7 +37,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup } = params;
+        const { affiliateSetup, integrations } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -50,6 +50,7 @@ const processActions = {
 			admin_id		    : admin._id,
             name    			: params.name,
             affiliateSetup,       
+            integrations,
 			description         : params.description,
 			marketType          : params.marketType,
 			metadataJSON        : JSON.parse(params.metadataJSON),
@@ -316,6 +317,19 @@ const processActions = {
             affiliateSetup : app.affiliateSetup,
             structures
         }
+    },
+    __editIntegration : async (params) => {
+        let { app, publicKey, privateKey, integration_id, integration_type, isActive } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            publicKey,
+            app_id : app._id,
+            privateKey,
+            integration_type,
+            isActive,
+            integration_id
+        }
     }
 }
 
@@ -462,7 +476,6 @@ const progressActions = {
 
         return params;
     },
-   
     __finalizeWithdraw : async (params) => {
             
         /* Add Withdraw to user */
@@ -512,6 +525,22 @@ const progressActions = {
         /* Create Affiliate Structures */
         return await AppRepository.prototype.editAffiliateSetup(app_id, affiliateSetupId)
     },
+    __editIntegration : async (params) => {
+        let { app, publicKey, privateKey, integration_type, integration_id, isActive } = params;
+        /* Update Integrations Id Type */
+        switch(integration_type){
+            case 'live_chat' : {
+                await ChatRepository.prototype.findByIdAndUpdate(integration_id, {
+                    publicKey,
+                    privateKey, 
+                    integration_type,
+                    integration_id,
+                    isActive
+                })
+            }
+        }
+        return params;
+    }
 }
 
 /**
@@ -601,6 +630,9 @@ class AppLogic extends LogicComponent{
                 case 'EditAffiliateStructure' : {
                     return await library.process.__editAffiliateStructure(params); break;
                 };
+                case 'EditIntegration' : {
+                    return await library.process.__editIntegration(params); break;
+                };
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
                 };
@@ -683,6 +715,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;
+                };
+                case 'EditIntegration' : {
+                    return await library.progress.__editIntegration(params); break;
                 };
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;

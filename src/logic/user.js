@@ -14,6 +14,7 @@ import codes from './categories/codes';
 import { globals } from '../Globals';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
+import { getIntegrationsInfo } from './utils/integrations';
 let error = new ErrorManager();
 
 
@@ -43,12 +44,14 @@ const processActions = {
         if(!user){throwError('USER_NOT_EXISTENT')}
         var app = user.app_id; 
         var user_in_app = (app._id == params.app);
+        const { integrations } = app;
 		if(user){
 			normalized = {
 				username : user.username,
 				password : input_params.password,
                 user_in_app,
-				verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
+                verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
+                integrations : getIntegrationsInfo({integrations, user_id : user.username}),
 				...user
 			}
 		}
