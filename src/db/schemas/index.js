@@ -11,9 +11,11 @@ import {BetResultSpaceSchema} from './betResultSpace';
 import { WalletSchema } from './wallet';
 import { SecuritySchema } from './security';
 import { AffiliateStructureSchema } from './affiliateStructure';
+import { ChatSchema } from './integrations/chat';
 
 export {
     UserSchema,
+    ChatSchema,
     AppSchema,
     WalletSchema,
     SecuritySchema,

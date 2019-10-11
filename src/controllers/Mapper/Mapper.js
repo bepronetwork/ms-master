@@ -51,6 +51,11 @@ let outputs = {
             "platformBlockchain"    : object.platformBlockchain,
             "platformTokenAddress"  : object.platformTokenAddress,
             "licensesId"            : object.licensesId,
+            "integrations"          : {
+                "chat" : {
+                    "publicKey" :  object.integrations.chat ? object.integrations.chat.publicKey : ''
+                }
+            },
             "countriesAvailable"    : object.countriesAvailable,
             "games"                 : object.games ? object.games.map( game => {
                 return {
@@ -78,6 +83,7 @@ let outputs = {
             "isValid"               : object.isValid,
             "currencyTicker"        : object.currencyTicker,
             "decimals"              : object.decimals,
+            "integrations"          : object.integrations,
             "services"              : object.services,
             "withdraws"             : object.withdraws,
             "deposits"              : object.deposits,
@@ -108,6 +114,7 @@ let outputs = {
             "bearerToken" : object.bearerToken,
             "deposits"  : object.deposits,
             "verifiedAccounts" : object.verifiedAccount,
+            "integrations" : object.integrations,
             "affiliateId"  : object.affiliateLink._id,
             "affilateLinkInfo" : object.affiliateLink,
             "affiliateInfo" : object.affiliate

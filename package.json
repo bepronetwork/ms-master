@@ -13,8 +13,8 @@
         "md-docs": "swagger-markdown -i api/swagger/swagger.yaml",
         "generate-docs": "docsify init docs",
         "swagger": "swagger project edit",
-        "generate-result-space": "node scripts/createResultSpace",  
-        "scripts" : "babel-node scripts --nopresets es2015,stage-2"
+        "generate-result-space": "node scripts/createResultSpace",
+        "scripts": "babel-node scripts --nopresets es2015,stage-2"
     },
     "dependencies": {
         "abi-decoder": "^1.2.0",
@@ -91,6 +91,7 @@
         "requestify": "^0.2.5",
         "serve-favicon": "~2.4.2",
         "socket.io": "^2.0.4",
+        "stream-chat": "^1.1.5",
         "stripe": "^5.5.0",
         "swagger-express-mw": "^0.7.0",
         "throng": "^4.0.0",

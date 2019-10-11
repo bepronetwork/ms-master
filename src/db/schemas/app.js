@@ -23,6 +23,7 @@ AppSchema.prototype.schema =  {
     deposits            : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Deposit'}],
     withdraws           : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Withdraw'}],
     affiliateSetup      : { type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateSetup'},
+    integrations        : { type: mongoose.Schema.Types.ObjectId, ref: 'Integrations'},
     countriesAvailable  : [{ type: Number}],
     bearerToken         : { type: String },
     platformAddress     : { type : String },

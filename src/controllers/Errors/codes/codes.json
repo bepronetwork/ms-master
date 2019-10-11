@@ -170,5 +170,9 @@
     "042" : {
         "key" : "ERROR_AFFILIATE_EDIT",
         "message"   : "Affiliate Structure Edit is Invalid"
+    },
+    "043" : {
+        "key" : "BAD_REQUEST",
+        "message"   : "Bad Request"
     }
 }

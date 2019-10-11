@@ -315,6 +315,16 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.EDIT_EDGE_NOT_VALID));
                     break;
                 };
+                case 'EditIntegration' : {
+                    // Verify App
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                       libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT));
+                    // Verify if hsa fields
+                    if(!object.publicKey || !object.privateKey){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_REQUEST));
+                    }
+                    break;
+                };
             }
         }catch(err){
             throw err
@@ -417,6 +427,17 @@ class ErrorManager {
         }
     }
 
+    integrations = function (object, type){
+        try{
+            switch(type){
+                
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+
     affiliateLink = function (affiliateLink, type){
         try{
             switch(type){
@@ -430,6 +451,16 @@ class ErrorManager {
         }
     }
 
+
+    chat = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
 
     affiliate = function (object, type){
         try{
