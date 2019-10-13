@@ -13,7 +13,7 @@ import { SecuritySchema } from './security';
 import { AffiliateStructureSchema } from './affiliateStructure';
 import { ChatSchema } from './integrations/chat';
 import { CustomizationSchema } from './customization';
-import { TopBarSchema } from './customization/topBar';
+import { TopBarSchema} from './customization/topBar';
 
 export {
     UserSchema,
