@@ -273,6 +273,19 @@ async function editIntegration (req, res) {
 	}
 }
 
+
+async function editTopBar (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editTopBar();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 /**
  *
  * @param {*} req
@@ -293,6 +306,7 @@ async function updateWalletApp (req, res) {
 
 export {
     createApp,
+    editTopBar,
     getApp,
     createGame,
     addBlockchainInformation,

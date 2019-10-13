@@ -4,9 +4,10 @@ import faker from 'faker';
 
 const detectValidationErrors = (res) => {
     if(res.message == 'Validation errors'){
-        return res.errors[0];
+        console.log(res.errors[0]);
+        return true;
     }else{
-        return null;
+        return false;
     }
 }
 

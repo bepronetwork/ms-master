@@ -1,4 +1,5 @@
-import { populate_integrations_all } from "./integrations";
+import populate_integrations_all from "./integrations/all";
+
 
 let populate_user = [
     {

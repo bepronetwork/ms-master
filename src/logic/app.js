@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository } from '../db/repos';
+import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository, TopBarRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDepositApp, verifytransactionHashWithdrawApp } from './services/services';
@@ -37,7 +37,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations } = params;
+        const { affiliateSetup, integrations, customization } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -50,6 +50,7 @@ const processActions = {
 			admin_id		    : admin._id,
             name    			: params.name,
             affiliateSetup,       
+            customization,
             integrations,
 			description         : params.description,
 			marketType          : params.marketType,
@@ -319,17 +320,19 @@ const processActions = {
         }
     },
     __editIntegration : async (params) => {
-        let { app, publicKey, privateKey, integration_id, integration_type, isActive } = params;
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return params;
+    },
+    __editTopBar  : async (params) => {
+        let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
-            publicKey,
-            app_id : app._id,
-            privateKey,
-            integration_type,
-            isActive,
-            integration_id
-        }
+            ...params,
+            app
+        };
     }
 }
 
@@ -526,7 +529,7 @@ const progressActions = {
         return await AppRepository.prototype.editAffiliateSetup(app_id, affiliateSetupId)
     },
     __editIntegration : async (params) => {
-        let { app, publicKey, privateKey, integration_type, integration_id, isActive } = params;
+        let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         /* Update Integrations Id Type */
         switch(integration_type){
             case 'live_chat' : {
@@ -539,6 +542,17 @@ const progressActions = {
                 })
             }
         }
+        return params;
+    },
+    __editTopBar  : async (params) => {
+        let { app, backgroundColor, textColor, text, isActive } = params;
+        const { topBar } = app.customization;
+        await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
+            textColor,
+            backgroundColor, 
+            text,
+            isActive
+        })
         return params;
     }
 }
@@ -636,6 +650,9 @@ class AppLogic extends LogicComponent{
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
                 };
+                case 'EditTopBar' : {
+                    return await library.process.__editTopBar(params); break;
+                };
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
                 };
@@ -718,6 +735,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditIntegration' : {
                     return await library.progress.__editIntegration(params); break;
+                };
+                case 'EditTopBar' : {
+                    return await library.progress.__editTopBar(params); break;
                 };
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;

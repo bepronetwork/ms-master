@@ -21,9 +21,13 @@ import AffiliateStructureRepository from './affiliateStructure';
 import AffiliateSetupRepository from './affiliateSetup';
 import IntegrationsRepository from './integrations';
 import ChatRepository from './chat';
+import CustomizationRepository from './customization';
+import TopBarRepository from './topBar';
 
 export{
     ChatRepository,
+    TopBarRepository,
+    CustomizationRepository,
     IntegrationsRepository,
     AffiliateLinkRepository,
     AffiliateRepository,

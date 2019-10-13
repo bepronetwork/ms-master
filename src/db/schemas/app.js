@@ -24,6 +24,7 @@ AppSchema.prototype.schema =  {
     withdraws           : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Withdraw'}],
     affiliateSetup      : { type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateSetup'},
     integrations        : { type: mongoose.Schema.Types.ObjectId, ref: 'Integrations'},
+    customization       : { type: mongoose.Schema.Types.ObjectId, ref: 'Customization'},
     countriesAvailable  : [{ type: Number}],
     bearerToken         : { type: String },
     platformAddress     : { type : String },

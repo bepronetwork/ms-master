@@ -1,4 +1,5 @@
-import { populate_integrations_all } from "../integrations";
+import populate_integrations_all from "../integrations/all";
+import populate_customization_all from "../customization/all";
 
 let populate_app_all = [
     {
@@ -50,6 +51,12 @@ let populate_app_all = [
         model : 'Integrations',
         select : { '__v': 0 },
         populate : populate_integrations_all
+    },
+    {
+        path : 'customization',
+        model : 'Customization',
+        select : { '__v': 0 },
+        populate : populate_customization_all
     },
 ] 
 

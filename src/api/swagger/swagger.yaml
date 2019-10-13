@@ -510,6 +510,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/topBar : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Top Bar Customization
+      operationId: editTopBar
+      description: Change Table Limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationTopBar'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
   /app/games/editEdge:
     x-swagger-router-controller: game
     post:
@@ -1259,6 +1290,36 @@ definitions:
         example: 3245
         description: |
           New Table Limit
+  AppCustomizationTopBar : 
+    type: object
+    required:
+      - app
+      - backgroundColor
+      - textColor
+      - text
+      - isActive
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      backgroundColor:
+        type : string
+        format: name
+        example: "#ccc"
+      textColor:
+        type : string
+        format: name
+        example: "#ccc"
+      text:
+        type : string
+        format: name
+        example: "Hey the website is up!"
+      isActive : 
+        type : boolean
+        example: true
   AppEditIntegration : 
     type: object
     required:

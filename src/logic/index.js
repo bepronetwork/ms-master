@@ -18,12 +18,16 @@ import AffiliateStructureLogic from './affiliateStructure';
 import AffiliateSetupLogic from './affiliateSetup';
 import IntegrationsLogic from './integrations';
 import ChatLogic from './chat';
+import CustomizationLogic from './customization';
+import TopBarLogic from './topBar';
 
 export {
     UserLogic,
+    TopBarLogic,
     EventsLogic,
     AppLogic,
     IntegrationsLogic,
+    CustomizationLogic,
     ChatLogic,
     AffiliateLinkLogic,
     AffiliateSetupLogic,

@@ -3,7 +3,7 @@ import ModelComponent from './modelComponent';
 import {AppRepository} from '../db/repos';
 import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
-import { AffiliateSetup, Integrations } from '.';
+import { AffiliateSetup, Integrations, Customization } from '.';
 
 class App extends ModelComponent{
 
@@ -28,7 +28,8 @@ class App extends ModelComponent{
                             }
                         ]
                     }),
-                    new Integrations(params)
+                    new Integrations(params),
+                    new Customization(params)
                 ]
             }
             );
@@ -293,6 +294,19 @@ class App extends ModelComponent{
     async editIntegration(){
         try{
             return await this.process('EditIntegration');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTopBar(){
+        try{
+            return await this.process('EditTopBar');
         }catch(err){
             throw err;
         }

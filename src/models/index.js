@@ -17,12 +17,16 @@ import AffiliateStructure from './affiliateStructure';
 import AffiliateSetup from './affiliateSetup';
 import Integrations from './integrations';
 import Chat from './chat';
+import Customization from './customization';
+import TopBar from './topBar';
 
 export {
     User,
     Chat,
+    TopBar,
     Wallet,
     Deposit,
+    Customization,
     Integrations,
     Game,
     Affiliate,
