@@ -12,9 +12,13 @@ import { WalletSchema } from './wallet';
 import { SecuritySchema } from './security';
 import { AffiliateStructureSchema } from './affiliateStructure';
 import { ChatSchema } from './integrations/chat';
+import { CustomizationSchema } from './customization';
+import { TopBarSchema} from './customization/topBar';
 
 export {
     UserSchema,
+    TopBarSchema,
+    CustomizationSchema,
     ChatSchema,
     AppSchema,
     WalletSchema,

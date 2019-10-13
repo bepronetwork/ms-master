@@ -205,7 +205,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => {return res.body})
-        
+    },
+    async editTopBarCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/topBar')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
     },
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
