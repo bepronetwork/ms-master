@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository, TopBarRepository } from '../db/repos';
+import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDepositApp, verifytransactionHashWithdrawApp } from './services/services';
@@ -13,6 +13,7 @@ import codes from './categories/codes';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
+import GoogleStorageSingleton from './third-parties/googleStorage';
 let error = new ErrorManager();
 
 
@@ -325,7 +326,7 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
-    __editTopBar  : async (params) => {
+    __editTopBar : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -333,7 +334,16 @@ const processActions = {
             ...params,
             app
         };
-    }
+    },
+    __editBanners : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
 }
 
 
@@ -554,7 +564,19 @@ const progressActions = {
             isActive
         })
         return params;
-    }
+    },
+    __editBanners : async (params) => {
+        let { app, autoDisplay, banners } = params;
+        let ids = await Promise.all(banners.map( b => {
+            return GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b});
+        }))
+        await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
+            autoDisplay,
+            ids
+        })
+        // Save info on Customization Part
+        return params;
+    },
 }
 
 /**
@@ -653,6 +675,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
+                case 'EditBanners' : {
+                    return await library.process.__editBanners(params); break;
+                };
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
                 };
@@ -739,6 +764,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;
                 };
+                case 'EditBanners' : {
+                    return await library.progress.__editBanners(params); break;
+                };
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;
                 };
@@ -751,6 +779,7 @@ class AppLogic extends LogicComponent{
                 case 'GetPopularNumbers' : {
 					return await library.progress.__getPopularNumbers(params); break;
                 };
+                
 			}
 		}catch(error){
 			throw error;

@@ -286,6 +286,19 @@ async function editTopBar (req, res) {
 	}
 }
 
+async function editBanners(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editBanners();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+
 /**
  *
  * @param {*} req
@@ -323,6 +336,7 @@ export {
     resolveBet,
     summary,
     editIntegration,
+    editBanners,
     finalizeAppWithdraw,
     getLastBets,
     addServices,
