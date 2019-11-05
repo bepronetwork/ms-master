@@ -20,11 +20,13 @@ import IntegrationsLogic from './integrations';
 import ChatLogic from './chat';
 import CustomizationLogic from './customization';
 import TopBarLogic from './topBar';
+import BannersLogic from './banners';
 
 export {
     UserLogic,
     TopBarLogic,
     EventsLogic,
+    BannersLogic,
     AppLogic,
     IntegrationsLogic,
     CustomizationLogic,
