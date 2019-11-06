@@ -14,7 +14,7 @@ import { PORT } from './config';
 //---------CODING-CHOICES--------------//
 
 //app.use(cookieParser());
-app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.json({limit: '5mb'}));
 //app.use(bodyParser.urlencoded({extended: true}));
 //app.use(bodyParser.json());
 
