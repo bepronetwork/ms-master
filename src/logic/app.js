@@ -568,7 +568,7 @@ const progressActions = {
     __editBanners : async (params) => {
         let { app, autoDisplay, banners } = params;
         let ids = await Promise.all(banners.map( b => {
-            if(!src.includes("https")){
+            if(src.includes("https")){
                 /* If it is a link already */
                 return src;
             }else{
