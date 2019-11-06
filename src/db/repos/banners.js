@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { CustomizationSchema } from '../schemas';
+import { BannersSchema } from '../schemas';
 
 /**
  * Accounts database interaction class.
@@ -13,24 +13,24 @@ import { CustomizationSchema } from '../schemas';
  */
 
 
-class CustomizationRepository extends MongoComponent{
+class BannersRepository extends MongoComponent{
 
     constructor(){
-        super(CustomizationSchema)
+        super(BannersSchema)
     }
     /**
-     * @function setCustomizationModel
-     * @param Customization Model
-     * @return {Schema} CustomizationModel
+     * @function setBannersModel
+     * @param Banners Model
+     * @return {Schema} BannersModel
      */
 
-    setModel = (Customization) => {
-        return CustomizationRepository.prototype.schema.model(Customization)
+    setModel = (Banners) => {
+        return BannersRepository.prototype.schema.model(Banners)
     }
 
     findById(_id){ 
         return new Promise( (resolve, reject) => {
-            CustomizationRepository.prototype.schema.model.findById(_id)
+            BannersRepository.prototype.schema.model.findById(_id)
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -38,12 +38,13 @@ class CustomizationRepository extends MongoComponent{
         });
     }
 
-    setBannerId(_id, banner_id){
+    findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
-            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+            BannersRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "banners" : banner_id,
+                    "ids"          : newStructure.ids,
+                    "autoDisplay"   : newStructure.autoDisplay
                 } },
                 { 'new': true })
                 .exec( (err, item) => {
@@ -56,6 +57,6 @@ class CustomizationRepository extends MongoComponent{
 
 }
 
-CustomizationRepository.prototype.schema = new CustomizationSchema();
+BannersRepository.prototype.schema = new BannersSchema();
 
-export default CustomizationRepository;
+export default BannersRepository;

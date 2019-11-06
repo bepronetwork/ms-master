@@ -1,7 +1,7 @@
 import { CustomizationLogic } from '../logic';
 import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
-import { TopBar } from '.';
+import { TopBar, Banners } from '.';
 
 class Customization extends ModelComponent{
 
@@ -17,7 +17,8 @@ class Customization extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new TopBar(params)
+                    new TopBar(params),
+                    new Banners(params)
                 ]
             }
             );
