@@ -568,9 +568,9 @@ const progressActions = {
     __editBanners : async (params) => {
         let { app, autoDisplay, banners } = params;
         let ids = await Promise.all(banners.map( b => {
-            if(src.includes("https")){
+            if(b.includes("https")){
                 /* If it is a link already */
-                return src;
+                return b;
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b});
