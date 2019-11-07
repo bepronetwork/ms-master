@@ -41,7 +41,7 @@ class CasinoContract{
      */
 
     async __init__(){
-        try{
+        try{ 
             let contractDepolyed = await this.deploy();
             let response = await this.sendTokensToCasinoContract(self.tokenTransferAmount);
             this.__assert(contractDepolyed);
