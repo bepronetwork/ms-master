@@ -111,11 +111,12 @@ const processActions = {
             app : params.app,
             ownerAddress : params.address,
             decimals : params.decimals,
-            authorizedAddress : params.authorizedAddress,
             currencyTicker : params.currencyTicker,
             platformAddress : params.platformAddress, 
             platformBlockchain : params.platformBlockchain, 
-            platformTokenAddress : params.platformTokenAddress 
+            platformTokenAddress : params.platformTokenAddress ,
+            authorizedAddresses : params.authorizedAddresses,
+            croupierAddress : params.croupierAddress
         }
 
 		return res;

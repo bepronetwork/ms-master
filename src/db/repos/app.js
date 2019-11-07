@@ -78,15 +78,7 @@ class AppRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findByIdAndUpdate(
                 app_id, 
-                { $set: { 
-                    "currencyTicker" : params.currencyTicker,
-                    "decimals"      : params.decimals,
-                    "ownerAddress"   : new String(params.ownerAddress).trim(),
-                    "authorizedAddress"   : new String(params.authorizedAddress).trim(),
-                    "platformAddress" : new String(params.platformAddress).trim(),
-                    "platformBlockchain" :  new String(params.platformBlockchain).trim(),
-                    "platformTokenAddress" : new String(params.platformTokenAddress).trim()
-                } },
+                { $set: params },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){reject(err)}

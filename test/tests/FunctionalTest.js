@@ -131,7 +131,8 @@ context('Functional Testing', async () =>  {
                         maxWithdrawal : CONST.maxWithdrawal, 
                         acc : eth_account_0,
                         decimals : CONST.decimals,
-                        authorizedAddress : global.managerAccount
+                        authorizedAddresses : [CONST.ownerAccount.getAddress()],
+                        croupierAddress            : global.managerAccount,
                     });
 
                     PLATFORM_TOKEN_ADDRESS =  res_deploy.platformTokenAddress;
@@ -143,7 +144,8 @@ context('Functional Testing', async () =>  {
                         platformAddress : PLATFORM_ADDRESS,
                         decimals : CONST.decimals,
                         currencyTicker : CONST.currencyTicker,
-                        authorizedAddress : global.managerAccount,
+                        authorizedAddresses : [CONST.ownerAccount.getAddress()],
+                        croupierAddress            : global.managerAccount,
                         address         : eth_account_0.getAddress(),
                         platformTokenAddress : PLATFORM_TOKEN_ADDRESS,
                         platformBlockchain : PLATFORM_BLOCKCHAIN
