@@ -267,15 +267,6 @@ module.exports = {
         .then(res => {return res.body})
         
     },
-    async finalizeWithdraw(params, bearerToken, payload){
-        return request(global.server)
-        .post('/api/users/finalizeWithdraw')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => {return res.body})
-        
-    },
     async cancelAppWithdraw(params, bearerToken){
         return request(global.server)
         .post('/api/app/cancelWithdraw')
@@ -292,15 +283,7 @@ module.exports = {
         .send(params)
         .then(res => {return res.body})    
     },
-    async finalizeAppWithdraw(params, bearerToken, payload){
-        return request(global.server)
-        .post('/api/app/finalizeWithdraw')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => {return res.body})
-        
-    },
+
     async getEcosystemData(params){
         return request(global.server)
         .get('/api/ecosystem/all')
