@@ -439,6 +439,17 @@ class ErrorManager {
         }
     }
 
+
+    banner = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     customization = function (object, type){
         try{
             switch(type){

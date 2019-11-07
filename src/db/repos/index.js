@@ -23,10 +23,12 @@ import IntegrationsRepository from './integrations';
 import ChatRepository from './chat';
 import CustomizationRepository from './customization';
 import TopBarRepository from './topBar';
+import BannersRepository from './banners';
 
 export{
     ChatRepository,
     TopBarRepository,
+    BannersRepository,
     CustomizationRepository,
     IntegrationsRepository,
     AffiliateLinkRepository,

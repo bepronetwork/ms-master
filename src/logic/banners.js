@@ -40,12 +40,13 @@ const processActions = {
   
 const progressActions = {
 	__register : async (params) => {
-		try{            
-            let customization = await self.save(params);
+		try{
+            
+            let Banner = await self.save(params);
         
 			return {
-				...customization,
-				type : 'customization'
+				...Banner,
+				type : 'banners'
 			};
 		}catch(err){
 			throw err;
@@ -54,7 +55,7 @@ const progressActions = {
 }
 
 /**
- * Main Customization logic.
+ * Main Banner logic.
  *
  * @class
  * @memberof logic
@@ -67,14 +68,14 @@ const progressActions = {
  * @param {ZSchema} schema
  * @param {Object} logger
  * @param {function} cb - Callback function
- * @property {Customization_model} model
- * @property {Customization_schema} schema
+ * @property {Banner_model} model
+ * @property {Banner_schema} schema
  * @returns {setImmediate} error, this
  * @todo Add description for the params
  */
 
 
-class CustomizationLogic extends LogicComponent {
+class BannersLogic extends LogicComponent {
 	constructor(scope) {
 		super(scope);
 		self = this;
@@ -92,10 +93,10 @@ class CustomizationLogic extends LogicComponent {
 
 
     /**
-	 * Validates Customization schema.
+	 * Validates Banner schema.
 	 *
-	 * @param {Customization} Customization
-	 * @returns {Customization} Customization
+	 * @param {Banner} Banner
+	 * @returns {Banner} Banner
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
@@ -111,16 +112,16 @@ class CustomizationLogic extends LogicComponent {
 	}
 
 	 /**
-	 * Tests Customization schema.
+	 * Tests Banner schema.
 	 *
-	 * @param {Customization} Customization
-	 * @returns {Customization} Customization
+	 * @param {Banner} Banner
+	 * @returns {Banner} Banner
 	 * @throws {string} On schema.validate failure
 	 */
 
 	testParams(params, action){
 		try{
-			error.customization(params, action);
+			error.banner(params, action);
 		}catch(err){
 			throw err;
 		}
@@ -142,4 +143,4 @@ class CustomizationLogic extends LogicComponent {
 }
 
 // Export Default Module
-export default CustomizationLogic;
+export default BannersLogic;
