@@ -123,7 +123,11 @@ context('App Testing', async () =>  {
             APP = res.data.message
             /* Set app Global Variable for Further Test */
             global.test.app = res.data.message;
-            expect(res.data.status).to.equal(200);
+            const { message, status } = res.data;
+            expect(status).to.equal(200);
+            expect(message.authorizedAddresses.length).to.equal(0);
+            expect(message.croupierAddress).to.equal('N/A');
+
         })); 
 
         it('should Get App Data', mochaAsync(async () => {
@@ -148,7 +152,8 @@ context('App Testing', async () =>  {
                 maxDeposit : CONST.maxDeposit, 
                 maxWithdrawal : CONST.maxWithdrawal, 
                 decimals : CONST.decimals,
-                authorizedAddress : global.managerAccount
+                authorizedAddresses : [CONST.ownerAccount.getAddress()],
+                croupierAddress : global.managerAccount
             });
 
             CASINO_CONTRACT = res_deploy.casinoContract;
@@ -166,13 +171,23 @@ context('App Testing', async () =>  {
                 platformAddress : PLATFORM_ADDRESS,
                 decimals : CONST.decimals,
                 currencyTicker : CONST.currencyTicker,
-                authorizedAddress : global.managerAccount,
+                authorizedAddresses : [CONST.ownerAccount.getAddress()],
+                croupierAddress : global.managerAccount,
                 address         : CONST.ownerAccount.getAddress(),
                 platformTokenAddress : PLATFORM_TOKEN_ADDRESS,
                 platformBlockchain : PLATFORM_BLOCKCHAIN
             });
             let res = await addBlockchainInformation(add_blockchain_info_model, BEARER_TOKEN, {id : APP_ID});
             expect(res.data.status).to.equal(200);
+            /* Get new Data */
+            let get_app_model = models.apps.get_app(APP_ID);
+            res = await getAppAuth(get_app_model, BEARER_TOKEN, {id : APP_ID});
+            const { message, status } = res.data;
+            global.test.app = message;
+            expect(status).to.equal(200);
+            expect(message.authorizedAddresses.length).to.equal(1);
+            expect(message.croupierAddress).to.not.be.null;
+    
         })); 
 
 

@@ -1758,16 +1758,23 @@ definitions:
         example: 18
         description: |
           Blockchain Contract Decimal Reading 
-      authorizedAddress : 
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Address that will be used to Update States on the Platform
       address :
         type : string
         example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
         description: |
           Address that will be used for deposit and withdrawals
+      croupierAddress : 
+        type : string
+        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
+        description: |
+          Address that will be used for controlling the operator
+      authorizedAddresses : 
+        type : array
+        items : 
+          type : string
+          example: ["0x539ac1406CDd80D1be443f61ba0acAA3da80027F"]
+          description: |
+            Address that manages withdraws
   AuthAdminRequest : 
     type: object
     required:

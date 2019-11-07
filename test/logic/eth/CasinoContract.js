@@ -57,7 +57,7 @@ class CasinoContract{
     async authorize(addr){
         try{
             let data = await self.contract.getContract().methods.authorize(
-                addr
+                this.getAddress()
             ).encodeABI();
             let res =  await self.contract.send(self.account.getAccount(), data);
             return res;
@@ -292,7 +292,7 @@ class CasinoContract{
             
             let params = [
                 self.erc20TokenContract.getAddress(),  // ERC-20 Token Contract
-                self.authorizedAddress,                     // Authorized Address
+                self.account.getAddress(),             // Authorized Address
                 self.account.getAddress()              // Owner Address
             ];
             let res = await self.contract.deploy(
@@ -351,17 +351,6 @@ class CasinoContract{
         }
     }
 
-    async withdrawFunds({amount}){
-        try{
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
-            let data = self.contract.getContract().methods.withdraw(
-                amountWithDecimals
-            ).encodeABI(); 
-            return await self.contract.send(self.account.getAccount(), data);  
-        }catch(err){
-            throw err;
-        }
-    }
 
     async allowWithdrawalFromContract({amount}){
         try{

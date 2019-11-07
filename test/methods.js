@@ -395,29 +395,6 @@ module.exports = {
             throw err;
         }
     },
-    async withdrawUser({amount, platformAddress, tokenAddress, nonce, acc=null}){
-        try{
-            let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
-
-            let casinoContract = new CasinoContract({
-                web3 : global.web3,
-                account : acc ? acc : global.userAccount,
-                erc20TokenContract : erc20Contract,
-                contractAddress: platformAddress,
-                decimals: 18
-            })
-           
-            /* Deposit Tokens */
-            return await casinoContract.withdrawFunds({
-                amount,
-                nonce : nonce
-            });
-
-        }catch(err){
-            console.log(err)
-            throw err;
-        }
-    },
     async withdrawApp({amount, platformAddress, tokenAddress,acc=null}){
         try{
             let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
