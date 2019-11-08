@@ -42,24 +42,6 @@ class WithdrawRepository extends MongoComponent{
         });
     }
 
-    finalizeWithdraw(id, params){
-        return new Promise( (resolve, reject) => {
-            WithdrawRepository.prototype.schema.model.findByIdAndUpdate(id,
-                { $set: 
-                    { 
-                        amount                  : params.amount,
-                        done                    : params.done,
-                        confirmed               : params.confirmed,
-                        transactionHash         : params.transactionHash,
-                        last_update_timestamp   : params.last_update_timestamp
-                }},{ new: true }
-            )
-            .exec( (err, Withdraw) => {
-                if(err) { reject(err)}
-                resolve(Withdraw);
-            });
-        });
-    }
 
     getTransactionsByApp(app, filters=[]){
         try{

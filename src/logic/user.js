@@ -159,91 +159,6 @@ const processActions = {
             throw err;
         }
     },
-    __finalizeWithdraw : async (params) => {
-        try{
-            var params_input = params;
-            var transaction_params = { }, tokenDifferenceDecentralized;
-
-            /* Get User Id */
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            let app = await AppRepository.prototype.findAppById(params.app);
-            if(!app){throwError('APP_NOT_EXISTENT')}
-            if(!user){throwError('USER_NOT_EXISTENT')}
-            
-            /* Create Casino Contract Instance */
-            let casinoContract = new CasinoContract({
-                web3                : globals.web3,
-                contractAddress     : app.platformAddress,
-                tokenAddress        : app.platformTokenAddress
-            })
-
-            /* Verify if User is in App */
-            let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
-            
-            /* Verify if this transactionHashs was already added */
-            let withdraw = await WithdrawRepository.prototype.getWithdrawByTransactionHash(params.transactionHash);
-            let wasAlreadyAdded = withdraw ? true : false;
-
-            withdraw = await WithdrawRepository.prototype.findWithdrawById(params.withdraw_id);
-            let withdrawExists = withdraw ? true : false;
-
-            /* Verify App Balance in Smart-Contract */
-            let currentOpenWithdrawingAmount = await casinoContract.getApprovedWithdrawAmount(
-                {address : user.address, decimals : app.decimals});
-            
-            var hashWithdrawingPositionOpen = (currentOpenWithdrawingAmount != 0 ) ? true : false;
-
-            /* Verify User Balance in Smart-Contract */
-            let newBalance = Numbers.toFloat(Numbers.fromDecimals(await casinoContract.getUserBalance(params.address), app.decimals));
-            
-            /* Verify User Balance in API */
-            let currentAPIBalance = Numbers.toFloat(user.wallet.playBalance);
-    
-            /* Withdraw Occured in the Smart-Contract */
-            transaction_params = await verifytransactionHashWithdrawUser(
-                'eth', params_input.transactionHash, params_input.tokenAmount, app.platformAddress, app.decimals
-            )
-
-            let transactionIsValid = transaction_params.isValid;
-
-            if(transactionIsValid){
-                /* Transaction is Valid */
-                tokenDifferenceDecentralized = Numbers.toFloat(Numbers.fromDecimals(transaction_params.tokenAmount, app.decimals));
-            }else{
-                /* Transaction is Not Valid */
-                tokenDifferenceDecentralized = undefined;
-            }
-            /* Verify if User Address is Valid */
-            let isValidAddress = (new String(user.address).toLowerCase() == new String(transaction_params.tokensTransferedTo).toLowerCase())
-            
-            
-            let res = {
-                withdrawExists,
-                user_in_app,
-                withdraw_id : params.withdraw_id,
-                transactionIsValid,
-                hashWithdrawingPositionOpen,
-                isValidAddress,
-                newDecentralizedBalance : newBalance,
-                currentAPIBalance,
-                newBalance,
-                currentOpenWithdrawingAmount,
-                casinoContract : casinoContract,
-                wasAlreadyAdded,
-                transactionHash : params.transactionHash,
-                currencyTicker      : app.currencyTicker,
-                creationDate        : new Date(),
-                app,
-                user,
-                amount : -Math.abs(Numbers.toFloat(tokenDifferenceDecentralized)),
-                withdrawAddress : user.address
-            }
-            
-            return res;
-        }catch(err){
-            throw err;
-        }
-    },
     __createApiToken : async (params) => {
 		let normalized = {
             ...params,
@@ -331,21 +246,6 @@ const progressActions = {
             throw err;
         }
     },
-    __finalizeWithdraw : async (params) => {
-        try{
-            /* Add Withdraw to user */
-            await WithdrawRepository.prototype.finalizeWithdraw(params.withdraw_id, {
-                transactionHash         : params.transactionHash,
-                last_update_timestamp   : new Date(),                             
-                amount                  : Numbers.toFloat(Math.abs(params.amount)),
-                confirmed               : true,
-                done                    : params.withdrawExists
-            });
-            return params;
-        }catch(err){
-            throw err;
-        }
-    },
     __createApiToken : async (params) => {
         let res = await UsersRepository.prototype.createAPIToken(params.id, params.bearerToken);
 		return res;
@@ -415,9 +315,6 @@ class UserLogic extends LogicComponent {
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); 
                 };
-                case 'FinalizeWithdraw' : {
-					return await library.process.__finalizeWithdraw(params); 
-                };
                 case 'CreateAPIToken' : {
 					return await library.process.__createApiToken(params); break;
                 };
@@ -461,9 +358,6 @@ class UserLogic extends LogicComponent {
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); 
-                };
-                case 'FinalizeWithdraw' : {
-					return await library.progress.__finalizeWithdraw(params); 
                 };
                 case 'CreateAPIToken' : {
 					return await library.progress.__createApiToken(params); break;

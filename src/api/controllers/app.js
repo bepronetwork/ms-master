@@ -237,17 +237,6 @@ async function addBlockchainInformation (req, res) {
 }
 
 
-async function finalizeAppWithdraw (req, res) {
-    try{
-        SecuritySingleton.verify({type : 'app', req});
-        let params = req.body;
-		let app = new App(params);
-		let data = await app.finalizeWithdraw();
-        MiddlewareSingleton.respond(res, data);
-	}catch(err){
-        MiddlewareSingleton.respondError(res, err);
-	}
-}
 
 async function editAffiliateStructure (req, res) {
     try{
@@ -337,7 +326,6 @@ export {
     summary,
     editIntegration,
     editBanners,
-    finalizeAppWithdraw,
     getLastBets,
     addServices,
     updateWalletApp

@@ -63,18 +63,6 @@ async function getBets (req, res) {
 	}
 }
 
-async function finalizeWithdraw (req, res) {
-    try{
-        SecuritySingleton.verify({type : 'user', req});
-        let params = req.body;
-		let user = new User(params);
-        let data = await user.finalizeWithdraw();
-        MiddlewareSingleton.respond(res, data);
-	}catch(err){
-        MiddlewareSingleton.respondError(res, err);
-	}
-}
-
 /**
  * @param {*} req
  * @param {*} res
@@ -98,6 +86,5 @@ export {
 	loginUser,
     userSummary,
     getBets,
-    finalizeWithdraw,
     updateWallet
 }

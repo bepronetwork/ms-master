@@ -228,20 +228,6 @@ class App extends ModelComponent{
         }
     }
 
-      
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
-
-    async finalizeWithdraw(){
-        try{
-            return await this.process('FinalizeWithdraw');
-        }catch(err){
-            throw err;
-        }
-    }
-
      
      /**
      * @param {String} 

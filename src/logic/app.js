@@ -182,74 +182,6 @@ const processActions = {
 
         return res;
     },
-    __finalizeWithdraw : async (params) => {
-
-        var params_input = params;
-        var transaction_params = { }, tokenDifferenceDecentralized;
-
-        /* Get App By Id */
-        let app = await AppRepository.prototype.findAppById(params.app);
-        if(!app){throwError('APP_NOT_EXISTENT')}
-
-        /* Create Casino Contract Instance */
-        let casinoContract = new CasinoContract({
-            web3                : globals.web3,
-            contractAddress     : app.platformAddress,
-            tokenAddress        : app.platformTokenAddress
-        })
-
-        /* Verify if this transactionHashs was already added */
-        let withdraw = await WithdrawRepository.prototype.getWithdrawByTransactionHash(params.transactionHash);
-        let wasAlreadyAdded = withdraw ? true : false;
-        
-        withdraw = await WithdrawRepository.prototype.findWithdrawById(params.withdraw_id);
-        let withdrawExists = withdraw ? true : false;
-
-        /* Verify App Balance in Smart-Contract */
-        let currentOpenWithdrawingAmount = await casinoContract.getApprovedWithdrawAmount(
-            {address : app.ownerAddress, decimals : app.decimals});
-
-        var hashWithdrawingPositionOpen = (currentOpenWithdrawingAmount != 0 ) ? true : false;
-       
-        /* Verify App Balance in API */
-        let currentAPIBalance = Numbers.toFloat(app.wallet.playBalance);
-
-        /* Withdraw Occured in the Smart-Contract */
-        transaction_params = await verifytransactionHashWithdrawApp(
-            'eth', params_input.transactionHash, params_input.tokenAmount, app.platformAddress, app.decimals
-        )
-
-        let transactionIsValid = transaction_params.isValid;
-
-        if(transaction_params.isValid){
-            /* Transaction is Valid */
-            tokenDifferenceDecentralized = Numbers.toFloat(Numbers.fromDecimals(transaction_params.tokenAmount, app.decimals));
-        }else{
-            tokenDifferenceDecentralized = undefined
-        }
-
-        /* Verify if Ap Address is Valid */
-        let isValidAddress = (new String(app.ownerAddress).toLowerCase() == new String(transaction_params.tokensTransferedTo).toLowerCase())
-        
-        let res = {
-            withdrawExists,
-            withdraw_id : params.withdraw_id,
-            transactionIsValid,
-            hashWithdrawingPositionOpen,
-            isValidAddress,
-            currentAPIBalance,
-            casinoContract      : casinoContract,
-            wasAlreadyAdded,
-            transactionHash     : params.transactionHash,
-            currencyTicker      : app.currencyTicker,
-            creationDate        : new Date(),
-            app,
-            amount              : -Math.abs(Numbers.toFloat(tokenDifferenceDecentralized)),
-            withdrawAddress     : transaction_params.tokensTransferedTo
-        }
-        
-        return res;
-    },
     __getTransactions : async (params) => {
         let {
             app, filters
@@ -490,19 +422,6 @@ const progressActions = {
 
         return params;
     },
-    __finalizeWithdraw : async (params) => {
-            
-        /* Add Withdraw to user */
-        await WithdrawRepository.prototype.finalizeWithdraw(params.withdraw_id, {
-            transactionHash         : params.transactionHash,
-            last_update_timestamp   : new Date(),                             
-            amount                  : Numbers.toFloat(Math.abs(params.amount)),
-            confirmed               : true,
-            done                    : params.withdrawExists
-        })
-
-        return params;
-    },
     __createApiToken : async (params) => {
         let res = await AppRepository.prototype.createAPIToken(params.app, params.bearerToken)
 		return res;
@@ -661,9 +580,6 @@ class AppLogic extends LogicComponent{
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
-                case 'FinalizeWithdraw' : {
-					return await library.process.__finalizeWithdraw(params); 
-                };
                 case 'CreateAPIToken' : {
 					return await library.process.__createApiToken(params); break;
                 };
@@ -737,9 +653,6 @@ class AppLogic extends LogicComponent{
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;
-                };
-                case 'FinalizeWithdraw' : {
-					return await library.progress.__finalizeWithdraw(params); 
                 };
 				case 'Summary' : {
 					return await library.progress.__summary(params); break;
