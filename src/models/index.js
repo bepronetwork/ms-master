@@ -19,12 +19,14 @@ import Integrations from './integrations';
 import Chat from './chat';
 import Customization from './customization';
 import TopBar from './topBar';
+import Banners from './banners';
 
 export {
     User,
     Chat,
     TopBar,
     Wallet,
+    Banners,
     Deposit,
     Customization,
     Integrations,

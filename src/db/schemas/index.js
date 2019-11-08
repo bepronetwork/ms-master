@@ -14,10 +14,12 @@ import { AffiliateStructureSchema } from './affiliateStructure';
 import { ChatSchema } from './integrations/chat';
 import { CustomizationSchema } from './customization';
 import { TopBarSchema } from './customization/topBar';
+import { BannersSchema } from './customization/banners';
 
 export {
     UserSchema,
     TopBarSchema,
+    BannersSchema,
     CustomizationSchema,
     ChatSchema,
     AppSchema,

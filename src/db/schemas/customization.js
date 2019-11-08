@@ -7,7 +7,9 @@ class CustomizationSchema{};
 CustomizationSchema.prototype.name = 'Customization';
 
 CustomizationSchema.prototype.schema =  {
-    topBar : { type : mongoose.Schema.Types.ObjectId, ref: 'TopBar', required : true }
+    topBar : { type : mongoose.Schema.Types.ObjectId, ref: 'TopBar', required : true },
+    banners : { type : mongoose.Schema.Types.ObjectId, ref: 'Banners', required : true }
+
 }
 
 

@@ -511,7 +511,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
+  /app/customization/banners : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Banner Information
+      operationId: editBanners
+      description: Change Banners
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationBanners'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/games/editEdge:
     x-swagger-router-controller: game
     post:
@@ -1232,6 +1261,28 @@ definitions:
         example: 3245
         description: |
           New Table Limit
+  AppCustomizationBanners : 
+    type: object
+    required:
+      - app
+      - banners
+      - autoDisplay
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      banners:
+        type : array
+        items : 
+          type : string
+          example : 876348bct3t2rc2t34
+          description : image blob
+      autoDisplay:
+        type : boolean
+        example: true
   AppCustomizationTopBar : 
     type: object
     required:

@@ -297,7 +297,21 @@ class App extends ModelComponent{
             throw err;
         }
     }
-     
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editBanners(){
+        try{
+            return await this.process('EditBanners');
+        }catch(err){
+            throw err;
+        }
+    }
+
+
      /**
      * @param {String} 
      * @return {bool || Exception}  
