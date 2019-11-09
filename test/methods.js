@@ -155,6 +155,14 @@ module.exports = {
         .then(res => res.body)
         
     },
+    async getAppUsers(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/users')
+        .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => res.body)
+        
+    },
     async createGame(params, bearerToken){
         return request(global.server)
         .post('/api/app/games/add')

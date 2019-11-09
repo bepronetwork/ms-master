@@ -311,6 +311,19 @@ class App extends ModelComponent{
         }
     }
 
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async getUsers(){
+        try{
+            return await this.process('GetUsers');
+        }catch(err){
+            throw err;
+        }
+    }
+
 
      /**
      * @param {String} 

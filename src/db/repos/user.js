@@ -10,6 +10,7 @@ import {
 } from './pipelines/user';
 import { populate_user } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
+import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 /**
  * Accounts database interaction class.
  *
@@ -150,6 +151,17 @@ class UsersRepository extends MongoComponent{
     async getAll(){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find().lean().populate(foreignKeys)
+            .exec( (err, docs) => {
+                if(err){reject(err)}
+                resolve(docs);
+            })
+        })
+    }
+
+    async getAllFiltered({size=30, offset=0, app, user}){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model
+            .aggregate(usersFromAppFiltered({size, offset, app, user}))
             .exec( (err, docs) => {
                 if(err){reject(err)}
                 resolve(docs);
