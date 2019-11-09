@@ -277,6 +277,9 @@ const processActions = {
             app
         };
     },
+    __getUsers : async (params) => {
+        return params;
+    }
 }
 
 
@@ -503,6 +506,10 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __getUsers : async (params) => {
+        let res = await UsersRepository.prototype.getAllFiltered(params);
+        return res;
+    }
 }
 
 /**
@@ -613,6 +620,9 @@ class AppLogic extends LogicComponent{
                 case 'GetPopularNumbers' : {
 					return await library.process.__getPopularNumbers(params); break;
                 };
+                case 'GetUsers' : {
+					return await library.process.__getUsers(params); break;
+                };
 			}
 			
 		}catch(error){
@@ -698,6 +708,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetPopularNumbers' : {
 					return await library.progress.__getPopularNumbers(params); break;
+                };
+                case 'GetUsers' : {
+					return await library.progress.__getUsers(params); break;
                 };
                 
 			}

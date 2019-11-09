@@ -23,6 +23,7 @@ import {
     getAppAuth,
     getAppLastBets,
     addGame,
+    getAppUsers,
     getAppPopularNumbers,
     editGameEdge
 } from '../methods';
@@ -720,6 +721,15 @@ context('App Testing', async () =>  {
 
 
     context('GET - App Data', mochaAsync( async () => {
+        
+        it('GET users - should allow', mochaAsync(async () => {
+            let postData = {
+                app : APP_ID
+            };
+            let res = await getAppUsers(postData, BEARER_TOKEN, {id : APP_ID});
+            expect(res.data.status).to.equal(200);
+        }));
+
         it('GET last Bets - should allow', mochaAsync(async () => {
             let postData = {
                 app : APP_ID,
