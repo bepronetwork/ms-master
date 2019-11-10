@@ -192,6 +192,24 @@ context('App Testing', async () =>  {
         })); 
 
 
+        it('should add some blockhain Information to App', mochaAsync(async () => {
+            let add_blockchain_info_model = models.apps.add_blockchain_information(APP_ID, {
+                authorizedAddresses : [CONST.ownerAccount.getAddress(), CONST.ownerAccount.getAddress()],
+            });
+            let res = await addBlockchainInformation(add_blockchain_info_model, BEARER_TOKEN, {id : APP_ID});
+            expect(res.data.status).to.equal(200);
+            /* Get new Data */
+            let get_app_model = models.apps.get_app(APP_ID);
+            res = await getAppAuth(get_app_model, BEARER_TOKEN, {id : APP_ID});
+            const { message, status } = res.data;
+            global.test.app = message;
+            expect(status).to.equal(200);
+            expect(message.authorizedAddresses.length).to.equal(2);
+            expect(message.croupierAddress).to.not.be.null;
+    
+        })); 
+
+
         it('should´nt update wallet with pending transaction', mochaAsync(async () => {
             let transferTokenAmount = 1;
             /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 

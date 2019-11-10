@@ -382,6 +382,8 @@ const progressActions = {
 		return params;
     },
     __addBlockchainInformation : async (params) => {
+        Object.keys(params).forEach(key => params[key] === undefined && delete params[key]);
+        if(!params){throwError('UNKNOWN')}
         let res = await AppRepository.prototype.addBlockchainInformation(params.app, params);
 		return res;
     },
