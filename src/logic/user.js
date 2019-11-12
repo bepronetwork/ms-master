@@ -7,7 +7,7 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import { UsersRepository, AppRepository, WalletsRepository, DepositRepository, WithdrawRepository, AffiliateLinkRepository, AffiliateRepository } from '../db/repos';
 import Numbers from './services/numbers';
-import { verifytransactionHashDepositUser, verifytransactionHashWithdrawUser } from './services/services';
+import { verifytransactionHashDepositUser, verifytransactionHashWithdrawUser, verifytransactionHashDirectDeposit } from './services/services';
 import { Deposit, Withdraw, AffiliateLink } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import codes from './categories/codes';
@@ -116,6 +116,7 @@ const processActions = {
     },
     __updateWallet : async (params) => {
         try{
+
             if(params.amount <= 0){throwError('INVALID_AMOUNT')}
 
             /* Get User Id */
@@ -128,7 +129,21 @@ const processActions = {
             let { isValid, from, amount } = await verifytransactionHashDepositUser(
                 app.blockchain, params.transactionHash, 
                 app.platformAddress , app.decimals)
-                
+
+            /* Verify if the transactionHash was created */
+            let deposit_data = await verifytransactionHashDirectDeposit(
+            app.blockchain, params.transactionHash, params.amount, 
+            app.platformAddress , app.decimals);
+
+            let isDirectDeposit = deposit_data.isValid;
+
+            if(isDirectDeposit){
+                amount = deposit_data.amount;
+                isValid = deposit_data.isValid;
+                from = deposit_data.from;
+            }else{
+                // Nothing
+            }
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
             let wasAlreadyAdded = deposit ? true : false;

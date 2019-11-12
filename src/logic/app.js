@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
-import { getServices, fromDecimals, verifytransactionHashDepositApp, verifytransactionHashWithdrawApp } from './services/services';
+import { getServices, fromDecimals, verifytransactionHashDirectDeposit, verifytransactionHashWithdrawApp } from './services/services';
 import { Game, Deposit, Withdraw, AffiliateSetup } from '../models';
 import games from '../config/games.config.json';
 import CasinoContract from './eth/CasinoContract';
@@ -155,12 +155,10 @@ const processActions = {
         /* Get App Id */
         let app = await AppRepository.prototype.findAppById(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
-
         /* Verify if the transactionHash was created */
-        let { isValid, from } = await verifytransactionHashDepositApp(
+        let { isValid, from } = await verifytransactionHashDirectDeposit(
             app.blockchain, params.transactionHash, params.amount, 
             app.platformAddress , app.decimals);
-        
         /* Verify if this transactionHashs was already added */
         let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
 

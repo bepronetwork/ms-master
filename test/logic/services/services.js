@@ -167,7 +167,7 @@ async function verifytransactionHashWithdrawApp(blockchain, transactionHash, tra
 }
 
 
-async function verifytransactionHashDepositApp(blockchain, transactionHash, amount, platformAddress, decimals){
+async function verifytransactionHashDirectDeposit(blockchain, transactionHash, amount, platformAddress, decimals){
     try{
         /* Get Information of this transactionHash */
         let res_transaction = await globalsTest.web3.eth.getTransaction(transactionHash);
@@ -202,7 +202,7 @@ export {
     services,
     verifytransactionHashDepositUser,
     getServices,
-    verifytransactionHashDepositApp,
+    verifytransactionHashDirectDeposit,
     fromDecimals,
     verifytransactionHashWithdrawApp,
     fromExponential,

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import account from './logic/eth/models/account';
 import CasinoContract from './logic/eth/CasinoContract';
 import { globalsTest } from './GlobalsTest';
+import Numbers from './logic/services/numbers';
 
 module.exports = {
     async registerUser(params) {
@@ -382,7 +383,8 @@ module.exports = {
                 contractAddress: platformAddress,
                 decimals: 18
             })
-           
+            
+
             /* Deposit Tokens */
             return await casinoContract.depositFunds({
                 amount,
@@ -390,7 +392,26 @@ module.exports = {
             });
 
         }catch(err){
-            console.log(err)
+            throw err;
+        }
+    },
+    async directDepositUser({amount, platformAddress, tokenAddress, nonce, acc=null}){
+        try{
+            let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
+
+            let casinoContract = new CasinoContract({
+                web3 : global.web3,
+                account : acc ? acc : global.userAccount,
+                erc20TokenContract : erc20Contract,
+                contractAddress: platformAddress,
+                decimals: 18
+            })
+            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, 18);
+
+            /* Deposit Tokens Directly */
+            return await casinoContract.sendTokensToCasinoContract(amountWithDecimals);
+
+        }catch(err){
             throw err;
         }
     },
@@ -413,7 +434,6 @@ module.exports = {
             });
 
         }catch(err){
-            console.log(err)
             throw err;
         }
     },
