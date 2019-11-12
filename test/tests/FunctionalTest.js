@@ -3,6 +3,7 @@ import {
     loginAdmin,
     getGames,
     depositUser,
+    directDepositUser,
     updateUserWallet,
     registerAdmin,
     getEcosystemCasinoGames,
@@ -246,7 +247,7 @@ context('Functional Testing', async () =>  {
              * @param User 1
              * @param 1 Tokens
              */
-
+  
             let res = await actions.user.deposit({...postData.USER_1, USER_DEPOSIT_AMOUNT : 0.01});
             let balance = await actions.user.getUserBalance(postData.USER_1);
             expect(res.data.status).to.equal(200);
@@ -256,6 +257,48 @@ context('Functional Testing', async () =>  {
             expect(dexBalance).to.equal(0);
             expect(balance).to.equal(2.01);
             expect(playersBalance).to.equal(2.01);
+
+        }));
+
+        it('should allow user to direct deposit & verify ecosystem balances - 0.02', mochaAsync(async () => {
+          
+            /**
+             * @function Deposit
+             * @param User 1
+             * @param 1 Tokens
+             */
+
+            let res = await actions.user.directDeposit({...postData.USER_1, USER_DEPOSIT_AMOUNT : 0.02});
+            let balance = await actions.user.getUserBalance(postData.USER_1);
+            expect(res.data.status).to.equal(200);
+            let playersBalance = await actions.app.getAllPlayersBalance(postData.APP);
+            balance = await actions.user.getUserBalance(postData.USER_1);
+            let dexBalance = await actions.smart_contract.getWithdrawAmount({CASINO_CONTRACT : postData.CASINO_CONTRACT, address : postData.USER_1.USER_ACCOUNT.getAddress()})
+            expect(dexBalance).to.equal(0);
+            expect(balance).to.equal(2.03);
+            expect(playersBalance).to.equal(2.03);
+
+        }));
+
+        it('should not allow double deposit ', mochaAsync(async () => {
+          
+            /**
+             * @function Deposit
+             * @param User 1
+             * @param 1 Tokens
+             */
+
+            var { USER_BEARER_TOKEN, USER_ID} = await getUserAuth(postData.USER_1.user);
+
+            let params = {
+                user :  USER_ID,
+                amount : 0.02,
+                app: APP_ID,
+                nonce : getNonce(),
+                transactionHash: global.resEthereumGlobal.transactionHash
+            }
+            let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
+            expect(res.data.status).to.equal(11);
 
         }));
     });
@@ -274,6 +317,29 @@ const actions = {
                 platformAddress :  PLATFORM_ADDRESS,
                 nonce : NONCE
             });
+
+            let params = {
+                user :  USER_ID,
+                amount : USER_DEPOSIT_AMOUNT,
+                app: APP_ID,
+                nonce : NONCE,
+                transactionHash: resEthereum.transactionHash
+            }
+            let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
+            return res;
+        },
+        directDeposit : async ({user, USER_DEPOSIT_AMOUNT, PLATFORM_TOKEN_ADDRESS, PLATFORM_ADDRESS, APP_ID, USER_ACCOUNT}) => {
+            var { USER_BEARER_TOKEN, USER_ID, USER_ADDRESS} = await getUserAuth(user);
+            const NONCE = getNonce();
+            let resEthereum = await directDepositUser({
+                amount : USER_DEPOSIT_AMOUNT,
+                acc : USER_ACCOUNT,
+                tokenAddress : PLATFORM_TOKEN_ADDRESS,
+                platformAddress :  PLATFORM_ADDRESS,
+                nonce : NONCE
+            });
+
+            global.resEthereumGlobal = resEthereum;
 
             let params = {
                 user :  USER_ID,

@@ -97,6 +97,7 @@ class CasinoContract{
             let res = await self.erc20TokenContract.getABI().send(self.account.getAccount(), data, null, options, callback);
             return res;
         }catch(err){
+            console.log(err)
             throw new Error(`Possibly the Owner Account Address : ${self.account.getAddress()} does not have ${tokenAmount} Tokens to send to the Contract (Providing Liquidity)`)
         }   
     }
