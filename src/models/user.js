@@ -68,6 +68,7 @@ class User extends ModelComponent{
             throw err;
         }
     }
+    
 
      /**
      * @param {String} 
