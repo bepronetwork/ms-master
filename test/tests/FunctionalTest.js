@@ -260,7 +260,7 @@ context('Functional Testing', async () =>  {
 
         }));
 
-        it('should allow user to direct deposit & verify ecosystem balances - 0.02', mochaAsync(async () => {
+        it('should allow user to direct deposit & verify ecosystem balances - 0.02 and verify mutex testing (same sec double spending)', mochaAsync(async () => {
           
             /**
              * @function Deposit
@@ -268,9 +268,29 @@ context('Functional Testing', async () =>  {
              * @param 1 Tokens
              */
 
-            let res = await actions.user.directDeposit({...postData.USER_1, USER_DEPOSIT_AMOUNT : 0.02});
+
+            let params = await actions.user.directDeposit({...postData.USER_1, USER_DEPOSIT_AMOUNT : 0.02, apiCall : false});
+            console.log(postData.USER_1.user)
+            var { USER_BEARER_TOKEN, USER_ID } = await getUserAuth(postData.USER_1.user);
+
+            let res = updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
+            let res_replay_atack = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
+
+            let ret = await Promise.resolve(await res);
+            let status_1 = ret.data.status;
+            const { status } = res_replay_atack.data;
+    
+            // Confirm either one or the other tx got phroibited
+            if(status_1 == 200){
+                expect(status_1).to.be.equal(200);
+                expect(status).to.be.equal(14);
+            }else{
+                expect(status_1).to.be.equal(14);
+                expect(status).to.be.equal(200);
+            }
+
             let balance = await actions.user.getUserBalance(postData.USER_1);
-            expect(res.data.status).to.equal(200);
+
             let playersBalance = await actions.app.getAllPlayersBalance(postData.APP);
             balance = await actions.user.getUserBalance(postData.USER_1);
             let dexBalance = await actions.smart_contract.getWithdrawAmount({CASINO_CONTRACT : postData.CASINO_CONTRACT, address : postData.USER_1.USER_ACCOUNT.getAddress()})
@@ -286,7 +306,7 @@ context('Functional Testing', async () =>  {
              * @function Deposit
              * @param User 1
              * @param 1 Tokens
-             */
+            */
 
             var { USER_BEARER_TOKEN, USER_ID} = await getUserAuth(postData.USER_1.user);
 
@@ -296,7 +316,8 @@ context('Functional Testing', async () =>  {
                 app: APP_ID,
                 nonce : getNonce(),
                 transactionHash: global.resEthereumGlobal.transactionHash
-            }
+            };
+            
             let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
             expect(res.data.status).to.equal(11);
 
@@ -328,9 +349,10 @@ const actions = {
             let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
             return res;
         },
-        directDeposit : async ({user, USER_DEPOSIT_AMOUNT, PLATFORM_TOKEN_ADDRESS, PLATFORM_ADDRESS, APP_ID, USER_ACCOUNT}) => {
+        directDeposit : async ({user, USER_DEPOSIT_AMOUNT, PLATFORM_TOKEN_ADDRESS, PLATFORM_ADDRESS, APP_ID, USER_ACCOUNT, apiCall=true}) => {
             var { USER_BEARER_TOKEN, USER_ID, USER_ADDRESS} = await getUserAuth(user);
             const NONCE = getNonce();
+
             let resEthereum = await directDepositUser({
                 amount : USER_DEPOSIT_AMOUNT,
                 acc : USER_ACCOUNT,
@@ -348,8 +370,14 @@ const actions = {
                 nonce : NONCE,
                 transactionHash: resEthereum.transactionHash
             }
-            let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
-            return res;
+
+            if(apiCall){
+                let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
+                return res;
+            }else{
+                return params;
+            }
+
         },
         getWithdraws : async ({user}) => {
             const { username, password, app } = user;
