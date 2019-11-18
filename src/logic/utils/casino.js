@@ -118,7 +118,7 @@ class CasinoLogic{
                         maxWin = parseFloat(el.value)/parseFloat(probability);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }   
                     break;
                 };
@@ -135,7 +135,7 @@ class CasinoLogic{
                         // Won
                         isWon = true;
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }
                     break;
                 };
@@ -152,7 +152,7 @@ class CasinoLogic{
                         // Won
                         isWon = true;
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }
                     break;
                 };
@@ -169,7 +169,7 @@ class CasinoLogic{
                         // Won
                         isWon = true;
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }
                     break;
                 };
@@ -185,7 +185,7 @@ class CasinoLogic{
                         maxWin = parseFloat(el.value)/parseFloat(probability);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }   
                     break;
                 };
@@ -208,7 +208,7 @@ class CasinoLogic{
                         maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }  
                     break;
                 };
@@ -231,7 +231,7 @@ class CasinoLogic{
                         maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance);
                     }  
                     break;
                 };
@@ -242,8 +242,8 @@ class CasinoLogic{
 
 
             return {
-                winAmount : Numbers.toFloat(winAmount),
-                totalBetAmount : Numbers.toFloat(totalBetAmount),
+                winAmount : parseFloat(winAmount),
+                totalBetAmount : parseFloat(totalBetAmount),
                 isWon
             }
         }catch(err){
@@ -281,7 +281,7 @@ class CasinoLogic{
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    winAmount = parseFloat(maxWin - houseEdgeBalance);
                     break;
                 };
                 case 'wheel_simple' : {
@@ -301,7 +301,7 @@ class CasinoLogic{
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    winAmount = parseFloat(maxWin - houseEdgeBalance);
                     break;
                 };
                 case 'wheel_variation_1' : {
@@ -321,7 +321,7 @@ class CasinoLogic{
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    winAmount = parseFloat(maxWin - houseEdgeBalance);
                     break;
                 };
                 case 'plinko_variation_1' : {
@@ -341,7 +341,7 @@ class CasinoLogic{
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                    winAmount = Numbers.toFloat(maxWin - houseEdgeBalance);
+                    winAmount = parseFloat(maxWin - houseEdgeBalance);
                     break;
                 };
                 case 'coinflip_simple' : {
@@ -359,7 +359,7 @@ class CasinoLogic{
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                     let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
-                    winAmount = Numbers.toFloat(winBalance - houseEdgeBalance);
+                    winAmount = parseFloat(winBalance - houseEdgeBalance);
                     break;
                 };
                 case 'linear_dice_simple' : {
@@ -375,7 +375,7 @@ class CasinoLogic{
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                     let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
-                    winAmount = Numbers.toFloat(winBalance - houseEdgeBalance);
+                    winAmount = parseFloat(winBalance - houseEdgeBalance);
                     break;
                 };
                 case 'jackpot_auto' : {
@@ -391,7 +391,7 @@ class CasinoLogic{
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                     let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
-                    winAmount = Numbers.toFloat(winBalance - houseEdgeBalance);
+                    winAmount = parseFloat(winBalance - houseEdgeBalance);
                     break;
                 };
                 default : { 
@@ -400,8 +400,8 @@ class CasinoLogic{
             }
             return {
                 possibleWinAmount : winAmount, 
-                fee : Numbers.toFloat(Numbers.toFloat(Math.abs(totalBetAmount))*houseEdge/100),
-                totalBetAmount : Numbers.toFloat(totalBetAmount)
+                fee : parseFloat(parseFloat(Math.abs(totalBetAmount))*houseEdge/100),
+                totalBetAmount : parseFloat(totalBetAmount)
             }
         }catch(err){
             throw err;

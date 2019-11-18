@@ -12,9 +12,9 @@ require('../app');
         await AddIntegrationsToApps.default.prototype.start();
         let addCustomizationToApp = require('./addCustomizationToApp');
         await addCustomizationToApp.default.prototype.start();
-       */
         let addBannersToApps = require('./addBannersToApps');
         await addBannersToApps.default.prototype.start();
-        
+               */
+
     }, 5*1000)
 })()
