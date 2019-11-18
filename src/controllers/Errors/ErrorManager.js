@@ -78,24 +78,19 @@ class ErrorManager {
                     // Verify User (Syntax Error)
                     if(typeof admin == 'undefined' || Object.is(admin, null))
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
-    
                     // Verify User
                     if(typeof admin.username == 'undefined' || Object.is(admin.username, null)){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT)); break;
                     }
-    
                     // Verify Password
                     if(!Object.is(admin.verifiedAccount, Boolean) && admin.verifiedAccount !== true){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_PASSWORD)); break;
                     }
-
                     // is 2FA Setup
                     if(admin.has2FASet){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_HAS_2FA)); break;
                     }
-
                     break;
-
                 };
                 case 'Auth' : {
                     break;
