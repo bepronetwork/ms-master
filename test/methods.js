@@ -3,6 +3,7 @@ import _ from 'lodash';
 import account from './logic/eth/models/account';
 import CasinoContract from './logic/eth/CasinoContract';
 import { globalsTest } from './GlobalsTest';
+import Numbers from './logic/services/numbers';
 
 module.exports = {
     async registerUser(params) {
@@ -155,6 +156,14 @@ module.exports = {
         .then(res => res.body)
         
     },
+    async getAppUsers(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/users')
+        .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => res.body)
+        
+    },
     async createGame(params, bearerToken){
         return request(global.server)
         .post('/api/app/games/add')
@@ -275,15 +284,6 @@ module.exports = {
         .then(res => {return res.body})
         
     },
-    async finalizeWithdraw(params, bearerToken, payload){
-        return request(global.server)
-        .post('/api/users/finalizeWithdraw')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => {return res.body})
-        
-    },
     async cancelAppWithdraw(params, bearerToken){
         return request(global.server)
         .post('/api/app/cancelWithdraw')
@@ -300,15 +300,7 @@ module.exports = {
         .send(params)
         .then(res => {return res.body})    
     },
-    async finalizeAppWithdraw(params, bearerToken, payload){
-        return request(global.server)
-        .post('/api/app/finalizeWithdraw')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => {return res.body})
-        
-    },
+
     async getEcosystemData(params){
         return request(global.server)
         .get('/api/ecosystem/all')
@@ -391,7 +383,8 @@ module.exports = {
                 contractAddress: platformAddress,
                 decimals: 18
             })
-           
+            
+
             /* Deposit Tokens */
             return await casinoContract.depositFunds({
                 amount,
@@ -399,11 +392,10 @@ module.exports = {
             });
 
         }catch(err){
-            console.log(err)
             throw err;
         }
     },
-    async withdrawUser({amount, platformAddress, tokenAddress, nonce, acc=null}){
+    async directDepositUser({amount, platformAddress, tokenAddress, nonce, acc=null}){
         try{
             let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
 
@@ -414,15 +406,12 @@ module.exports = {
                 contractAddress: platformAddress,
                 decimals: 18
             })
-           
-            /* Deposit Tokens */
-            return await casinoContract.withdrawFunds({
-                amount,
-                nonce : nonce
-            });
+            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, 18);
+
+            /* Deposit Tokens Directly */
+            return await casinoContract.sendTokensToCasinoContract(amountWithDecimals);
 
         }catch(err){
-            console.log(err)
             throw err;
         }
     },
@@ -445,7 +434,6 @@ module.exports = {
             });
 
         }catch(err){
-            console.log(err)
             throw err;
         }
     },

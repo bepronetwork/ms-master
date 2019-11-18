@@ -188,7 +188,7 @@ async function verifytransactionHashWithdrawApp(blockchain, transactionHash, tra
 }
 
 
-async function verifytransactionHashDepositApp(blockchain, transactionHash, amount, platformAddress, decimals){
+async function verifytransactionHashDirectDeposit(blockchain, transactionHash, amount, platformAddress, decimals){
     try{
 
         let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
@@ -219,6 +219,7 @@ async function verifytransactionHashDepositApp(blockchain, transactionHash, amou
             throw false;
         }
         /* Verify if the Token Amount is the same */
+ 
         if(
             Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
             != Numbers.toSmartContractDecimals(new Number(amount), decimals)){
@@ -230,7 +231,8 @@ async function verifytransactionHashDepositApp(blockchain, transactionHash, amou
 
         return {
             isValid : true,
-            from :  res_transaction.from 
+            from :  res_transaction.from,
+            amount : Numbers.fromDecimals(Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)), decimals)
         };
 
     }catch(err){
@@ -251,7 +253,7 @@ export {
     generateRandomID,
     verifytransactionHashDepositUser,
     getServices,
-    verifytransactionHashDepositApp,
+    verifytransactionHashDirectDeposit,
     fromDecimals,
     verifytransactionHashWithdrawApp,
     fromExponential,

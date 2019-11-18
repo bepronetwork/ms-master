@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
-import { getServices, fromDecimals, verifytransactionHashDepositApp, verifytransactionHashWithdrawApp } from './services/services';
+import { getServices, fromDecimals, verifytransactionHashDirectDeposit, verifytransactionHashWithdrawApp } from './services/services';
 import { Game, Deposit, Withdraw, AffiliateSetup } from '../models';
 import games from '../config/games.config.json';
 import CasinoContract from './eth/CasinoContract';
@@ -111,11 +111,12 @@ const processActions = {
             app : params.app,
             ownerAddress : params.address,
             decimals : params.decimals,
-            authorizedAddress : params.authorizedAddress,
             currencyTicker : params.currencyTicker,
             platformAddress : params.platformAddress, 
             platformBlockchain : params.platformBlockchain, 
-            platformTokenAddress : params.platformTokenAddress 
+            platformTokenAddress : params.platformTokenAddress ,
+            authorizedAddresses : params.authorizedAddresses,
+            croupierAddress : params.croupierAddress
         }
 
 		return res;
@@ -154,12 +155,10 @@ const processActions = {
         /* Get App Id */
         let app = await AppRepository.prototype.findAppById(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
-
         /* Verify if the transactionHash was created */
-        let { isValid, from } = await verifytransactionHashDepositApp(
+        let { isValid, from } = await verifytransactionHashDirectDeposit(
             app.blockchain, params.transactionHash, params.amount, 
             app.platformAddress , app.decimals);
-        
         /* Verify if this transactionHashs was already added */
         let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
 
@@ -179,74 +178,6 @@ const processActions = {
             isValid
         }
 
-        return res;
-    },
-    __finalizeWithdraw : async (params) => {
-
-        var params_input = params;
-        var transaction_params = { }, tokenDifferenceDecentralized;
-
-        /* Get App By Id */
-        let app = await AppRepository.prototype.findAppById(params.app);
-        if(!app){throwError('APP_NOT_EXISTENT')}
-
-        /* Create Casino Contract Instance */
-        let casinoContract = new CasinoContract({
-            web3                : globals.web3,
-            contractAddress     : app.platformAddress,
-            tokenAddress        : app.platformTokenAddress
-        })
-
-        /* Verify if this transactionHashs was already added */
-        let withdraw = await WithdrawRepository.prototype.getWithdrawByTransactionHash(params.transactionHash);
-        let wasAlreadyAdded = withdraw ? true : false;
-        
-        withdraw = await WithdrawRepository.prototype.findWithdrawById(params.withdraw_id);
-        let withdrawExists = withdraw ? true : false;
-
-        /* Verify App Balance in Smart-Contract */
-        let currentOpenWithdrawingAmount = await casinoContract.getApprovedWithdrawAmount(
-            {address : app.ownerAddress, decimals : app.decimals});
-
-        var hashWithdrawingPositionOpen = (currentOpenWithdrawingAmount != 0 ) ? true : false;
-       
-        /* Verify App Balance in API */
-        let currentAPIBalance = Numbers.toFloat(app.wallet.playBalance);
-
-        /* Withdraw Occured in the Smart-Contract */
-        transaction_params = await verifytransactionHashWithdrawApp(
-            'eth', params_input.transactionHash, params_input.tokenAmount, app.platformAddress, app.decimals
-        )
-
-        let transactionIsValid = transaction_params.isValid;
-
-        if(transaction_params.isValid){
-            /* Transaction is Valid */
-            tokenDifferenceDecentralized = Numbers.toFloat(Numbers.fromDecimals(transaction_params.tokenAmount, app.decimals));
-        }else{
-            tokenDifferenceDecentralized = undefined
-        }
-
-        /* Verify if Ap Address is Valid */
-        let isValidAddress = (new String(app.ownerAddress).toLowerCase() == new String(transaction_params.tokensTransferedTo).toLowerCase())
-        
-        let res = {
-            withdrawExists,
-            withdraw_id : params.withdraw_id,
-            transactionIsValid,
-            hashWithdrawingPositionOpen,
-            isValidAddress,
-            currentAPIBalance,
-            casinoContract      : casinoContract,
-            wasAlreadyAdded,
-            transactionHash     : params.transactionHash,
-            currencyTicker      : app.currencyTicker,
-            creationDate        : new Date(),
-            app,
-            amount              : -Math.abs(Numbers.toFloat(tokenDifferenceDecentralized)),
-            withdrawAddress     : transaction_params.tokensTransferedTo
-        }
-        
         return res;
     },
     __getTransactions : async (params) => {
@@ -344,6 +275,9 @@ const processActions = {
             app
         };
     },
+    __getUsers : async (params) => {
+        return params;
+    }
 }
 
 
@@ -446,6 +380,8 @@ const progressActions = {
 		return params;
     },
     __addBlockchainInformation : async (params) => {
+        Object.keys(params).forEach(key => params[key] === undefined && delete params[key]);
+        if(!params){throwError('UNKNOWN')}
         let res = await AppRepository.prototype.addBlockchainInformation(params.app, params);
 		return res;
     },
@@ -486,19 +422,6 @@ const progressActions = {
         
         /* Add Deposit to App */
         await AppRepository.prototype.addDeposit(params.app_id, depositSaveObject._id)
-
-        return params;
-    },
-    __finalizeWithdraw : async (params) => {
-            
-        /* Add Withdraw to user */
-        await WithdrawRepository.prototype.finalizeWithdraw(params.withdraw_id, {
-            transactionHash         : params.transactionHash,
-            last_update_timestamp   : new Date(),                             
-            amount                  : Numbers.toFloat(Math.abs(params.amount)),
-            confirmed               : true,
-            done                    : params.withdrawExists
-        })
 
         return params;
     },
@@ -583,6 +506,10 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __getUsers : async (params) => {
+        let res = await UsersRepository.prototype.getAllFiltered(params);
+        return res;
+    }
 }
 
 /**
@@ -660,9 +587,6 @@ class AppLogic extends LogicComponent{
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
-                case 'FinalizeWithdraw' : {
-					return await library.process.__finalizeWithdraw(params); 
-                };
                 case 'CreateAPIToken' : {
 					return await library.process.__createApiToken(params); break;
                 };
@@ -695,6 +619,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetPopularNumbers' : {
 					return await library.process.__getPopularNumbers(params); break;
+                };
+                case 'GetUsers' : {
+					return await library.process.__getUsers(params); break;
                 };
 			}
 			
@@ -736,9 +663,6 @@ class AppLogic extends LogicComponent{
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;
-                };
-                case 'FinalizeWithdraw' : {
-					return await library.progress.__finalizeWithdraw(params); 
                 };
 				case 'Summary' : {
 					return await library.progress.__summary(params); break;
@@ -784,6 +708,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetPopularNumbers' : {
 					return await library.progress.__getPopularNumbers(params); break;
+                };
+                case 'GetUsers' : {
+					return await library.progress.__getUsers(params); break;
                 };
                 
 			}

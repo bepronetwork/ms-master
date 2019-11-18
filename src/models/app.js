@@ -228,20 +228,6 @@ class App extends ModelComponent{
         }
     }
 
-      
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
-
-    async finalizeWithdraw(){
-        try{
-            return await this.process('FinalizeWithdraw');
-        }catch(err){
-            throw err;
-        }
-    }
-
      
      /**
      * @param {String} 
@@ -320,6 +306,19 @@ class App extends ModelComponent{
     async editBanners(){
         try{
             return await this.process('EditBanners');
+        }catch(err){
+            throw err;
+        }
+    }
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async getUsers(){
+        try{
+            return await this.process('GetUsers');
         }catch(err){
             throw err;
         }

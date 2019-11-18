@@ -155,9 +155,6 @@ const processActions = {
             }
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);            
-            // If Casino Existent
-            //var jackpotGame = app.games.find(game => game.metaName === 'jackpot_auto')
-            //let hasJackpot = jackpotGame ? true : false;    
 
             let normalized = {
                 user_in_app,

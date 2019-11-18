@@ -68,14 +68,7 @@ class User extends ModelComponent{
             throw err;
         }
     }
-
-    async finalizeWithdraw(){
-        try{
-            return await this.process('FinalizeWithdraw');
-        }catch(err){
-            throw err;
-        }
-    }
+    
 
      /**
      * @param {String} 

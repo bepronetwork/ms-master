@@ -41,7 +41,7 @@ class CasinoContract{
      */
 
     async __init__(){
-        try{
+        try{ 
             let contractDepolyed = await this.deploy();
             let response = await this.sendTokensToCasinoContract(self.tokenTransferAmount);
             this.__assert(contractDepolyed);
@@ -57,7 +57,7 @@ class CasinoContract{
     async authorize(addr){
         try{
             let data = await self.contract.getContract().methods.authorize(
-                addr
+                this.getAddress()
             ).encodeABI();
             let res =  await self.contract.send(self.account.getAccount(), data);
             return res;
@@ -97,6 +97,7 @@ class CasinoContract{
             let res = await self.erc20TokenContract.getABI().send(self.account.getAccount(), data, null, options, callback);
             return res;
         }catch(err){
+            console.log(err)
             throw new Error(`Possibly the Owner Account Address : ${self.account.getAddress()} does not have ${tokenAmount} Tokens to send to the Contract (Providing Liquidity)`)
         }   
     }
@@ -292,7 +293,7 @@ class CasinoContract{
             
             let params = [
                 self.erc20TokenContract.getAddress(),  // ERC-20 Token Contract
-                self.authorizedAddress,                     // Authorized Address
+                self.account.getAddress(),             // Authorized Address
                 self.account.getAddress()              // Owner Address
             ];
             let res = await self.contract.deploy(
@@ -351,17 +352,6 @@ class CasinoContract{
         }
     }
 
-    async withdrawFunds({amount}){
-        try{
-            let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
-            let data = self.contract.getContract().methods.withdraw(
-                amountWithDecimals
-            ).encodeABI(); 
-            return await self.contract.send(self.account.getAccount(), data);  
-        }catch(err){
-            throw err;
-        }
-    }
 
     async allowWithdrawalFromContract({amount}){
         try{

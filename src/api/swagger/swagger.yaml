@@ -209,6 +209,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/users:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - user
+      summary: Get App Users
+      operationId: getUsers
+      description: Get All App Users
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AppUsersRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/register:
     x-swagger-router-controller: user
     post:
@@ -360,36 +390,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /users/finalizeWithdraw:
-    x-swagger-router-controller: user
-    post:
-      tags:
-      - user
-      summary: Request for User Finalize Withdraw
-      operationId: finalizeWithdraw
-      description: Request Finalize Withdraw
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: user
-          description: User Information
-          required: true
-          schema:
-            $ref: '#/definitions/UserFinalizeWithdrawRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+  
   /app/create:
     x-swagger-router-controller: app
     post:
@@ -720,36 +721,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/finalizeWithdraw:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Request for App Finalize Withdraw
-      operationId: finalizeAppWithdraw
-      description: Request Finalize Withdraw
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppFinalizeWithdrawRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+  
   /app/services/add:
     x-swagger-router-controller: app
     post:
@@ -1568,44 +1540,27 @@ definitions:
         example : 50
         description: |
           size
-  AppFinalizeWithdrawRequest : 
+  AppUsersRequest : 
     type: object
     required:
       - app
-      - address
-      - tokenAmount
-      - transactionHash
-      - withdraw_id
     properties:
-      tokenAmount:
-        type : number
-        example: 203
-        description: |
-          New User Balance for User
       app :
         type : string
         format : name
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      address :
+      size :
+        type : number
+      user :
         type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        format : name
+        example : "5cuedgq7e6t334t34" 
         description: |
-          User Address
-      transactionHash :
-        type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
-        description: |
-          Transaction Hash
-      withdraw_id :
-        type : string
-        format: name
-        example: "53746tcuhn324"
-        description: |
-          Withdraw Id
+          User Id
+      offset :
+        type : number
   UpdateAppWalletRequest : 
     type: object
     required:
@@ -1630,38 +1585,6 @@ definitions:
         example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
         description: |
           Transaction Hash
-  UserFinalizeWithdrawRequest : 
-    type: object
-    required:
-      - app
-      - user
-      - transactionHash
-      - withdraw_id
-    properties:
-      app :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          App ID
-      user :
-        type : string
-        format: name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          User ID
-      transactionHash :
-        type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
-        description: |
-          Transaction Hash
-      withdraw_id :
-        type : string
-        format: name
-        example: "65f76st8vdsb3181"
-        description: |
-            Withdraw Id
   UserBetsRequest : 
     type: object
     required:
@@ -1809,16 +1732,23 @@ definitions:
         example: 18
         description: |
           Blockchain Contract Decimal Reading 
-      authorizedAddress : 
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Address that will be used to Update States on the Platform
       address :
         type : string
         example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
         description: |
           Address that will be used for deposit and withdrawals
+      croupierAddress : 
+        type : string
+        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
+        description: |
+          Address that will be used for controlling the operator
+      authorizedAddresses : 
+        type : array
+        items : 
+          type : string
+          example: ["0x539ac1406CDd80D1be443f61ba0acAA3da80027F"]
+          description: |
+            Address that manages withdraws
   AuthAdminRequest : 
     type: object
     required:

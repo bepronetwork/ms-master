@@ -237,17 +237,6 @@ async function addBlockchainInformation (req, res) {
 }
 
 
-async function finalizeAppWithdraw (req, res) {
-    try{
-        SecuritySingleton.verify({type : 'app', req});
-        let params = req.body;
-		let app = new App(params);
-		let data = await app.finalizeWithdraw();
-        MiddlewareSingleton.respond(res, data);
-	}catch(err){
-        MiddlewareSingleton.respondError(res, err);
-	}
-}
 
 async function editAffiliateStructure (req, res) {
     try{
@@ -298,6 +287,19 @@ async function editBanners(req, res) {
 	}
 }
 
+async function getUsers(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.getUsers();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+
 
 /**
  *
@@ -331,13 +333,13 @@ export {
     getGame,
     getGames,
     createBet,
+    getUsers,
     getAppAuth,
     getTransactions,
     resolveBet,
     summary,
     editIntegration,
     editBanners,
-    finalizeAppWithdraw,
     getLastBets,
     addServices,
     updateWalletApp
