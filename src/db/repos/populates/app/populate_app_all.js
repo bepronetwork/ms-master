@@ -43,6 +43,11 @@ let populate_app_all = [
                 path : 'affiliateStructures',
                 model : 'AffiliateStructure',
                 select : { '__v': 0}
+            },
+            {
+                path : 'customAffiliateStructures',
+                model : 'AffiliateStructure',
+                select : { '__v': 0}
             }
         ]
     },

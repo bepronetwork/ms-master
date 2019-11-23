@@ -511,6 +511,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/affiliate/custom/add :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Creater Custom Affiliate 1st level
+      operationId: createAffiliateCustom
+      description: Change Table Limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAffiliateCustomStructure'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/topBar : 
     x-swagger-router-controller: app
     post:
@@ -1401,6 +1431,28 @@ definitions:
             percentageOnLoss:
               type: number
       affiliateTotalCut:
+        type : number
+        example: 3245
+        description: |
+          Total Affiliate Cut (0-1)
+  AppAffiliateCustomStructure : 
+    type: object
+    required:
+      - app
+      - affiliatePercentage
+      - user
+    properties:
+      app:
+        type : string
+        example: "wertwertwertwert"
+        description: |
+          App id
+      user:
+        type : string
+        example: "wertwertwertwert"
+        description: |
+          User id
+      affiliatePercentage:
         type : number
         example: 3245
         description: |

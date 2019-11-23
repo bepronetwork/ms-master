@@ -7,8 +7,10 @@ class AffiliateSetupSchema{};
 AffiliateSetupSchema.prototype.name = 'AffiliateSetup';
 
 AffiliateSetupSchema.prototype.schema =  {
-    isActive             : {type : Boolean, required : true, default : true},
-    affiliateStructures  : [{ type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateStructure'}],
+    isActive                    : { type : Boolean, required : true, default : true },
+    affiliateStructures         : [{ type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateStructure'}],
+    customAffiliateStructures   : [{ type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateStructure'}]
+
 }
 
 

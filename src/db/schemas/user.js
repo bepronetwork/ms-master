@@ -24,7 +24,7 @@ UserSchema.prototype.schema = {
     withdraws           : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Withdraw'}],
     wallet              : { type: mongoose.Schema.Types.ObjectId, ref: 'Wallet'},
     affiliate           : { type: mongoose.Schema.Types.ObjectId, ref: 'Affiliate', required : true}, // User Affiliate -> is profit based affiliates
-    affiliateLink      : { type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateLink'}, // UserAffiliated that is parent based
+    affiliateLink       : { type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateLink'}, // UserAffiliated that is parent based
     register_timestamp  : { type: Date, required : true},
     metadata            : { type : JSON },
     isWithdrawing       : { type : Boolean, default : false, required : true }
