@@ -28,6 +28,15 @@ class AffiliateLink extends ModelComponent{
             throw err;
         }
     }
+
+    async setCustomAffiliatePercentage(){
+        try{
+            return await this.process('SetCustomAffiliatePercentage');
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 export default AffiliateLink;

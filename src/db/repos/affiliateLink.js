@@ -52,8 +52,21 @@ class AffiliateLinkRepository extends MongoComponent{
                 resolve(item);
             })
         });
-
     }
+
+    setDirectAfffiliateStructure(_id, affiliateStructureId){
+        return new Promise( (resolve,reject) => {
+            AffiliateLinkRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: _id },
+                { $set: { "affiliateStructure" : affiliateStructureId} },
+                { 'new': true })
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     getAll = async() => {
         return new Promise( (resolve,reject) => {
             AffiliateLinkRepository.prototype.schema.model.find().lean().populate()

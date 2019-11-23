@@ -330,6 +330,14 @@ module.exports = {
         .send(params)
         .then(res => {return res.body})
     },
+    async setCustomAffiliateStructureToUser(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/affiliate/custom/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
     async deployPlatformContract({tokenAddress, tokenAmount, maxDeposit, maxWithdrawal, decimals, authorizedAddress, acc=null}){
         try{
             let erc20Contract = globalsTest.getERC20Contract(tokenAddress);

@@ -1,16 +1,17 @@
 import chai from 'chai';
 import { createEthAccount, provideFunds } from '../utils/env';
 import { mochaAsync } from '../utils';
-import { createUser, editAppStructure, getApp, createUserDeposit, getUserInfo, bet } from '../services';
+import { createUser, editAppStructure, getApp, createUserDeposit, getUserInfo, bet, addCustomAffiliateStructureToUser } from '../services';
+import Numbers from '../logic/services/numbers';
 const expect = chai.expect;
 
 const inputs = {
-    structures : [{level : 1, percentageOnLoss : 0.04}, {level : 2, percentageOnLoss : 0.03}]
+    structures : [{level : 1, percentageOnLoss : 0.04}, {level : 2, percentageOnLoss : 0.03}, {level : 3, percentageOnLoss : 0.02}]
 }
 
 context('Affiliates Testing', async () =>  {
     var app;
-    var res_1, res_2, res_3;
+    var res_1, res_2, res_3, res_4, res_5;
 
     before( async () =>  {
         app = global.test.app;
@@ -76,6 +77,80 @@ context('Affiliates Testing', async () =>  {
             expect(message.affilateLinkInfo.parentAffiliatedLinks[1].affiliateStructure.percentageOnLoss).to.equal(inputs.structures[0].percentageOnLoss);
         }));
 
+
+        it('it should register with affiliates for link for parent and its parent levels', mochaAsync(async () => {
+
+            const { status, message } = res_3;
+            expect(status).to.equal(200);
+            expect(message.affiliateId).to.not.be.null;
+
+            //expect(message.affilateLinkInfo.userAffiliate).to.equal(id);
+            expect(message.affiliateInfo.wallet.playBalance).to.equal(0);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(2);
+
+            expect(message.affilateLinkInfo.affiliateStructure.level).to.equal(inputs.structures[0].level);
+            expect(message.affilateLinkInfo.affiliateStructure.percentageOnLoss).to.equal(inputs.structures[0].percentageOnLoss);
+
+            expect(message.affilateLinkInfo.parentAffiliatedLinks[0].affiliateStructure.level).to.equal(inputs.structures[1].level);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks[0].affiliateStructure.percentageOnLoss).to.equal(inputs.structures[1].percentageOnLoss);
+
+            expect(message.affilateLinkInfo.parentAffiliatedLinks[1].affiliateStructure.level).to.equal(inputs.structures[0].level);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks[1].affiliateStructure.percentageOnLoss).to.equal(inputs.structures[0].percentageOnLoss);
+        }));
+
+        it('it should allow create user 4', mochaAsync(async () => {
+
+            res_4 = await createUser({app_id : app.id});
+            const { status, message } = res_4;
+            expect(status).to.equal(200);
+            expect(message.affiliateId).to.not.be.null;
+
+            expect(message.affiliateInfo.wallet.playBalance).to.equal(0);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(0);
+        }));
+
+
+        it('it should allow app to give custom affiliate percentage (%) to desired user', mochaAsync(async () => {
+            const postData = {
+                user : res_4.message.id,
+                affiliatePercentage : 0.3,
+                app : app
+            };
+
+            let res = await addCustomAffiliateStructureToUser(postData);
+            const { status } = res.data;
+            expect(status).to.equal(200);
+
+            let app_data_after = await getApp({app});
+            const { message : data_after } = app_data_after.data;
+
+            /* Test if they are 1 */
+            expect(data_after.affiliateSetup.customAffiliateStructures.length).to.equal(1);
+        }));
+
+        it('it should allow create user 5', mochaAsync(async () => {
+        
+            const { affiliateId, id } = res_4.message;
+            res_5 = await createUser({app_id : app.id, affiliateLink : affiliateId});
+            const { status, message } = res_5;
+
+            let app_data = await getApp({app});
+            const { message : app_data_after } = app_data.data;
+
+            expect(status).to.equal(200);
+            expect(message.affiliateId).to.not.be.null;
+
+            //expect(message.affilateLinkInfo.userAffiliate).to.equal(id);
+            expect(message.affiliateInfo.wallet.playBalance).to.equal(0);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(1);
+
+            expect(message.affilateLinkInfo.affiliateStructure.level).to.equal(inputs.structures[0].level);
+            expect(message.affilateLinkInfo.affiliateStructure.percentageOnLoss).to.equal(inputs.structures[0].percentageOnLoss);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(1);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks[0].affiliateStructure.level).to.equal(app_data_after.affiliateSetup.customAffiliateStructures[0].level);
+            expect(message.affilateLinkInfo.parentAffiliatedLinks[0].affiliateStructure.percentageOnLoss).to.equal(app_data_after.affiliateSetup.customAffiliateStructures[0].percentageOnLoss);
+
+        }));
     });
 
     context('edit structures', async () => {
@@ -129,6 +204,7 @@ context('Affiliates Testing', async () =>  {
             const { status } = res.data;
             expect(status).to.equal(42);
         }));
+
         it('it should throw error on structure with percentageOnLoss 0', mochaAsync(async () => {
             const structures = [{level : 1, percentageOnLoss : 0}]
             let res = await editAppStructure({app, structures});
@@ -221,8 +297,8 @@ context('Affiliates Testing', async () =>  {
 
                 }
             }
-
         }));
+
 
         it('it should allow app to keep structures with same variables', mochaAsync(async () => {
             /* Get Before Data */
@@ -319,7 +395,7 @@ context('Affiliates Testing', async () =>  {
     });
 
     context('POST Bet', async () => {
-        it('it should set Bet for user and losts should be sent to parent Users', mochaAsync(async () => {
+        it('it should set Bet for user and losts should be sent to parent Users (standard affiliate)', mochaAsync(async () => {
             /* Get Info for User 1 before Bet */
             var user_1_before_info = await getUserInfo({user : res_1.message, app});
             /* Get Info for User 2 before Bet */
@@ -386,7 +462,150 @@ context('Affiliates Testing', async () =>  {
             expect(parseFloat(user_3_after_info.wallet.playBalance).toFixed(6)).to.equal(parseFloat(user_3_before_info.wallet.playBalance-BET_AMOUNT).toFixed(6));
 
         }));
+
+        it('it should set Bet for user and losts should be sent to parent Users (custom affiliate)', mochaAsync(async () => {
+            /* Get Info for User 4 before Bet */
+            var user_4_before_info = await getUserInfo({user : res_4.message, app});
+            /* Get Info for User 5 before Bet */
+            var user_5_before_info = await getUserInfo({user : res_5.message, app});
+            
+            /* Get Info for User3 before Bet */
+            const user_4 = {...user_4_before_info, eth_account : res_4.eth_account};
+            const user_5 = {...user_5_before_info, eth_account : res_5.eth_account};
+
+            /* Get Info for App before Bet */
+            const app_data_before = (await getApp({app})).data.message;
+
+            /* Const */
+            const TOKEN_DEPOSIT_AMOUNT = 3;
+            const ETH_DEPOSIT_AMOUNT = 0.1;
+            const BET_AMOUNT = 0.2;
+            const BET_GAME = app_data_before.games.find( game => game.metaName == 'european_roulette_simple');
+            const BET_RESULT = [{
+                place: 0, value: BET_AMOUNT
+            }];
+
+            /* Send Tokens to User */
+            await provideFunds({account : user_5.eth_account, ethAmount : ETH_DEPOSIT_AMOUNT, tokenAmount : TOKEN_DEPOSIT_AMOUNT});
+            /* Deposit for User */
+            await createUserDeposit({user : user_5, tokenAmount : TOKEN_DEPOSIT_AMOUNT, app : app_data_before});
+
+            /* Get Info for User 4 before Bet */
+            user_5_before_info = await getUserInfo({user : res_5.message, app});
+            
+            var wasWon = true;
+
+            /* Creater User Bet */
+            while(wasWon){
+                /* Verify that was Lost */
+                var bet_res = await bet({user : user_5, game : BET_GAME, result : BET_RESULT, app});
+                const { message } = bet_res.data;
+                wasWon = message.isWon;
+            }
+
+            const { status, message } = bet_res.data;
+            /* Confirm Bet was valid */
+            expect(status).to.equal(200);
+
+            /* Get Info for User 4 After Bet */
+            const user_4_after_info = await getUserInfo({user : res_4.message, app});
+            /* Get Info for User 5 After Bet */
+            const user_5_after_info = await getUserInfo({user : res_5.message, app});
+
+            /* Check that Affiliate With Structure x got his amount */
+            var { percentageOnLoss : user_4_percentageOnLoss } = user_5.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_4_after_info.affiliateInfo._id).affiliateStructure;
+            
+            /* Verify Affiliate Balance on User 4,5 */
+            expect(user_4_after_info.affiliateInfo.wallet.playBalance).to.equal(BET_AMOUNT*user_4_percentageOnLoss);
+            expect(user_5_after_info.affiliateInfo.wallet.playBalance).to.equal(0);
+            
+            /* Get Info for App After Bet */
+            const app_data_after = (await getApp({app})).data.message;
+            const affiliateReturns = BET_AMOUNT*(user_4_percentageOnLoss);
+
+            /* Verify balance on App */
+            expect(parseFloat(app_data_after.wallet.playBalance).toFixed(6)).to.equal(parseFloat(app_data_before.wallet.playBalance+BET_AMOUNT-affiliateReturns).toFixed(6));
+            /* Verify Balance on User 5 */
+            expect(parseFloat(user_5_after_info.wallet.playBalance).toFixed(6)).to.equal(parseFloat(user_5_before_info.wallet.playBalance-BET_AMOUNT).toFixed(6));
+
+        }));
+
+        it('it should change the Structure and remove the return of the previous user structure & bet should succeed', mochaAsync(async () => {
+            const structures = [{level : 1, percentageOnLoss : 0.4}]
+            let res_editAppStructure = await editAppStructure({app, structures});
+            expect(res_editAppStructure.data.status).to.equal(200);
+
+            /* Get Info for User 1 before Bet */
+            var user_1_before_info = await getUserInfo({user : res_1.message, app});
+            /* Get Info for User 2 before Bet */
+            var user_2_before_info = await getUserInfo({user : res_2.message, app});
+            /* Get Info for User 2 before Bet */
+            var user_3_before_info = await getUserInfo({user : res_3.message, app});
+
+            /* Get Info for User3 before Bet */
+            const user_1 = {...user_1_before_info, eth_account : res_1.eth_account};
+            const user_2 = {...user_2_before_info, eth_account : res_2.eth_account};
+            const user_3 = {...user_3_before_info, eth_account : res_3.eth_account};
+
+            /* Get Info for App before Bet */
+            const app_data_before = (await getApp({app})).data.message;
+
+            /* Const */
+            const BET_AMOUNT = 0.2;
+            const BET_GAME = app_data_before.games.find( game => game.metaName == 'european_roulette_simple');
+            const BET_RESULT = [{
+                place: 0, value: BET_AMOUNT
+            }];
+
+            /* Get Info for User 2 before Bet */
+            user_3_before_info = await getUserInfo({user : res_3.message, app});
+            var wasWon = true;
+
+            /* Creater User Bet */
+            while(wasWon){
+                /* Verify that was Lost */
+                var bet_res = await bet({user : user_3, game : BET_GAME, result : BET_RESULT, app});
+                const { message } = bet_res.data;
+                wasWon = message.isWon;
+            }
+
+            const { status, message } = bet_res.data;
+            /* Confirm Bet was valid */
+            expect(status).to.equal(200);
+            /* Get Info for User 1 After Bet */
+            const user_1_after_info = await getUserInfo({user : res_1.message, app});
+            /* Get Info for User 2 After Bet */
+            const user_2_after_info = await getUserInfo({user : res_2.message, app});
+            /* Get Info for User3 After Bet */
+            const user_3_after_info = await getUserInfo({user : res_3.message, app});
+
+            /* Check that Affiliate With Structure x got his amount */
+            var { percentageOnLoss : user_2_percentageOnLoss } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_2_after_info.affiliateInfo._id).affiliateStructure;
+            var { isActive : user_1_isActive } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_1_after_info.affiliateInfo._id).affiliateStructure;
+            
+            /* Expect the percentage on loss to be equal to new change */
+            expect(user_2_percentageOnLoss).to.equal(structures.find(s => s.level == 1).percentageOnLoss);
+            /* Verify Affiliate Balance on User 1,2,3 */
+            expect(Numbers.toFloat(user_2_after_info.affiliateInfo.wallet.playBalance)).to.equal(Numbers.toFloat(user_2_before_info.affiliateInfo.wallet.playBalance+BET_AMOUNT*user_2_percentageOnLoss));
+            expect(user_1_isActive).to.equal(false);
+
+            /* Confirm User 1 has the affiliate balance equal to before */
+            expect(user_1_after_info.affiliateInfo.wallet.playBalance).to.equal(user_1_before_info.affiliateInfo.wallet.playBalance);
+            expect(user_3_after_info.affiliateInfo.wallet.playBalance).to.equal(0);
+
+            /* Get Info for App After Bet */
+            const app_data_after = (await getApp({app})).data.message;
+
+            /* Verify balance on App */
+            const affiliateReturns = BET_AMOUNT*(user_2_percentageOnLoss);
+            expect(parseFloat(app_data_after.wallet.playBalance).toFixed(6)).to.equal(parseFloat(app_data_before.wallet.playBalance+BET_AMOUNT-affiliateReturns).toFixed(6));
+
+            /* Verify Balance on User 3 */
+            expect(parseFloat(user_3_after_info.wallet.playBalance).toFixed(6)).to.equal(parseFloat(user_3_before_info.wallet.playBalance-BET_AMOUNT).toFixed(6));
+        }));
     });
+
+    
 });
 
 

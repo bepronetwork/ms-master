@@ -49,6 +49,20 @@ class AffiliateSetupRepository extends MongoComponent{
             })
         })
     }
+
+    
+    async addToCustomAffiliates(_id, affiliateStructureId){
+        return new Promise( (resolve,reject) => {
+            AffiliateSetupRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: _id, customAffiliateStructures : {$nin : [affiliateStructureId] } }, 
+                { $push: { "customAffiliateStructures" : affiliateStructureId } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        })
+    }
 }
 
 AffiliateSetupRepository.prototype.schema = new AffiliateSetupSchema();

@@ -1,7 +1,7 @@
 
 export function getAffiliatesReturn({affiliateLink, lostAmount}){
     const { parentAffiliatedLinks } = affiliateLink;
-
+    
     /* Get indirect values for parent affiliate */ 
     let affiliateParentReturns = parentAffiliatedLinks.map( parentAffiliatedLink => {
         const { percentageOnLoss, isActive } = parentAffiliatedLink.affiliateStructure;
@@ -14,6 +14,7 @@ export function getAffiliatesReturn({affiliateLink, lostAmount}){
         }
 
     }).filter(el => el != null)
+
     /* Get Total Affiliate Return */
     const totalAffiliateReturn = affiliateParentReturns.reduce( (acc, a) =>  acc + a.amount ,0);
 

@@ -11,6 +11,7 @@ AffiliateLinkSchema.prototype.schema = {
     affiliate                           : { type: mongoose.Schema.Types.ObjectId, ref: 'Affiliate'}, // Just for mapping
     parentAffiliatedLinks               : [{ type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateLink'}] , // Parent Affiliated that will resemble return from this one
     affiliateStructure                  : { type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateStructure'},
+    isCustom                            : { type: Boolean, default : false },
 }
 
 
