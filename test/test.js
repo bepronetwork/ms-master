@@ -140,6 +140,7 @@ const runTests = async () => {
             }))
         });
     })();
+    
     mocha.addFile('./test/tests/AppTest.js');
     mocha.addFile('./test/tests/AffiliatesTest.js');
     mocha.addFile('./test/tests/app');

@@ -50,6 +50,15 @@ class User extends ModelComponent{
         }
     }
 
+    async getInfo(){
+        try{
+            return await this.process('GetInfo');
+        }catch(err){
+            throw err;
+        }
+    }
+
+
     async updateWallet(){
         const { user } = this.self.params;
         try{

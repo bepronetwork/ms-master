@@ -209,36 +209,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/users:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - user
-      summary: Get App Users
-      operationId: getUsers
-      description: Get All App Users
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: user
-          description: User object to submit to the network
-          required: true
-          schema:
-            $ref: '#/definitions/AppUsersRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /users/register:
     x-swagger-router-controller: user
     post:
@@ -751,6 +721,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/user/get : 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      - app
+      summary: Get all User Info
+      operationId: getUserInfo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: bet
+          description: Game Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserInfoGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/users:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - user
+      summary: Get App Users
+      operationId: getUsers
+      description: Get All App Users
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AppUsersRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
   /app/services/add:
     x-swagger-router-controller: app
@@ -1170,6 +1200,22 @@ definitions:
         minLength: 1
         description: |
           User Address
+  UserInfoGetRequest : 
+    type: object
+    required:
+      - user
+      - app
+    properties:
+      user:
+        type : string
+        example: "43256291237846817623"
+        description: |
+          Unique identifier of the user, ID
+      app:
+        type : string
+        example: "43256291237846817623"
+        description: |
+          Unique identifier of the user, ID
   AdminLoginRequest : 
     type: object
     required:

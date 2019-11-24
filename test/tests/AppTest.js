@@ -14,6 +14,7 @@ import {
     loginUser,
     registerUser,
     depositUser,
+    getUserInfo,
     getEcosystemCasinoGames,
     updateUserWallet,
     editTableLimit,
@@ -739,7 +740,19 @@ context('App Testing', async () =>  {
 
 
     context('GET - App Data', mochaAsync( async () => {
+
         
+
+        it('GET user - should allow', mochaAsync(async () => {
+            let postData = {
+                user : USER_ID,
+                app : APP_ID
+            };
+            let res = await getUserInfo(postData, BEARER_TOKEN, {id : APP_ID});
+            expect(res.data.status).to.equal(200);
+        }));
+
+
         it('GET users - should allow', mochaAsync(async () => {
             let postData = {
                 app : APP_ID

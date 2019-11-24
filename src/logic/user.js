@@ -187,6 +187,11 @@ const processActions = {
             size : params.size
         });
 		return bets;
+    },
+    __getInfo : async (params) => {
+        const { user } = params;
+        let res = await UsersRepository.prototype.findUserById(user);
+		return res;
     }
 }
 
@@ -268,6 +273,9 @@ const progressActions = {
     __getBets : async (params) => {
 		return params;
     },
+    __getInfo : async (params) => {
+		return params;
+    }
 }
 
 /**
@@ -336,6 +344,9 @@ class UserLogic extends LogicComponent {
                 case 'GetBets' : {
 					return await library.process.__getBets(params); break;
                 };
+                case 'GetInfo' : {
+					return await library.process.__getInfo(params); break;
+                };
 			}
 		}catch(err){
 			throw err;
@@ -379,6 +390,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'GetBets' : {
 					return await library.progress.__getBets(params); break;
+                };
+                case 'GetInfo' : {
+					return await library.progress.__getInfo(params); break;
                 };
 			}
 		}catch(err){
