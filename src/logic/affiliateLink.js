@@ -85,7 +85,6 @@ const processActions = {
 
         user = await UsersRepository.prototype.findUserById(user); 
         app = await AppRepository.prototype.findAppById(app, 'affiliates');
-        console.log(app._id)
         /* No Mapping Error Verification */
         if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
         if(!user){throwError('USER_NOT_EXISTENT')};
