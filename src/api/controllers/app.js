@@ -1,6 +1,6 @@
 
 import {
-	Game, App, Bet, Event
+	Game, App, Bet, Event, AffiliateLink
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -319,9 +319,31 @@ async function updateWalletApp (req, res) {
 	}
 }
 
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+
+
+async function createAffiliateCustom(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let affiliateLink = new AffiliateLink(params);
+        let data = await affiliateLink.setCustomAffiliatePercentage();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        console.log(err)
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+
 export {
     createApp,
     editTopBar,
+    createAffiliateCustom,
     getApp,
     createGame,
     addBlockchainInformation,

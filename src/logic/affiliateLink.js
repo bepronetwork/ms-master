@@ -2,10 +2,10 @@
 
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AffiliateLinkRepository, AppRepository, AffiliateRepository } from '../db/repos';
+import { AffiliateLinkRepository, AppRepository, AffiliateRepository, UsersRepository, AffiliateSetupRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import _ from 'lodash';
-import { AffiliateLink } from '../models';
+import { AffiliateLink, AffiliateStructure } from '../models';
 let error = new ErrorManager();
 
 
@@ -77,7 +77,24 @@ const processActions = {
             parentAffiliatedLinks : selfParentAffiliateLinks,
             affiliateStructure : affiliateStructureInitial
         };
-	}
+    },
+    __setCustomAffiliatePercentage : async (params) => {
+        
+        var { user, affiliatePercentage, app } = params;
+        /* Get User Affiliate Link Id + Confirm user exists */
+
+        user = await UsersRepository.prototype.findUserById(user); 
+        app = await AppRepository.prototype.findAppById(app, 'affiliates');
+        /* No Mapping Error Verification */
+        if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
+        if(!user){throwError('USER_NOT_EXISTENT')};
+
+		return {
+            user,
+            app,
+            affiliatePercentage
+        };
+    }
 }
 
 /**
@@ -111,7 +128,34 @@ const progressActions = {
             type : 'affiliateLink'
         };
        
-	}
+    },
+    __setCustomAffiliatePercentage : async (params) => {
+
+        const { app, user, affiliatePercentage } = params;
+        var customAffiliate;
+        /* Confirm the current custom already exists in customStructures for App */
+        const { customAffiliateStructures } = app.affiliateSetup;
+        var customExistent = customAffiliateStructures.find( c => c.percentageOnLoss == affiliatePercentage);
+
+        if(!customExistent){
+            /* If Not - Create Custom Affiliate Structure with amount */
+            customAffiliate = new AffiliateStructure({
+                percentageOnLoss : affiliatePercentage,
+                level : 0,
+                isActive : true
+            });
+            customAffiliate = await customAffiliate.register();
+
+            /* If Not - Attach this Structure to custom App */
+            await AffiliateSetupRepository.prototype.addToCustomAffiliates(app.affiliateSetup._id, customAffiliate._id);
+        }
+
+        /* Set Affiliate Structure to Affiliate Link Id */
+        await AffiliateLinkRepository.prototype.setDirectAfffiliateStructure(user.affiliateLink._id, customAffiliate._id);
+
+        /* Return True */
+        return true;
+    }
 }
 
 /**
@@ -164,6 +208,9 @@ class AffiliateLinkLogic extends LogicComponent {
 			switch(processAction) {
 				case 'Register' : {
 					return library.process.__register(params); break;
+                };
+                case 'SetCustomAffiliatePercentage' : {
+					return await library.process.__setCustomAffiliatePercentage(params);
 				};
 			}
 		}catch(err){
@@ -194,7 +241,10 @@ class AffiliateLinkLogic extends LogicComponent {
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params);
-				}
+                };
+                case 'SetCustomAffiliatePercentage' : {
+					return await library.progress.__setCustomAffiliatePercentage(params);
+				};
 			}
 		}catch(err){
 			throw err;

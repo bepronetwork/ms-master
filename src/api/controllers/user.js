@@ -39,6 +39,18 @@ async function loginUser (req, res) {
 	}
 }
 
+async function getUserInfo (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let user = new User(params);
+		let data = await user.getInfo();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function userSummary (req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
@@ -83,7 +95,8 @@ async function updateWallet (req, res) {
 
 export {
 	registUser,
-	loginUser,
+    loginUser,
+    getUserInfo,
     userSummary,
     getBets,
     updateWallet

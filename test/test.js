@@ -140,10 +140,11 @@ const runTests = async () => {
             }))
         });
     })();
+    
     mocha.addFile('./test/tests/AppTest.js');
+    mocha.addFile('./test/tests/AffiliatesTest.js');
     mocha.addFile('./test/tests/app');
     mocha.addFile('./test/tests/FunctionalTest.js');
-    mocha.addFile('./test/tests/AffiliatesTest.js');
     mocha.addFile('./test/tests/EcosystemTest.js');
     mocha.addFile('./test/tests/AdminTest.js');
     mocha.addFile('./test/tests/BetTest.js');

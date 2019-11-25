@@ -4,6 +4,7 @@ import {
     loginUser,
     editAffiliateStructure,
     placeBet,
+    setCustomAffiliateStructureToUser,
     updateUserWallet
 } from '../methods';
 import { genData, detectValidationErrors } from "../utils";
@@ -51,7 +52,6 @@ export async function createUserDeposit({user, tokenAmount, app}){
         nonce : getNonce(),
         transactionHash: res_eth.transactionHash
     }, bearerToken, {id : user_id});
-
 }
 
 export async function editAppStructure({app, structures}){
@@ -59,6 +59,14 @@ export async function editAppStructure({app, structures}){
         app : app.id,
         structures, 
         affiliateTotalCut : structures.reduce( (acc, s) => acc+s.percentageOnLoss, 0)
+    }, app.bearerToken, {id : app.id})
+}
+
+export async function addCustomAffiliateStructureToUser({app, affiliatePercentage, user}){
+    return await setCustomAffiliateStructureToUser({
+        app : app.id,
+        user, 
+        affiliatePercentage
     }, app.bearerToken, {id : app.id})
 }
 

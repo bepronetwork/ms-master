@@ -148,10 +148,11 @@ module.exports = {
         .send(params)
         .then(res => {return res.body})
     },
-    async getUser(id, bearerToken) {
+    async getUserInfo(params, bearerToken, payload) {
         return request(global.server)
-        .post('/api/users/${id}/info')
+        .post('/api/app/user/get')
         .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => res.body)
         
@@ -159,7 +160,8 @@ module.exports = {
     async getAppUsers(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/users')
-        .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => res.body)
         
@@ -325,6 +327,14 @@ module.exports = {
     async editAffiliateStructure(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/affiliate/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async setCustomAffiliateStructureToUser(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/affiliate/custom/add')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

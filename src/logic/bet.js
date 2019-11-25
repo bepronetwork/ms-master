@@ -101,7 +101,7 @@ const processActions = {
             var clientSeed = CryptographySingleton.generateSeed();
             const { affiliateLink } = user;
             const isUserAffiliated = (affiliateLink != null && !_.isEmpty(affiliateLink))
-            
+
             /* Verify if Withdrawing Mode is ON - User */
             let isUserWithdrawingAPI = user.isWithdrawing;
             /* Verify if Withdrawing Mode is ON - App */

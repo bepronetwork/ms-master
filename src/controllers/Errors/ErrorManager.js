@@ -393,6 +393,13 @@ class ErrorManager {
                 case 'Register' : {  
                     if(typeof affiliateLink == 'undefined' || Object.is(affiliateLink, null))
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                };
+                case 'SetCustomAffiliatePercentage' : {
+                    if(typeof affiliateLink == 'undefined' || Object.is(affiliateLink, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                    if(affiliateLink.affiliatePercentage <= 0 || affiliateLink.affiliatePercentage > 1 ){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_REQUEST));
+                    }
                 }
             }
         }catch(err){
