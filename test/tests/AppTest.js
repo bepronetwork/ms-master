@@ -41,6 +41,11 @@ import { getRandom } from '../utils/math';
 import Random from '../tools/Random';
 import Numbers from '../logic/services/numbers';
 
+import {
+    shouldCreateTheApp,
+    shouldGetNewBearerToken
+} from './output/AppTestMethod';
+
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
@@ -109,8 +114,7 @@ context('App Testing', async () =>  {
             USER_ADDRESS = res_user_loginUser.data.message.address;
 
             saveOutputTest("AppTest","shouldCreateTheApp",response.data);
-
-            expect(response.data.status).to.equal(200);
+            shouldCreateTheApp(response.data, expect);
         }));
         
         it('should get new Bearer Token ', mochaAsync(async () => {
@@ -120,7 +124,7 @@ context('App Testing', async () =>  {
             expect(res.data.status).to.equal(200);
             BEARER_TOKEN = res.data.message.app.bearerToken;
             saveOutputTest("AppTest","shouldGetNewBearerToken",res.data);
-            expect(res.data.message.app).to.have.property('bearerToken');
+            shouldGetNewBearerToken(res.data, expect);
         })); 
     
         it('should Get App Data Auth', mochaAsync(async () => {
