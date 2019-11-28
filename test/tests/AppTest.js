@@ -43,7 +43,8 @@ import Numbers from '../logic/services/numbers';
 
 import {
     shouldCreateTheApp,
-    shouldGetNewBearerToken
+    shouldGetNewBearerToken,
+    shouldGetAppDataAuth
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -135,9 +136,7 @@ context('App Testing', async () =>  {
             global.test.app = res.data.message;
             const { message, status } = res.data;
             saveOutputTest("AppTest","shouldGetAppDataAuth",res.data);
-            expect(status).to.equal(200);
-            expect(message.authorizedAddresses.length).to.equal(0);
-            expect(message.croupierAddress).to.equal('N/A');
+            shouldGetAppDataAuth(res.data, expect);
 
         })); 
 
