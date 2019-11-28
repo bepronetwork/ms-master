@@ -155,7 +155,15 @@ module.exports = {
         expect(data.message.affiliateSetup.affiliateStructures).to.not.be.null;
         expect(data.message.affiliateSetup.affiliateStructures).to.be.an('array');
         expect(data.message.affiliateSetup.affiliateStructures.isActive).to.not.be.null;
-        // expect(data.message.affiliateSetup.isActive).to.not.be.null;
-        // expect(data.message.affiliateSetup.isActive).to.be.true;
+        expect(data.message.affiliateSetup.affiliateStructures._id).to.not.be.null;
+        expect(data.message.affiliateSetup.affiliateStructures.level).to.not.be.null;
+        expect(data.message.affiliateSetup.affiliateStructures.percentageOnLoss).to.not.be.null;
+        expect(data.message.affiliateSetup._id).to.not.be.null;
+        expect(data.message.affiliateSetup._id).to.be.an('String');
+        expect(data.message.wallet).to.not.be.null;
+        expect(data.message.wallet).to.be.an('object');
+        expect(data.message.wallet).to.include({ playBalance: data.message.wallet.playBalance });
+        expect(data.message.wallet.playBalance).to.not.be.null;
+        expect(data.message.wallet.playBalance).to.be.an('number');
     },
 }
