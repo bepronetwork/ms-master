@@ -45,7 +45,8 @@ import {
     shouldCreateTheApp,
     shouldGetNewBearerToken,
     shouldGetAppDataAuth,
-    shouldGetAppData
+    shouldGetAppData,
+    shouldIntegrateServicesIntoApp
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -153,7 +154,7 @@ context('App Testing', async () =>  {
             let service_call_add_model = models.apps.add_services(APP_ID, [101, 201]);
             let res = await addAppServices(service_call_add_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","shouldIntegrateServicesIntoApp",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldIntegrateServicesIntoApp(res.data, expect);
         })); 
 
         it('ETH - should Deploy the Platform Smart Contract & Provide Liquidity', mochaAsync(async () => {

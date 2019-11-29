@@ -217,4 +217,8 @@ module.exports = {
         expect(data.message.games).to.be.an('array').that.is.empty;
         
     },
+    shouldIntegrateServicesIntoApp(data, expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+    }
 }
