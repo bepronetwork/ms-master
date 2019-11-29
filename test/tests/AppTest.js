@@ -44,7 +44,8 @@ import Numbers from '../logic/services/numbers';
 import {
     shouldCreateTheApp,
     shouldGetNewBearerToken,
-    shouldGetAppDataAuth
+    shouldGetAppDataAuth,
+    shouldGetAppData
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -144,7 +145,7 @@ context('App Testing', async () =>  {
             let get_app_model = models.apps.get_app(APP_ID);
             let res = await getApp(get_app_model);
             saveOutputTest("AppTest","shouldGetAppData",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldGetAppData(res.data, expect);
         })); 
 
 

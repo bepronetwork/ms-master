@@ -18,8 +18,8 @@ module.exports = {
         expect(data.message.integrations.chat).to.not.be.null;
         expect(data.message.integrations.chat).to.not.be.empty;
         expect(data.message.integrations.chat.publicKey).to.not.be.null;
-        expect(data.message.countriesAvailable).to.be.an('array').that.is.empty;;
-        expect(data.message.games).to.be.an('array').that.is.empty;;
+        expect(data.message.countriesAvailable).to.be.an('array').that.is.empty;
+        expect(data.message.games).to.be.an('array').that.is.empty;
 
     },
     shouldGetNewBearerToken(data, expect) {
@@ -165,5 +165,56 @@ module.exports = {
         expect(data.message.wallet).to.include({ playBalance: data.message.wallet.playBalance });
         expect(data.message.wallet.playBalance).to.not.be.null;
         expect(data.message.wallet.playBalance).to.be.an('number');
+    },
+    shouldGetAppData(data, expect) {
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('object');
+        expect(data.message).to.include({ id: data.message.id, name: data.message.name, description: data.message.description, isValid: data.message.isValid, licensesId: data.message.licensesId, customization: data.message.customization, integrations: data.message.integrations, countriesAvailable: data.message.countriesAvailable, integrations: data.message.integrations, games: data.message.games });
+        expect(data.message.id).to.not.be.null;
+        expect(data.message.id).to.be.an('string');
+        expect(data.message.name).to.not.be.null;
+        expect(data.message.name).to.be.an('string');
+        expect(data.message.description).to.not.be.null;
+        expect(data.message.description).to.be.an('string');
+        expect(data.message.isValid).to.not.be.null;
+        expect(data.message.isValid).to.be.false;
+        expect(data.message.licensesId).to.not.be.null;
+        expect(data.message.licensesId).to.be.an('array').that.is.empty;
+        expect(data.message.customization).to.not.be.null;
+        expect(data.message.customization).to.be.an('object');
+        expect(data.message.customization).to.include({ _id: data.message.customization._id, topBar: data.message.customization.topBar, banners: data.message.customization.banners });
+        expect(data.message.customization._id).to.not.be.null;
+        expect(data.message.customization._id).to.be.an('string');
+        expect(data.message.customization.topBar).to.not.be.null;
+        expect(data.message.customization.topBar).to.be.an('object');
+        expect(data.message.customization.topBar).to.include({ isActive: data.message.customization.topBar.isActive, _id: data.message.customization.topBar._id });
+        expect(data.message.customization.topBar.isActive).to.not.be.null;
+        expect(data.message.customization.topBar.isActive).to.be.false;
+        expect(data.message.customization.topBar._id).to.not.be.null;
+        expect(data.message.customization.topBar._id).to.be.an('string');
+        expect(data.message.customization.banners).to.not.be.null;
+        expect(data.message.customization.banners).to.be.an('object');
+        expect(data.message.customization.banners).to.include({ ids: data.message.customization.banners.ids, autoDisplay: data.message.customization.banners.autoDisplay, _id: data.message.customization.banners._id });
+        expect(data.message.customization.banners.ids).to.not.be.null;
+        expect(data.message.customization.banners.ids).to.be.an('array').that.is.empty;
+        expect(data.message.customization.banners.autoDisplay).to.not.be.null;
+        expect(data.message.customization.banners.autoDisplay).to.be.false;
+        expect(data.message.customization.banners._id).to.not.be.null;
+        expect(data.message.customization.banners._id).to.be.an('string');
+        expect(data.message.integrations).to.not.be.null;
+        expect(data.message.integrations).to.be.an('object');
+        expect(data.message.integrations).to.include({ chat: data.message.integrations.chat });
+        expect(data.message.integrations.chat).to.not.be.null;
+        expect(data.message.integrations.chat).to.be.an('object');
+        expect(data.message.integrations.chat).to.include({ publicKey: data.message.integrations.chat.publicKey });
+        expect(data.message.integrations.chat.publicKey).to.not.be.null;
+        expect(data.message.integrations.chat.publicKey).to.be.an('string');
+        expect(data.message.countriesAvailable).to.not.be.null;
+        expect(data.message.countriesAvailable).to.be.an('array').that.is.empty;
+        expect(data.message.games).to.not.be.null;
+        expect(data.message.games).to.be.an('array').that.is.empty;
+        
     },
 }
