@@ -220,5 +220,17 @@ module.exports = {
     shouldIntegrateServicesIntoApp(data, expect){
         expect(data.status).to.not.be.null;
         expect(data.status).to.equal(200);
-    }
+    },
+    ethShouldDeployThePlatformSmartContract(res_deploy, expect){
+        expect(res_deploy.platformTokenAddress).to.not.be.null;
+        expect(res_deploy.platformTokenAddress).to.be.an('string');
+        expect(res_deploy.transactionHash).to.not.be.null;
+        expect(res_deploy.transactionHash).to.be.an('string');
+        expect(res_deploy.platformAddress).to.not.be.null;
+        expect(res_deploy.platformAddress).to.be.an('string');
+        expect(res_deploy.platformBlockchain).to.not.be.null;
+        expect(res_deploy.platformBlockchain).to.be.an('string');
+        expect(res_deploy.casinoContract).to.not.be.null;
+        expect(res_deploy.casinoContract).to.be.an('object');
+    },
 }
