@@ -48,7 +48,8 @@ import {
     shouldGetAppData,
     shouldIntegrateServicesIntoApp,
     ethShouldDeployThePlatformSmartContract,
-    shouldAddBlockchainInformationToApp
+    shouldAddBlockchainInformationToApp,
+    shouldAddSomeBlockhainInformationToApp
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -219,10 +220,7 @@ context('App Testing', async () =>  {
             const { message, status } = res.data;
             global.test.app = message;
             saveOutputTest("AppTest","shouldAddSomeBlockhainInformationToApp",res.data);
-            expect(status).to.equal(200);
-            expect(message.authorizedAddresses.length).to.equal(2);
-            expect(message.croupierAddress).to.not.be.null;
-    
+            shouldAddSomeBlockhainInformationToApp(res.data, expect);
         })); 
 
 
