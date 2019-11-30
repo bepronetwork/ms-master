@@ -47,7 +47,8 @@ import {
     shouldGetAppDataAuth,
     shouldGetAppData,
     shouldIntegrateServicesIntoApp,
-    ethShouldDeployThePlatformSmartContract
+    ethShouldDeployThePlatformSmartContract,
+    shouldAddBlockchainInformationToApp
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -178,7 +179,6 @@ context('App Testing', async () =>  {
             TRANSACTION_TOKEN_TRANSFER_HASH = res_deploy.transactionHash;
             saveOutputTest("AppTest","ETH-shouldDeployThePlatformSmartContract&ProvideLiquidity",res_deploy);
             ethShouldDeployThePlatformSmartContract(res_deploy, expect);
-            // expect(res_deploy).to.not.equal(false);
         })); 
 
 
@@ -202,9 +202,7 @@ context('App Testing', async () =>  {
             const { message, status } = res.data;
             global.test.app = message;
             saveOutputTest("AppTest","shouldAddBlockchainInformationToApp",res.data);
-            expect(status).to.equal(200);
-            expect(message.authorizedAddresses.length).to.equal(1);
-            expect(message.croupierAddress).to.not.be.null;
+            shouldAddBlockchainInformationToApp(res.data, expect);
     
         })); 
 
