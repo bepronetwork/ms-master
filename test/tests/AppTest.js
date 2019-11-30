@@ -55,7 +55,8 @@ import {
     shouldUpdateTheIntegrationInfoFromApp,
     shouldGetAllEcosystemGamesEuropeanRoulette,
     shouldAddEcosystemGameEuropeanRoulette,
-    shouldGetAllAppGamesEuropeanRoulette
+    shouldGetAllAppGamesEuropeanRoulette,
+    shouldChangeGameTableLimitEuropeanRoulette,
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -315,7 +316,7 @@ context('App Testing', async () =>  {
             }
             let res = await editTableLimit(postData, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","shouldChangeGameTableLimitEuropeanRoulette",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldChangeGameTableLimitEuropeanRoulette(res.data, expect);
         })); 
 
         it('should change game Edge', mochaAsync(async () => {
@@ -331,6 +332,7 @@ context('App Testing', async () =>  {
             let games_res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             let new_edge = games_res.data.message[0].edge;
             saveOutputTest("AppTest","shouldChangeGameEdgeEuropeanRoulette",res.data);
+            // shouldChangeGameEdgeEuropeanRoulette(res.data, expect);
             expect(res.data.status).to.equal(200);
             expect(new_edge).to.equal(postData.edge);
         })); 
