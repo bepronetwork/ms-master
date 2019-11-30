@@ -53,7 +53,8 @@ import {
     shouldntUpdateWalletWithPendingTransaction,
     shouldUpdateWalletWithVerifiedTransaction,
     shouldUpdateTheIntegrationInfoFromApp,
-    shouldGetAllEcosystemGamesEuropeanRoulette
+    shouldGetAllEcosystemGamesEuropeanRoulette,
+    shouldAddEcosystemGameEuropeanRoulette
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -291,7 +292,7 @@ context('App Testing', async () =>  {
             let res = await addGame(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             saveOutputTest("AppTest","shouldAddEcosystemGameEuropeanRoulette",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldAddEcosystemGameEuropeanRoulette(res.data, expect);
         })); 
 
         it('should get All App Games', mochaAsync(async () => {
