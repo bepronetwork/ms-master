@@ -51,7 +51,8 @@ import {
     shouldAddBlockchainInformationToApp,
     shouldAddSomeBlockhainInformationToApp,
     shouldntUpdateWalletWithPendingTransaction,
-    shouldUpdateWalletWithVerifiedTransaction
+    shouldUpdateWalletWithVerifiedTransaction,
+    shouldUpdateTheIntegrationInfoFromApp,
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -265,7 +266,7 @@ context('App Testing', async () =>  {
             }
             let res = await editAppIntegration(postData, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","shouldUpdateTheIntegrationInfoFromApp",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldUpdateTheIntegrationInfoFromApp(res.data, expect);
         })); 
     });
 

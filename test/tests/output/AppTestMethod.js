@@ -604,4 +604,22 @@ module.exports = {
         expect(data.message.isValid).to.not.be.null;
         expect(data.message.isValid).to.be.true;
     },
+    shouldUpdateTheIntegrationInfoFromApp(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('object');
+        expect(data.message.app).to.not.be.null;
+        expect(data.message.app).to.be.an('string');
+        expect(data.message.isActive).to.not.be.null;
+        expect(data.message.isActive).to.be.true;
+        expect(data.message.integration_id).to.not.be.null;
+        expect(data.message.integration_id).to.be.an('string');
+        expect(data.message.publicKey).to.not.be.null;
+        expect(data.message.publicKey).to.be.an('string');
+        expect(data.message.privateKey).to.not.be.null;
+        expect(data.message.privateKey).to.be.an('string');
+        expect(data.message.integration_type).to.not.be.null;
+        expect(data.message.integration_type).to.be.an('string');
+    },
 }
