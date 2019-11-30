@@ -54,7 +54,8 @@ import {
     shouldUpdateWalletWithVerifiedTransaction,
     shouldUpdateTheIntegrationInfoFromApp,
     shouldGetAllEcosystemGamesEuropeanRoulette,
-    shouldAddEcosystemGameEuropeanRoulette
+    shouldAddEcosystemGameEuropeanRoulette,
+    shouldGetAllAppGamesEuropeanRoulette
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -301,7 +302,7 @@ context('App Testing', async () =>  {
             detectValidationErrors(res);
             GAMES = res.data.message;
             saveOutputTest("AppTest","shouldGetAllAppGamesEuropeanRoulette",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldGetAllAppGamesEuropeanRoulette(res.data, expect);
         })); 
 
         it('should change game Table Limit', mochaAsync(async () => {
