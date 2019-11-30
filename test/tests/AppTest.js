@@ -49,7 +49,8 @@ import {
     shouldIntegrateServicesIntoApp,
     ethShouldDeployThePlatformSmartContract,
     shouldAddBlockchainInformationToApp,
-    shouldAddSomeBlockhainInformationToApp
+    shouldAddSomeBlockhainInformationToApp,
+    shouldntUpdateWalletWithPendingTransaction
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -238,7 +239,7 @@ context('App Testing', async () =>  {
             let res = await updateAppWallet(wallet_update_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             saveOutputTest("AppTest","shouldntUpdateWalletWithPendingTransaction",res.data);
-            expect(res.data.status).to.equal(10);
+            shouldntUpdateWalletWithPendingTransaction(res.data, expect);
         })); 
 
         it('should update Wallet with verified transaction', mochaAsync(async () => {

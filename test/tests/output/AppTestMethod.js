@@ -452,4 +452,10 @@ module.exports = {
         expect(data.message.wallet.playBalance).to.not.be.null;
         expect(data.message.wallet.playBalance).to.be.an('number');
     },
+    shouldntUpdateWalletWithPendingTransaction(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(10);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('string');
+    },
 }
