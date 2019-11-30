@@ -50,7 +50,8 @@ import {
     ethShouldDeployThePlatformSmartContract,
     shouldAddBlockchainInformationToApp,
     shouldAddSomeBlockhainInformationToApp,
-    shouldntUpdateWalletWithPendingTransaction
+    shouldntUpdateWalletWithPendingTransaction,
+    shouldUpdateWalletWithVerifiedTransaction
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -246,7 +247,7 @@ context('App Testing', async () =>  {
             let wallet_update_app_model = models.apps.update_wallet(APP_ID, CONST.tokenTransferAmount, TRANSACTION_TOKEN_TRANSFER_HASH);
             let res = await updateAppWallet(wallet_update_app_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","shouldUpdateWalletWithVerifiedTransaction",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldUpdateWalletWithVerifiedTransaction(res.data, expect);
         })); 
 
        
