@@ -58,7 +58,7 @@ class AffiliateLinkRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             AffiliateLinkRepository.prototype.schema.model.findOneAndUpdate(
                 { _id: _id },
-                { $set: { "affiliateStructure" : affiliateStructureId, isCustom : true} },
+                { $set: { "affiliateStructure" : affiliateStructureId, isCustom : true } },
                 { 'new': true })
             .exec( (err, item) => {
                 if(err){reject(err)}

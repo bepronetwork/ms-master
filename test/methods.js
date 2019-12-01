@@ -233,6 +233,30 @@ module.exports = {
         .send(params)
         .then(res => {return res.body})
     },
+    async editLogoCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/logo')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async editColorsCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/colors')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async editFooterCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/footer')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/integrations/edit')

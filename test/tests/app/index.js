@@ -1,3 +1,3 @@
-context('App Testing', async () => {
+context('App Customization', async () => {
     require('./customization');
 });

@@ -287,6 +287,42 @@ async function editBanners(req, res) {
 	}
 }
 
+async function editLogo(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editLogo();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function editColors(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editColors();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function editFooter(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editFooter();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function getUsers(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
@@ -345,6 +381,7 @@ export {
     editTopBar,
     createAffiliateCustom,
     getApp,
+    editFooter,
     createGame,
     addBlockchainInformation,
     getPopularNumbers,
@@ -354,6 +391,8 @@ export {
     editAffiliateStructure,
     getGame,
     getGames,
+    editLogo,
+    editColors,
     createBet,
     getUsers,
     getAppAuth,

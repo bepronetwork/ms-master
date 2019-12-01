@@ -311,6 +311,47 @@ class App extends ModelComponent{
         }
     }
 
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editLogo(){
+        try{
+            return await this.process('EditLogo');
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editColors(){
+        try{
+            return await this.process('EditColors');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editFooter(){
+        try{
+            return await this.process('EditFooter');
+        }catch(err){
+            throw err;
+        }
+    }
+
      /**
      * @param {String} 
      * @return {bool || Exception}  

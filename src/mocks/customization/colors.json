@@ -1,0 +1,38 @@
+[
+    {
+        "type" :    "backgroundColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "primaryColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "secondaryColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "thirdColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "forthColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "fifthColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "sixthColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "seventhColor",
+        "hex"  :    "#ffffff"
+    },
+    {
+        "type" :    "heightColor",
+        "hex"  :    "#ffffff"
+    }
+]

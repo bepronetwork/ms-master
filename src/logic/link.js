@@ -3,7 +3,6 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { Color } from '../models';
 let error = new ErrorManager();
 
 
@@ -41,19 +40,13 @@ const processActions = {
   
 const progressActions = {
 	__register : async (params) => {
-		try{            
-            let { colors } = params;
-            /* Save all Colors customization */
-            let ids = await Promise.all(colors.map( async c => {
-                return (await new Color(c).register())._doc._id;
-            }));
+		try{
 
-            params.colors = ids;
-
-            let customization = await self.save(params);
+            let Link = await self.save(params);
+            
 			return {
-				...customization,
-				type : 'customization'
+				...Link,
+				type : 'link'
 			};
 		}catch(err){
 			throw err;
@@ -62,7 +55,7 @@ const progressActions = {
 }
 
 /**
- * Main Customization logic.
+ * Main Link logic.
  *
  * @class
  * @memberof logic
@@ -75,14 +68,14 @@ const progressActions = {
  * @param {ZSchema} schema
  * @param {Object} logger
  * @param {function} cb - Callback function
- * @property {Customization_model} model
- * @property {Customization_schema} schema
+ * @property {Link_model} model
+ * @property {Link_schema} schema
  * @returns {setImmediate} error, this
  * @todo Add description for the params
  */
 
 
-class CustomizationLogic extends LogicComponent {
+class LinkLogic extends LogicComponent {
 	constructor(scope) {
 		super(scope);
 		self = this;
@@ -100,10 +93,10 @@ class CustomizationLogic extends LogicComponent {
 
 
     /**
-	 * Validates Customization schema.
+	 * Validates Link schema.
 	 *
-	 * @param {Customization} Customization
-	 * @returns {Customization} Customization
+	 * @param {Link} Link
+	 * @returns {Link} Link
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
@@ -119,16 +112,16 @@ class CustomizationLogic extends LogicComponent {
 	}
 
 	 /**
-	 * Tests Customization schema.
+	 * Tests Link schema.
 	 *
-	 * @param {Customization} Customization
-	 * @returns {Customization} Customization
+	 * @param {Link} Link
+	 * @returns {Link} Link
 	 * @throws {string} On schema.validate failure
 	 */
 
 	testParams(params, action){
 		try{
-			error.customization(params, action);
+			error.link(params, action);
 		}catch(err){
 			throw err;
 		}
@@ -150,4 +143,4 @@ class CustomizationLogic extends LogicComponent {
 }
 
 // Export Default Module
-export default CustomizationLogic;
+export default LinkLogic;

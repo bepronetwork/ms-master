@@ -20,9 +20,17 @@ import Chat from './chat';
 import Customization from './customization';
 import TopBar from './topBar';
 import Banners from './banners';
+import Color from './color';
+import Logo from './logo';
+import Footer from './footer';
+import Link from './link';
 
 export {
     User,
+    Link,
+    Color,
+    Footer,
+    Logo,
     Chat,
     TopBar,
     Wallet,
