@@ -59,6 +59,7 @@ import {
     shouldChangeGameTableLimitEuropeanRoulette,
     shouldChangeGameEdgeEuropeanRoulette,
     shouldGetAllEcosystemGamesCoinFlip,
+    shouldAddEcosystemGameCoinFlip,
     
 } from './output/AppTestMethod';
 
@@ -350,7 +351,6 @@ context('App Testing', async () =>  {
             ECOSYSTEM_GAMES = res.data.message;
             saveOutputTest("AppTest","shouldGetAllEcosystemGamesCoinFlip",res.data);
             shouldGetAllEcosystemGamesCoinFlip(res.data, expect);
-            expect(res.data.status).to.equal(200);
         })); 
         
         it('should add ecosystem game', mochaAsync(async () => {
@@ -363,7 +363,7 @@ context('App Testing', async () =>  {
             let res = await addGame(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             saveOutputTest("AppTest","shouldAddEcosystemGameCoinFlip",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldAddEcosystemGameCoinFlip(res.data, expect);
         })); 
 
         it('should get All App Games', mochaAsync(async () => {
