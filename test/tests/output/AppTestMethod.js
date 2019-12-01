@@ -830,7 +830,7 @@ module.exports = {
         expect(data.message.app.croupierAddress).to.not.be.null;
         expect(data.message.app.croupierAddress).to.be.an('string');
         expect(data.message.app.games).to.not.be.null;
-        expect(data.message.app.games).to.be.an('array').that.is.empty;
+        expect(data.message.app.games).to.be.an('array');
         expect(data.message.app.listAdmins).to.not.be.null;
         expect(data.message.app.listAdmins).to.be.an('array').that.not.is.empty;
         expect(data.message.app.listAdmins.length).to.equal(1);
