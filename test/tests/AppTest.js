@@ -60,6 +60,7 @@ import {
     shouldChangeGameEdgeEuropeanRoulette,
     shouldGetAllEcosystemGamesCoinFlip,
     shouldAddEcosystemGameCoinFlip,
+    shouldGetAllAppGamesCoinFlip,
     
 } from './output/AppTestMethod';
 
@@ -372,7 +373,7 @@ context('App Testing', async () =>  {
             detectValidationErrors(res);
             GAMES = res.data.message;
             saveOutputTest("AppTest","shouldGetAllAppGamesCoinFlip",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldGetAllAppGamesCoinFlip(res.data, expect);
         })); 
 
         it('should change game Table Limit', mochaAsync(async () => {
