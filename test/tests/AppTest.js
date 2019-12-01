@@ -58,6 +58,8 @@ import {
     shouldGetAllAppGamesEuropeanRoulette,
     shouldChangeGameTableLimitEuropeanRoulette,
     shouldChangeGameEdgeEuropeanRoulette,
+    shouldGetAllEcosystemGamesCoinFlip,
+    
 } from './output/AppTestMethod';
 
 const expect = chai.expect;
@@ -347,6 +349,7 @@ context('App Testing', async () =>  {
             detectValidationErrors(res);
             ECOSYSTEM_GAMES = res.data.message;
             saveOutputTest("AppTest","shouldGetAllEcosystemGamesCoinFlip",res.data);
+            shouldGetAllEcosystemGamesCoinFlip(res.data, expect);
             expect(res.data.status).to.equal(200);
         })); 
         
