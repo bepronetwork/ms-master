@@ -62,6 +62,7 @@ import {
     shouldAddEcosystemGameCoinFlip,
     shouldGetAllAppGamesCoinFlip,
     shouldChangeGameTableLimitCoinFlip,
+    shouldChangeGameEdgeCoinFlip
 
 } from './output/AppTestMethod';
 
@@ -404,7 +405,7 @@ context('App Testing', async () =>  {
             let new_edge = games_res.data.message[0].edge;
             saveOutputTest("AppTest","shouldChangeGameEdgeCoinFlip",res.data);
             expect(new_edge).to.equal(postData.edge);
-            // shouldGetAllAppGamesCoinFlip(res.data, expect);
+            shouldChangeGameEdgeCoinFlip(res.data, expect);
         })); 
 
     });
