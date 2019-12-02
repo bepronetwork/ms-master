@@ -64,7 +64,8 @@ import {
     shouldChangeGameTableLimitCoinFlip,
     shouldChangeGameEdgeCoinFlip,
     shouldGetAllEcosystemGamesLinearDice,
-    shouldAddEcosystemGameLinearDice
+    shouldAddEcosystemGameLinearDice,
+    shouldGetAllAppGamesLinearDice
 
 } from './output/AppTestMethod';
 
@@ -433,7 +434,6 @@ context('App Testing', async () =>  {
             detectValidationErrors(res);
             saveOutputTest("AppTest","shouldAddEcosystemGameLinearDice",res.data);
             shouldAddEcosystemGameLinearDice(res.data, expect);
-            expect(res.data.status).to.equal(200);
         })); 
 
         it('should get All App Games', mochaAsync(async () => {
@@ -442,7 +442,7 @@ context('App Testing', async () =>  {
             detectValidationErrors(res);
             GAMES = res.data.message;
             saveOutputTest("AppTest","shouldGetAllAppGamesLinearDice",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldGetAllAppGamesLinearDice(res.data, expect);
         })); 
 
         it('should change game Table Limit', mochaAsync(async () => {
