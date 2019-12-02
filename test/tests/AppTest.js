@@ -67,7 +67,8 @@ import {
     shouldAddEcosystemGameLinearDice,
     shouldGetAllAppGamesLinearDice,
     shouldChangeGameTableLimitLinearDice,
-    shouldChangeGameEdgeLinearDice
+    shouldChangeGameEdgeLinearDice,
+    shouldGetAllAppGamesUserIntegration
 
 } from './output/AppTestMethod';
 
@@ -487,7 +488,7 @@ context('App Testing', async () =>  {
             detectValidationErrors(res);
             GAMES = res.data.message;
             saveOutputTest("AppTest","shouldGetAllAppGamesUserIntegration",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldGetAllAppGamesUserIntegration(res.data, expect);
         })); 
 
         context('Deposit', async () => {
