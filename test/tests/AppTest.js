@@ -65,7 +65,8 @@ import {
     shouldChangeGameEdgeCoinFlip,
     shouldGetAllEcosystemGamesLinearDice,
     shouldAddEcosystemGameLinearDice,
-    shouldGetAllAppGamesLinearDice
+    shouldGetAllAppGamesLinearDice,
+    shouldChangeGameTableLimitLinearDice
 
 } from './output/AppTestMethod';
 
@@ -455,7 +456,7 @@ context('App Testing', async () =>  {
             }
             let res = await editTableLimit(postData, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","shouldChangeGameTableLimitLinearDice",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldChangeGameTableLimitLinearDice(res.data, expect);
         }));
         
         it('should change game Edge', mochaAsync(async () => {
