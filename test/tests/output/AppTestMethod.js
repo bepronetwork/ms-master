@@ -1093,4 +1093,40 @@ module.exports = {
         expect(data.message.__v).to.not.be.null;
         expect(data.message.__v).to.be.an('number');
     },
+    shouldChangeGameEdgeLinearDice(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('object');
+        expect(data.message.resultSpace).to.not.be.null;
+        expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
+        expect(data.message.tableLimit).to.not.be.null;
+        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.result).to.not.be.null;
+        expect(data.message.result).to.be.an('array').that.is.empty;
+        expect(data.message.bets).to.not.be.null;
+        expect(data.message.bets).to.be.an('array').that.is.empty;
+        expect(data.message.isClosed).to.not.be.null;
+        expect(data.message.isClosed).to.be.false;
+        expect(data.message._id).to.not.be.null;
+        expect(data.message._id).to.be.an('string');
+        expect(data.message.name).to.not.be.null;
+        expect(data.message.name).to.be.an('string');
+        expect(data.message.edge).to.not.be.null;
+        expect(data.message.edge).to.be.an('number');
+        expect(data.message.app).to.not.be.null;
+        expect(data.message.app).to.be.an('string');
+        expect(data.message.betSystem).to.not.be.null;
+        expect(data.message.betSystem).to.be.an('number');
+        expect(data.message.timestamp).to.not.be.null;
+        expect(data.message.timestamp).to.be.an('string');
+        expect(data.message.image_url).to.not.be.null;
+        expect(data.message.image_url).to.be.an('string');
+        expect(data.message.metaName).to.not.be.null;
+        expect(data.message.metaName).to.be.an('string');
+        expect(data.message.description).to.not.be.null;
+        expect(data.message.description).to.be.an('string');
+        expect(data.message.__v).to.not.be.null;
+        expect(data.message.__v).to.be.an('number');
+    },
 }

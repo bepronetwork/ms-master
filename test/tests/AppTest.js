@@ -66,7 +66,8 @@ import {
     shouldGetAllEcosystemGamesLinearDice,
     shouldAddEcosystemGameLinearDice,
     shouldGetAllAppGamesLinearDice,
-    shouldChangeGameTableLimitLinearDice
+    shouldChangeGameTableLimitLinearDice,
+    shouldChangeGameEdgeLinearDice
 
 } from './output/AppTestMethod';
 
@@ -472,8 +473,8 @@ context('App Testing', async () =>  {
             let games_res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             let new_edge = games_res.data.message[0].edge;
             saveOutputTest("AppTest","shouldChangeGameEdgeLinearDice",res.data);
-            expect(res.data.status).to.equal(200);
             expect(new_edge).to.equal(postData.edge);
+            shouldChangeGameEdgeLinearDice(res.data, expect);
         })); 
     });
 
