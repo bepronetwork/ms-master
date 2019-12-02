@@ -960,4 +960,10 @@ module.exports = {
         expect(data.message.__v).to.not.be.null;
         expect(data.message.__v).to.be.an('number');
     },
+    shouldGetAllEcosystemGamesLinearDice(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+    },
 }
