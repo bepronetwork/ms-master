@@ -63,7 +63,8 @@ import {
     shouldGetAllAppGamesCoinFlip,
     shouldChangeGameTableLimitCoinFlip,
     shouldChangeGameEdgeCoinFlip,
-    shouldGetAllEcosystemGamesLinearDice
+    shouldGetAllEcosystemGamesLinearDice,
+    shouldAddEcosystemGameLinearDice
 
 } from './output/AppTestMethod';
 
@@ -431,6 +432,7 @@ context('App Testing', async () =>  {
             let res = await addGame(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             saveOutputTest("AppTest","shouldAddEcosystemGameLinearDice",res.data);
+            shouldAddEcosystemGameLinearDice(res.data, expect);
             expect(res.data.status).to.equal(200);
         })); 
 
