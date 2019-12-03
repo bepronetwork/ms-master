@@ -28,6 +28,7 @@ import { getNonce } from '../lib';
 import CasinoContract from '../logic/eth/CasinoContract';
 import Numbers from '../logic/services/numbers';
 import { generateEthAccountWithTokensAndEthereum } from '../utils/eth';
+import {saveOutputTest} from '../outputTest/configOutput';
 
 const expect = chai.expect;
 
@@ -214,7 +215,8 @@ context('Functional Testing', async () =>  {
                     contractAddress: PLATFORM_ADDRESS,
                     decimals: global.CONST.decimals
                 })
-            }       
+            } 
+            saveOutputTest("FunctionalTesting","shouldMakeUserDepositTwiceAndWithdrawalWithNoProblem",postData.data);      
         }));
         
 
