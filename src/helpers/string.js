@@ -10,8 +10,6 @@ export function substituteString(modifiableString, key, value){
 }
 
 export function isHexColor (hex) {
-    return typeof hex === 'string'
-        && hex.length === 6
-        && !isNaN(Number('0x' + hex))
+    return (typeof hex === 'string' && hex[0] === '#')
   }
   

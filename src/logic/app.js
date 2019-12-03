@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository, LogoRepository, FooterRepository } from '../db/repos';
+import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository, LogoRepository, FooterRepository, ColorRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
@@ -555,8 +555,8 @@ const progressActions = {
         await Promise.all(app.customization.colors.map( async c => {
             const correspondentColorType = colors.find( ci => ci.type.toLowerCase() == c.type.toLowerCase());
             /* Not right type */
-            if(!correspondentColorType || !isHexColor(correspondentColorType.hex)){return null}
-            return await ColorsRepository.prototype.findByIdAndUpdate(c._id, {
+            if(!correspondentColorType || !isHexColor(new String(correspondentColorType.hex).toString())){return null}
+            return await ColorRepository.prototype.findByIdAndUpdate(c._id, {
                 type : correspondentColorType.type,
                 hex : correspondentColorType.hex.toLowerCase()
             })

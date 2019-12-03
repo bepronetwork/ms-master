@@ -16,7 +16,7 @@ class AddFooterToCustomization{
             console.log("har")
 
             /* Add Affiliate Setup to Apps */
-            var app_all = await AppRepository.prototype.getAll();
+            var app_all = [await AppRepository.prototype.findAppById("5dcb0a764269ec0021800cf3")];
             // start the progress bar with a total value of 200 and start value of 0
             bar1.start(app_all.length, 0);
             for( var i = 0; i < app_all.length; i++){
@@ -30,7 +30,7 @@ class AddFooterToCustomization{
 
                 /* Add Colors */
                 let colorIds = await Promise.all(colors.map( async c => {
-                    return (await new Color().register(c))._doc._id;
+                    return (await new Color(c).register())._doc._id;
                 }));
                 await CustomizationRepository.prototype.setColors(app.customization._id, colorIds);
                 bar1.increment();
