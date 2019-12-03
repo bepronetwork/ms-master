@@ -543,7 +543,7 @@ const progressActions = {
             logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : logo});
         }
 
-        await LogoRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
+        await LogoRepository.prototype.findByIdAndUpdate(app.customization.logo._id, {
             id : logoURL
         })
         // Save info on Customization Part

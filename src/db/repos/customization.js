@@ -70,6 +70,22 @@ class CustomizationRepository extends MongoComponent{
         });
     }
 
+    setLogoId(_id, logo_id){
+        return new Promise( (resolve,reject) => {
+            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $set: { 
+                    "logo" : logo_id,
+                } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     setFooterId(_id, footer_id){
         return new Promise( (resolve,reject) => {
             CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
