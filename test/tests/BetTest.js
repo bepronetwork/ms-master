@@ -16,6 +16,17 @@ import { create_bet } from '../models/bets';
 import { detectValidationErrors } from '../utils';
 import { getRandom } from '../utils/math';
 import {saveOutputTest} from '../outputTest/configOutput';
+import { 
+    shoudntBeAbleToBetLacksPayload,
+    shoudntBeAbleToBetLacksBearerToken,
+    shouldntBeAbleToBetInsufficientLiquidity,
+    shouldntBeAbleToBetBadGame,
+    shouldntBeAbleToBetBadUser,
+    shouldntBeAbleToBetBadApp,
+    shouldntBeAbleToBetEmptyResult,
+    shouldntBeAbleToBetZeroValue,
+    shouldntBeAbleToBetNegativeValue
+} from './output/BetTestMethod';
 
 const expect = chai.expect;
 
@@ -99,7 +110,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN);
             detectValidationErrors(res);
             saveOutputTest("BetTest","shoudntBeAbleToBetLacksPayload",res.data);
-            expect(res.data.status).to.equal(304);
+            shoudntBeAbleToBetLacksPayload(res.data, expect);
         }));
 
         it('shoudn´t be able to bet - lacks Bearer Token', mochaAsync(async () => {
@@ -111,7 +122,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, null, {user : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shoudntBeAbleToBetLacksBearerToken",res.data);
-            expect(res.data.status).to.equal(304);
+            shoudntBeAbleToBetLacksBearerToken(res.data, expect);
         }));
     });
     
@@ -125,7 +136,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetInsufficientLiquidity",res.data);
-            expect(res.data.status).to.equal(1);
+            shouldntBeAbleToBetInsufficientLiquidity(res.data, expect);
         }));
 
         it('shouldn´t be able to bet - bad game', mochaAsync(async () => {
@@ -141,7 +152,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetBadGame",res.data);
-            expect(res.data.status).to.equal(27);
+            shouldntBeAbleToBetBadGame(res.data, expect);
         }));
 
         it('shouldn´t be able to bet - bad user', mochaAsync(async () => {
@@ -157,7 +168,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetBadUser",res.data);
-            expect(res.data.status).to.equal(304);
+            shouldntBeAbleToBetBadUser(res.data, expect);
         }));
 
         it('shouldn´t be able to bet - bad app', mochaAsync(async () => {
@@ -173,7 +184,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetBadApp",res.data);
-            expect(res.data.status).to.equal(12);
+            shouldntBeAbleToBetBadApp(res.data, expect);
         }));
 
         it('shouldn´t be able to bet - empty result', mochaAsync(async () => {
@@ -187,7 +198,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetEmptyResult",res.data);
-            expect(res.data.status).to.equal(13);
+            shouldntBeAbleToBetEmptyResult(res.data, expect);
         }));
 
         it('shouldn´t be able to bet - Zero Value', mochaAsync(async () => {
@@ -203,7 +214,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetZeroValue",res.data);
-            expect(res.data.status).to.equal(13);
+            shouldntBeAbleToBetZeroValue(res.data, expect);
         }));
 
         it('shouldn´t be able to bet - Negative Value', mochaAsync(async () => {
@@ -219,23 +230,7 @@ context('Bet Testing', async () =>  {
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
             saveOutputTest("BetTest","shouldntBeAbleToBetNegativeValue",res.data);
-            expect(res.data.status).to.equal(13);
-        }));
-
-        it('should´nt be able to bet - Zero Value', mochaAsync(async () => {
-            let create_bet_model = { 
-                game: GAMES[0]._id,
-                user: USER_ID,
-                app: APP_ID,
-                nonce: getRandom(123,2384723),
-                result: [{
-                    place: 0, value: 0
-                }]
-            }
-            var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
-            detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetZeroValue",res.data);
-            expect(res.data.status).to.equal(13);
+            shouldntBeAbleToBetNegativeValue(res.data, expect);
         }));
     });
 });
