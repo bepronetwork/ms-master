@@ -566,7 +566,7 @@ const progressActions = {
     },
     __editFooter : async (params) => {
         let { app, communityLinks, supportLinks } = params;
-
+        console.log(supportLinks)
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
             return (await new Link(c).register())._doc._id
         }));
@@ -574,6 +574,8 @@ const progressActions = {
         let supportLinkIDs = await Promise.all(supportLinks.map( async c => {
             return (await new Link(c).register())._doc._id
         }));
+
+        console.log(supportLinkIDs)
 
         await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,

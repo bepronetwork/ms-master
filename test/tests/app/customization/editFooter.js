@@ -18,21 +18,21 @@ context('Edit Footer', async () => {
             supportLinks : [
                 {
                     "name" :    "Affiliate",
-                    "hex"  :    "https://"
+                    "href"  :    "https://"
                 },
                 {
                     "name" :    "Affiliate 2",
-                    "hex"  :    "https://"
+                    "href"  :    "https://"
                 },
             ],
             communityLinks : [
                 {
                     "name" :    "Affiliate",
-                    "hex"  :    "https://"
+                    "href"  :    "https://"
                 },
                 {
                     "name" :    "Affiliate 2",
-                    "hex"  :    "https://"
+                    "href"  :    "https://"
                 },
             ],
             app : app.id
