@@ -1234,6 +1234,27 @@ module.exports = {
         expect(data.status).to.equal(200);
         expect(data.message).to.not.be.null;
         expect(data.message).to.be.an('object');
-        
+        expect(data.message.playBalance).to.not.be.null;
+        expect(data.message.playBalance).to.be.an('number');
+        expect(data.message.blockchain).to.not.be.null;
+        expect(data.message.blockchain).to.be.an('object');
+        expect(data.message.blockchain.decentralized).to.not.be.null;
+        expect(data.message.blockchain.decentralized).to.be.an('object');
+        expect(data.message.blockchain.decentralized.totalLiquidity).to.not.be.null;
+        expect(data.message.blockchain.decentralized.totalLiquidity).to.be.an('number');
+        expect(data.message.blockchain.decentralized.houseBalance).to.not.be.null;
+        expect(data.message.blockchain.decentralized.houseBalance).to.be.an('number');
+        expect(data.message.blockchain.decentralized.playersBalance).to.not.be.null;
+        expect(data.message.blockchain.decentralized.playersBalance).to.be.an('number');
+        expect(data.message.blockchain.allPlayersBalance).to.not.be.null;
+        expect(data.message.blockchain.allPlayersBalance).to.be.an('number');
+        expect(data.message.blockchain.decimals).to.not.be.null;
+        expect(data.message.blockchain.decimals).to.be.an('number');
+        expect(data.message.blockchain.tokenAddress).to.not.be.null;
+        expect(data.message.blockchain.tokenAddress).to.be.an('string');
+        expect(data.message.blockchain.ticker).to.not.be.null;
+        expect(data.message.blockchain.ticker).to.be.an('string');
+        expect(data.message.blockchain.blockchain).to.not.be.null;
+        expect(data.message.blockchain.blockchain).to.be.an('string');
     },
 }
