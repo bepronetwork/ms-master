@@ -12,7 +12,19 @@ import chai from 'chai';
 import Security from '../../src/controllers/Security/Security';
 import models from '../models';
 import { detectValidationErrors } from '../utils';
-import {saveOutputTest} from '../outputTest/configOutput';
+import {
+    shouldRegisterTheAdmin,
+    shouldLoginTheAdmin,
+    shouldCreateTheApp,
+    shouldSet2FAForTheAdmin,
+    shouldLoginTheAdminFA,
+    shouldAuthForAdminBearerToken,
+    shouldntLoginTheAdminWRONGTOKEN,
+    shouldntCreateAnAppForExistingAppOnAdmin,
+    shouldntLoginTheAdminNOTOKEN,
+    shouldntLoginTheAdminAndNoticeTheUserDoesNotExist,
+    shouldntLoginTheAdmin
+} from './output/AdminTestMethod'
 
 
 const expect = chai.expect;
@@ -37,23 +49,20 @@ context('Admin Testing', async () => {
     context('POST', async () => {
         it('should register the Admin', mochaAsync(async () => {
             var res = await registerAdmin(BOILERPLATES.admins.NORMAL_REGISTER);
-            saveOutputTest("AdminTesting","shouldRegisterTheAdmin",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldRegisterTheAdmin(res.data, expect);
         }));
 
         it('should login the Admin', mochaAsync(async () => {
             let res = await loginAdmin(BOILERPLATES.admins.NORMAL_LOGIN_USER);
             ADMIN_ID = res.data.message.id;
-            saveOutputTest("AdminTesting","shouldLoginTheAdmin",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldLoginTheAdmin(res.data, expect);
         }));
 
         it('should create the App', mochaAsync(async () => {
             let app_call_model = genData(faker, models.apps.app_normal_register(ADMIN_ID));
             var response = await registerApp(app_call_model);
             APP_ID = response.data.message.id;
-            saveOutputTest("AdminTesting","shouldCreateTheApp",response.data);
-            expect(response.data.status).to.equal(200);
+            shouldCreateTheApp(response.data, expect);
             
         }));
 
@@ -69,8 +78,7 @@ context('Admin Testing', async () => {
                 '2fa_token' : token,
                 admin : ADMIN_ID
             }, BEARER_TOKEN, { id : ADMIN_ID});
-            saveOutputTest("AdminTesting","shouldSet2FAForTheAdmin",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldSet2FAForTheAdmin(res.data, expect);
         }));
 
         it('should login the Admin', mochaAsync(async () => {
@@ -79,8 +87,7 @@ context('Admin Testing', async () => {
                 '2fa_token' : token
             });
             ADMIN_ID = res.data.message.id;
-            saveOutputTest("AdminTesting","shouldLoginTheAdminFA",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldLoginTheAdminFA(res.data, expect);
         }));
 
 
@@ -95,8 +102,7 @@ context('Admin Testing', async () => {
             res = await authAdmin({
                 admin : ADMIN_ID
             }, BEARER_TOKEN, { id : ADMIN_ID});
-            saveOutputTest("AdminTesting","shouldAuthForAdminBearerToken",res.data);
-            expect(res.data.status).to.equal(200);
+            shouldAuthForAdminBearerToken(res.data, expect);
         }));
 
     
@@ -110,8 +116,7 @@ context('Admin Testing', async () => {
                 'admin_id' : ADMIN_ID
             });
             detectValidationErrors(res);
-            saveOutputTest("AdminTesting","shouldntLoginTheAdminWRONGTOKEN",res.data);
-            expect(res.data.status).to.equal(36);
+            shouldntLoginTheAdminWRONGTOKEN(res.data, expect);
         }));
 
 
@@ -119,29 +124,25 @@ context('Admin Testing', async () => {
             let app_call_model = genData(faker, models.apps.app_normal_register(ADMIN_ID));
             var response = await registerApp(app_call_model);
             APP_ID = response.data.message.id;
-            saveOutputTest("AdminTesting","shouldntCreateAnAppForExistingAppOnAdmin",response.data);
-            expect(response.data.status).to.equal(38);
+            shouldntCreateAnAppForExistingAppOnAdmin(response.data, expect);
             
         }));
 
         it('shouldn´t login the Admin - NO TOKEN', mochaAsync(async () => {
             let res = await loginAdmin(BOILERPLATES.admins.NORMAL_LOGIN_USER);
             detectValidationErrors(res);
-            saveOutputTest("AdminTesting","shouldntLoginTheAdminNOTOKEN",res.data);
-            expect(res.data.status).to.equal(37);
+            shouldntLoginTheAdminNOTOKEN(res.data, expect);
         }));
 
         it('shouldn´t Login the Admin and notice the user does not exist', mochaAsync(async () => {
             var res = await loginAdmin(BOILERPLATES.admins.UNKNOWN_USER_LOGIN);
             detectValidationErrors(res);
-            saveOutputTest("AdminTesting","shouldntLoginTheAdminAndNoticeTheUserDoesNotExist",res.data);
-            expect(res.data.status).to.equal(4);
+            shouldntLoginTheAdminAndNoticeTheUserDoesNotExist(res.data, expect);
         }));
         it('shouldn´t Login the Admin', mochaAsync(async () => {
             var res = await loginAdmin(BOILERPLATES.admins.WRONG_PASS_LOGIN_USER);
             detectValidationErrors(res);
-            saveOutputTest("AdminTesting","shouldntLoginTheAdmin",res.data);
-            expect(res.data.status).to.equal(5);
+            shouldntLoginTheAdmin(res.data, expect);
         }));
     });
 })
