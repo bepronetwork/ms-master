@@ -5,7 +5,6 @@ import {
 
 import chai from 'chai';
 import { detectValidationErrors } from '../utils';
-import {saveOutputTest} from '../outputTest/configOutput';
 import { 
     getAllDataFromTheEcosystem,
     shouldGetAllEcosystemGames
@@ -28,14 +27,12 @@ var mochaAsync = (fn) => {
 context('Ecosystem Test', async () => {
     it('get all data from the Ecosystem', mochaAsync(async () => {
         var res = await getEcosystemData();
-        saveOutputTest("EcosystemTest","getAllDataFromTheEcosystem",res.data);
         getAllDataFromTheEcosystem(res.data, expect);
     }));
 
     it('should get All Ecosystem Games', mochaAsync(async () => {
         let res = await getEcosystemCasinoGames();
         detectValidationErrors(res);
-        saveOutputTest("EcosystemTest","shouldGetAllEcosystemGames",res.data);
         shouldGetAllEcosystemGames(res.data, expect);
     })); 
 

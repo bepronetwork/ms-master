@@ -154,8 +154,6 @@ context('App Testing', async () =>  {
 
             let res_user_loginUser = await loginUser(userPostData);
             USER_ADDRESS = res_user_loginUser.data.message.address;
-
-            saveOutputTest("AppTest","shouldCreateTheApp",response.data);
             shouldCreateTheApp(response.data, expect);
         }));
         
@@ -165,7 +163,6 @@ context('App Testing', async () =>  {
             }, ADMIN_BEARER_TOKEN, { id : ADMIN_ID});
             expect(res.data.status).to.equal(200);
             BEARER_TOKEN = res.data.message.app.bearerToken;
-            saveOutputTest("AppTest","shouldGetNewBearerToken",res.data);
             shouldGetNewBearerToken(res.data, expect);
         })); 
     
@@ -176,7 +173,6 @@ context('App Testing', async () =>  {
             /* Set app Global Variable for Further Test */
             global.test.app = res.data.message;
             const { message, status } = res.data;
-            saveOutputTest("AppTest","shouldGetAppDataAuth",res.data);
             shouldGetAppDataAuth(res.data, expect);
 
         })); 
@@ -184,7 +180,6 @@ context('App Testing', async () =>  {
         it('should Get App Data', mochaAsync(async () => {
             let get_app_model = models.apps.get_app(APP_ID);
             let res = await getApp(get_app_model);
-            saveOutputTest("AppTest","shouldGetAppData",res.data);
             shouldGetAppData(res.data, expect);
         })); 
 
@@ -192,7 +187,6 @@ context('App Testing', async () =>  {
         it('should Integrate Services into App', mochaAsync(async () => {
             let service_call_add_model = models.apps.add_services(APP_ID, [101, 201]);
             let res = await addAppServices(service_call_add_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","shouldIntegrateServicesIntoApp",res.data);
             shouldIntegrateServicesIntoApp(res.data, expect);
         })); 
 
@@ -214,7 +208,6 @@ context('App Testing', async () =>  {
             PLATFORM_BLOCKCHAIN = res_deploy.platformBlockchain;
             PLATFORM_ADDRESS =  res_deploy.platformAddress;
             TRANSACTION_TOKEN_TRANSFER_HASH = res_deploy.transactionHash;
-            saveOutputTest("AppTest","ETH-shouldDeployThePlatformSmartContract&ProvideLiquidity",res_deploy);
             ethShouldDeployThePlatformSmartContract(res_deploy, expect);
         })); 
 
@@ -238,7 +231,6 @@ context('App Testing', async () =>  {
             res = await getAppAuth(get_app_model, BEARER_TOKEN, {id : APP_ID});
             const { message, status } = res.data;
             global.test.app = message;
-            saveOutputTest("AppTest","shouldAddBlockchainInformationToApp",res.data);
             shouldAddBlockchainInformationToApp(res.data, expect);
     
         })); 
@@ -255,7 +247,6 @@ context('App Testing', async () =>  {
             res = await getAppAuth(get_app_model, BEARER_TOKEN, {id : APP_ID});
             const { message, status } = res.data;
             global.test.app = message;
-            saveOutputTest("AppTest","shouldAddSomeBlockhainInformationToApp",res.data);
             shouldAddSomeBlockhainInformationToApp(res.data, expect);
         })); 
 
@@ -273,14 +264,12 @@ context('App Testing', async () =>  {
             let wallet_update_app_model = models.apps.update_wallet(APP_ID, transferTokenAmount, transactionHash);
             let res = await updateAppWallet(wallet_update_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
-            saveOutputTest("AppTest","shouldntUpdateWalletWithPendingTransaction",res.data);
             shouldntUpdateWalletWithPendingTransaction(res.data, expect);
         })); 
 
         it('should update Wallet with verified transaction', mochaAsync(async () => {
             let wallet_update_app_model = models.apps.update_wallet(APP_ID, CONST.tokenTransferAmount, TRANSACTION_TOKEN_TRANSFER_HASH);
             let res = await updateAppWallet(wallet_update_app_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","shouldUpdateWalletWithVerifiedTransaction",res.data);
             shouldUpdateWalletWithVerifiedTransaction(res.data, expect);
         })); 
 
@@ -298,7 +287,6 @@ context('App Testing', async () =>  {
                 integration_type : 'live_chat'
             }
             let res = await editAppIntegration(postData, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","shouldUpdateTheIntegrationInfoFromApp",res.data);
             shouldUpdateTheIntegrationInfoFromApp(res.data, expect);
         })); 
     });
@@ -309,7 +297,6 @@ context('App Testing', async () =>  {
             let res = await getEcosystemCasinoGames();
             detectValidationErrors(res);
             ECOSYSTEM_GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllEcosystemGamesEuropeanRoulette",res.data);
             shouldGetAllEcosystemGamesEuropeanRoulette(res.data, expect);
         })); 
 
@@ -322,7 +309,6 @@ context('App Testing', async () =>  {
             }
             let res = await addGame(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
-            saveOutputTest("AppTest","shouldAddEcosystemGameEuropeanRoulette",res.data);
             shouldAddEcosystemGameEuropeanRoulette(res.data, expect);
         })); 
 
@@ -331,7 +317,6 @@ context('App Testing', async () =>  {
             let res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllAppGamesEuropeanRoulette",res.data);
             shouldGetAllAppGamesEuropeanRoulette(res.data, expect);
         })); 
 
@@ -344,7 +329,6 @@ context('App Testing', async () =>  {
                 tableLimit : 30
             }
             let res = await editTableLimit(postData, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","shouldChangeGameTableLimitEuropeanRoulette",res.data);
             shouldChangeGameTableLimitEuropeanRoulette(res.data, expect);
         })); 
 
@@ -360,7 +344,6 @@ context('App Testing', async () =>  {
             let get_app_model = models.apps.get_app(APP_ID);
             let games_res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             let new_edge = games_res.data.message[0].edge;
-            saveOutputTest("AppTest","shouldChangeGameEdgeEuropeanRoulette",res.data);
             expect(new_edge).to.equal(postData.edge);
             shouldChangeGameEdgeEuropeanRoulette(res.data, expect);
         })); 
@@ -374,7 +357,6 @@ context('App Testing', async () =>  {
             let res = await getEcosystemCasinoGames();
             detectValidationErrors(res);
             ECOSYSTEM_GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllEcosystemGamesCoinFlip",res.data);
             shouldGetAllEcosystemGamesCoinFlip(res.data, expect);
         })); 
         
@@ -387,7 +369,6 @@ context('App Testing', async () =>  {
             }
             let res = await addGame(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
-            saveOutputTest("AppTest","shouldAddEcosystemGameCoinFlip",res.data);
             shouldAddEcosystemGameCoinFlip(res.data, expect);
         })); 
 
@@ -396,7 +377,6 @@ context('App Testing', async () =>  {
             let res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllAppGamesCoinFlip",res.data);
             shouldGetAllAppGamesCoinFlip(res.data, expect);
         })); 
 
@@ -409,7 +389,6 @@ context('App Testing', async () =>  {
                 tableLimit : 30
             }
             let res = await editTableLimit(postData, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","shouldChangeGameTableLimitCoinFlip",res.data);
             shouldChangeGameTableLimitCoinFlip(res.data, expect);
         })); 
 
@@ -425,7 +404,6 @@ context('App Testing', async () =>  {
             let get_app_model = models.apps.get_app(APP_ID);
             let games_res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             let new_edge = games_res.data.message[0].edge;
-            saveOutputTest("AppTest","shouldChangeGameEdgeCoinFlip",res.data);
             expect(new_edge).to.equal(postData.edge);
             shouldChangeGameEdgeCoinFlip(res.data, expect);
         })); 
@@ -438,7 +416,6 @@ context('App Testing', async () =>  {
             let res = await getEcosystemCasinoGames();
             detectValidationErrors(res);
             ECOSYSTEM_GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllEcosystemGamesLinearDice",res.data);
             shouldGetAllEcosystemGamesLinearDice(res.data, expect);
         })); 
 
@@ -451,7 +428,6 @@ context('App Testing', async () =>  {
             }
             let res = await addGame(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
-            saveOutputTest("AppTest","shouldAddEcosystemGameLinearDice",res.data);
             shouldAddEcosystemGameLinearDice(res.data, expect);
         })); 
 
@@ -460,7 +436,6 @@ context('App Testing', async () =>  {
             let res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllAppGamesLinearDice",res.data);
             shouldGetAllAppGamesLinearDice(res.data, expect);
         })); 
 
@@ -473,7 +448,6 @@ context('App Testing', async () =>  {
                 tableLimit : 30
             }
             let res = await editTableLimit(postData, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","shouldChangeGameTableLimitLinearDice",res.data);
             shouldChangeGameTableLimitLinearDice(res.data, expect);
         }));
         
@@ -489,7 +463,6 @@ context('App Testing', async () =>  {
             let get_app_model = models.apps.get_app(APP_ID);
             let games_res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             let new_edge = games_res.data.message[0].edge;
-            saveOutputTest("AppTest","shouldChangeGameEdgeLinearDice",res.data);
             expect(new_edge).to.equal(postData.edge);
             shouldChangeGameEdgeLinearDice(res.data, expect);
         })); 
@@ -503,7 +476,6 @@ context('App Testing', async () =>  {
             let res = await getGames(get_app_model, BEARER_TOKEN, {id : APP_ID});
             detectValidationErrors(res);
             GAMES = res.data.message;
-            saveOutputTest("AppTest","shouldGetAllAppGamesUserIntegration",res.data);
             shouldGetAllAppGamesUserIntegration(res.data, expect);
         })); 
 
@@ -781,7 +753,6 @@ context('App Testing', async () =>  {
         it('GET App DATA - should forbid the access', mochaAsync(async () => {
             let get_app_model = models.apps.get_app(APP_ID);
             let res = await getAppAuth(get_app_model);
-            saveOutputTest("AppTest","GETAppDATAShouldForbidTheAccess",res.data);
             GETAppDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
@@ -789,35 +760,30 @@ context('App Testing', async () =>  {
         it('GET USERS DATA - should forbid the access', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'USERS', 'weekly');
             let res = await getAppSummary(users_call_model);
-            saveOutputTest("AppTest","GETUSERSDATAShouldForbidTheAccess",res.data);
             GETUSERSDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET REVENUE DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'REVENUE', 'weekly');
             let res = await getAppSummary(users_call_model);
-            saveOutputTest("AppTest","GETREVENUEDATAShouldForbidTheAccess",res.data);
             GETREVENUEDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET GAMES DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'GAMES', 'weekly');
             let res = await getAppSummary(users_call_model);
-            saveOutputTest("AppTest","GETGAMESDATAShouldForbidTheAccess",res.data);
             GETGAMESDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET BEST DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'BETS', 'weekly');
             let res = await getAppSummary(users_call_model);
-            saveOutputTest("AppTest","GETBESTDATAShouldForbidTheAccess",res.data);
             GETBESTDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET WALLET DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'WALLET');
             let res = await getAppSummary(users_call_model);
-            saveOutputTest("AppTest","GETWALLETDATAShouldForbidTheAccess",res.data);
             GETWALLETDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
@@ -831,7 +797,6 @@ context('App Testing', async () =>  {
                 app : APP_ID
             };
             let res = await getAppUsers(postData, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","GETUsersShouldAllow",res.data);
             GETUsersShouldAllow(res.data, expect);
         }));
 
@@ -841,7 +806,6 @@ context('App Testing', async () =>  {
                 size : 30
             };
             let res = await getAppLastBets(postData);
-            saveOutputTest("AppTest","GETLastBetsShouldAllow",res.data);
             GETLastBetsShouldAllow(res.data, expect);
         }));
 
@@ -851,7 +815,6 @@ context('App Testing', async () =>  {
                 size : 30
             };
             let res = await getAppBiggestBetWinners(postData);
-            saveOutputTest("AppTest","GETBiggestBetWinnersShouldAllow",res.data);
             GETBiggestBetWinnersShouldAllow(res.data, expect);
         }))
 
@@ -861,7 +824,6 @@ context('App Testing', async () =>  {
                 size : 30
             };
             let res = await getAppBiggestUserWinners(postData);
-            saveOutputTest("AppTest","GETBiggestUserWinnersShouldAllow",res.data);
             GETBiggestUserWinnersShouldAllow(res.data, expect);
         }))
 
@@ -870,42 +832,36 @@ context('App Testing', async () =>  {
                 app : APP_ID
             };
             let res = await getAppPopularNumbers(postData);
-            saveOutputTest("AppTest","GETPopularNumbersShouldAllow",res.data);
             GETPopularNumbersShouldAllow(res.data, expect);
         }))
                 
         it('GET USERS DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'USERS', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","GETUSERSDATAShouldAllow",res.data);
             GETUSERSDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET REVENUE DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'REVENUE');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","GETREVENUEDATAShouldAllow",res.data);
             GETREVENUEDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET GAMES DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'GAMES', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","GETGAMESDATAShouldAllow",res.data);
             GETGAMESDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET BEST DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'BETS', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","GETBESTDATAShouldAllow",res.data);
             GETBESTDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET WALLET DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'WALLET', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
-            saveOutputTest("AppTest","GETWALLETDATAShouldAllow",res.data);
             GETWALLETDATAShouldAllow(res.data, expect);
         }));
 

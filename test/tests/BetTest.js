@@ -15,7 +15,6 @@ import models from '../models';
 import { create_bet } from '../models/bets';
 import { detectValidationErrors } from '../utils';
 import { getRandom } from '../utils/math';
-import {saveOutputTest} from '../outputTest/configOutput';
 import { 
     shoudntBeAbleToBetLacksPayload,
     shoudntBeAbleToBetLacksBearerToken,
@@ -109,7 +108,6 @@ context('Bet Testing', async () =>  {
             })
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN);
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shoudntBeAbleToBetLacksPayload",res.data);
             shoudntBeAbleToBetLacksPayload(res.data, expect);
         }));
 
@@ -121,7 +119,6 @@ context('Bet Testing', async () =>  {
             })
             var res = await placeBet(create_bet_model, null, {user : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shoudntBeAbleToBetLacksBearerToken",res.data);
             shoudntBeAbleToBetLacksBearerToken(res.data, expect);
         }));
     });
@@ -135,7 +132,6 @@ context('Bet Testing', async () =>  {
             })
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetInsufficientLiquidity",res.data);
             shouldntBeAbleToBetInsufficientLiquidity(res.data, expect);
         }));
 
@@ -151,7 +147,6 @@ context('Bet Testing', async () =>  {
             }
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetBadGame",res.data);
             shouldntBeAbleToBetBadGame(res.data, expect);
         }));
 
@@ -167,7 +162,6 @@ context('Bet Testing', async () =>  {
             }
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetBadUser",res.data);
             shouldntBeAbleToBetBadUser(res.data, expect);
         }));
 
@@ -183,7 +177,6 @@ context('Bet Testing', async () =>  {
             }
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetBadApp",res.data);
             shouldntBeAbleToBetBadApp(res.data, expect);
         }));
 
@@ -197,7 +190,6 @@ context('Bet Testing', async () =>  {
             }
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetEmptyResult",res.data);
             shouldntBeAbleToBetEmptyResult(res.data, expect);
         }));
 
@@ -213,7 +205,6 @@ context('Bet Testing', async () =>  {
             }
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetZeroValue",res.data);
             shouldntBeAbleToBetZeroValue(res.data, expect);
         }));
 
@@ -229,7 +220,6 @@ context('Bet Testing', async () =>  {
             }
             var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
             detectValidationErrors(res);
-            saveOutputTest("BetTest","shouldntBeAbleToBetNegativeValue",res.data);
             shouldntBeAbleToBetNegativeValue(res.data, expect);
         }));
     });

@@ -11,6 +11,11 @@ import faker from 'faker';
 import chai from 'chai';
 import models from '../models';
 import Random from '../tools/Random';
+import {saveOutputTest} from '../outputTest/configOutput';
+import { 
+    shouldntRegisterTheUser,
+    GETlast15BetsShouldAllow
+} from "./output/UserTestMethod"
 
 const expect = chai.expect;
 
@@ -86,12 +91,13 @@ context('User Testing', async () =>  {
         }));
         var res = await registerUser(userPostData);
         USER_ID = res.data.message._id;
+        saveOutputTest("UserTesting","shouldRegisterTheUser",res.data);
         expect(res.data.status).to.equal(200);
     }));
 
     it('should´nt register the user', mochaAsync(async () => {
         var res = await registerUser(userPostData);
-        expect(res.data.status).to.equal(7);
+        shouldntRegisterTheUser(res.data, expect);
     })); 
     it('should login the User', mochaAsync(async () => {
         var res = await loginUser(userPostData);
@@ -109,7 +115,7 @@ context('User Testing', async () =>  {
                 size : 15
             };
             let res = await getUserBets(postData, USER_BEARER_TOKEN, { id : USER_ID});
-            expect(res.data.status).to.equal(200);
+            GETlast15BetsShouldAllow(res.data, expect);
         })); 
     }));
 });
