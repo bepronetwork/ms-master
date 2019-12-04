@@ -1136,4 +1136,104 @@ module.exports = {
         expect(data.message).to.be.an('array');
         
     },
+    GETAppDATAShouldForbidTheAccess(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(304);
+        
+    },
+    GETUSERSDATAShouldForbidTheAccess(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(304);
+        
+    },
+    GETREVENUEDATAShouldForbidTheAccess(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(304);
+        
+    },
+    GETGAMESDATAShouldForbidTheAccess(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(304);
+        
+    },
+    GETBESTDATAShouldForbidTheAccess(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(304);
+        
+    },
+    GETWALLETDATAShouldForbidTheAccess(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(304);
+        
+    },
+    GETUsersShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETLastBetsShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETBiggestBetWinnersShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETBiggestUserWinnersShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETPopularNumbersShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETUSERSDATAShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETREVENUEDATAShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETGAMESDATAShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETBESTDATAShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('array');
+        
+    },
+    GETWALLETDATAShouldAllow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.status).to.equal(200);
+        expect(data.message).to.not.be.null;
+        expect(data.message).to.be.an('object');
+        
+    },
 }

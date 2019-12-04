@@ -68,7 +68,23 @@ import {
     shouldGetAllAppGamesLinearDice,
     shouldChangeGameTableLimitLinearDice,
     shouldChangeGameEdgeLinearDice,
-    shouldGetAllAppGamesUserIntegration
+    shouldGetAllAppGamesUserIntegration,
+    GETAppDATAShouldForbidTheAccess,
+    GETUSERSDATAShouldForbidTheAccess,
+    GETREVENUEDATAShouldForbidTheAccess,
+    GETGAMESDATAShouldForbidTheAccess,
+    GETBESTDATAShouldForbidTheAccess,
+    GETWALLETDATAShouldForbidTheAccess,
+    GETUsersShouldAllow,
+    GETLastBetsShouldAllow,
+    GETBiggestBetWinnersShouldAllow,
+    GETBiggestUserWinnersShouldAllow,
+    GETPopularNumbersShouldAllow,
+    GETUSERSDATAShouldAllow,
+    GETREVENUEDATAShouldAllow,
+    GETGAMESDATAShouldAllow,
+    GETBESTDATAShouldAllow,
+    GETWALLETDATAShouldAllow
 
 } from './output/AppTestMethod';
 
@@ -766,7 +782,7 @@ context('App Testing', async () =>  {
             let get_app_model = models.apps.get_app(APP_ID);
             let res = await getAppAuth(get_app_model);
             saveOutputTest("AppTest","GETAppDATAShouldForbidTheAccess",res.data);
-            expect(res.data.status).to.equal(304);
+            GETAppDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
 
@@ -774,35 +790,35 @@ context('App Testing', async () =>  {
             let users_call_model = models.apps.get_summary(APP_ID, 'USERS', 'weekly');
             let res = await getAppSummary(users_call_model);
             saveOutputTest("AppTest","GETUSERSDATAShouldForbidTheAccess",res.data);
-            expect(res.data.status).to.equal(304);
+            GETUSERSDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET REVENUE DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'REVENUE', 'weekly');
             let res = await getAppSummary(users_call_model);
             saveOutputTest("AppTest","GETREVENUEDATAShouldForbidTheAccess",res.data);
-            expect(res.data.status).to.equal(304);
+            GETREVENUEDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET GAMES DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'GAMES', 'weekly');
             let res = await getAppSummary(users_call_model);
             saveOutputTest("AppTest","GETGAMESDATAShouldForbidTheAccess",res.data);
-            expect(res.data.status).to.equal(304);
+            GETGAMESDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET BEST DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'BETS', 'weekly');
             let res = await getAppSummary(users_call_model);
             saveOutputTest("AppTest","GETBESTDATAShouldForbidTheAccess",res.data);
-            expect(res.data.status).to.equal(304);
+            GETBESTDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
         it('GET WALLET DATA - should forbid the access ', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'WALLET');
             let res = await getAppSummary(users_call_model);
             saveOutputTest("AppTest","GETWALLETDATAShouldForbidTheAccess",res.data);
-            expect(res.data.status).to.equal(304);
+            GETWALLETDATAShouldForbidTheAccess(res.data, expect);
         })); 
 
     }));
@@ -816,7 +832,7 @@ context('App Testing', async () =>  {
             };
             let res = await getAppUsers(postData, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","GETUsersShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETUsersShouldAllow(res.data, expect);
         }));
 
         it('GET last Bets - should allow', mochaAsync(async () => {
@@ -826,7 +842,7 @@ context('App Testing', async () =>  {
             };
             let res = await getAppLastBets(postData);
             saveOutputTest("AppTest","GETLastBetsShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETLastBetsShouldAllow(res.data, expect);
         }));
 
         it('GET Biggest Bet Winners - should allow', mochaAsync(async () => {
@@ -836,7 +852,7 @@ context('App Testing', async () =>  {
             };
             let res = await getAppBiggestBetWinners(postData);
             saveOutputTest("AppTest","GETBiggestBetWinnersShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETBiggestBetWinnersShouldAllow(res.data, expect);
         }))
 
         it('GET Biggest User Winners - should allow', mochaAsync(async () => {
@@ -846,7 +862,7 @@ context('App Testing', async () =>  {
             };
             let res = await getAppBiggestUserWinners(postData);
             saveOutputTest("AppTest","GETBiggestUserWinnersShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETBiggestUserWinnersShouldAllow(res.data, expect);
         }))
 
         it('GET Popular Numbers - should allow', mochaAsync(async () => {
@@ -855,42 +871,42 @@ context('App Testing', async () =>  {
             };
             let res = await getAppPopularNumbers(postData);
             saveOutputTest("AppTest","GETPopularNumbersShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETPopularNumbersShouldAllow(res.data, expect);
         }))
                 
         it('GET USERS DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'USERS', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","GETUSERSDATAShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETUSERSDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET REVENUE DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'REVENUE');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","GETREVENUEDATAShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETREVENUEDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET GAMES DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'GAMES', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","GETGAMESDATAShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETGAMESDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET BEST DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'BETS', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","GETBESTDATAShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETBESTDATAShouldAllow(res.data, expect);
         })); 
 
         it('GET WALLET DATA - should allow', mochaAsync(async () => {
             let users_call_model = models.apps.get_summary(APP_ID, 'WALLET', 'weekly');
             let res = await getAppSummary(users_call_model, BEARER_TOKEN, {id : APP_ID});
             saveOutputTest("AppTest","GETWALLETDATAShouldAllow",res.data);
-            expect(res.data.status).to.equal(200);
+            GETWALLETDATAShouldAllow(res.data, expect);
         }));
 
         
