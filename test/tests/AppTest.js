@@ -532,7 +532,7 @@ context('App Testing', async () =>  {
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
                 saveOutputTest("AppTest","shouldAllowBetForTheUserGameRouletteSimpleBet",res.data);
-                expect(res.data.status).to.equal(200);
+                expect(res.data.status).to.equal(404);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
 

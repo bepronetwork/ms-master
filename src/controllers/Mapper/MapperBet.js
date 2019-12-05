@@ -16,86 +16,86 @@ let outputs = {
             "bet": {
                 "result": [
                     {
-                        "_id"  : object.result._id,
-                        "place": object.result.place,
-                        "value": object.result.value,
-                        "__v": object.result.__v
+                        "_id"  : object.bet.result._id,
+                        "place": object.bet.result.place,
+                        "value": object.bet.result.value,
+                        "__v": object.bet.result.__v
                     }
                 ],
-                "isResolved": object.isResolved,
-                "_id": object._id,
-                "user": object.user,
-                "app": object.app,
+                "isResolved": object.bet.isResolved,
+                "_id": object.bet._id,
+                "user": object.bet.user,
+                "app": object.bet.app,
                 "outcomeResultSpace": {
-                    "key": object.outcomeResultSpace.key,
-                    "start": object.outcomeResultSpace.start,
-                    "end": object.outcomeResultSpace.end,
-                    "probability": object.outcomeResultSpace.probability,
-                    "index": object.outcomeResultSpace.index
+                    "key": object.bet.outcomeResultSpace.key,
+                    "start": object.bet.outcomeResultSpace.start,
+                    "end": object.bet.outcomeResultSpace.end,
+                    "probability": object.bet.outcomeResultSpace.probability,
+                    "index": object.bet.outcomeResultSpace.index
                 },
-                "isWon": object.isWon,
-                "game": object.game,
-                "winAmount": object.winAmount,
-                "betAmount": object.betAmount,
-                "fee": object.fee,
-                "timestamp": object.timestamp,
-                "nonce": object.nonce,
-                "clientSeed": object.clientSeed,
-                "serverHashedSeed": object.serverHashedSeed,
-                "serverSeed": object.serverSeed,
-                "__v": object.__v
+                "isWon": object.bet.isWon,
+                "game": object.bet.game,
+                "winAmount": object.bet.winAmount,
+                "betAmount": object.bet.betAmount,
+                "fee": object.bet.fee,
+                "timestamp": object.bet.timestamp,
+                "nonce": object.bet.nonce,
+                "clientSeed": object.bet.clientSeed,
+                "serverHashedSeed": object.bet.serverHashedSeed,
+                "serverSeed": object.bet.serverSeed,
+                "__v": object.bet.__v
             },
-            "user_in_app": object.value,
-            "isUserWithdrawingAPI": object.value,
-            "isAppWithdrawingAPI": object.value,
-            "user_delta": object.value,
-            "app_delta": object.value,
-            "isUserAffiliated": object.value,
+            "user_in_app": object.user_in_app,
+            "isUserWithdrawingAPI": object.isUserWithdrawingAPI,
+            "isAppWithdrawingAPI": object.isAppWithdrawingAPI,
+            "user_delta": object.user_delta,
+            "app_delta": object.app_delta,
+            "isUserAffiliated": object.isUserAffiliated,
             "affiliateReturns": [
-                object.value
+                object.affiliateReturns
             ],
-            "totalAffiliateReturn": object.value,
-            "tableLimit": object.value,
-            "user": object.value,
-            "app": object.value,
+            "totalAffiliateReturn": object.totalAffiliateReturn,
+            "tableLimit": object.tableLimit,
+            "user": object.user,
+            "app": object.app,
             "outcomeResultSpace": {
-                "key":object.value,
-                "start": object.value,
-                "end": object.value,
-                "probability": object.value,
-                "index": object.value
+                "key":object.outcomeResultSpace.key,
+                "start": object.outcomeResultSpace.start,
+                "end": object.outcomeResultSpace.end,
+                "probability": object.outcomeResultSpace.probability,
+                "index": object.outcomeResultSpace.index
             },
-            "isWon": object.value,
-            "game": object.value,
-            "betSystem": object.value,
-            "appWallet": object.value,
-            "wallet": object.value,
-            "possibleWinAmount": object.value,
-            "winAmount": object.value,
-            "betAmount": object.value,
-            "fee": object.value,
+            "isWon": object.isWon,
+            "game": object.game,
+            "betSystem": object.betSystem,
+            "appWallet": object.appWallet,
+            "wallet": object.wallet,
+            "possibleWinAmount": object.possibleWinAmount,
+            "winAmount": object.winAmount,
+            "betAmount": object.betAmount,
+            "fee": object.fee,
             "result": [
                 {
-                    "_id": object.value,
-                    "place": object.value,
-                    "value": object.value,
-                    "__v": object.value
+                    "_id": object.result._id,
+                    "place": object.result.place,
+                    "value": object.result.value,
+                    "__v": object.result.__v
                 }
             ],
-            "timestamp": object.value,
-            "nonce": object.value,
-            "clientSeed": object.value,
+            "timestamp": object.timestamp,
+            "nonce": object.nonce,
+            "clientSeed": object.clientSeed,
             "serverHashedSeed": {
                 "$super": {
                     "$super": {}
                 },
                 "words": [
-                    object.value
+                    object.words
                 ],
-                "sigBytes": object.value
+                "sigBytes": object.sigBytes
             },
-            "serverSeed": object.value,
-            "isResolved": object.value
+            "serverSeed": object.serverSeed,
+            "isResolved": object.isResolved
         }
     },
 }
