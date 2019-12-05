@@ -31,7 +31,7 @@ class Bet extends ModelComponent{
                     res.jackpot = res_playJackpot;
                 }*/
             }
-            return MapperBetSingleton.output('App', res);
+            return MapperBetSingleton.output('Bet', res);
         }catch(err){
             throw err;
         }

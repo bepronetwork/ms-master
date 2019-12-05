@@ -14,14 +14,14 @@ let outputs = {
     bet : (object) => {
         return {
             "bet": {
-                "result": [
-                    {
-                        "_id"  : object.bet.result._id,
-                        "place": object.bet.result.place,
-                        "value": object.bet.result.value,
-                        "__v": object.bet.result.__v
-                    }
-                ],
+                "result": object.bet.result.map(result => {
+                    return ({
+                        _id: result._id,
+                        place: result.place,
+                        value: result.value,
+                        __v: result.__v
+                    })
+                }),
                 "isResolved": object.bet.isResolved,
                 "_id": object.bet._id,
                 "user": object.bet.user,
@@ -52,7 +52,7 @@ let outputs = {
             "app_delta": object.app_delta,
             "isUserAffiliated": object.isUserAffiliated,
             "affiliateReturns": [
-                object.affiliateReturns
+                ...object.affiliateReturns
             ],
             "totalAffiliateReturn": object.totalAffiliateReturn,
             "tableLimit": object.tableLimit,
@@ -74,14 +74,14 @@ let outputs = {
             "winAmount": object.winAmount,
             "betAmount": object.betAmount,
             "fee": object.fee,
-            "result": [
-                {
-                    "_id": object.result._id,
-                    "place": object.result.place,
-                    "value": object.result.value,
-                    "__v": object.result.__v
-                }
-            ],
+            "result": object.result.map(result => {
+                return ({
+                    _id: result._id,
+                    place: result.place,
+                    value: result.value,
+                    __v: result.__v
+                })
+            }),
             "timestamp": object.timestamp,
             "nonce": object.nonce,
             "clientSeed": object.clientSeed,
@@ -90,7 +90,7 @@ let outputs = {
                     "$super": {}
                 },
                 "words": [
-                    object.words
+                    ...object.serverHashedSeed.words
                 ],
                 "sigBytes": object.sigBytes
             },
