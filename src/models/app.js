@@ -3,6 +3,7 @@ import ModelComponent from './modelComponent';
 import {AppRepository} from '../db/repos';
 import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
+import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
 import { AffiliateSetup, Integrations, Customization } from '.';
 
 class App extends ModelComponent{
@@ -338,7 +339,7 @@ class App extends ModelComponent{
             let res = await this.process('UpdateWallet');
             /* Open Mutex */
             await AppRepository.prototype.changeWithdrawPosition(app, false);
-            return res;
+            return MapperWalletSingleton.output('WalletTransaction', res);
         }catch(err){
             if(parseInt(err.code) != 14){
                 /* If not withdrawing atm */
