@@ -2,6 +2,7 @@ import {BetLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {BetsRepository} from '../db/repos';
 import { isCasino } from '../logic/markets/betSystems';
+import { MapperBetSingleton } from '../controllers/Mapper/MapperBet';
 
 class Bet extends ModelComponent{
 
@@ -30,7 +31,7 @@ class Bet extends ModelComponent{
                     res.jackpot = res_playJackpot;
                 }*/
             }
-            return res;
+            return MapperBetSingleton.output('Bet', res);
         }catch(err){
             throw err;
         }

@@ -5,6 +5,10 @@ import {
 
 import chai from 'chai';
 import { detectValidationErrors } from '../utils';
+import { 
+    getAllDataFromTheEcosystem,
+    shouldGetAllEcosystemGames
+} from './output/EcosystemMethod';
 
 const expect = chai.expect;
 
@@ -23,13 +27,13 @@ var mochaAsync = (fn) => {
 context('Ecosystem Test', async () => {
     it('get all data from the Ecosystem', mochaAsync(async () => {
         var res = await getEcosystemData();
-        expect(res.data.status).to.equal(200);
+        getAllDataFromTheEcosystem(res.data, expect);
     }));
 
     it('should get All Ecosystem Games', mochaAsync(async () => {
         let res = await getEcosystemCasinoGames();
         detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
+        shouldGetAllEcosystemGames(res.data, expect);
     })); 
 
 })

@@ -214,7 +214,7 @@ context('Functional Testing', async () =>  {
                     contractAddress: PLATFORM_ADDRESS,
                     decimals: global.CONST.decimals
                 })
-            }       
+            }
         }));
         
 
