@@ -11,7 +11,6 @@ import faker from 'faker';
 import chai from 'chai';
 import models from '../models';
 import Random from '../tools/Random';
-import {saveOutputTest} from '../outputTest/configOutput';
 import { 
     shouldntRegisterTheUser,
     GETlast15BetsShouldAllow
@@ -91,7 +90,6 @@ context('User Testing', async () =>  {
         }));
         var res = await registerUser(userPostData);
         USER_ID = res.data.message._id;
-        saveOutputTest("UserTesting","shouldRegisterTheUser",res.data);
         expect(res.data.status).to.equal(200);
     }));
 

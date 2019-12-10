@@ -28,8 +28,6 @@ import {
     editGameEdge
 } from '../methods';
 
-import {saveOutputTest} from '../outputTest/configOutput';
-
 import faker from 'faker';
 import chai from 'chai';
 const delay = require('delay');
@@ -505,7 +503,6 @@ context('App Testing', async () =>  {
                     transactionHash: resEthereum.transactionHash
                 }
                 let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
-                saveOutputTest("AppTest","shouldAllowDepositForTheUser",res.data);
                 expect(res.data.status).to.equal(200);
 
             }));
@@ -531,7 +528,6 @@ context('App Testing', async () =>  {
                 
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameRouletteSimpleBet",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -556,7 +552,6 @@ context('App Testing', async () =>  {
 
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameRouletteDoubleBet",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
@@ -581,7 +576,6 @@ context('App Testing', async () =>  {
                 }
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameCoinFlipSimpleBet",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -604,7 +598,6 @@ context('App Testing', async () =>  {
                 }
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameCoinFlipSimpleBet",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -630,7 +623,6 @@ context('App Testing', async () =>  {
     
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameLinearDiceSimpleBetContinueBetting",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -655,7 +647,6 @@ context('App Testing', async () =>  {
     
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameLinearDice3PlacesConsecutiveSameValue",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -679,7 +670,6 @@ context('App Testing', async () =>  {
     
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetFortheUserGameLinearDice2PlacesLimitSameValue",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -704,7 +694,6 @@ context('App Testing', async () =>  {
     
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldAllowBetForTheUserGameLinearDice3PlacesNotConsecutiveSameValue",res.data);
                 expect(res.data.status).to.equal(200);
                 expect(await digestBetResult({res, user : userPostData, previousBalance : USER_BALANCE}), true);
             }));
@@ -721,7 +710,6 @@ context('App Testing', async () =>  {
                     tableLimit : 0.03
                 }
                 let res = await editTableLimit(postData, BEARER_TOKEN, {id : APP_ID});
-                saveOutputTest("AppTest","shouldChangeGameTableLimitBetError",res.data);
                 expect(res.data.status).to.equal(200);
             })); 
 
@@ -742,7 +730,6 @@ context('App Testing', async () =>  {
     
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
-                saveOutputTest("AppTest","shouldntAllowBetLimitTablePassed",res.data);
                 expect(res.data.status).to.equal(29);
             }));
         })
