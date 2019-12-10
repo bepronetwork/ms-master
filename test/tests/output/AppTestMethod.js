@@ -563,8 +563,6 @@ module.exports = {
         expect(data.message.app.integrations.chat.publicKey).to.be.an('string');
         expect(data.message.app.description).to.not.be.null;
         expect(data.message.app.description).to.be.an('string');
-        expect(data.message.app.__v).to.not.be.null;
-        expect(data.message.app.__v).to.be.an('number');
         expect(data.message.app).to.have.property('bearerToken');
         expect(data.message.app.bearerToken).to.not.be.null;
         expect(data.message.app.bearerToken).to.be.an('string');
@@ -647,8 +645,6 @@ module.exports = {
         expect(data.message.gameEcosystem.description).to.be.an('string');
         expect(data.message.gameEcosystem.image_url).to.not.be.null;
         expect(data.message.gameEcosystem.image_url).to.be.an('string');
-        expect(data.message.gameEcosystem.__v).to.not.be.null;
-        expect(data.message.gameEcosystem.__v).to.be.an('number');
         expect(data.message.app).to.not.be.null;
         expect(data.message.app).to.be.an('object');
         expect(data.message.app.isValid).to.not.be.null;
@@ -657,9 +653,8 @@ module.exports = {
         expect(data.message.app.ownerAddress).to.be.an('string');
         expect(data.message.app.authorizedAddresses).to.not.be.null;
         expect(data.message.app.authorizedAddresses).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.authorizedAddresses.length).to.equal(2);
         expect(data.message.app.croupierAddress).to.not.be.null;
-        expect(data.message.app.croupierAddress).to.be.an('string');
+        expect(data.message.app.croupierAddress).to.be.an('array');
         expect(data.message.app.games).to.not.be.null;
         expect(data.message.app.games).to.be.an('array').that.is.empty;
         expect(data.message.app.listAdmins).to.not.be.null;
@@ -696,11 +691,6 @@ module.exports = {
         expect(data.message.app.integrations).to.be.an('string');
         expect(data.message.app.description).to.not.be.null;
         expect(data.message.app.description).to.be.an('string');
-        expect(data.message.app.__v).to.not.be.null;
-        expect(data.message.app.__v).to.be.an('number');
-        expect(data.message.app).to.have.property('bearerToken');
-        expect(data.message.app.bearerToken).to.not.be.null;
-        expect(data.message.app.bearerToken).to.be.an('string');
         expect(data.message.app.currencyTicker).to.not.be.null;
         expect(data.message.app.currencyTicker).to.be.an('string');
         expect(data.message.app.decimals).to.not.be.null;
@@ -752,8 +742,6 @@ module.exports = {
         expect(data.message.metaName).to.be.an('string');
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
-        expect(data.message.__v).to.not.be.null;
-        expect(data.message.__v).to.be.an('number');
     },
     shouldChangeGameEdgeEuropeanRoulette(data,expect){
         expect(data.status).to.not.be.null;
@@ -788,8 +776,6 @@ module.exports = {
         expect(data.message.metaName).to.be.an('string');
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
-        expect(data.message.__v).to.not.be.null;
-        expect(data.message.__v).to.be.an('number');
     },
     shouldGetAllEcosystemGamesCoinFlip(data,expect){
         expect(data.status).to.not.be.null;
@@ -816,8 +802,6 @@ module.exports = {
         expect(data.message.gameEcosystem.description).to.be.an('string');
         expect(data.message.gameEcosystem.image_url).to.not.be.null;
         expect(data.message.gameEcosystem.image_url).to.be.an('string');
-        expect(data.message.gameEcosystem.__v).to.not.be.null;
-        expect(data.message.gameEcosystem.__v).to.be.an('number');
         expect(data.message.app).to.not.be.null;
         expect(data.message.app).to.be.an('object');
         expect(data.message.app.isValid).to.not.be.null;
@@ -826,9 +810,8 @@ module.exports = {
         expect(data.message.app.ownerAddress).to.be.an('string');
         expect(data.message.app.authorizedAddresses).to.not.be.null;
         expect(data.message.app.authorizedAddresses).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.authorizedAddresses.length).to.equal(2);
         expect(data.message.app.croupierAddress).to.not.be.null;
-        expect(data.message.app.croupierAddress).to.be.an('string');
+        expect(data.message.app.croupierAddress).to.be.an('array');
         expect(data.message.app.games).to.not.be.null;
         expect(data.message.app.games).to.be.an('array');
         expect(data.message.app.listAdmins).to.not.be.null;
@@ -865,11 +848,6 @@ module.exports = {
         expect(data.message.app.integrations).to.be.an('string');
         expect(data.message.app.description).to.not.be.null;
         expect(data.message.app.description).to.be.an('string');
-        expect(data.message.app.__v).to.not.be.null;
-        expect(data.message.app.__v).to.be.an('number');
-        expect(data.message.app).to.have.property('bearerToken');
-        expect(data.message.app.bearerToken).to.not.be.null;
-        expect(data.message.app.bearerToken).to.be.an('string');
         expect(data.message.app.currencyTicker).to.not.be.null;
         expect(data.message.app.currencyTicker).to.be.an('string');
         expect(data.message.app.decimals).to.not.be.null;
@@ -921,8 +899,6 @@ module.exports = {
         expect(data.message.metaName).to.be.an('string');
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
-        expect(data.message.__v).to.not.be.null;
-        expect(data.message.__v).to.be.an('number');
     },
     shouldChangeGameEdgeCoinFlip(data,expect){
         expect(data.status).to.not.be.null;
@@ -957,8 +933,6 @@ module.exports = {
         expect(data.message.metaName).to.be.an('string');
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
-        expect(data.message.__v).to.not.be.null;
-        expect(data.message.__v).to.be.an('number');
     },
     shouldGetAllEcosystemGamesLinearDice(data,expect){
         expect(data.status).to.not.be.null;
@@ -985,8 +959,6 @@ module.exports = {
         expect(data.message.gameEcosystem.description).to.be.an('string');
         expect(data.message.gameEcosystem.image_url).to.not.be.null;
         expect(data.message.gameEcosystem.image_url).to.be.an('string');
-        expect(data.message.gameEcosystem.__v).to.not.be.null;
-        expect(data.message.gameEcosystem.__v).to.be.an('number');
         expect(data.message.app).to.not.be.null;
         expect(data.message.app).to.be.an('object');
         expect(data.message.app.isValid).to.not.be.null;
@@ -995,9 +967,8 @@ module.exports = {
         expect(data.message.app.ownerAddress).to.be.an('string');
         expect(data.message.app.authorizedAddresses).to.not.be.null;
         expect(data.message.app.authorizedAddresses).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.authorizedAddresses.length).to.equal(2);
         expect(data.message.app.croupierAddress).to.not.be.null;
-        expect(data.message.app.croupierAddress).to.be.an('string');
+        expect(data.message.app.croupierAddress).to.be.an('array');
         expect(data.message.app.games).to.not.be.null;
         expect(data.message.app.games).to.be.an('array');
         expect(data.message.app.listAdmins).to.not.be.null;
@@ -1034,11 +1005,6 @@ module.exports = {
         expect(data.message.app.integrations).to.be.an('string');
         expect(data.message.app.description).to.not.be.null;
         expect(data.message.app.description).to.be.an('string');
-        expect(data.message.app.__v).to.not.be.null;
-        expect(data.message.app.__v).to.be.an('number');
-        expect(data.message.app).to.have.property('bearerToken');
-        expect(data.message.app.bearerToken).to.not.be.null;
-        expect(data.message.app.bearerToken).to.be.an('string');
         expect(data.message.app.currencyTicker).to.not.be.null;
         expect(data.message.app.currencyTicker).to.be.an('string');
         expect(data.message.app.decimals).to.not.be.null;
@@ -1090,8 +1056,6 @@ module.exports = {
         expect(data.message.metaName).to.be.an('string');
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
-        expect(data.message.__v).to.not.be.null;
-        expect(data.message.__v).to.be.an('number');
     },
     shouldChangeGameEdgeLinearDice(data,expect){
         expect(data.status).to.not.be.null;
@@ -1126,8 +1090,6 @@ module.exports = {
         expect(data.message.metaName).to.be.an('string');
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
-        expect(data.message.__v).to.not.be.null;
-        expect(data.message.__v).to.be.an('number');
     },
     shouldGetAllAppGamesUserIntegration(data,expect){
         expect(data.status).to.not.be.null;

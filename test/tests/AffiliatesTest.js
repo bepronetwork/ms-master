@@ -2,7 +2,6 @@ import chai from 'chai';
 import { createEthAccount, provideFunds } from '../utils/env';
 import { mochaAsync } from '../utils';
 import { createUser, editAppStructure, getApp, createUserDeposit, getUserInfo, bet } from '../services';
-import {saveOutputTest} from '../outputTest/configOutput';
 const expect = chai.expect;
 
 const inputs = {
@@ -24,7 +23,6 @@ context('Affiliates Testing', async () =>  {
         it('it should register with affiliates with no parent User', mochaAsync(async () => {
             res_1 = await createUser({app_id : app.id});
             const { status, message } = res_1;
-            saveOutputTest("AdminTesting","shouldRegisterTheAdmin",res_1.data);
             expect(status).to.equal(200);
             expect(message.affiliateId).to.not.be.null;
             expect(message.affiliateInfo.userAffiliated).to.equal(message._id);

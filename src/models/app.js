@@ -4,6 +4,8 @@ import {AppRepository} from '../db/repos';
 import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
+import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
+import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
 import { AffiliateSetup, Integrations, Customization } from '.';
 
 class App extends ModelComponent{
@@ -103,7 +105,8 @@ class App extends ModelComponent{
 
     async getGames(){
         try{
-            return await this.process('GetGames');
+            let app = await this.process('GetGames');
+            return app;
         }catch(err){
             throw err;
         }
@@ -116,7 +119,8 @@ class App extends ModelComponent{
 
     async createAPIToken(){
         try{
-            return await this.process('CreateAPIToken');
+            let app = await this.process('CreateAPIToken');
+            return app;
         }catch(err){
             throw err;
         }
@@ -129,7 +133,8 @@ class App extends ModelComponent{
 
     async addServices(){
         try{
-            return await this.process('AddServices');
+            let app = await this.process('AddServices');
+            return app;
         }catch(err){
             throw err;
         }
@@ -143,7 +148,8 @@ class App extends ModelComponent{
 
     async addGame(){
         try{
-            return await this.process('AddGame');
+            let app = await this.process('AddGame');
+            return MapperAddGamesSingleton.output('AddGames', app);
         }catch(err){
             throw err;
         }
@@ -157,7 +163,8 @@ class App extends ModelComponent{
 
     async addBlockchainInformation(){
         try{
-            return await this.process('AddBlockchainInformation');
+            let app = await this.process('AddBlockchainInformation');
+            return MapperAddBlockchainSingleton.output('AddBlockchain', app);
         }catch(err){
             throw err;
         }
@@ -170,7 +177,8 @@ class App extends ModelComponent{
 
     async getTransactions(){
         try{
-            return await this.process('GetTransactions');
+            let app = await this.process('GetTransactions');
+            return app;
         }catch(err){
             throw err;
         }

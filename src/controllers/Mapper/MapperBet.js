@@ -18,8 +18,7 @@ let outputs = {
                     return ({
                         _id: result._id,
                         place: result.place,
-                        value: result.value,
-                        __v: result.__v
+                        value: result.value
                     })
                 }),
                 "isResolved": object.bet.isResolved,
@@ -43,7 +42,6 @@ let outputs = {
                 "clientSeed": object.bet.clientSeed,
                 "serverHashedSeed": object.bet.serverHashedSeed,
                 "serverSeed": object.bet.serverSeed,
-                "__v": object.bet.__v
             },
             "user_in_app": object.user_in_app,
             "isUserWithdrawingAPI": object.isUserWithdrawingAPI,
@@ -78,8 +76,7 @@ let outputs = {
                 return ({
                     _id: result._id,
                     place: result.place,
-                    value: result.value,
-                    __v: result.__v
+                    value: result.value
                 })
             }),
             "timestamp": object.timestamp,

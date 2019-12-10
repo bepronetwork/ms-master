@@ -105,7 +105,6 @@ let outputs = {
             },
             external_user: object.external_user,
             external_id: object.external_id,
-            __v: object.__v,
             affiliateLink: {
                 parentAffiliatedLinks: [
                     ...object.affiliateLink.parentAffiliatedLinks

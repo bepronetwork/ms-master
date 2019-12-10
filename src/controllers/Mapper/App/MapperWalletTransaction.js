@@ -120,7 +120,6 @@ let outputs = {
                 },
                 description: object.app.description,
                 bearerToken: object.app.bearerToken,
-                __v: object.app.__v,
                 currencyTicker: object.app.currencyTicker,
                 decimals: object.app.decimals,
                 platformAddress: object.app.platformAddress,
