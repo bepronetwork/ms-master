@@ -15,7 +15,6 @@ require('../app');
         let addBannersToApps = require('./addBannersToApps');
         await addBannersToApps.default.prototype.start();
                */
-              console.log("ha")
         let AddFooterToCustomization = require('./addFooterToCustomization');
         await AddFooterToCustomization.default.prototype.start();
 

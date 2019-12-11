@@ -13,10 +13,8 @@ class AddFooterToCustomization{
 
     async start(){
         try{
-            console.log("har")
-
             /* Add Affiliate Setup to Apps */
-            var app_all = [await AppRepository.prototype.findAppById("5dcb0a764269ec0021800cf3")];
+            var app_all = await AppRepository.prototype.getAll();
             // start the progress bar with a total value of 200 and start value of 0
             bar1.start(app_all.length, 0);
             for( var i = 0; i < app_all.length; i++){
