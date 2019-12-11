@@ -5,18 +5,45 @@ var SHA512 = require("crypto-js/hmac-sha512");
 var SHA512_HASH = require("crypto-js/sha512");
 var randomstring = require("randomstring");
 const fortuna = require('javascript-fortuna');
+const si = require('systeminformation');
+const sha512 = require('js-sha512');
+var entropyVal = sha512(`${JSON.stringify(randomstring.generate())}`);
 
-fortuna.init();
+function entropyAccumFunction() {
+    return new Promise(async (resolve) => {
+        const cpuSpeed = await si.cpu();
+        const processes = await si.processes();
+        const disksIO = await si.disksIO();
+        const memory = await si.mem();
+        entropyVal = sha512(`${JSON.stringify(cpuSpeed)}:${JSON.stringify(processes)}:${JSON.stringify(disksIO)}:${JSON.stringify(memory)}`);
+        resolve();
+    });
+}
+  
+function entropyFunction() {
+    return entropyVal;
+}
+  
+let entropyInterval = setInterval(async () => {
+    await entropyAccumFunction();
+}, 250);
+
+fortuna.init({ timeBasedEntropy: true, accumulateTimeout: 100, entropyFxn: entropyFunction });
+
+setTimeout(() => {
+    fortuna.stopTimer();
+    clearInterval(entropyInterval);
+}, 5000);
 
 class Cryptography{
 
     constructor(){
-
+    
     }
 
     generateSeed(){
         const number = fortuna.random();
-        return parseInt(number*Math.pow(10, 32)).toString(32);
+        return parseInt(number*Math.pow(2, 53)).toString(16);
     }
 
     hashSeed(seed){
@@ -34,10 +61,8 @@ class Cryptography{
     }
 
     hexToInt = (randomHex) => {
-        // TO DO : If this number is over 999,999 than the next 5 characters (ex : aad5e) would be used. But in our case it's 697,969 so this will be used. Now you only have to apply a modulus of 10^4 and divide it by 100
-        let hexString = randomHex.toString().substring(0, 5);
-        const number = parseInt(hexString, 16)%(10000)/100;
-        return number;
+        let hexString = randomHex.toString().substring(0, 13);
+        return parseInt(hexString, 16)/(Math.pow(2, 52));
     }
 
     generatePrivateKey = () => {

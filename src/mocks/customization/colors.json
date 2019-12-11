@@ -1,19 +1,19 @@
 [
     {
         "type" :    "backgroundColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#17162d"
     },
     {
         "type" :    "primaryColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#0f0e1d"
     },
     {
         "type" :    "secondaryColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#393984"
     },
     {
         "type" :    "thirdColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#05040c"
     },
     {
         "type" :    "forthColor",
@@ -21,15 +21,15 @@
     },
     {
         "type" :    "fifthColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#858bc7"
     },
     {
         "type" :    "sixthColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#000000"
     },
     {
         "type" :    "seventhColor",
-        "hex"  :    "#ffffff"
+        "hex"  :    "#7e84be"
     },
     {
         "type" :    "heightColor",
