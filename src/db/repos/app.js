@@ -299,7 +299,21 @@ class AppRepository extends MongoComponent{
         }
     }
 
-
+    async setHostingInformation(app_id, {hosting_id, web_url}){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id }, 
+                { $set : {  "hosting_id" : hosting_id, "web_url" :  web_url} },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
   
     findUserByExternalId(app_id, user_external_id){
         try{

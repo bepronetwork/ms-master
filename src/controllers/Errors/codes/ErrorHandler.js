@@ -58,6 +58,7 @@ ErrorHandler.prototype.KEYS =  {
     'AFFILIATE_NOT_EXISTENT'                : "041",
     'ERROR_AFFILIATE_EDIT'                  : "042",
     'BAD_REQUEST'                           : "043",
+    'DEPLOY_ERROR'                          : "044"
 }; 
 
 

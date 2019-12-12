@@ -33,7 +33,9 @@ AppSchema.prototype.schema =  {
     platformTokenAddress: { type : String },
     licensesId          : [{ type: String}],
     metadataJSON        : {  type: JSON},
-    isWithdrawing       : { type : Boolean, default : false, required : true }
+    isWithdrawing       : { type : Boolean, default : false, required : true },
+    hosting_id          : { type : String },
+    web_url             : { type : String },
 }
 
 

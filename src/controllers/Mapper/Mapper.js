@@ -86,6 +86,8 @@ let outputs = {
             "currencyTicker"        : object.currencyTicker,
             "decimals"              : object.decimals,
             "integrations"          : object.integrations,
+            "hosting_id"            : object.hosting_id,
+            "web_url"               : object.web_url,
             "services"              : object.services,
             "customization"         : object.customization,
             "withdraws"             : object.withdraws,

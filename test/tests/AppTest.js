@@ -689,7 +689,7 @@ context('App Testing', async () =>  {
                     result: [{
                         place: 0, value: BET_VALUE,
                         place: 10, value: BET_VALUE,
-                        place: 45, value: BET_VALUE
+                        place: 45, value: BET_VALUE,
                     }]
                 }
     

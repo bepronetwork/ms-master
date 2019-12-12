@@ -5,6 +5,8 @@ export const PORT = process.env.PORT;
 
 /* ENV */
 
+export const ENV = process.env.ENV;
+
 export const DB_USER =  process.env.DB_USER;
 
 export const DB_PASSWORD =  process.env.DB_PASSWORD;
@@ -26,6 +28,18 @@ export const PUBLIC_KEY = process.env.PUBLIC_KEY;
 export const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 export const CONFIRMATION_NEEDED = process.env.CONFIRMATION_NEEDED;
+
+export const HEROKU_API_TOKEN = process.env.HEROKU_API_TOKEN;
+
+export const HEROKU_API_BEARER_TOKEN = process.env.HEROKU_API_BEARER_TOKEN;
+
+export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
+
+export const MS_MASTER_URL = process.env.MS_MASTER_URL;
+
+export const FRONTEND_BRANCH = ENV == 'production' ? 'master' : 'dev';
+
+export const GITHUB_LAYOUT_REPO = process.env.GITHUB_LAYOUT_REPO;
 
 /* Variables */
 

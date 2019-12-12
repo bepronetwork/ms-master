@@ -43,6 +43,16 @@ module.exports = {
         .then(res => res.body)
         
     },
+
+    async deployApp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/deploy')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => res.body)
+        
+    },
     async loginAdmin2FA(params) {
         return request(global.server)
         .post('/api/admins/login/2fa')

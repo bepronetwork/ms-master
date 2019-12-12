@@ -13,6 +13,7 @@ import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
+import { HerokuClientSingleton } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -41,7 +42,7 @@ const processActions = {
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
-          // Get App by Appname
+        // Get App by Appname
 		let normalized = {
             address             : params.address,
             wallet              : params.wallet,
@@ -71,7 +72,16 @@ const processActions = {
             ...app
         }
 		return normalized;
-	},
+    },
+    __deployApp : async (params) => {
+        let app = await AppRepository.prototype.findAppById(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        // Get App by Appname
+        let normalized = {
+            app
+        }
+		return normalized;
+    },
 	__summary : async (params) => {
 
         let normalized = {
@@ -372,6 +382,16 @@ const progressActions = {
 
         return ret;
     },
+    __deployApp : async (params) => {
+
+        const { _id, name } = params.app;
+        /* Deploy App on Heroku */
+        let { heroku_id, web_url } = await HerokuClientSingleton.setupClientPlatform({id : _id, name : name.split(' ').join('-')});
+        /* Store Information */
+        await AppRepository.prototype.setHostingInformation(_id, { hosting_id : heroku_id, web_url});
+        /* Return */
+        return true;
+    },
     __get : async (params) => {
         let res = params;
 		return res;
@@ -561,12 +581,13 @@ const progressActions = {
                 hex : correspondentColorType.hex.toLowerCase()
             })
         }));
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
         // Save info on Customization Part
         return params;
     },
     __editFooter : async (params) => {
         let { app, communityLinks, supportLinks } = params;
-        console.log(supportLinks)
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
             return (await new Link(c).register())._doc._id
         }));
@@ -574,8 +595,6 @@ const progressActions = {
         let supportLinkIDs = await Promise.all(supportLinks.map( async c => {
             return (await new Link(c).register())._doc._id
         }));
-
-        console.log(supportLinkIDs)
 
         await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,
@@ -644,6 +663,9 @@ class AppLogic extends LogicComponent{
 				};
 				case 'Summary' : {
 					return await library.process.__summary(params); break;
+                };
+                case 'DeployApp' : {
+					return await library.process.__deployApp(params); break;
                 };
                 case 'Get' : {
 					return await library.process.__get(params); break;
@@ -754,6 +776,9 @@ class AppLogic extends LogicComponent{
                 };
 				case 'Summary' : {
 					return await library.progress.__summary(params); break;
+                };
+                case 'DeployApp' : {
+					return await library.progress.__deployApp(params); break;
                 };
                 case 'Get' : {
 					return await library.progress.__get(params); break;

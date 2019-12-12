@@ -270,7 +270,6 @@ context('Functional Testing', async () =>  {
 
 
             let params = await actions.user.directDeposit({...postData.USER_1, USER_DEPOSIT_AMOUNT : 0.02, apiCall : false});
-            console.log(postData.USER_1.user)
             var { USER_BEARER_TOKEN, USER_ID } = await getUserAuth(postData.USER_1.user);
 
             let res = updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
