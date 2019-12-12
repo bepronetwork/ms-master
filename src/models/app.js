@@ -98,6 +98,19 @@ class App extends ModelComponent{
         }
     }
 
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async deployApp(){
+        try{
+            return await this.process('DeployApp');
+        }catch(err){
+            throw err;
+        }
+    }
+
      /**
      * @param {String} 
      * @return {bool || Exception}  

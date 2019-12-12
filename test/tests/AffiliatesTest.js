@@ -415,10 +415,7 @@ context('Affiliates Testing', async () =>  {
             const TOKEN_DEPOSIT_AMOUNT = 3;
             const ETH_DEPOSIT_AMOUNT = 0.1;
             const BET_AMOUNT = 0.2;
-            const BET_GAME = app_data_before.games.find( game => game.metaName == 'european_roulette_simple');
-            const BET_RESULT = [{
-                place: 0, value: BET_AMOUNT
-            }];
+           
 
             /* Send Tokens to User */
             await provideFunds({account : user_3.eth_account, ethAmount : ETH_DEPOSIT_AMOUNT, tokenAmount : TOKEN_DEPOSIT_AMOUNT});
@@ -430,12 +427,16 @@ context('Affiliates Testing', async () =>  {
             var wasWon = true;
             /* Creater User Bet */
             while(wasWon){
+                var BET_GAME = app_data_before.games.find( game => game.metaName == 'european_roulette_simple');
+                var BET_RESULT = [{
+                    place: 0, value: BET_AMOUNT
+                }];
                 /* Verify that was Lost */
                 var bet_res = await bet({user : user_3, game : BET_GAME, result : BET_RESULT, app});
                 const { message } = bet_res.data;
                 wasWon = message.isWon;
             }
-            const { status, message } = bet_res.data;
+            const { status } = bet_res.data;
             /* Confirm Bet was valid */
             expect(status).to.equal(200);
             /* Get Info for User 1 After Bet */

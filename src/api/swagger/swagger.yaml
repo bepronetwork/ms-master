@@ -662,6 +662,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
+  /app/deploy : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Deploy App
+      operationId: deployApp
+      description: Deploy Application
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppDeploy'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse" 
+  
   /app/games/editEdge:
     x-swagger-router-controller: game
     post:
@@ -1578,6 +1609,17 @@ definitions:
       isActive : 
         type : boolean
         example: true
+  AppDeploy : 
+    type: object
+    required:
+      - app
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
   AppEditIntegration : 
     type: object
     required:
@@ -1612,7 +1654,7 @@ definitions:
         example: "3456g334"
       isActive : 
         type : boolean
-        example: true
+        example: true   
   AppEditAffiliateStructure : 
     type: object
     required:

@@ -63,6 +63,19 @@ async function getGames (req, res) {
 }
 
 // JSON WebToken Security Functions
+async function deployApp (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+        let data = await app.deployApp();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+// JSON WebToken Security Functions
 async function createGame (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
@@ -401,6 +414,7 @@ export {
     summary,
     editIntegration,
     editBanners,
+    deployApp,
     getLastBets,
     addServices,
     updateWalletApp

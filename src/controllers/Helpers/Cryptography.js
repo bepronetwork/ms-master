@@ -62,7 +62,8 @@ class Cryptography{
 
     hexToInt = (randomHex) => {
         let hexString = randomHex.toString().substring(0, 13);
-        return parseInt(hexString, 16)/(Math.pow(2, 52));
+        let decimal = parseInt(hexString, 16)/(Math.pow(2, 52))
+        return parseInt(decimal*100);
     }
 
     generatePrivateKey = () => {

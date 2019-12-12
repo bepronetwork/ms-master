@@ -1,13 +1,11 @@
 import { Mongoose } from "mongoose";
 import Web3 from 'web3';
 import CasinoContract from "./logic/eth/CasinoContract";
-import account from "./logic/eth/models/account";
 import interfaces from "./logic/eth/interfaces";
 import ERC20TokenContract from "./logic/eth/ERC20Contract";
 import { ETH_NETWORK, ETH_NET_NAME, DB_MONGO } from './config';
 import { IPRunning } from "./helpers/network";
 import { Logger } from "./helpers/logger";
-import { Inquirer } from "./helpers/inquirer";
 import bluebird from 'bluebird';
 
 class Globals{
@@ -77,11 +75,13 @@ class Globals{
     async connect(){      
         // Main DB
         this.main_db = new Mongoose();
-        await this.main_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.main, {useMongoClient : true});
+        this.main_db.set('useFindAndModify', false);
+        await this.main_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.main, { useNewUrlParser: true, useUnifiedTopology: true});
         this.main_db.Promise = bluebird;
         // Ecosystem DB
         this.ecosystem_db = new Mongoose();
-        await this.ecosystem_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.ecosystem, {useMongoClient : true})
+        this.ecosystem_db.set('useFindAndModify', false);
+        await this.ecosystem_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.ecosystem, { useNewUrlParser: true, useUnifiedTopology: true});
         this.ecosystem_db.Promise = bluebird;
         // Main DB
         this.default = new Mongoose();
