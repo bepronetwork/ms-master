@@ -174,5 +174,9 @@
     "043" : {
         "key" : "BAD_REQUEST",
         "message"   : "Bad Request"
+    },
+    "044" : {
+        "key" : "DEPLOY_ERROR",
+        "message"   : "The Platform was not able to be deployed, please contact support"
     }
 }

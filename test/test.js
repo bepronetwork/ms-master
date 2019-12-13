@@ -8,6 +8,9 @@ import account from './logic/eth/models/account';
 const app = require('../src/app');
 import { globalsTest } from './GlobalsTest';
 import Numbers from './logic/services/numbers';
+import { HerokuClientSingleton } from '../src/logic/third-parties';
+import { getAppAuth } from './methods'; 
+import { get_app } from './models/apps';
 
 const testConfig = require('./config/config').default;
 const expect = chai.expect;
@@ -36,7 +39,7 @@ const CONST = {
     decimals : 18,
     user : {
         DEPOSIT_AMOUNT : 10,
-        BET_AMOUNT : 0.2,
+        BET_AMOUNT : 0.05,
         WITHDRAW_AMOUNT : 2,
     },
     currencyTicker : 'DAI',
@@ -142,8 +145,8 @@ const runTests = async () => {
     })();
     
     mocha.addFile('./test/tests/AppTest.js');
-    mocha.addFile('./test/tests/AffiliatesTest.js');
     mocha.addFile('./test/tests/app');
+    mocha.addFile('./test/tests/AffiliatesTest.js');
     mocha.addFile('./test/tests/FunctionalTest.js');
     mocha.addFile('./test/tests/EcosystemTest.js');
     mocha.addFile('./test/tests/AdminTest.js');
@@ -158,8 +161,14 @@ const runTests = async () => {
         console.log('Test fail');
         process.exit(1);
     })
-    .on('end', function() {
+    .on('end', async () =>  {
         console.log('All done');
+        const app = global.test.app;
+        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
+        const { hosting_id } = res_app.data.message;
+        /* Remove App from Heroku because it compounds $$ */
+        let res = await HerokuClientSingleton.deleteApp({app : hosting_id})
+        expect(res).to.not.be.null;
         process.exit(0)
     });
 };

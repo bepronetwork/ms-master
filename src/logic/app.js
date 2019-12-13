@@ -1,19 +1,19 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, WithdrawRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository } from '../db/repos';
+import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository, LogoRepository, FooterRepository, ColorRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
-import { getServices, fromDecimals, verifytransactionHashDirectDeposit, verifytransactionHashWithdrawApp } from './services/services';
-import { Game, Deposit, Withdraw, AffiliateSetup } from '../models';
-import games from '../config/games.config.json';
+import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
+import { Game, Deposit, Withdraw, AffiliateSetup, Link } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import { globals } from '../Globals';
 import Numbers from './services/numbers';
-import codes from './categories/codes';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
+import { isHexColor } from '../helpers/string';
+import { HerokuClientSingleton } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -42,7 +42,7 @@ const processActions = {
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
-          // Get App by Appname
+        // Get App by Appname
 		let normalized = {
             address             : params.address,
             wallet              : params.wallet,
@@ -72,7 +72,16 @@ const processActions = {
             ...app
         }
 		return normalized;
-	},
+    },
+    __deployApp : async (params) => {
+        let app = await AppRepository.prototype.findAppById(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        // Get App by Appname
+        let normalized = {
+            app
+        }
+		return normalized;
+    },
 	__summary : async (params) => {
 
         let normalized = {
@@ -275,6 +284,33 @@ const processActions = {
             app
         };
     },
+    __editLogo : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editColors : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editFooter : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __getUsers : async (params) => {
         return params;
     }
@@ -345,6 +381,16 @@ const progressActions = {
          }
 
         return ret;
+    },
+    __deployApp : async (params) => {
+
+        const { _id, name } = params.app;
+        /* Deploy App on Heroku */
+        let { heroku_id, web_url } = await HerokuClientSingleton.setupClientPlatform({id : _id, name : name.split(' ').join('-')});
+        /* Store Information */
+        await AppRepository.prototype.setHostingInformation(_id, { hosting_id : heroku_id, web_url});
+        /* Return */
+        return true;
     },
     __get : async (params) => {
         let res = params;
@@ -506,6 +552,58 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editLogo : async (params) => {
+        let { app, logo } = params;
+        let logoURL;
+        if(logo.includes("https")){
+            /* If it is a link already */
+            logoURL = logo;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : logo});
+        }
+
+        await LogoRepository.prototype.findByIdAndUpdate(app.customization.logo._id, {
+            id : logoURL
+        })
+        // Save info on Customization Part
+        return params;
+    },
+    __editColors : async (params) => {
+        let { app, colors } = params;
+        /* Update all colors info */
+        await Promise.all(app.customization.colors.map( async c => {
+            const correspondentColorType = colors.find( ci => ci.type.toLowerCase() == c.type.toLowerCase());
+            /* Not right type */
+            if(!correspondentColorType || !isHexColor(new String(correspondentColorType.hex).toString())){return null}
+            return await ColorRepository.prototype.findByIdAndUpdate(c._id, {
+                type : correspondentColorType.type,
+                hex : correspondentColorType.hex.toLowerCase()
+            })
+        }));
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        // Save info on Customization Part
+        return params;
+    },
+    __editFooter : async (params) => {
+        let { app, communityLinks, supportLinks } = params;
+        let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
+            return (await new Link(c).register())._doc._id
+        }));
+
+        let supportLinkIDs = await Promise.all(supportLinks.map( async c => {
+            return (await new Link(c).register())._doc._id
+        }));
+
+        await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
+            communityLinks : communityLinkIDs,
+            supportLinks : supportLinkIDs,
+        })
+
+        // Save info on Customization Part
+        return params;
+    },
     __getUsers : async (params) => {
         let res = await UsersRepository.prototype.getAllFiltered(params);
         return res;
@@ -530,7 +628,7 @@ const progressActions = {
  * @property {App_schema} schema
  * @returns {setImmediate} error, this
  * @todo Add description for the params
- */
+*/
 
 
 class AppLogic extends LogicComponent{
@@ -565,6 +663,9 @@ class AppLogic extends LogicComponent{
 				};
 				case 'Summary' : {
 					return await library.process.__summary(params); break;
+                };
+                case 'DeployApp' : {
+					return await library.process.__deployApp(params); break;
                 };
                 case 'Get' : {
 					return await library.process.__get(params); break;
@@ -607,6 +708,15 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
+                };
+                case 'EditLogo' : {
+                    return await library.process.__editLogo(params); break;
+                };
+                case 'EditFooter' : {
+                    return await library.process.__editFooter(params); break;
+                };
+                case 'EditColors' : {
+                    return await library.process.__editColors(params); break;
                 };
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
@@ -667,6 +777,9 @@ class AppLogic extends LogicComponent{
 				case 'Summary' : {
 					return await library.progress.__summary(params); break;
                 };
+                case 'DeployApp' : {
+					return await library.progress.__deployApp(params); break;
+                };
                 case 'Get' : {
 					return await library.progress.__get(params); break;
                 };
@@ -696,6 +809,15 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;
+                };
+                case 'EditLogo' : {
+                    return await library.progress.__editLogo(params); break;
+                };
+                case 'EditColors' : {
+                    return await library.progress.__editColors(params); break;
+                };
+                case 'EditFooter' : {
+                    return await library.progress.__editFooter(params); break;
                 };
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;

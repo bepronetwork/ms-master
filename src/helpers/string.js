@@ -8,3 +8,8 @@ export function substituteString(modifiableString, key, value){
     if(!key || !value){ return }
     return modifiableString.replaceAll(`<${new String(key).toUpperCase().trim()}>`, value)
 }
+
+export function isHexColor (hex) {
+    return (typeof hex === 'string' && hex[0] === '#')
+  }
+  

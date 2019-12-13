@@ -12,7 +12,7 @@ context('Add TopBar Info', async () => {
     });
 
 
-    it('should be able to change customization on app', mochaAsync(async () => {
+    it('should be able to edit top bar info', mochaAsync(async () => {
 
         const postData = {
             backgroundColor : '#ccc',

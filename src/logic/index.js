@@ -21,10 +21,18 @@ import ChatLogic from './chat';
 import CustomizationLogic from './customization';
 import TopBarLogic from './topBar';
 import BannersLogic from './banners';
+import LogoLogic from './logo';
+import ColorLogic from './color';
+import LinkLogic from './link';
+import FooterLogic from './footer';
 
 export {
     UserLogic,
     TopBarLogic,
+    LinkLogic,
+    FooterLogic,
+    ColorLogic,
+    LogoLogic,
     EventsLogic,
     BannersLogic,
     AppLogic,

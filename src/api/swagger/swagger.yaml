@@ -571,6 +571,128 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/logo : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Banner Information
+      operationId: editLogo
+      description: Change Logo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationLogo'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/customization/colors : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Colors Information
+      operationId: editColors
+      description: Change Colors
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationColors'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/customization/footer : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Colors Information
+      operationId: editFooter
+      description: Change Footer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationFooter'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /app/deploy : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Deploy App
+      operationId: deployApp
+      description: Deploy Application
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppDeploy'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse" 
+  
   /app/games/editEdge:
     x-swagger-router-controller: game
     post:
@@ -1389,6 +1511,74 @@ definitions:
       autoDisplay:
         type : boolean
         example: true
+  AppCustomizationColors : 
+    type: object
+    required:
+      - app
+      - colors
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      colors:
+        type : array
+        items : 
+          type: object
+          properties:
+            type :
+              type: string
+            hex :
+              type: string
+  AppCustomizationLogo : 
+    type: object
+    required:
+      - app
+      - logo
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      logo:
+        type : string
+        example: 876348bct3t2rc2t34
+        description : image blob or link
+  AppCustomizationFooter : 
+    type: object
+    required:
+      - app
+      - supportLinks
+      - communityLinks
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      supportLinks :
+        type : array
+        items:
+          type: object
+          properties:
+            href :
+              type: string
+            name :
+              type: string
+      communityLinks :
+        type : array
+        items:
+          type: object
+          properties:
+            href :
+              type: string
+            name :
+              type: string
   AppCustomizationTopBar : 
     type: object
     required:
@@ -1419,6 +1609,17 @@ definitions:
       isActive : 
         type : boolean
         example: true
+  AppDeploy : 
+    type: object
+    required:
+      - app
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
   AppEditIntegration : 
     type: object
     required:
@@ -1453,7 +1654,7 @@ definitions:
         example: "3456g334"
       isActive : 
         type : boolean
-        example: true
+        example: true   
   AppEditAffiliateStructure : 
     type: object
     required:

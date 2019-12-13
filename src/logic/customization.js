@@ -3,6 +3,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
+import { Color } from '../models';
 let error = new ErrorManager();
 
 
@@ -41,8 +42,15 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{            
+            let { colors } = params;
+            /* Save all Colors customization */
+            let ids = await Promise.all(colors.map( async c => {
+                return (await new Color(c).register())._doc._id;
+            }));
+
+            params.colors = ids;
+
             let customization = await self.save(params);
-        
 			return {
 				...customization,
 				type : 'customization'

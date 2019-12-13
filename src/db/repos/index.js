@@ -24,10 +24,18 @@ import ChatRepository from './chat';
 import CustomizationRepository from './customization';
 import TopBarRepository from './topBar';
 import BannersRepository from './banners';
+import LogoRepository from './logo';
+import ColorRepository from './color';
+import LinkRepository from './link';
+import FooterRepository from './footer';
 
 export{
     ChatRepository,
+    FooterRepository,
     TopBarRepository,
+    LinkRepository,
+    ColorRepository,
+    LogoRepository,
     BannersRepository,
     CustomizationRepository,
     IntegrationsRepository,

@@ -43,6 +43,16 @@ module.exports = {
         .then(res => res.body)
         
     },
+
+    async deployApp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/deploy')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => res.body)
+        
+    },
     async loginAdmin2FA(params) {
         return request(global.server)
         .post('/api/admins/login/2fa')
@@ -228,6 +238,30 @@ module.exports = {
     async editBannersCustomizationApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/customization/banners')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async editLogoCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/logo')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async editColorsCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/colors')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {return res.body})
+    },
+    async editFooterCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/footer')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

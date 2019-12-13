@@ -1,3 +1,4 @@
-context('App Testing', async () => {
+context('App', async () => {
+    require('./deploy');
     require('./customization');
 });

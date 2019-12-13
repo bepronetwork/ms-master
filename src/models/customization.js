@@ -1,7 +1,8 @@
 import { CustomizationLogic } from '../logic';
 import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
-import { TopBar, Banners } from '.';
+import { TopBar, Banners, Color, Logo, Footer } from '.';
+import { colors } from '../mocks';
 
 class Customization extends ModelComponent{
 
@@ -15,10 +16,12 @@ class Customization extends ModelComponent{
                 logic : new CustomizationLogic({db : db}), 
                 db : db,
                 self : null, 
-                params : params,
+                params : {...params, colors : colors},
                 children : [
                     new TopBar(params),
-                    new Banners(params)
+                    new Banners(params),
+                    new Logo(params),
+                    new Footer(params)
                 ]
             }
             );

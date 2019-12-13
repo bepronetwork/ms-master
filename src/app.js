@@ -30,7 +30,7 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     globals.verify();
     await globals.connect();
     console.log("Connected to DB")
-	app.listen(PORT, () => {
+	app.listen(PORT,async () => {
         Logger.success("Listening in port", PORT);
 	});
 

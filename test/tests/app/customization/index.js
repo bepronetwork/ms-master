@@ -1,4 +1,7 @@
-context('Customization Testing', async () => {
+context('Customization', async () => {
     require('./addTopBarInformation');
     require('./addBanner');
+    require('./addLogo');
+    require('./editColors');
+    require('./editFooter');
 });

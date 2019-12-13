@@ -3,6 +3,9 @@ import ModelComponent from './modelComponent';
 import {AppRepository} from '../db/repos';
 import Wallet from './wallet';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
+import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
+import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
+import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
 import { AffiliateSetup, Integrations, Customization } from '.';
 
 class App extends ModelComponent{
@@ -95,6 +98,19 @@ class App extends ModelComponent{
         }
     }
 
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async deployApp(){
+        try{
+            return await this.process('DeployApp');
+        }catch(err){
+            throw err;
+        }
+    }
+
      /**
      * @param {String} 
      * @return {bool || Exception}  
@@ -102,7 +118,8 @@ class App extends ModelComponent{
 
     async getGames(){
         try{
-            return await this.process('GetGames');
+            let app = await this.process('GetGames');
+            return app;
         }catch(err){
             throw err;
         }
@@ -115,7 +132,8 @@ class App extends ModelComponent{
 
     async createAPIToken(){
         try{
-            return await this.process('CreateAPIToken');
+            let app = await this.process('CreateAPIToken');
+            return app;
         }catch(err){
             throw err;
         }
@@ -128,7 +146,8 @@ class App extends ModelComponent{
 
     async addServices(){
         try{
-            return await this.process('AddServices');
+            let app = await this.process('AddServices');
+            return app;
         }catch(err){
             throw err;
         }
@@ -142,7 +161,8 @@ class App extends ModelComponent{
 
     async addGame(){
         try{
-            return await this.process('AddGame');
+            let app = await this.process('AddGame');
+            return MapperAddGamesSingleton.output('AddGames', app);
         }catch(err){
             throw err;
         }
@@ -156,7 +176,8 @@ class App extends ModelComponent{
 
     async addBlockchainInformation(){
         try{
-            return await this.process('AddBlockchainInformation');
+            let app = await this.process('AddBlockchainInformation');
+            return MapperAddBlockchainSingleton.output('AddBlockchain', app);
         }catch(err){
             throw err;
         }
@@ -169,7 +190,8 @@ class App extends ModelComponent{
 
     async getTransactions(){
         try{
-            return await this.process('GetTransactions');
+            let app = await this.process('GetTransactions');
+            return app;
         }catch(err){
             throw err;
         }
@@ -311,6 +333,47 @@ class App extends ModelComponent{
         }
     }
 
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editLogo(){
+        try{
+            return await this.process('EditLogo');
+        }catch(err){
+            throw err;
+        }
+    }
+
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editColors(){
+        try{
+            return await this.process('EditColors');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editFooter(){
+        try{
+            return await this.process('EditFooter');
+        }catch(err){
+            throw err;
+        }
+    }
+
      /**
      * @param {String} 
      * @return {bool || Exception}  
@@ -338,7 +401,7 @@ class App extends ModelComponent{
             let res = await this.process('UpdateWallet');
             /* Open Mutex */
             await AppRepository.prototype.changeWithdrawPosition(app, false);
-            return res;
+            return MapperWalletSingleton.output('WalletTransaction', res);
         }catch(err){
             if(parseInt(err.code) != 14){
                 /* If not withdrawing atm */

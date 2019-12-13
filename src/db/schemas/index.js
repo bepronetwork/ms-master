@@ -15,11 +15,19 @@ import { ChatSchema } from './integrations/chat';
 import { CustomizationSchema } from './customization';
 import { TopBarSchema } from './customization/topBar';
 import { BannersSchema } from './customization/banners';
+import { LogoSchema }  from './customization/logo';
+import { ColorSchema }  from './customization/color';
+import { LinkSchema } from './customization/link';
+import { FooterSchema } from './customization/footer';
 
 export {
     UserSchema,
+    LinkSchema,
     TopBarSchema,
+    FooterSchema,
+    ColorSchema,
     BannersSchema,
+    LogoSchema,
     CustomizationSchema,
     ChatSchema,
     AppSchema,
