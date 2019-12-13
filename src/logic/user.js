@@ -42,21 +42,93 @@ const processActions = {
         let normalized = {};
         let user = await __private.db.findUser(params.username);     
         if(!user){throwError('USER_NOT_EXISTENT')}
-        var app = user.app_id; 
+        if(!user.security){throwError()};
+        let has2FASet = user.security['2fa_set'];
+        var app = MiddlewareSingleton.sign(user.app_id);
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
 		if(user){
 			normalized = {
-				username : user.username,
-				password : input_params.password,
+                has2FASet,
                 user_in_app,
+				username : user.username,
+                password : input_params.password,
+                security_id : user.security._id,
                 verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
                 integrations : getIntegrationsInfo({integrations, user_id : user.username}),
 				...user
 			}
 		}
 		return normalized;
-	},
+    },
+    
+    // __login2FA : async (params) => {
+    //     // Get User by Username
+    //     let admin = await __private.db.findAdmin(params.username);
+
+    //     if(!admin){throwError('USER_NOT_EXISTENT')};
+    //     if(!admin.security){throwError()};
+
+    //     var has2FASet = admin.security['2fa_set'];
+    //     var secret2FA = admin.security['2fa_secret'];
+
+    //     // is 2FA not Setup
+    //     if((!has2FASet) || (!secret2FA)){throwError('USER_HAS_2FA_DEACTIVATED')}
+    
+    //     let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
+    //         secret : secret2FA,
+    //         token : params['2fa_token']
+    //     });
+
+    //     let bearerToken = MiddlewareSingleton.sign(admin._id);
+
+    //     let normalized = {
+    //         has2FASet,
+    //         secret2FA,
+    //         bearerToken,
+    //         isVerifiedToken2FA,
+    //         username : admin.username,
+    //         password : params.password,
+    //         security_id : admin.security._id,
+    //         verifiedAccount : Security.prototype.unhashPassword(params.password, admin.hash_password),
+    //         ...admin
+    //     }
+
+    //     return normalized;
+    // },
+    // __auth  : async (params) => {
+    //     // Get User by Username
+    //     let admin = await __private.db.findAdminById(params.admin);
+    //     if(!admin){throwError('USER_NOT_EXISTENT')};
+    //     if(!admin.security){throwError()};
+    //     let normalized = admin;        
+    //     return normalized;
+    // },
+    // __set2FA : async (params) => {
+    //     // Get User by Username
+    //     let admin = await __private.db.findAdminById(params.admin);
+
+    //     if(!admin){throwError('USER_NOT_EXISTENT')};
+    //     if(!admin.security){throwError()};
+    
+    //     let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
+    //         secret : params['2fa_secret'],
+    //         token : params['2fa_token']
+    //     })
+
+
+    //     let normalized = {
+    //         newSecret : params['2fa_secret'],
+    //         username : admin.username,
+    //         isVerifiedToken2FA,
+    //         admin_id : params.admin,
+    //         security_id : admin.security._id,
+    //         ...admin
+    //     }
+
+    //     return normalized;
+    // },
+
 	__register : async (params) => {
 
         const { affiliateLink, affiliate } = params;
