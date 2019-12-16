@@ -336,7 +336,7 @@ paths:
       tags:
       - user
       summary: Setup 2fa
-      operationId: setAdmin2FA
+      operationId: setUser2FA
       description: Search for matching accounts in the system.
       consumes:
         - application/json
@@ -1488,7 +1488,7 @@ definitions:
       - 2fa_token
       - 2fa_secret
     properties:
-      admin:
+      user:
         type : string
         example: "24234g234g23g"
         minLength: 1
@@ -2149,7 +2149,7 @@ definitions:
     required:
       - user
     properties:
-      admin:
+      user:
         type : string
         example: "Aweruithwe4837592837"
         description: |
