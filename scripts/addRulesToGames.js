@@ -38,7 +38,7 @@ class AddRulesToGames{
     async start(){
         try{
             /* Add Affiliate Setup to Apps */
-            var app_all = [await AppRepository.prototype.findAppById('5dcb0a764269ec0021800cf3')];
+            var app_all = await AppRepository.prototype.getAll();
             let gamesEco = await GamesEcoRepository.prototype.getAll();
             // start the progress bar with a total value of 200 and start value of 0
             bar1.start(app_all.length + gamesEco, 0);
