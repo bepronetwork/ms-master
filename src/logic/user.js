@@ -53,9 +53,10 @@ const processActions = {
         if(!user){throwError('USER_NOT_EXISTENT')}
         if(!user.security){throwError()};
         let has2FASet = user.security['2fa_set'];
-        var app = MiddlewareSingleton.sign(user.app_id);
+        var app = user.app_id;
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
+
 		if(user){
 			normalized = {
                 has2FASet,
@@ -63,11 +64,11 @@ const processActions = {
 				username : user.username,
                 password : input_params.password,
                 security_id : user.security._id,
-                verifiedAccount : new Security().prototype.unhashPassword(input_params.password, user.hash_password),
-                integrations : getIntegrationsInfo({integrations, user_id : user.username}),
+                verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
+                integrations : getIntegrationsInfo({ integrations: integrations, user_id : user.username}),
 				...user
 			}
-		}
+        }
 		return normalized;
     },
     __login2FA : async (params) => {
@@ -99,7 +100,7 @@ const processActions = {
             username : user.username,
             password : params.password,
             security_id : user.security._id,
-            verifiedAccount : new Security().prototype.unhashPassword(input_params.password, user.hash_password),
+            verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
             integrations : getIntegrationsInfo({integrations, user_id : user.username}),
             ...user
         }
@@ -186,8 +187,7 @@ const processActions = {
 			app_id			    : params.app,
 			external_user	: params.user_external_id ? true : false,
 			external_id		: params.user_external_id
-		}
-	
+        }
 		return normalized;
 	},
 	__summary : async (params) => {
