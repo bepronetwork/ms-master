@@ -415,6 +415,7 @@ const progressActions = {
             edge            : 0,
             name            : gameEcosystem.name,
             resultSpace     : gameEcosystem.resultSpace,
+            rules           : gameEcosystem.rules,
             image_url       : gameEcosystem.image_url,
             metaName        : gameEcosystem.metaName,
             betSystem       : 0, // Auto
