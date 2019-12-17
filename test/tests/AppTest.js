@@ -504,6 +504,7 @@ context('App Testing', async () =>  {
                     transactionHash: resEthereum.transactionHash
                 }
                 let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
+                console.log(res);
                 expect(res.data.status).to.equal(200);
 
             }));

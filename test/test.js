@@ -148,7 +148,8 @@ const runTests = async () => {
     mocha.addFile('./test/tests/EcosystemTest.js');
     mocha.addFile('./test/tests/AdminTest.js');
     mocha.addFile('./test/tests/BetTest.js');
-    mocha.addFile('./test/tests/UserTest.js');
+    mocha.addFile('./test/tests/userTest');
+    // mocha.addFile('./test/tests/UserTest.js');
     
     mocha
     .timeout(1000*60*1000)

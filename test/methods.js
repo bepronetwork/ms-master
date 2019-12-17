@@ -58,6 +58,30 @@ module.exports = {
         .then(res => res.body)
         
     },
+    async authUser(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/auth')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => res.body)
+        
+    },
+    async loginUser2FA(params) {
+        return request(global.server)
+        .post('/api/users/login/2fa')
+        .send(params)
+        .then(res => res.body)
+        
+    },
+    async setUser2FA(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/2fa/set')
+        .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => res.body)
+        
+    },
     async registerApp(params) {
         return request(global.server)
         .post('/api/app/create').send(params)
