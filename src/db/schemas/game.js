@@ -9,7 +9,8 @@ GameSchema.prototype.name = 'Game';
 GameSchema.prototype.schema = {
     name                : { type: String, required : true}, 
     metaName            : { type: String, required : true}, 
-    description         : { type: String, required : true},     
+    description         : { type: String, required : true},   
+    rules               : { type: String, required : true},       
     edge                : { type : Number, required : true},      
     app                 : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true },  
     // Event Data

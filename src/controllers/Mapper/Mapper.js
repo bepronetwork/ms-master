@@ -63,6 +63,7 @@ let outputs = {
                     _id : game._id,
                     edge : game.edge,
                     name : game.name,
+                    rules : game.rules,
                     metaName : game.metaName,
                     image_url : game.image_url,
                     description : game.description,

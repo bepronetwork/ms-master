@@ -42,6 +42,7 @@ const processActions = {
             timestamp           : new Date(),
             image_url           : params.image_url,
             metaName            : params.metaName,
+            rules               : params.rules,
             description         : params.description,
             metadataJSON        : params.metadataJSON
 		}
@@ -56,7 +57,8 @@ const processActions = {
 			name    			: game.name,
 			description         : game.description,
             edge        		: game.edge,
-            events              : game.events
+            events              : game.events,
+            rules               : game.rules
 		}
 
 		return normalized;
