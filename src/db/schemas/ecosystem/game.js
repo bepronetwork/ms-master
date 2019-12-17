@@ -13,6 +13,7 @@ GameSchema.prototype.schema = {
     resultSpace         : [{type: mongoose.Schema.Types.ObjectId, ref: 'ResultSpace', required : true }],
     image_url           : { type: String, required: true },
     description         : { type: String, required: true },
+    rules               : { type: String, required : true},     
     metadataJSON        : { type: JSON},
     isValid             : { type: Boolean , required : true, default : true},
 }

@@ -57,6 +57,20 @@ class GamesRepository extends MongoComponent{
         });
     }
 
+    editRules({id, rules}){
+        return new Promise( (resolve,reject) => {
+            GamesRepository.prototype.schema.model.findByIdAndUpdate(
+                id, 
+                { $set: { "rules" : rules } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     editEdge({id, edge}){
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.findByIdAndUpdate(
