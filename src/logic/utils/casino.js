@@ -26,19 +26,18 @@ class CasinoLogic{
         let currentSpace = 0;
         let res;
         let resultSpaceArray = resultSpace.map( (item, index) => {
-            let spaces = MathSingleton.toFloat(item.probability*100);
+            let spaces = item.probability*100;
             let nextSpace = currentSpace+spaces;
             let res = {
                 key     : item.formType,
-                start   : parseFloat(parseFloat(currentSpace).toFixed(6)),
-                end     : parseFloat(parseFloat(nextSpace).toFixed(6)),
+                start   : parseFloat(currentSpace),
+                end     : parseFloat(nextSpace),
                 probability : item.probability,
                 index 
             }
             currentSpace = nextSpace;
             return res;
         })
-
         resultSpaceArray.map( (item) => {
             if(outcome >= item.start && outcome < item.end){
                 res = item;
