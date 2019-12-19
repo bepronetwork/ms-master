@@ -123,7 +123,13 @@ let outputs = {
             "integrations" : object.integrations,
             "affiliateId"  : object.affiliateLink._id,
             "affilateLinkInfo" : object.affiliateLink,
-            "affiliateInfo" : object.affiliate
+            "affiliateInfo" : object.affiliate,
+            "security" : {
+                "id"                    : object.security._id,    
+                "2fa_set"               : object.security['2fa_set'],
+                "email_verified"        : object.security['email_verified'],
+                "bearerToken"           : object.security['bearerToken'],
+            }
         }
     },
     deposit : (object) => {

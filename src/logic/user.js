@@ -5,7 +5,16 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { UsersRepository, AppRepository, WalletsRepository, DepositRepository, WithdrawRepository, AffiliateLinkRepository, AffiliateRepository } from '../db/repos';
+import { 
+    UsersRepository, 
+    AppRepository, 
+    WalletsRepository, 
+    DepositRepository, 
+    WithdrawRepository, 
+    AffiliateLinkRepository, 
+    AffiliateRepository, 
+    SecurityRepository
+} from '../db/repos';
 import Numbers from './services/numbers';
 import { verifytransactionHashDepositUser, verifytransactionHashWithdrawUser, verifytransactionHashDirectDeposit } from './services/services';
 import { Deposit, Withdraw, AffiliateLink } from '../models';
@@ -42,21 +51,95 @@ const processActions = {
         let normalized = {};
         let user = await __private.db.findUser(params.username);     
         if(!user){throwError('USER_NOT_EXISTENT')}
-        var app = user.app_id; 
+        if(!user.security){throwError()};
+        let has2FASet = user.security['2fa_set'];
+        var app = user.app_id;
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
+
 		if(user){
 			normalized = {
-				username : user.username,
-				password : input_params.password,
+                has2FASet,
                 user_in_app,
+				username : user.username,
+                password : input_params.password,
+                security_id : user.security._id,
                 verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
-                integrations : getIntegrationsInfo({integrations, user_id : user.username}),
+                integrations : getIntegrationsInfo({ integrations: integrations, user_id : user.username}),
 				...user
 			}
-		}
+        }
 		return normalized;
-	},
+    },
+    __login2FA : async (params) => {
+        // Get User by Username
+        let user = await __private.db.findUser(params.username);
+
+        if(!user){throwError('USER_NOT_EXISTENT')};
+        if(!user.security){throwError()};
+
+        var has2FASet = user.security['2fa_set'];
+        var secret2FA = user.security['2fa_secret'];
+
+        // is 2FA not Setup
+        if((!has2FASet) || (!secret2FA)){throwError('USER_HAS_2FA_DEACTIVATED')}
+    
+        let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
+            secret : secret2FA,
+            token : params['2fa_token']
+        });
+
+        let app = MiddlewareSingleton.sign(user.app_id);
+        var user_in_app = (app._id == params.app);
+
+        let normalized = {
+            has2FASet,
+            secret2FA,
+            user_in_app,
+            isVerifiedToken2FA,
+            username : user.username,
+            password : params.password,
+            security_id : user.security._id,
+            verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
+            integrations : getIntegrationsInfo({integrations, user_id : user.username}),
+            ...user
+        }
+
+        return normalized;
+    },
+    __auth  : async (params) => {
+        // Get User by Username
+        let user = await __private.db.findUser(params.username);
+        if(!user){throwError('USER_NOT_EXISTENT')};
+        if(!user.security){throwError()};
+        let normalized = user;        
+        return normalized;
+    },
+    __set2FA : async (params) => {
+        // Get User by Username
+        let user = await __private.db.findUser(params.username);
+
+        if(!user){throwError('USER_NOT_EXISTENT')};
+        if(!user.security){throwError()};
+    
+        let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
+            secret : params['2fa_secret'],
+            token : params['2fa_token']
+        })
+
+
+        let normalized = {
+            newSecret : params['2fa_secret'],
+            username : user.username,
+            isVerifiedToken2FA,
+            user_id : params.user,
+            security_id : user.security._id,
+            ...user
+        }
+
+        return normalized;
+    },
+
 	__register : async (params) => {
 
         const { affiliateLink, affiliate } = params;
@@ -97,14 +180,14 @@ const processActions = {
             wallet 			: params.wallet,
             register_timestamp : new Date(),
 			nationality		: params.nationality,
-			age				: params.age,
+            age				: params.age,
+            security        : params.security,
             email			: params.email,
             affiliateLink,
 			app_id			    : params.app,
 			external_user	: params.user_external_id ? true : false,
 			external_id		: params.user_external_id
-		}
-	
+        }
 		return normalized;
 	},
 	__summary : async (params) => {
@@ -207,6 +290,39 @@ const processActions = {
 
   
 const progressActions = {
+    __login : async (params) => {
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        let bearerToken;
+        if(params.app){
+            /* Create BearerToken for App */
+            bearerToken = MiddlewareSingleton.sign(params.app._id);
+            await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
+        }
+
+        return {...params, app : {...params.app, bearerToken}};
+    },
+    __login2FA : async (params) => {    
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        let bearerToken;
+        if(params.app){
+            /* Create BearerToken for App */
+            bearerToken = MiddlewareSingleton.sign(params.app._id);
+            await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
+        }
+        return {...params, app : {...params.app, bearerToken}};
+    },
+    __auth  : async (params) => {
+        return params;
+    },
+    __set2FA : async (params) => {
+        let {
+            newSecret,
+            security_id
+        } = params;
+        //Add new Secret
+        await SecurityRepository.prototype.addSecret2FA(security_id, newSecret);
+        return params;
+    },
 	__register : async (params) => {
         try{
             const { affiliate } = params;
@@ -328,6 +444,15 @@ class UserLogic extends LogicComponent {
 			switch(processAction) {
 				case 'Login' : {
 					return await library.process.__login(params); break;
+                };
+                case 'Login2FA' : {
+					return await library.process.__login2FA(params); 
+                };
+                case 'Auth' : {
+					return await library.process.__auth(params); 
+                };
+                case 'Set2FA' : {
+					return await library.process.__set2FA(params); 
 				};
 				case 'Register' : {
 					return library.process.__register(params); break;
@@ -374,7 +499,16 @@ class UserLogic extends LogicComponent {
 		try{			
 			switch(progressAction) {
 				case 'Login' : {
-					return params;
+					return await library.process.__login(params);
+                };
+                case 'Login2FA' : {
+					return await library.process.__login2FA(params); 
+                };
+                case 'Auth' : {
+					return await library.process.__auth(params); 
+                };
+                case 'Set2FA' : {
+					return await library.process.__set2FA(params); 
 				};
 				case 'Register' : {
 					return await library.progress.__register(params); 

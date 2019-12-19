@@ -39,6 +39,41 @@ async function loginUser (req, res) {
 	}
 }
 
+async function setUser2FA(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'user', req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.set2FA();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function loginUser2FA(req, res) {
+    try{
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.login2FA();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function authUser (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'user', req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.auth();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function getUserInfo (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
@@ -99,5 +134,8 @@ export {
     getUserInfo,
     userSummary,
     getBets,
-    updateWallet
+    updateWallet,
+    setUser2FA,
+    loginUser2FA,
+    authUser
 }

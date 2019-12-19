@@ -209,6 +209,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
   /users/register:
     x-swagger-router-controller: user
     post:
@@ -239,6 +240,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /users/auth:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Login User
+      operationId: authUser
+      description: Login User Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AuthUserRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/login:
     x-swagger-router-controller: user
     post:
@@ -258,6 +289,66 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UserLoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/login/2fa:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Login User
+      operationId: loginUser2FA
+      description: Login User Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/User2FALoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/2fa/set:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Setup 2fa
+      operationId: setUser2FA
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/UserSet2FARequest'
       responses:
         "200":
           description: Success
@@ -1421,6 +1512,43 @@ definitions:
         example: 53vi230283vv234fg2v37243
         description: |
           Unique identifier of the App Id
+  UserSet2FARequest : 
+    type: object
+    required : 
+      - user
+      - 2fa_token
+      - 2fa_secret
+    properties:
+      user:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          User Id
+      2fa_token:
+        type : string
+        example: "765075"
+        minLength: 1
+        description: |
+          Token Prior to the set of 2FA
+      2fa_secret:
+        type : string
+        example: "XDQXYCP5AC6FA32FQXDGJSPBIDYNKK5W"
+        minLength: 1
+        description: |
+          Secret Token 2FA
+  User2FALoginRequest : 
+    type: object
+    required : 
+      - 2fa_token
+    properties:
+      2fa_token:
+        type : string
+        format: username
+        example: "765075"
+        minLength: 1
+        description: |
+          Token to Unlock Login Data
   UserSummaryRequest:
     type: object
     required:
@@ -2058,6 +2186,16 @@ definitions:
         example: "Aweruithwe4837592837"
         description: |
           Admin Id
+  AuthUserRequest : 
+    type: object
+    required:
+      - user
+    properties:
+      user:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          User Id
   GetGamesFromAppRequest : 
     type: object
     required:

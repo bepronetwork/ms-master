@@ -4,6 +4,7 @@ import {UsersRepository} from '../db/repos';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import { MapperUserSingleton } from '../controllers/Mapper/MapperUser';
 import { Affiliate, Wallet, AffiliateLink } from '.';
+import Security from './security';
 
 class User extends ModelComponent{
 
@@ -20,16 +21,44 @@ class User extends ModelComponent{
                 params : params,
                 children : [
                     new Wallet(params),
-                    new Affiliate(params)
+                    new Affiliate(params),
+                    new Security(params)
                 ]
             }
             );
+    }
+
+    async auth(){
+        try{
+            let res = await this.process('Auth');
+            return MapperSingleton.output('User', res);
+        }catch(err){
+            throw err;
+        }
     }
 
     async login(){
         try{
             let res = await this.process('Login');
             return MapperSingleton.output('User', res);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async login2FA(){
+        try{
+            let res = await this.process('Login2FA');
+            return MapperSingleton.output('User', res);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async set2FA(){
+        try{
+            let res = await this.process('Set2FA');
+            return res;
         }catch(err){
             throw err;
         }
