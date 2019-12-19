@@ -16,9 +16,8 @@ require('../app');
             await addBannersToApps.default.prototype.start();
             let AddFooterToCustomization = require('./addFooterToCustomization');
             await AddFooterToCustomization.default.prototype.start();
-        */
-        let AddRulesToGames = require('./addRulesToGames');
-        await AddRulesToGames.default.prototype.start();
-
+            let AddRulesToGames = require('./addRulesToGames');
+            await AddRulesToGames.default.prototype.start();
+            */
     }, 5*1000)
 })()

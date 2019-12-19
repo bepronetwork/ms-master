@@ -84,7 +84,7 @@ class CasinoContract{
             if(!res || (parseFloat(res) == 0)){
                 return 0;
             }else{
-                return Numbers.toFloat(Numbers.fromDecimals(res.amount, decimals))
+                return Numbers.fromDecimals(res.amount, decimals)
             }
         }catch(err){
             throw err;

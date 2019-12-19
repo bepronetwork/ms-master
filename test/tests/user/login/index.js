@@ -12,7 +12,6 @@ import {
 import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
-import Random from '../../../tools/Random';
 
 const expect = chai.expect;
 
@@ -38,7 +37,7 @@ var mochaAsync = (fn) => {
 const BOILERPLATES = global.BOILERPLATES;
 const CONST = global.CONST;    
    
-context('User Testing Login', async () =>  {
+context('User', async () =>  {
     var ADMIN_ID, APP_ID, userPostData, USER_ID, USER_ADDRESS, USER_BEARER_TOKEN;
 
     it('🍳(setup)🍳', mochaAsync(async () => {
@@ -81,8 +80,10 @@ context('User Testing Login', async () =>  {
     }));
 
     context('POST', async () => {
+        
         it('should login the User', mochaAsync(async () => {
             var res = await loginUser(userPostData);
+            console.log(res);
             USER_BEARER_TOKEN = res.data.message.bearerToken;
             expect(res.data.status).to.equal(200);
         }));
@@ -113,16 +114,18 @@ context('User Testing Login', async () =>  {
 
 
         it('should auth for User - BearerToken', mochaAsync(async () => {
-
+            console.log("entering log auth")
             let token = Security.prototype.generateToken2FA(SECRET);
             let res = await loginUser2FA({...userPostData,
                 '2fa_token' : token
             });
             USER_ID = res.data.message.id;
             BEARER_TOKEN = res.data.message.bearerToken;
+
             res = await authUser({
                 user : USER_ID
             }, BEARER_TOKEN, { id : USER_ID});
+
             expect(res.data.status).to.equal(200);
         }));
     });

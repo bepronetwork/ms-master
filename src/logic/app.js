@@ -182,7 +182,7 @@ const processActions = {
             transactionHash     : params.transactionHash,
             from                : from,
             currencyTicker      : app.currencyTicker,
-            amount              : Numbers.toFloat(params.amount),
+            amount              : params.amount,
             wasAlreadyAdded,
             isValid
         }
@@ -364,7 +364,7 @@ const progressActions = {
                             },   
                             totalLiquidity  : appInfo.playBalance, 
                             houseBalance    : appInfo.playBalance, 
-                            allPlayersBalance  :   Numbers.toFloat(allUsersBalance), 
+                            allPlayersBalance  :   allUsersBalance, 
                             decimals        : appInfo.decimals,
                             tokenAddress    : appInfo.platformTokenAddress,
                             ticker          : appInfo.currencyTicker,

@@ -248,7 +248,7 @@ const processActions = {
                 transactionHash     : params.transactionHash,
                 from                : from,
                 currencyTicker      : app.currencyTicker,
-                amount              : Numbers.toFloat(amount),
+                amount              : amount,
                 isValid
             }
 
@@ -372,7 +372,7 @@ const progressActions = {
             let depositSaveObject = await deposit.createDeposit();
 
             /* Update Balance of App */
-            await WalletsRepository.prototype.updatePlayBalance(params.wallet, Numbers.toFloat(params.amount));
+            await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
             
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);

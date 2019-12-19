@@ -68,7 +68,7 @@ class CasinoLogic{
      */
 
     getRealOdd(betAmount, houseEdge=0){
-        return Numbers.toFloat(MathSingleton.multiplyAbsolutes(betAmount, parseInt(houseEdge))/100);
+        return MathSingleton.multiplyAbsolutes(betAmount, parseInt(houseEdge))/100;
     }
 
 
