@@ -10,6 +10,7 @@ import {
 } from '../../methods';
 
 import Security from '../../../src/controllers/Security/Security';
+import { detectValidationErrors } from '../../utils';
 
 import faker from 'faker';
 import chai from 'chai';
@@ -144,6 +145,40 @@ context('User Testing', async () => {
         }, USER_BEARER_TOKEN, { id : USER_ID});
 
         expect(res.data.status).to.equal(200);
+    }));
+
+    it('shouldn´t login the User - WRONG TOKEN', mochaAsync(async () => {
+        let res = await loginUser2FA({...userPostData,
+            '2fa_token' : '345633',
+            'user_id' : USER_ID
+        });
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(36);
+    }));
+
+    it('shouldn´t login the User - NO TOKEN', mochaAsync(async () => {
+        let res = await loginUser2FA({...userPostData,
+            '2fa_token' : 'null',
+            'user_id' : USER_ID
+        });
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(36);
+    }));
+
+    it('shouldn´t Login the User and notice the user does not exist', mochaAsync(async () => {
+        var res = await loginUser(BOILERPLATES.users.UNKNOWN_USER_LOGIN);
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(4);
+    }));
+
+    it('shouldn´t Login the User - WRONG PASSWORD', mochaAsync(async () => {
+        let res = await loginUser({...userPostData,
+            'password' : 'null',
+            'user_id' : USER_ID
+        });
+        console.log(res);
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(5);
     }));
 });
 

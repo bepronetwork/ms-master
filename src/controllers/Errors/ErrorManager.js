@@ -35,6 +35,48 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_PASSWORD));
                     break;
                 };
+                case 'Auth' : {
+                    break;
+                };
+                case 'Login2FA' : {  
+                    // Verify User (Syntax Error)
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+    
+                    // Verify User
+                    if(typeof object.username == 'undefined' || Object.is(object.username, null)){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT)); break;
+                    }
+    
+                    // Verify Password
+                    if(!Object.is(object.verifiedAccount, Boolean) && object.verifiedAccount !== true){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_PASSWORD)); break;
+                    }
+
+                    // is 2FA not Setup
+                    if((!object.has2FASet) || (!object.secret2FA)){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_HAS_2FA_DEACTIVATED)); break;
+                    }
+
+                    // is 2FA Token is Wrong
+                    if(!object.isVerifiedToken2FA){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_2FA_TOKEN)); break;
+                    }
+                    break;
+                };
+
+                case 'Set2FA' : {  
+                    // Verify User (Syntax Error)
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+
+                    // is 2FA Token is Wrong
+                    if(!object.isVerifiedToken2FA){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_2FA_TOKEN)); break;
+                    }
+                    break;
+                };
+
                 case 'Register': {
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null))
