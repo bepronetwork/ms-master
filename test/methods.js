@@ -11,7 +11,6 @@ module.exports = {
         .post('/api/users/register')
         .send(params)
         .then(res => res.body)
-
     },
     async registerAdmin(params) {
         return request(global.server)
