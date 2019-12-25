@@ -504,7 +504,6 @@ context('App Testing', async () =>  {
                     transactionHash: resEthereum.transactionHash
                 }
                 let res = await updateUserWallet(params, USER_BEARER_TOKEN, {id : USER_ID});
-                console.log(res);
                 expect(res.data.status).to.equal(200);
 
             }));
@@ -588,7 +587,6 @@ context('App Testing', async () =>  {
                 var GAME = GAMES.find( game => game.metaName == 'coinflip_simple');
                 let { USER_BALANCE, USER_BEARER_TOKEN, USER_ID } = await getUserAuth(userPostData);
 
-
                 let create_bet_model = { 
                     game: GAME._id,
                     user: USER_ID,
@@ -598,6 +596,9 @@ context('App Testing', async () =>  {
                         place: 1, value: BET_VALUE
                     }]
                 }
+
+                console.log(USER_BALANCE)
+
                 var res = await placeBet(create_bet_model, USER_BEARER_TOKEN, {id : USER_ID});
                 detectValidationErrors(res);
                 expect(res.data.status).to.equal(200);
@@ -882,21 +883,21 @@ context('App Testing', async () =>  {
 async function digestBetResult({user, res, previousBalance}){
     const { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta} = res.data.message;
     let { USER_BALANCE } = await getUserAuth(user);
-
+    console.log(USER_BALANCE)
     if(isWon){
         // Confirm delta is positive
         expect(user_delta).to.be.greaterThan(0);
         // Confirm Win Amount is Positive
         expect(winAmount).to.be.greaterThan(0);
         // Confirm New User Balance is equal to previous plus delta
-        expect(USER_BALANCE).to.be.equal(Numbers.toFloat(previousBalance+user_delta));
+        expect(USER_BALANCE).to.be.equal(previousBalance+user_delta);
     }else{
         // Confirm delta is negative
         expect(user_delta).to.be.lessThan(0);
         // Confirm Win Amount is 0
         expect(winAmount).to.be.equal(0);
         // Confirm New User Balance is equal to previous plus delta
-        expect(USER_BALANCE).to.be.equal(Numbers.toFloat(previousBalance+user_delta));
+        expect(USER_BALANCE).to.be.equal(previousBalance+user_delta);
     }
     return true;
 }
@@ -908,7 +909,7 @@ async function getUserAuth({username, password, app}){
     let USER_ID = res.data.message.id;
     let USER_ADDRESS = res.data.message.address;
     let WITHDRAWS = res.data.message.withdraws;
-    let USER_BALANCE = Numbers.toFloat(res.data.message.wallet.playBalance);
+    let USER_BALANCE = res.data.message.wallet.playBalance;
     return { USER_ID, USER_BEARER_TOKEN, USER_BALANCE, USER_ADDRESS, WITHDRAWS };
 }
 

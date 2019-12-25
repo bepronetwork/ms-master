@@ -3,6 +3,11 @@ import populate_integrations_all from "./integrations/all";
 
 let populate_user = [
     {
+        path : 'security',
+        model : 'Security',
+        select : { '__v': 0},
+    },
+    {
         path : 'wallet',
         model : 'Wallet',
         select : { '__v': 0},

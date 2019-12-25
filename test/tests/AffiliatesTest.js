@@ -495,14 +495,16 @@ context('Affiliates Testing', async () =>  {
             user_5_before_info = await getUserInfo({user : res_5.message, app});
             
             var wasWon = true;
-
+            var bet_res;
             /* Creater User Bet */
             while(wasWon){
                 /* Verify that was Lost */
-                var bet_res = await bet({user : user_5, game : BET_GAME, result : BET_RESULT, app});
+                bet_res = await bet({user : user_5, game : BET_GAME, result : BET_RESULT, app});
                 const { message } = bet_res.data;
                 wasWon = message.isWon;
             }
+
+            console.log(wasWon);
 
             const { status, message } = bet_res.data;
             /* Confirm Bet was valid */
@@ -519,10 +521,12 @@ context('Affiliates Testing', async () =>  {
             /* Verify Affiliate Balance on User 4,5 */
             expect(user_4_after_info.affiliateInfo.wallet.playBalance).to.equal(BET_AMOUNT*user_4_percentageOnLoss);
             expect(user_5_after_info.affiliateInfo.wallet.playBalance).to.equal(0);
-            
+            console.log(wasWon);
+
             /* Get Info for App After Bet */
             const app_data_after = (await getApp({app})).data.message;
             const affiliateReturns = BET_AMOUNT*(user_4_percentageOnLoss);
+            console.log(app_data_before.wallet.playBalance, BET_AMOUNT, affiliateReturns);
 
             /* Verify balance on App */
             expect(parseFloat(app_data_after.wallet.playBalance).toFixed(6)).to.equal(parseFloat(app_data_before.wallet.playBalance+BET_AMOUNT-affiliateReturns).toFixed(6));
@@ -587,11 +591,11 @@ context('Affiliates Testing', async () =>  {
             /* Expect the percentage on loss to be equal to new change */
             expect(user_2_percentageOnLoss).to.equal(structures.find(s => s.level == 1).percentageOnLoss);
             /* Verify Affiliate Balance on User 1,2,3 */
-            expect(Numbers.toFloat(user_2_after_info.affiliateInfo.wallet.playBalance)).to.equal(Numbers.toFloat(user_2_before_info.affiliateInfo.wallet.playBalance+BET_AMOUNT*user_2_percentageOnLoss));
+            expect(parseFloat(user_2_after_info.affiliateInfo.wallet.playBalance).toFixed(6)).to.equal(parseFloat(user_2_before_info.affiliateInfo.wallet.playBalance+BET_AMOUNT*user_2_percentageOnLoss).toFixed(6));
             expect(user_1_isActive).to.equal(false);
 
             /* Confirm User 1 has the affiliate balance equal to before */
-            expect(user_1_after_info.affiliateInfo.wallet.playBalance).to.equal(user_1_before_info.affiliateInfo.wallet.playBalance);
+            expect(parseFloat(user_1_after_info.affiliateInfo.wallet.playBalance).toFixed(6)).to.equal(parseFloat(user_1_before_info.affiliateInfo.wallet.playBalance).toFixed(6));
             expect(user_3_after_info.affiliateInfo.wallet.playBalance).to.equal(0);
 
             /* Get Info for App After Bet */

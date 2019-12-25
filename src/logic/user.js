@@ -49,10 +49,11 @@ const processActions = {
 	__login : async (params) => {
         var input_params = params;
         let normalized = {};
-        let user = await __private.db.findUser(params.username);     
+        let user = await __private.db.findUser(params.username);  
         if(!user){throwError('USER_NOT_EXISTENT')}
         if(!user.security){throwError()};
         let has2FASet = user.security['2fa_set'];
+        let bearerToken = MiddlewareSingleton.sign(user._id);
         var app = user.app_id;
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
@@ -60,16 +61,17 @@ const processActions = {
 		if(user){
 			normalized = {
                 has2FASet,
+                bearerToken,
                 user_in_app,
 				username : user.username,
                 password : input_params.password,
                 security_id : user.security._id,
                 verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
-                integrations : getIntegrationsInfo({ integrations: integrations, user_id : user.username}),
+                integrations : getIntegrationsInfo({ integrations, user_id : user.username}),
 				...user
 			}
         }
-		return normalized;
+        return normalized;
     },
     __login2FA : async (params) => {
         // Get User by Username
@@ -88,19 +90,22 @@ const processActions = {
             secret : secret2FA,
             token : params['2fa_token']
         });
-
-        let app = MiddlewareSingleton.sign(user.app_id);
+        let bearerToken = MiddlewareSingleton.sign(user._id);
+        
+        var app = user.app_id;
         var user_in_app = (app._id == params.app);
+        const { integrations } = app;
 
         let normalized = {
             has2FASet,
             secret2FA,
+            bearerToken,
             user_in_app,
             isVerifiedToken2FA,
             username : user.username,
             password : params.password,
             security_id : user.security._id,
-            verifiedAccount : new Security().unhashPassword(input_params.password, user.hash_password),
+            verifiedAccount : new Security().unhashPassword(params.password, user.hash_password),
             integrations : getIntegrationsInfo({integrations, user_id : user.username}),
             ...user
         }
@@ -109,7 +114,7 @@ const processActions = {
     },
     __auth  : async (params) => {
         // Get User by Username
-        let user = await __private.db.findUser(params.username);
+        let user = await __private.db.findUserById(params.user);
         if(!user){throwError('USER_NOT_EXISTENT')};
         if(!user.security){throwError()};
         let normalized = user;        
@@ -117,7 +122,7 @@ const processActions = {
     },
     __set2FA : async (params) => {
         // Get User by Username
-        let user = await __private.db.findUser(params.username);
+        let user = await __private.db.findUserById(params.user);
 
         if(!user){throwError('USER_NOT_EXISTENT')};
         if(!user.security){throwError()};
@@ -126,8 +131,6 @@ const processActions = {
             secret : params['2fa_secret'],
             token : params['2fa_token']
         })
-
-
         let normalized = {
             newSecret : params['2fa_secret'],
             username : user.username,
@@ -136,7 +139,6 @@ const processActions = {
             security_id : user.security._id,
             ...user
         }
-
         return normalized;
     },
 
@@ -184,7 +186,7 @@ const processActions = {
             security        : params.security,
             email			: params.email,
             affiliateLink,
-			app_id			    : params.app,
+			app_id			: params.app,
 			external_user	: params.user_external_id ? true : false,
 			external_id		: params.user_external_id
         }
@@ -248,7 +250,7 @@ const processActions = {
                 transactionHash     : params.transactionHash,
                 from                : from,
                 currencyTicker      : app.currencyTicker,
-                amount              : Numbers.toFloat(amount),
+                amount              : amount,
                 isValid
             }
 
@@ -372,7 +374,7 @@ const progressActions = {
             let depositSaveObject = await deposit.createDeposit();
 
             /* Update Balance of App */
-            await WalletsRepository.prototype.updatePlayBalance(params.wallet, Numbers.toFloat(params.amount));
+            await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
             
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
@@ -499,16 +501,16 @@ class UserLogic extends LogicComponent {
 		try{			
 			switch(progressAction) {
 				case 'Login' : {
-					return await library.process.__login(params);
+					return await library.progress.__login(params);
                 };
                 case 'Login2FA' : {
-					return await library.process.__login2FA(params); 
+					return await library.progress.__login2FA(params); 
                 };
                 case 'Auth' : {
-					return await library.process.__auth(params); 
+					return await library.progress.__auth(params); 
                 };
                 case 'Set2FA' : {
-					return await library.process.__set2FA(params); 
+					return await library.progress.__set2FA(params); 
 				};
 				case 'Register' : {
 					return await library.progress.__register(params); 

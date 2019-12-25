@@ -65,6 +65,9 @@ var BOILERPLATES = {
         NORMAL_REGISTER                                 : user_register,
         GENERATE_DEPOSIT_ADDRESS_BTC_EXISTING_USER      : genData(faker, mergeData(models.deposits.normal_btc_generateAddress, user_register)),
         GENERATE_DEPOSIT_ADDRESS_BTC_NEW_USER           : genData(faker, models.deposits.normal_btc_generateAddress),
+        NORMAL_LOGIN_USER                               : Object.assign({},{ username : user_register.username, password : user_register.password, app: user_register.app, bearerToken: {}}),
+        WRONG_PASS_LOGIN_USER                           : Object.assign({},{ username : user_register.username, password : 'null', app: user_register.app}),
+        UNKNOWN_USER_LOGIN                              : genData(faker, models.users.user_unknown_login)
     },
     admins : {
         NORMAL_REGISTER                                 : admin_register,
@@ -143,7 +146,7 @@ const runTests = async () => {
             }))
         });
     })();
-    
+
     mocha.addFile('./test/tests/AppTest.js');
     mocha.addFile('./test/tests/app');
     mocha.addFile('./test/tests/AffiliatesTest.js');
@@ -151,8 +154,7 @@ const runTests = async () => {
     mocha.addFile('./test/tests/EcosystemTest.js');
     mocha.addFile('./test/tests/AdminTest.js');
     mocha.addFile('./test/tests/BetTest.js');
-    mocha.addFile('./test/tests/userTest');
-    // mocha.addFile('./test/tests/UserTest.js');
+    mocha.addFile('./test/tests/user');
     
     mocha
     .timeout(1000*60*1000)
