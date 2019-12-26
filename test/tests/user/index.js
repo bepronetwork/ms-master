@@ -122,6 +122,13 @@ context('User Testing', async () => {
         }, USER_BEARER_TOKEN, { id: USER_ID });
         expect(res.data.status).to.equal(200);
     }));
+
+
+    it('should´t login the User with password without 2FA Login', mochaAsync(async () => {
+        var res = await loginUser(userPostData);
+        expect(res.data.status).to.equal(37);
+    }));
+
     it('should login the User2FA', mochaAsync(async () => {
         let token = Security.prototype.generateToken2FA(SECRET);
         let res = await loginUser2FA({
@@ -178,7 +185,7 @@ context('User Testing', async () => {
         });
         console.log(res);
         detectValidationErrors(res);
-        expect(res.data.status).to.equal(5);
+        expect(res.data.status).to.equal(37);
     }));
 });
 

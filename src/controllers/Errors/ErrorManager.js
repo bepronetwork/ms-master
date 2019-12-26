@@ -29,7 +29,10 @@ class ErrorManager {
                     // Verify User is in App
                     if(!object.user_in_app)
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
-    
+                    // is 2FA Setup
+                    if(object.has2FASet){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_HAS_2FA)); break;
+                    }
                     // Verify Password
                     if(!Object.is(object.verifiedAccount, Boolean) && object.verifiedAccount !== true)
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_PASSWORD));
