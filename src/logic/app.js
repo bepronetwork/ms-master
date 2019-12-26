@@ -505,6 +505,7 @@ const progressActions = {
             structures
         })).register());
         const affiliateSetupId = (affiliateSetupSaved._id || affiliateSetupSaved._doc._id);
+        
         /* Create Affiliate Structures */
         return await AppRepository.prototype.editAffiliateSetup(app_id, affiliateSetupId)
     },
