@@ -6,8 +6,7 @@ class SrcSchema{};
 SrcSchema.prototype.name = 'SrcTypography';
 
 SrcSchema.prototype.schema =  {
-    local  : { type : String },
-    local  : { type : String },
+    local  : [{ type : String }],
     url    : { type : String },
     format : { type : String },
 }
