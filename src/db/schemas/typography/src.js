@@ -1,4 +1,4 @@
-import { globals } from "../../Globals";
+import { globals } from "../../../Globals";
 let db = globals.main_db;
 
 class SrcTypographySchema{};
