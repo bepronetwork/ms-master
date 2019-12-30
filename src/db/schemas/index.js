@@ -19,6 +19,8 @@ import { LogoSchema }  from './customization/logo';
 import { ColorSchema }  from './customization/color';
 import { LinkSchema } from './customization/link';
 import { FooterSchema } from './customization/footer';
+import { SrcTypographySchema } from './typography/src';
+import { TypographySchema } from './typography';
 
 export {
     UserSchema,
@@ -41,5 +43,7 @@ export {
     EventSchema,
     WithdrawSchema,
     AdminSchema,
-    ResultSpaceSchema
+    ResultSpaceSchema,
+    SrcTypographySchema,
+    TypographySchema
 }

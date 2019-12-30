@@ -28,6 +28,8 @@ import LogoRepository from './logo';
 import ColorRepository from './color';
 import LinkRepository from './link';
 import FooterRepository from './footer';
+import SrcTypographyRepository from './srcTypography';
+import TypographyRepository from './typography';
 
 export{
     ChatRepository,
@@ -59,5 +61,7 @@ export{
     EventsRepository,
     DepositRepository,
     BetsRepository,
-    AdminsRepository
+    AdminsRepository,
+    SrcTypographyRepository,
+    TypographyRepository
 }  
