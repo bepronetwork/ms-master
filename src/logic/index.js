@@ -25,6 +25,8 @@ import LogoLogic from './logo';
 import ColorLogic from './color';
 import LinkLogic from './link';
 import FooterLogic from './footer';
+import TypographyLogic from './typography';
+
 
 export {
     UserLogic,
@@ -53,6 +55,7 @@ export {
     BetResultSpaceLogic,
     EventLogic,
     AdminLogic,
-    ResultSpaceLogic
+    ResultSpaceLogic,
+    TypographyLogic
 }
 

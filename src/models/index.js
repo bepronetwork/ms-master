@@ -24,6 +24,7 @@ import Color from './color';
 import Logo from './logo';
 import Footer from './footer';
 import Link from './link';
+import Typography from './typography';
 
 export {
     User,
@@ -51,5 +52,6 @@ export {
     ResultSpace,
     Ecosystem,
     Withdraw,
-    Admin
+    Admin,
+    Typography
 }
