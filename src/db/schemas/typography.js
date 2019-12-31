@@ -1,5 +1,4 @@
 import { globals } from "../../Globals";
-import mongoose from 'mongoose';
 let db = globals.main_db;
 
 class TypographySchema{};
@@ -7,11 +6,9 @@ class TypographySchema{};
 TypographySchema.prototype.name = 'Typography';
 
 TypographySchema.prototype.schema =  {
-    fontFamily : { type : String },
-    fontStyle  : { type : String },
-    fontWeight : { type : String },
-    src        : { type : mongoose.Schema.Types.ObjectId, ref: 'SrcTypography', required : true },
-    unicode    : { type : String }
+    local  : [{ type : String }],
+    url    : { type : String },
+    format : { type : String },
 }
 
 

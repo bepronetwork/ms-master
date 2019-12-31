@@ -20,12 +20,12 @@ class TypographyRepository extends MongoComponent{
     }
     /**
      * @function setTypographyModel
-     * @param Typography Model
+     * @param Font Model
      * @return {Schema} TypographyModel
      */
 
-    setModel = (Typography) => {
-        return TypographyRepository.prototype.schema.model(Typography)
+    setModel = (Font) => {
+        return TypographyRepository.prototype.schema.model(Font)
     }
 
     findById(_id){ 
@@ -43,10 +43,9 @@ class TypographyRepository extends MongoComponent{
             TypographyRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "fontFamily"          : newStructure.local,
-                    "fontStyle"           : newStructure.url,
-                    "fontWeight"           : newStructure.format,
-                    "unicode"           : newStructure.url
+                    "local"          : newStructure.local,
+                    "url"           : newStructure.url,
+                    "format"           : newStructure.format
                 } },
                 { 'new': true })
                 .exec( (err, item) => {
@@ -57,21 +56,6 @@ class TypographyRepository extends MongoComponent{
         });
     }
 
-    setSrcTypography(_id, _ids){
-        return new Promise( (resolve,reject) => {
-            TypographyRepository.prototype.schema.model.findByIdAndUpdate(
-                _id, 
-                { $set: { 
-                    "src" : _ids,
-                } },
-                { 'new': true })
-                .exec( (err, item) => {
-                    if(err){reject(err)}
-                    resolve(item);
-                }
-            )
-        });
-    }
 }
 
 TypographyRepository.prototype.schema = new TypographySchema();

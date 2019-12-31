@@ -28,7 +28,6 @@ import LogoRepository from './logo';
 import ColorRepository from './color';
 import LinkRepository from './link';
 import FooterRepository from './footer';
-import SrcTypographyRepository from './srcTypography';
 import TypographyRepository from './typography';
 
 export{
@@ -62,6 +61,5 @@ export{
     DepositRepository,
     BetsRepository,
     AdminsRepository,
-    SrcTypographyRepository,
     TypographyRepository
 }  
