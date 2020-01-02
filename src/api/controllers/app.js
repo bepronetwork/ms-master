@@ -336,6 +336,18 @@ async function editFooter(req, res) {
 	}
 }
 
+async function editTypography(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editTypography();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function getUsers(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
@@ -417,5 +429,6 @@ export {
     deployApp,
     getLastBets,
     addServices,
-    updateWalletApp
+    updateWalletApp,
+    editTypography
 };

@@ -752,6 +752,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/typography : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Typography Information
+      operationId: editTypography
+      description: Change Typography
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppTypography'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
   /app/deploy : 
     x-swagger-router-controller: app
@@ -1737,6 +1768,31 @@ definitions:
       isActive : 
         type : boolean
         example: true
+  AppTypography : 
+    type: object
+    required:
+      - app
+      - typography
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      typography:
+        type : array
+        items : 
+          type: object
+          properties:
+            local :
+              type: array
+              items:
+                type: string
+            url :
+              type: string
+            format :
+              type: string
   AppDeploy : 
     type: object
     required:

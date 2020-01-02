@@ -6,7 +6,7 @@ import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
 import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
 import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
-import { AffiliateSetup, Integrations, Customization } from '.';
+import { AffiliateSetup, Integrations, Customization, Typography } from '.';
 
 class App extends ModelComponent{
 
@@ -32,7 +32,8 @@ class App extends ModelComponent{
                         ]
                     }),
                     new Integrations(params),
-                    new Customization(params)
+                    new Customization(params),
+                    new Typography(params)
                 ]
             }
             );
@@ -369,6 +370,19 @@ class App extends ModelComponent{
     async editFooter(){
         try{
             return await this.process('EditFooter');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTypography(){
+        try{
+            return await this.process('editTypography');
         }catch(err){
             throw err;
         }

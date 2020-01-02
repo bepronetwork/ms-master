@@ -290,6 +290,14 @@ module.exports = {
         .send(params)
         .then(res => {return res.body})
     },
+    async editTypographyApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/typography')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => {console.log(res.body); return res.body})
+    },
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/integrations/edit')

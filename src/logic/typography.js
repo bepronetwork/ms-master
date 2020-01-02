@@ -66,8 +66,8 @@ const progressActions = {
  * @param {ZSchema} schema
  * @param {Object} logger
  * @param {function} cb - Callback function
- * @property {Color_model} model
- * @property {Color_schema} schema
+ * @property {Typography_model} model
+ * @property {Typography_schema} schema
  * @returns {setImmediate} error, this
  * @todo Add description for the params
  */
@@ -93,8 +93,8 @@ class TypographyLogic extends LogicComponent {
     /**
 	 * Validates Typography schema.
 	 *
-	 * @param {Fonts} Fonts
-	 * @returns {Fonts} Fonts
+	 * @param {Typography} Typography
+	 * @returns {Typography} Typography
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
@@ -112,14 +112,14 @@ class TypographyLogic extends LogicComponent {
 	 /**
 	 * Tests Typography schema.
 	 *
-	 * @param {Fonts} Fonts
-	 * @returns {Fonts} Fonts
+	 * @param {Typography} Typography
+	 * @returns {Typography} Typography
 	 * @throws {string} On schema.validate failure
 	 */
 
 	testParams(params, action){
 		try{
-			error.fonts(params, action);
+			error.typography(params, action);
 		}catch(err){
 			throw err;
 		}
