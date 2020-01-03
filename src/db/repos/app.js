@@ -299,6 +299,22 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    async setTypographyId(app_id, typography_id){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id }, 
+                { $set : { "typography" : typography_id } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
+
     async setHostingInformation(app_id, {hosting_id, web_url}){
         try{
             await AppRepository.prototype.schema.model.findOneAndUpdate(

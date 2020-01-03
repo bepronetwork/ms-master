@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository, LogoRepository, FooterRepository, ColorRepository } from '../db/repos';
+import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository, GamesRepository, ChatRepository, TopBarRepository, BannersRepository, LogoRepository, FooterRepository, ColorRepository, TypographyRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
@@ -38,7 +38,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization } = params;
+        const { affiliateSetup, integrations, customization, typography } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -52,6 +52,7 @@ const processActions = {
             name    			: params.name,
             affiliateSetup,       
             customization,
+            typography,
             integrations,
 			description         : params.description,
 			marketType          : params.marketType,
@@ -303,6 +304,15 @@ const processActions = {
         };
     },
     __editFooter : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editTypography : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -605,6 +615,24 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editTypography : async (params) => {
+        let { app, typography } = params;
+        /* Update all Typography info */
+        await Promise.all(app.typography.map( async c => {
+            const correspondentTypographyType = typography.find( ci => ci.local.toLowerCase() == c.local.toLowerCase());
+            /* Not right type */
+            if(!correspondentTypographyType){return null}
+            return await TypographyRepository.prototype.findByIdAndUpdate(c._id, {
+                local : correspondentTypographyType.local,
+                url : correspondentTypographyType.url,
+                format: correspondentTypographyType.format
+            })
+        }));
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        // Save info on Typography Part
+        return params;
+    },
     __getUsers : async (params) => {
         let res = await UsersRepository.prototype.getAllFiltered(params);
         return res;
@@ -719,6 +747,9 @@ class AppLogic extends LogicComponent{
                 case 'EditColors' : {
                     return await library.process.__editColors(params); break;
                 };
+                case 'EditTypography' : {
+                    return await library.process.__editTypography(params); break;
+                };
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
                 };
@@ -816,6 +847,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditColors' : {
                     return await library.progress.__editColors(params); break;
+                };
+                case 'EditTypography' : {
+                    return await library.progress.__editTypography(params); break;
                 };
                 case 'EditFooter' : {
                     return await library.progress.__editFooter(params); break;
