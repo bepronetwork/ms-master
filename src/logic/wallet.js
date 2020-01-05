@@ -29,7 +29,9 @@ let __private = {};
 const processActions = {
 	__register : (params) => {
 		let normalized = {
-            playBalance : 0
+            playBalance : 0,
+            currency : params.currency,
+            bank_address : params.bank_address
         }
 		return normalized;
 	},

@@ -25,15 +25,15 @@ class account{
         return this.account
     }
 
-    async sendEther(amount, address, data=null){
+    async sendEther(amount, address, data=null, options={}, callback){
         return new Promise( async (resolve, reject) => {
             try{
                 let tx = {
                     data : data,
                     from  : this.getAddress(),
                     to : address,
-                    gasPrice : 20000000000,
-                    gas : 4000000,
+                    gasPrice : options.gasPrice ? options.gasPrice : 20000000000,
+                    gas : options.gas ? options.gas : 4000000,
                     value: this.web3.utils.toWei(amount.toString(), 'ether')
                 }
                 let result = await this.account.signTransaction(tx);
@@ -42,7 +42,8 @@ class account{
                     resolve(receipt)
                 })
                 .on('error', (err) => {reject(err)})
-                .on('receipt', (e) => {resolve(true)});
+                .on('receipt', (e) => {resolve(e)})
+                .on('transactionHash', (tx) =>  callback ? callback(tx) : null);
             }catch(err){
                 reject(err);
             }

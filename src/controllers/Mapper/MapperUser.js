@@ -30,18 +30,11 @@ let outputs = {
                 affiliatedLinks: [
                     ...object.affiliate.affiliatedLinks
                 ],
-                _id: object.affiliate._id,
-                wallet: {
-                    playBalance: object.affiliate.wallet.playBalance,
-                    _id: object.affiliate.wallet._id
-                }
+                ...object.affiliate
             },
             name: object.name,
             address: object.address,
-            wallet: {
-                playBalance: object.wallet.playBalance,
-                _id: object.withdraws._id
-            },
+            wallet: object.wallet,
             register_timestamp: object.register_timestamp,
             nationality: object.nationality,
             age: object.age,
@@ -82,10 +75,7 @@ let outputs = {
                 ],
                 isWithdrawing: object.app_id.isWithdrawing,
                 _id: object.app_id._id,
-                wallet: {
-                    playBalance: object.app_id.wallet.playBalance,
-                    _id: object.app_id.wallet._id
-                },
+                wallet: object.app_id.wallet,
                 name: object.app_id.name,
                 affiliateSetup: object.app_id.affiliateSetup,
                 customization: object.app_id.customization,

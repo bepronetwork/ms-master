@@ -100,71 +100,6 @@ async function verifytransactionHashDepositUser(blockchain, transactionHash, amo
     }
 };
 
-async function verifytransactionHashWithdrawUser(blockchain, transactionHash, transferedAmount, platformAddress, decimals){
-    try{
-        /* Get Information of this transactionHash */
-        let res_transaction = await globalsTest.web3.eth.getTransaction(transactionHash);
-        let res_transaction_recipt = await globalsTest.web3.eth.getTransactionReceipt(transactionHash);
-        let res_transaction_decoded = EtherscanSingleton.getTransactionDataCasinoWithdraw(res_transaction_recipt);
-        
-        /* Verify if sender of Transaction is platformAddress */
-        if(new String(res_transaction_decoded.tokensTransferedFrom).toLowerCase() != new String(platformAddress).toLowerCase()){
-            throw false;
-        }
-        if(
-            Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
-            != Numbers.toSmartContractDecimals(new Number(transferedAmount), decimals)){
-            throw false;
-        }
-
-        return {
-            isValid : true,
-            tokensTransferedFrom : res_transaction_decoded.tokensTransferedFrom,
-            tokensTransferedTo  : res_transaction_decoded.tokensTransferedTo,
-            tokenAmount : res_transaction_decoded.tokenAmount,
-            from :  res_transaction.from 
-        };
-
-    }catch(err){
-        return {
-            isValid : false
-        };
-    }
-};
-
-async function verifytransactionHashWithdrawApp(blockchain, transactionHash, transferedAmount, platformAddress, decimals){
-    try{
-        /* Get Information of this transactionHash */
-        let res_transaction = await globalsTest.web3.eth.getTransaction(transactionHash);
-        let res_transaction_recipt = await globalsTest.web3.eth.getTransactionReceipt(transactionHash);
-        let res_transaction_decoded = EtherscanSingleton.getTransactionDataCasinoWithdraw(res_transaction_recipt);
-        
-        /* Verify if sender of Transaction is platformAddress */
-        if(new String(res_transaction_decoded.tokensTransferedFrom).toLowerCase() != new String(platformAddress).toLowerCase()){
-            throw false;
-        }
-
-        /* Verify if the Token Amount is the same */
-        if(
-            Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
-            != Numbers.toSmartContractDecimals(new Number(transferedAmount), decimals)){
-            throw false;
-        }
-
-        return {
-            isValid : true,
-            tokensTransferedFrom : res_transaction_decoded.tokensTransferedFrom,
-            tokensTransferedTo  : res_transaction_decoded.tokensTransferedTo,
-            tokenAmount : res_transaction_decoded.tokenAmount,
-            from :  res_transaction.from 
-        };
-
-    }catch(err){
-        return {
-            isValid : false
-        };
-    }
-}
 
 
 async function verifytransactionHashDirectDeposit(blockchain, transactionHash, amount, platformAddress, decimals){
@@ -204,8 +139,6 @@ export {
     getServices,
     verifytransactionHashDirectDeposit,
     fromDecimals,
-    verifytransactionHashWithdrawApp,
     fromExponential,
-    verifytransactionHashWithdrawUser,
     fromBigNumberToInteger
 }

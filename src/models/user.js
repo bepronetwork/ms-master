@@ -20,7 +20,6 @@ class User extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Wallet(params),
                     new Affiliate(params),
                     new Security(params)
                 ]

@@ -178,5 +178,13 @@
     "044" : {
         "key" : "DEPLOY_ERROR",
         "message"   : "The Platform was not able to be deployed, please contact support"
+    },
+    "045" : {
+        "key" : "CURRENCY_NOT_EXISTENT",
+        "message"   : "Currency not existent in this App, please verify the ID"
+    },
+    "046" : {
+        "key" : "CURRENCY_ALREADY_EXISTENT",
+        "message"   : "Currency is already existent in this App, please contract support"
     }
 }

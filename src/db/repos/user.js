@@ -148,6 +148,20 @@ class UsersRepository extends MongoComponent{
         });
     }
 
+    addCurrencyWallet(user_id, wallet){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: user_id, wallet : {$nin : [wallet._id] } }, 
+                { $push: { "wallet" : wallet} },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     async getAll(){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find().lean().populate(foreignKeys)

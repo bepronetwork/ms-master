@@ -85,7 +85,7 @@ export async function getUserInfo({user, app}){
 }
 
 
-export async function bet({user, result, game, app}){
+export async function bet({user, result, game, app, currency}){
     const { id : app_id} = app;
     const { _id : game_id } = game;
     const { id : user_id, bearerToken } = user;
@@ -95,7 +95,8 @@ export async function bet({user, result, game, app}){
         user: user_id,
         app: app_id,
         nonce: getNonce(),
-        result
+        result,
+        currency
     }   
 
     return await placeBet(postData, bearerToken, {id : user_id});

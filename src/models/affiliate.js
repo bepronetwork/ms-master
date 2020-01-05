@@ -17,7 +17,6 @@ class Affiliate extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Wallet(params)
                 ]
             }
             );

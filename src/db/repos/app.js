@@ -74,11 +74,11 @@ class AppRepository extends MongoComponent{
         });
     }
 
-    addBlockchainInformation(app_id, params){
+    addCurrencyWallet(app_id, wallet){
         return new Promise( (resolve,reject) => {
-            AppRepository.prototype.schema.model.findByIdAndUpdate(
-                app_id, 
-                { $set: params },
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id, wallet : {$nin : [wallet._id] } }, 
+                { $push: { "wallet" : wallet._id} },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){reject(err)}
@@ -87,6 +87,21 @@ class AppRepository extends MongoComponent{
             )
         });
     }
+
+    addCurrency(app_id, currency){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id, currencies : {$nin : [currency._id] } }, 
+                { $push: { "currencies" : currency} },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 
     addDeposit(app_id, deposit){
         return new Promise( (resolve,reject) => {

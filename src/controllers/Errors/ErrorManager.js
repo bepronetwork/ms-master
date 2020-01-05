@@ -229,6 +229,27 @@ class ErrorManager {
                     }
                     break;
                 };
+
+                case 'AddCurrencyWallet' : {
+                    // TO DO : Better Error Management
+                    // Verify App
+                    if(typeof object == 'undefined' || Object.is(object, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
+                    }
+                    // Verify Bank_address
+                    if(typeof object.bank_address == 'undefined' || Object.is(object.bank_address, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
+                    }
+                    //Verify Currency exists 
+                    if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
+                    }
+                    if(object.app.wallet.find( w => new String(w.currency._id).toLowerCase() == new String(object.currency._id).toLowerCase()))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.CURRENCY_ALREADY_EXISTENT)); break;
+                    
+                    break;
+                };
+
                 case 'EditGameTableLimit' : {
                     // Verify App
                     if(typeof object == 'undefined' || Object.is(object, null))
@@ -462,7 +483,7 @@ class ErrorManager {
             throw err
         }
     }
-
+    
     affiliate = function (object, type){
         try{
             switch(type){
@@ -481,6 +502,15 @@ class ErrorManager {
             switch(type){
                
             }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    currency = function (object, type){
+        try{
+          
         }catch(err){
             throw err
         }

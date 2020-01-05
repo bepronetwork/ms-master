@@ -14,7 +14,6 @@ import {
     loginUser,
     editTableLimit,
     editGameEdge,
-    addBlockchainInformation,
     updateAppWallet,
  } from '../methods';
 
@@ -141,17 +140,7 @@ context('Functional Testing', async () =>  {
                     PLATFORM_ADDRESS =  res_deploy.platformAddress;
                     TRANSACTION_TOKEN_TRANSFER_HASH = res_deploy.transactionHash;
                 //addBlockchainInfo : async () => {
-                    let add_blockchain_info_model = models.apps.add_blockchain_information(APP_ID, {
-                        platformAddress : PLATFORM_ADDRESS,
-                        decimals : CONST.decimals,
-                        currencyTicker : CONST.currencyTicker,
-                        authorizedAddresses : [CONST.ownerAccount.getAddress()],
-                        croupierAddress            : global.managerAccount,
-                        address         : eth_account_0.getAddress(),
-                        platformTokenAddress : PLATFORM_TOKEN_ADDRESS,
-                        platformBlockchain : PLATFORM_BLOCKCHAIN
-                    });
-                    await addBlockchainInformation(add_blockchain_info_model, APP_BEARER_TOKEN, {id : APP_ID});
+
                 //updateAppWallet : async () => {
                     let wallet_update_app_model = models.apps.update_wallet(APP_ID, CONST.tokenTransferAmount, TRANSACTION_TOKEN_TRANSFER_HASH);
                     await updateAppWallet(wallet_update_app_model, APP_BEARER_TOKEN, {id : APP_ID});

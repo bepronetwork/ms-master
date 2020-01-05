@@ -82,6 +82,8 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
+            const { currency } = params;
+
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
             let app = user.app_id;
@@ -94,8 +96,17 @@ const processActions = {
             var affiliateReturns = [], totalAffiliateReturn = 0;
             var user_delta, app_delta;
             var user_in_app = (app._id == params.app);
-            let appPlayBalance = parseFloat(app.wallet.playBalance);
-            let userBalance = parseFloat(user.wallet.playBalance);
+
+            /* Get balance by wallet type */
+            const appWallet = app.wallet.find( w => new String(w.currency).toString() == new String(currency).toString());
+            const userWallet = user.wallet.find( w => new String(w.currency).toString() == new String(currency).toString());
+
+            let appPlayBalance = parseFloat(appWallet.playBalance);
+            let userBalance = parseFloat(userWallet.playBalance);
+
+            /* Error on setup for new updates for array of wallets */
+            if(!userBalance || !appPlayBalance){throwError('UNKOWN')};
+
             let resultBetted = CasinoLogicSingleton.normalizeBet(params.result);
             var serverSeed = CryptographySingleton.generateSeed();
             var clientSeed = CryptographySingleton.generateSeed();
@@ -143,6 +154,7 @@ const processActions = {
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
+                        currency : currency,
                         lostAmount : totalBetAmount
                     })
                     /* Map */
@@ -165,15 +177,15 @@ const processActions = {
                 isUserAffiliated,
                 affiliateReturns,
                 totalAffiliateReturn,
+                appWallet,
                 tableLimit                      :   game.tableLimit,
+                wallet				            :   userWallet,
                 user                            :   user._id, 				    
                 app                             :   app._id,
                 outcomeResultSpace              :   outcomeResultSpace,
                 isWon                           :   isWon,
                 game                            :   game._id,
                 betSystem                       :   game.betSystem,
-                appWallet 			            :   app.wallet._id, 
-                wallet				            :   user.wallet._id,
                 appPlayBalance		:   appPlayBalance, 
                 playBalance         :   userBalance,
                 possibleWinAmount,

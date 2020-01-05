@@ -512,6 +512,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/wallet/currency/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Currency Wallet
+      operationId: addCurrencyWallet
+      description: Add Currency Wallet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddCurrencyWallet'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/games/editTableLimit:
     x-swagger-router-controller: game
     post:
@@ -1175,36 +1205,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/addBlockchainInformation:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Add Blockchain Information into the Setup
-      operationId: addBlockchainInformation
-      description: Add Blockchain Information into the Setup
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppBlockchainInformationRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /app/games/add:
     x-swagger-router-controller: app
     post:
@@ -1593,6 +1593,30 @@ definitions:
         example: 3245
         description: |
           New Edge
+  AppAddCurrencyWallet : 
+    type: object
+    required:
+      - app
+      - bank_address
+      - currency_id
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      currency_id:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Currency id
+      bank_address:
+        type : string
+        example: 0x9898347569837456983
+        description: |
+          Bank Address for Platform Use and bank
   AppGameEditTableLimit : 
     type: object
     required:
@@ -1994,6 +2018,7 @@ definitions:
       - app
       - amount
       - transactionHash
+      - currency
     properties:
       amount:
         type : number
@@ -2012,6 +2037,12 @@ definitions:
         example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
         description: |
           Transaction Hash
+      currency : 
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          Currency Type
   UserBetsRequest : 
     type: object
     required:
@@ -2036,6 +2067,7 @@ definitions:
       - amount
       - transactionHash
       - app
+      - currency
     properties:
       amount:
         type : number
@@ -2060,6 +2092,12 @@ definitions:
         example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
         description: |
           Transaction Hash
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   AppSummaryRequest:
     type: object
     required:
@@ -2123,59 +2161,6 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
-  AppBlockchainInformationRequest : 
-    type: object
-    required:
-      - app
-    properties:
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      currencyTicker : 
-        type : string
-        example: "DAI"
-        description: |
-           Currency Ticker for the Address
-      platformAddress :
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Blockchain Address for the Platform 
-      platformTokenAddress :
-        type : string
-        example: "0xdf9ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Token Address for the Platform
-      platformBlockchain :
-        type : string
-        example: "eth"
-        description: |
-          Blockchain reduce name
-      decimals :
-        type : number
-        example: 18
-        description: |
-          Blockchain Contract Decimal Reading 
-      address :
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Address that will be used for deposit and withdrawals
-      croupierAddress : 
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Address that will be used for controlling the operator
-      authorizedAddresses : 
-        type : array
-        items : 
-          type : string
-          example: ["0x539ac1406CDd80D1be443f61ba0acAA3da80027F"]
-          description: |
-            Address that manages withdraws
   AuthAdminRequest : 
     type: object
     required:
@@ -2214,6 +2199,7 @@ definitions:
       - game
       - result
       - nonce
+      - currency
     properties:
       user:
         type : string
@@ -2233,6 +2219,12 @@ definitions:
         example: "we23v3934ng9341"
         description: |
           Game Id
+      currency :
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Currency Id
       nonce :
         type : number
         example: 3453456

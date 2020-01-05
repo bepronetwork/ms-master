@@ -1,5 +1,6 @@
 import Numbers from "../logic/services/numbers";
 import CasinoContract from "../logic/eth/CasinoContract";
+import CasinoContractETH from '../logic/eth/CasinoContractETH';
 import account from "../logic/eth/models/account";
 import { globalsTest } from "../GlobalsTest";
 
@@ -46,35 +47,48 @@ export async function generateEthAccount(){
     return acc;
 }
 
-export async function deploySmartContract({eth_account}){
+export async function deploySmartContract({eth_account, tokenAddress, decimals}){
     try{
-        let erc20Contract = globalsTest.getERC20Contract(global.CONSTANTS.erc20Address);
+        let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
 
         let casino = new CasinoContract({
             web3 : global.web3,
             account : eth_account,
             erc20TokenContract : erc20Contract,
-            decimals : globalsTest.constants.tokenDecimals,
-            tokenTransferAmount : global.CONSTANTS.deploy.tokenTransferAmount
+            decimals : decimals
         })
        
-
         let res = await casino.__init__();
-        
-        await casino.setMaxWithdrawal(global.CONSTANTS.deploy.maxWithdrawal);
-        await casino.setMaxDeposit(global.CONSTANTS.deploy.maxDeposit);
-
         return {    
             casino : casino,
             platformTokenAddress    : global.CONSTANTS.erc20Address,
             transactionHash         : res.transactionHash,
-            platformAddress         : casino.getAddress(),
-            platformBlockchain      : 'eth',
-            amount                  : global.CONSTANTS.deploy.tokenTransferAmount,
-            casinoContract          : casino
+            platformAddress         : casino.getAddress()
         };
         
     }catch(err){
+        console.log(err)
+        return false;
+    }
+}
+
+
+export async function deploySmartContractETH({eth_account, decimals}){
+    try{
+        let casino = new CasinoContractETH({
+            web3 : global.web3,
+            account : eth_account
+        })
+       
+        let res = await casino.__init__();
+        return {    
+            casino : casino,
+            transactionHash         : res.transactionHash,
+            platformAddress         : casino.getAddress()
+        };
+        
+    }catch(err){
+        console.log(err)
         return false;
     }
 }
