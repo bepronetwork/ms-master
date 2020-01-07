@@ -44,8 +44,8 @@ class TypographyRepository extends MongoComponent{
                 _id, 
                 { $set: { 
                     "local"          : newStructure.local,
-                    "url"           : newStructure.url,
-                    "format"           : newStructure.format
+                    "url"            : newStructure.url,
+                    "format"         : newStructure.format
                 } },
                 { 'new': true })
                 .exec( (err, item) => {

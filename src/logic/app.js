@@ -617,6 +617,12 @@ const progressActions = {
     },
     __editTypography : async (params) => {
         let { app, typography } = params;
+
+        //1 - Eliminar todos os typographys de app 
+        //2- Gravar todos id novos typographys
+        //3 - Colocar os Ids do Typography em app, replace typography
+        
+        
         /* Update all Typography info */
         await Promise.all(app.typography.map( async c => {
             const correspondentTypographyType = typography.find( ci => ci.local.toLowerCase() == c.local.toLowerCase());

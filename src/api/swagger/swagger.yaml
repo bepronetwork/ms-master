@@ -771,7 +771,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppTypography'
+            $ref: '#/definitions/AppTypographyRequest'
       responses:
         "200":
           description: Success
@@ -1768,7 +1768,7 @@ definitions:
       isActive : 
         type : boolean
         example: true
-  AppTypography : 
+  AppTypographyRequest : 
     type: object
     required:
       - app

@@ -23,7 +23,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-		return params;
+		return {};
 	}
 }
 
@@ -39,9 +39,7 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{
-
             let Typography = await self.save(params);
-            
 			return {
 				...Typography,
 				type : 'typography'
