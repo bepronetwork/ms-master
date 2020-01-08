@@ -60,6 +60,20 @@ class AppRepository extends MongoComponent{
         });
     }
 
+    addTypography(app_id, typography){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id, typography : {$nin : [typography._id] } }, 
+                { $push: { "typography" : typography } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
+    }
+
     addUser(app_id, user){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findOneAndUpdate(

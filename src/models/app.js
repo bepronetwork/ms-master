@@ -382,7 +382,7 @@ class App extends ModelComponent{
 
     async editTypography(){
         try{
-            return await this.process('editTypography');
+            return await this.process('EditTypography');
         }catch(err){
             throw err;
         }

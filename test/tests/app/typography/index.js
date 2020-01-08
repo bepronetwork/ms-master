@@ -188,11 +188,7 @@ context('Edit Typography', async () => {
             app : app.id
         };
 
-        // console.log ("PostData: ", postData);
-        // console.log ("App Bearer: ", app.bearerToken);
-        // console.log ("Id: ", app.id);
         let res = await editTypographyApp(postData, app.bearerToken , {id : app.id});
-        console.log ("Typography: ", res);
 
         expect(detectValidationErrors(res)).to.be.equal(false);
 

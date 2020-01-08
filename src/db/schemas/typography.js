@@ -13,7 +13,7 @@ TypographySchema.prototype.schema =  {
 
 
 TypographySchema.prototype.model = db.model(TypographySchema.prototype.name, new db.Schema(TypographySchema.prototype.schema));
-      
+
 export {
     TypographySchema
 }

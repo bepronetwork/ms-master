@@ -20,12 +20,12 @@ class TypographyRepository extends MongoComponent{
     }
     /**
      * @function setTypographyModel
-     * @param Font Model
+     * @param Typography Model
      * @return {Schema} TypographyModel
      */
 
-    setModel = (Font) => {
-        return TypographyRepository.prototype.schema.model(Font)
+    setModel = (Typography) => {
+        return TypographyRepository.prototype.schema.model(Typography)
     }
 
     findById(_id){ 
@@ -53,6 +53,18 @@ class TypographyRepository extends MongoComponent{
                     resolve(item);
                 }
             )
+        });
+    }
+
+    setTypography(newStructure) {
+        return new Promise(async (resolve, reject) => {
+            let forSave = new TypographyRepository.prototype.schema.model({
+                local: newStructure.local,
+                url: newStructure.url,
+                format: newStructure.format,
+            });
+            let result = await forSave.save();
+            resolve(result);
         });
     }
 

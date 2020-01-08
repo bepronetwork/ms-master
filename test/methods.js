@@ -291,15 +291,12 @@ module.exports = {
         .then(res => {return res.body})
     },
     async editTypographyApp(params, bearerToken, payload){
-        console.log("Typography: ",params);
-        console.log("BearerToken: ",bearerToken);
-        console.log("Payload: ",payload);
         return request(global.server)
         .post('/api/app/typography')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
-        .then(res => {console.log("Res de Typography: ",res.body); return res.body})
+        .then(res => { return res.body})
     },
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
