@@ -429,6 +429,16 @@ class AppRepository extends MongoComponent{
             })
         })
     }
+
+    async getAllBySize(limit){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.find().lean().populate(foreignKeys).limit(limit)
+            .exec( (err, docs) => {
+                if(err){reject(err)}
+                resolve(docs);
+            })
+        })
+    }
 }
 
 AppRepository.prototype.schema = new AppSchema();

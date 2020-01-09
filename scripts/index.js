@@ -18,6 +18,8 @@ require('../app');
             await AddFooterToCustomization.default.prototype.start();
             let AddRulesToGames = require('./addRulesToGames');
             await AddRulesToGames.default.prototype.start();
+            let AddTypographyToApp = require('./addTypographyToApp');
+            await AddTypographyToApp.default.prototype.start();
             */
     }, 5*1000)
 })()

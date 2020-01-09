@@ -68,6 +68,16 @@ class TypographyRepository extends MongoComponent{
         });
     }
 
+    async getAll(){
+        return new Promise( (resolve,reject) => {
+            TypographyRepository.prototype.schema.model.find()
+            .exec( (err, docs) => {
+                if(err){reject(err)}
+                resolve(docs);
+            })
+        })
+    }
+
 }
 
 TypographyRepository.prototype.schema = new TypographySchema();
