@@ -1,5 +1,5 @@
 context('App', async () => {
-    require('./deploy');
+//     require('./deploy');
     require('./customization');
     require('./typography');
 });
