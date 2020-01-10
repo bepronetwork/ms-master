@@ -114,6 +114,14 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async getUserAuth(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/auth')
+        .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
     async getGames(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/games/getAll')
@@ -308,7 +316,6 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async resolveEvent(params, bearerToken){
         return request(global.server)
@@ -316,7 +323,6 @@ module.exports = {
         .set("authorization", "Bearer " + bearerToken)
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async updateAppWallet(params, bearerToken, payload){
         return request(global.server)
@@ -325,7 +331,6 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async updateUserWallet(params, bearerToken, payload){
         return request(global.server)

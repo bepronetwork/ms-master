@@ -48,6 +48,22 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'foreignField': '_id', 
                 'as': 'wallet'
             }
+        }, 
+        {
+            '$lookup': {
+                'from': 'affiliates', 
+                'localField': 'affiliate', 
+                'foreignField': '_id', 
+                'as': 'affiliate'
+            }
+        }, 
+        {
+            '$lookup': {
+                'from': 'wallets', 
+                'localField': 'affiliate.wallet', 
+                'foreignField': '_id', 
+                'as': 'affiliate.wallet'
+            }
         }, {
             '$project': {
                 '_id': true, 
@@ -55,11 +71,8 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'full_name': true, 
                 'name': true, 
                 'address': true, 
-                'wallet': {
-                    '$arrayElemAt': [
-                    '$wallet', 0
-                    ]
-                }, 
+                'affiliate' : true,
+                'wallet': true, 
                 'register_timestamp': true, 
                 'nationality': true, 
                 'age': true, 

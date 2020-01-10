@@ -67,8 +67,6 @@ class Etherscan{
             tokenAmount : functionParams[1].value
         }
 
-        console.log(functionParams)
-        console.log(decodedInput)
         return res;
         
     }

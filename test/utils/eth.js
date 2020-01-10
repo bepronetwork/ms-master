@@ -23,18 +23,21 @@ export async function getUserSignature({clientAccount, winBalance, nonce, catego
 }
   
 
-export async function generateEthAccountWithTokensAndEthereum({tokenAmount, ETHAmount}){
+export async function generateEthAccountWithTokensAndEthereum({tokenAmount, tokenAddress, ETHAmount, decimals}){
     let acc = await generateEthAccount();
-    let erc20Contract = globalsTest.getERC20Contract(global.CONSTANTS.erc20Address);
-    //Transfer Tokens
-    await erc20Contract.transferTokenAmount({fromAccount : global.masterAccount, toAddress : acc.getAddress(), tokenAmount : tokenAmount, decimals : globalsTest.constants.tokenDecimals});
+    if(tokenAddress){
+        let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
+        //Transfer Tokens
+        await erc20Contract.transferTokenAmount({fromAccount : global.masterAccount, toAddress : acc.getAddress(), tokenAmount : tokenAmount, decimals : decimals});
+    }
+  
     //Transfer Ethereum
     await global.masterAccount.sendEther(ETHAmount, acc.getAddress());
     return acc;
 }
 
-export async function fundEthAccountWithTokensAndEthereum({account, ethAmount, tokenAmount}){
-    let erc20Contract = globalsTest.getERC20Contract(global.CONSTANTS.erc20Address);
+export async function fundEthAccountWithTokensAndEthereum({account, ethAmount, tokenAmount, erc20Address}){
+    let erc20Contract = globalsTest.getERC20Contract(erc20Address);
     //Transfer Tokens
     await erc20Contract.transferTokenAmount({fromAccount : global.masterAccount, toAddress : account.getAddress(), tokenAmount : tokenAmount, decimals : globalsTest.constants.tokenDecimals});
     //Transfer Ethereum

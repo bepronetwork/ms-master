@@ -88,6 +88,10 @@ let outputs = {
             "hosting_id"            : object.hosting_id,
             "web_url"               : object.web_url,
             "services"              : object.services,
+            "users"                 : object.users.map( u => { return {
+                "wallet" : u.wallet, 
+                ...u
+            }}),
             "customization"         : object.customization,
             "withdraws"             : object.withdraws,
             "deposits"              : object.deposits,

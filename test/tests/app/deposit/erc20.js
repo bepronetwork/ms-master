@@ -16,7 +16,7 @@ context(`ERC20 (${erc20Ticker})`, async () => {
     before( async () =>  {
         app = (await getAppAuth(get_app(global.test.app.id), global.test.app.bearerToken, {id : global.test.app.id})).data.message;
         currencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(erc20Ticker).toLowerCase());
-        depositAmount = 1.345;
+        depositAmount = 20;
     });
 
     it('should´nt update wallet with pending transaction', mochaAsync(async () => {
@@ -43,7 +43,6 @@ context(`ERC20 (${erc20Ticker})`, async () => {
     it('should update Wallet with verified transaction', mochaAsync(async () => {
         let bankContract = globalsTest.getCasinoContract(currencyWallet.bank_address, currencyWallet.currency.address, global.ownerAccount);
         let tx = await bankContract.sendTokensToCasinoContract(Numbers.toSmartContractDecimals(depositAmount, currencyWallet.currency.decimals))
-        console.log(tx.transactionHash)
         const postData = {
             app : app.id,
             amount : depositAmount,
@@ -66,7 +65,6 @@ context(`ERC20 (${erc20Ticker})`, async () => {
             expect(status_1).to.be.equal(14);
             expect(status).to.be.equal(200);
         }
-        console.log(status_1, status)
         /* Verify if new wallet has that info */
         let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
         global.test.app = res_app.data.message;

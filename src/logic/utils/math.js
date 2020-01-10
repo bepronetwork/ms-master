@@ -3,7 +3,7 @@ class math{
 
     multiplyAbsolutes(...args){
         return args.reduce((acc, arg) => {
-            return acc*this.toFloat(arg);
+            return acc*parseFloat(arg);
         }, 1);
     }
 

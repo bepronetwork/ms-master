@@ -12,7 +12,6 @@ import { getRandom } from '../../../utils/math';
 import { digestBetResult } from '../../../utils/bet';
 const expect = chai.expect;
 
-
  const currenciesBetAmount = {
     'dai' : 0.2,
     'eth' : 0.001
@@ -23,7 +22,7 @@ const limitTableBetAmount = {
     'eth' : 0.0006
 }
 
-const metaName = 'linear_dice_simple';
+const metaName = 'coinflip_simple';
 
 Object.keys(currenciesBetAmount).forEach( async key => {
     var app, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency;
@@ -47,9 +46,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             currency : currency._id,
             nonce: getRandom(123,2384723),
             result: [{
-                place: 0, value: betAmount/3,
-                place: 1, value: betAmount/3,
-                place: 2, value: betAmount/3
+                place: 0, value: betAmount
             }]
         };
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
@@ -64,7 +61,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
     it( `${metaName} - ${key} - should allow bet for the User - Simple Bet (Heads)`, mochaAsync(async () => {
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
-
         const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
         let postData = { 
@@ -74,10 +70,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             app: app.id,
             nonce: getRandom(123,2384723),
             result: [{
-                place: 0, value: betAmount/3,
-                place: 40, value: betAmount/3,                
-                place: 12, value: betAmount/3,
-
+                place: 1, value: betAmount
             }]
         };
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
@@ -119,5 +112,3 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     }));
     
 });
-
-

@@ -156,7 +156,6 @@ const processActions = {
         });
 		return res;
     },
-   
     __updateWallet : async (params) => {
         var { currency, app } = params;
 
@@ -415,16 +414,15 @@ const progressActions = {
         await AppRepository.prototype.addCurrencyWallet(app._id, wallet);
         /* Add Wallet to all Users */
         await Promise.all(await app.users.map( async u => {
+            let w = (await (new Wallet({
+                currency : currency._id,
+            })).register())._doc;
+            await UsersRepository.prototype.addCurrencyWallet(u._id, w);
 
-            let w = await (new Wallet({
-                currency : currency._id
-            })).register();
-            await UsersRepository.prototype.addCurrencyWallet(u, w);
-
-            let wAffiliate = await (new Wallet({
-                currency : currency._id
-            })).register();
-            await AffiliateRepository.prototype.addCurrencyWallet(u, wAffiliate);
+            let wAffiliate = (await (new Wallet({
+                currency : currency._id,
+            })).register())._doc;
+            await AffiliateRepository.prototype.addCurrencyWallet(u.affiliate, wAffiliate);
 
         }));
         return {
@@ -487,7 +485,6 @@ const progressActions = {
         let depositSaveObject = await deposit.createDeposit();
         
         /* Update Balance of App */
-        console.log("amount", params.amount)
         await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
         
         /* Add Deposit to App */

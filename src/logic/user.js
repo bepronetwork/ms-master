@@ -160,18 +160,12 @@ const processActions = {
             user = await UsersRepository.prototype.findUser(input_params.username);
         }
 
-        let isAddressAlreadyRegistered = (await UsersRepository.prototype.findUserByAddress({
-            address : params.address,
-            app     : params.app
-        })) ? true : false;
-
         let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if(params.password)
 		    hash_password = new Security(params.password).hash();
 
 		let normalized = {
-            isAddressAlreadyRegistered,
 			alreadyExists	: alreadyExists,
 			username 		: params.username,
             full_name		: params.full_name,
@@ -185,7 +179,8 @@ const processActions = {
             security        : params.security,
             email			: params.email,
             affiliateLink,
-			app_id			: params.app,
+            app			: app,
+            app_id      : app.id,
 			external_user	: params.user_external_id ? true : false,
 			external_id		: params.user_external_id
         }
@@ -208,32 +203,28 @@ const processActions = {
             let app = await AppRepository.prototype.findAppById(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
-
-            const wallet = user.wallet.find( w => new String(w.currency).toString() == new String(currency).toString());
+            const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
             /* Verify if the transactionHash was created */
             let { amount, isValid, from } = await verifytransactionHashDirectDeposit(
-            new String(wallet.currency.ticker).toLowerCase(), params.transactionHash, params.amount, 
-            app.platformAddress , app.decimals);
-            
+                new String(wallet.currency.ticker).toLowerCase(), params.transactionHash, params.amount, 
+                appWallet.bank_address, appWallet.currency.decimals);
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
             let wasAlreadyAdded = deposit ? true : false;
-
-            /* Verify if User Address is Valid */
-            let isValidAddress = (new String(user.address).toLowerCase() == new String(from).toLowerCase());
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
 
             let res = {
-                isValidAddress,
                 app,
                 user_in_app,
+                user                : user,
                 wasAlreadyAdded,
                 user_id             : user._id,
-                wallet              : user.wallet,
+                wallet              : wallet,
                 creationDate        : new Date(),
                 transactionHash     : params.transactionHash,
                 from                : from,
@@ -315,25 +306,21 @@ const progressActions = {
     },
 	__register : async (params) => {
         try{
-            const { affiliate, app_id } = params;
-
+            const { affiliate, app } = params;
 
             /* Register of Available Wallets on App */
-            params.wallet = await Promise.all(app_id.wallet.map( async w => {
-                return await ((new Wallet({
+            params.wallet = await Promise.all(app.wallet.map( async w => {
+                return (await (new Wallet({
                     currency : w.currency
-                })).register())._id;
+                })).register())._doc._id;
             }))
-
-            console.log("Available Wallets : ");
-            console.log(params.wallet);
 
             let user = await self.save(params);
 
             /* Register of Affiliate Link */
             let affiliateLinkObject = await (new AffiliateLink({
                 userAffiliated : user._id,
-                app_id : params.app_id,
+                app_id : params.app.id,
                 affiliateLink : params.affiliateLink
             })).register();
             
@@ -363,7 +350,7 @@ const progressActions = {
         try{
             /* Create Deposit Object */
             let deposit = new Deposit({
-                user                    : params.user,
+                user                    : params.user_id,
                 transactionHash         : params.transactionHash,
                 creation_timestamp      : params.creationDate,                    
                 last_update_timestamp   : params.creationDate,                             
@@ -379,7 +366,7 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
             
             /* Add Deposit to user */
-            await UsersRepository.prototype.addDeposit(params.user._id, depositSaveObject._id);
+            await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
 
             return params;
         }catch(err){

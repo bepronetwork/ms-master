@@ -33,8 +33,22 @@ const mochaAsync = (fn) => {
 
 const genData = (data) => JSON.parse(faker.fake(JSON.stringify(data)));
 
+const detectEqualFieldValueOccurences = (arr1, arr2, field) => {
+    return arr1.reduce( (acc, a) => {
+        const b = arr2.find( s => {  ((s[field] == a[field]) && (s.isActive)) });
+        if(b){ return acc+1 }
+        else{ return acc }
+    }, 0)
+}
+
+const getCurrencyWallet = ({wallet, ticker}) => {
+    return wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())
+}
+
 export {
+    getCurrencyWallet,
     genData,
+    detectEqualFieldValueOccurences,
     detectValidationErrors,
     mochaAsync,
     generateEthAccountWithTokensAndEthereum

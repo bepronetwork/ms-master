@@ -42,10 +42,6 @@ let outputs = {
             app_id: {
                 isValid: object.app_id.isValid,
                 ownerAddress: object.app_id.ownerAddress,
-                authorizedAddresses: [
-                    ...object.app_id.authorizedAddresses
-                ],
-                croupierAddress: object.app_id.croupierAddress,
                 games: [
                     ...object.app_id.games
                 ],
@@ -55,25 +51,12 @@ let outputs = {
                 services: [
                     ...object.app_id.services
                 ],
-                users: [
-                    ...object.app_id.users
-                ],
-                external_users: [
-                    ...object.app_id.external_users
-                ],
-                deposits: [
-                    ...object.app_id.deposits
-                ],
-                withdraws: [
-                    ...object.app_id.withdraws
-                ],
                 countriesAvailable: [
                     ...object.app_id.countriesAvailable
                 ],
                 licensesId: [
                     ...object.app_id.licensesId
                 ],
-                isWithdrawing: object.app_id.isWithdrawing,
                 _id: object.app_id._id,
                 wallet: object.app_id.wallet,
                 name: object.app_id.name,

@@ -1,7 +1,6 @@
 import chai from 'chai';
 import models from '../../../models';
 import { 
-    getEcosystemCasinoGames,
     addGame,
     getGames,
     editTableLimit,
@@ -9,7 +8,6 @@ import {
 } from '../../../methods';
 
 import {
-    shouldGetAllAppGamesEuropeanRoulette,
     shouldAddEcosystemGameEuropeanRoulette,
     shouldChangeGameTableLimitEuropeanRoulette,
     shouldChangeGameEdgeEuropeanRoulette

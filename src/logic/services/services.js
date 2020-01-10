@@ -70,12 +70,9 @@ function fromExponential(x) {
 
 async function verifytransactionHashDirectDeposit(currency, transactionHash, amount, platformAddress, decimals){
     try{
-        console.log("currency", currency);
-
         switch(currency){
             /* If Ethereum */
             case 'eth' : {
-                console.log("eth entered")
                 let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
                 let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
                 let blockNumber = await globals.web3.eth.getBlockNumber();
@@ -91,9 +88,14 @@ async function verifytransactionHashDirectDeposit(currency, transactionHash, amo
                 }
 
                 if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
+                let res_transaction_decoded = {
+                    from : res_transaction_recipt.from,
+                    tokensTransferedTo : res_transaction.to,
+                    status : res_transaction_recipt.status,
+                    blockHash : res_transaction.blockHash,
+                    amount : res_transaction.value
+                }
                 
-                let res_transaction_decoded = EtherscanSingleton.getTransactionData(res_transaction);
-                        
                 /* Verify if receiver of Transaction is platformAddress */
                 if(new String(res_transaction_decoded.tokensTransferedTo).toLowerCase() != new String(platformAddress).toLowerCase()){
                     throw false;
@@ -106,7 +108,7 @@ async function verifytransactionHashDirectDeposit(currency, transactionHash, amo
                 return {
                     isValid : true,
                     from :  res_transaction.from,
-                    amount : globals.web3.utils.fromWei(new Number(res_transaction_decoded.tokenAmount))
+                    amount : parseFloat(globals.web3.utils.fromWei(new String(res_transaction_decoded.amount).toString()))
                 };
             }
             /* If Other ERC-20 Token */
@@ -124,11 +126,9 @@ async function verifytransactionHashDirectDeposit(currency, transactionHash, amo
                     res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
                 }
 
-                console.log("ooooo!!", blockNumber - res_transaction_recipt.blockNumber, CONFIRMATION_NEEDED)
                 if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
                 
                 let res_transaction_decoded = EtherscanSingleton.getTransactionDataERC20(res_transaction);
-                console.log(res_transaction_decoded)
                 /* Verify if receiver of Transaction is platformAddress */
                 if(new String(res_transaction_decoded.tokensTransferedTo).toLowerCase() != new String(platformAddress).toLowerCase()){
                     throw false;

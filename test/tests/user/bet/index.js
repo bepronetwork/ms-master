@@ -1,6 +1,6 @@
 context('Bets', async () => {
-    require('./european_roulette');
     require('./coinflip');
+    require('./european_roulette');
     require('./linear_dice');
     require('./errors');
 });
