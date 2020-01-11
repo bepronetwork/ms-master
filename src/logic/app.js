@@ -89,7 +89,8 @@ const processActions = {
             type : new String(params.type).toLowerCase().trim(),
             app : new String(params.app).trim(),
             opts : {
-                dates : fromPeriodicityToDates({periodicity : params.periodicity})
+                dates : fromPeriodicityToDates({periodicity : params.periodicity}),
+                currency : params.currency
                 // Add more here if needed
             }
         }
@@ -334,51 +335,9 @@ const progressActions = {
 		return app;
 	},
 	__summary : async (params) => {
-        // Get App Data
-        let appInfo = await AppRepository.prototype.findAppById(params.app);
-
         // Get Specific App Data
         let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts);
-        let ret = res;
-        // Normalize Data for Each Call
-        switch(params.type){
-            case 'wallet' :
-                var blockchainInfo;
-                var allUsersBalance = (await UsersRepository.prototype.getAllUsersBalance({app : params.app})).balance;
-                // Dependent on Blockchain Case
-                switch(appInfo.platformBlockchain){
-                    case 'eth' : {
-                        let casinoContract = new CasinoContract({
-                            web3 : globals.web3,
-                            contractAddress : appInfo.platformAddress,
-                            tokenAddress    : appInfo.platformTokenAddress
-                        })
-            
-                        blockchainInfo = {
-                            decentralized : {
-                                totalLiquidity  : fromDecimals(await casinoContract.getTotalLiquidity(), appInfo.decimals),
-                                houseBalance    : fromDecimals(await casinoContract.getHouseBalance(), appInfo.decimals),
-                                playersBalance  : fromDecimals(await casinoContract.getPlayersBalance(), appInfo.decimals)
-                            },   
-                            totalLiquidity  : appInfo.playBalance, 
-                            houseBalance    : appInfo.playBalance, 
-                            allPlayersBalance  :   allUsersBalance, 
-                            decimals        : appInfo.decimals,
-                            tokenAddress    : appInfo.platformTokenAddress,
-                            ticker          : appInfo.currencyTicker,
-                            blockchain      : appInfo.platformBlockchain,
-                        };
-                    }
-                }
-                ret = { ...res[0], blockchain : blockchainInfo };            
-
-                break;
-            default : {
-                // Respond Params
-            }
-         }
-
-        return ret;
+        return res;
     },
     __deployApp : async (params) => {
 

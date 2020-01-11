@@ -17,18 +17,7 @@ const pipeline_app_wallet = (_id) =>
         }
     }, {
         '$project': {
-            'wallet': {
-                '$arrayElemAt': [
-                    '$wallet', 0
-                ]
-            }
-        }
-    }, {
-        '$project': {
-            '_id': false, 
-            'playBalance': '$wallet.playBalance', 
-            'eur': '$wallet.eur', 
-            'eth': '$wallet.eth'
+            'wallet': true
         }
     }
 ]

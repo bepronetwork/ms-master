@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { pipeline_bets_by_date } from '../filters';
+import { pipeline_bets_by_date, pipeline_bets_by_currency } from '../filters';
 
-const pipeline_user_stats = (_id, { dates }) => 
+const pipeline_user_stats = (_id, { dates, currency }) => 
 	[
 		{
 			'$match': {
@@ -51,6 +51,8 @@ const pipeline_user_stats = (_id, { dates }) =>
 			}
 			}
         }, 
+            ...pipeline_bets_by_currency({currency}) 
+            ,
             ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to}) 
         ,{
 			'$lookup': {

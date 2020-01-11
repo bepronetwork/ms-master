@@ -1554,6 +1554,7 @@ definitions:
     required:
       - type
       - user
+      - currency
     properties:
       type:
         type : string
@@ -1569,6 +1570,18 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+      periodicity :
+        type : string
+        format: name
+        example: "Weekly"
+        description: |
+          Periodicity of Data
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   AppGameEditEdge : 
     type: object
     required:
@@ -2048,6 +2061,7 @@ definitions:
     required:
       - user
       - size
+      - currency
     properties:
       size:
         type : number
@@ -2060,6 +2074,18 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+      periodicity :
+        type : string
+        format: name
+        example: "Weekly"
+        description: |
+          Periodicity of Data
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   UpdateUserWalletRequest : 
     type: object
     required:
@@ -2103,6 +2129,7 @@ definitions:
     required:
       - type
       - app
+      - currency
     properties:
       type:
         type : string
@@ -2124,6 +2151,12 @@ definitions:
         example: "Weekly"
         description: |
          Periodicity of Data
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   AppAddGameRequest : 
     type: object
     required:

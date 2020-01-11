@@ -55,11 +55,11 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    getBets({id, size=15}){ 
+    getBets({id, size=15, dates, currency}){ 
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
-                .aggregate(pipeline_my_bets(id))
+                .aggregate(pipeline_my_bets(id,{ dates, currency }))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
@@ -274,7 +274,7 @@ class UsersRepository extends MongoComponent{
     }
 
 
-    async getSummaryStats(type, _id){ 
+    async getSummaryStats(type, _id, { dates, currency }){ 
 
         let pipeline;
 
@@ -292,7 +292,7 @@ class UsersRepository extends MongoComponent{
 
         return new Promise( (resolve, reject) => {
             UsersRepository.prototype.schema.model
-            .aggregate(pipeline(_id))
+            .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

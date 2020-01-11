@@ -3,7 +3,6 @@ import {
     getGames
 } from '../../../methods';
 
-import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
 

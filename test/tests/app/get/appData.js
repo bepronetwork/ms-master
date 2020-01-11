@@ -1,5 +1,7 @@
 import {
-    getApp
+    getApp,
+    authAdmin,
+    getAppAuth
 } from '../../../methods';
 
 import chai from 'chai';
@@ -39,14 +41,15 @@ import {
 import { getUserInfo } from '../../../services';
 
 const expect = chai.expect;
-
+const ticker = 'dai'
 context('App Data', async () =>  {
-    var admin, app;
+    var admin, app, currency;
 
 
     before( async () =>  {
-        app = global.test.app;
-        admin = global.test.admin;
+        admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
+        app = (await getAppAuth({app : admin.app.id}, admin.app.bearerToken, {id : admin.app.id})).data.message;
+        currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
     });
 
     it('should Get App Data', mochaAsync(async () => {
@@ -138,31 +141,31 @@ context('App Data', async () =>  {
     }))
             
     it('GET USERS DATA - should allow', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'USERS', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'USERS', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model, app.bearerToken, {id : app.id});
         GETUSERSDATAShouldAllow(res.data, expect);
     })); 
 
     it('GET REVENUE DATA - should allow', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'REVENUE');
+        let users_call_model = models.apps.get_summary(app.id, 'REVENUE', null, currency._id);
         let res = await getAppSummary(users_call_model, app.bearerToken, {id : app.id});
         GETREVENUEDATAShouldAllow(res.data, expect);
     })); 
 
     it('GET GAMES DATA - should allow', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'GAMES', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'GAMES', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model, app.bearerToken, {id : app.id});
         GETGAMESDATAShouldAllow(res.data, expect);
     })); 
 
     it('GET BEST DATA - should allow', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'BETS', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'BETS', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model, app.bearerToken, {id : app.id});
         GETBESTDATAShouldAllow(res.data, expect);
     })); 
 
     it('GET WALLET DATA - should allow', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'WALLET', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'WALLET', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model, app.bearerToken, {id : app.id});
         GETWALLETDATAShouldAllow(res.data, expect);
     }));

@@ -24,6 +24,7 @@ import { globals } from '../Globals';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
+import { fromPeriodicityToDates } from './utils/date';
 let error = new ErrorManager();
 
 
@@ -187,7 +188,7 @@ const processActions = {
 		return normalized;
 	},
 	__summary : async (params) => {
-		let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user)
+		let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user, params.opts);
 		let normalized = {
 			...res
 		}
@@ -248,7 +249,9 @@ const processActions = {
     __getBets : async (params) => {
         let bets = await UsersRepository.prototype.getBets({
             id : params.user,
-            size : params.size
+            size : params.size,
+            currency : params.currency,
+            dates : fromPeriodicityToDates({periodicity : params.periodicity})
         });
 		return bets;
     },
@@ -344,7 +347,16 @@ const progressActions = {
         }
 	},
 	__summary : async (params) => {
-		return params;
+        let normalized = {
+            type : new String(params.type).toLowerCase().trim(),
+            user : new String(params.app).trim(),
+            opts : {
+                dates : fromPeriodicityToDates({periodicity : params.periodicity}),
+                currency : params.currency
+                // Add more here if needed
+            }
+        }
+		return normalized;
     },
     __updateWallet : async (params) => {
         try{

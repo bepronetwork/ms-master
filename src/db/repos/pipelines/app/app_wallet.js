@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 
-const pipeline_user_wallet = (_id, opt) => 
+const pipeline_user_wallet = (_id) => 
     [
         //Stage 0
     {
@@ -15,19 +15,10 @@ const pipeline_user_wallet = (_id, opt) =>
             'foreignField': '_id', 
             'as': 'wallet'
         }
-    }, {
+    },
+    {
         '$project': {
-            'wallet': {
-                '$arrayElemAt': [
-                    '$wallet', 0
-                ]
-            }
-        }
-    }, {
-        '$project': {
-            '_id' : false, 
-            'playBalance': '$wallet.playBalance', 
-            'eur': '$wallet.eur',
+            'wallet': true
         }
     }
 ]

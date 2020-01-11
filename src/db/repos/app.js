@@ -377,7 +377,7 @@ class AppRepository extends MongoComponent{
      * @param {Mongoose Id} _id 
      */
 
-    async getSummaryStats(type, _id, { dates }){ 
+    async getSummaryStats(type, _id, { dates, currency }){ 
 
         let pipeline;
 
@@ -397,7 +397,7 @@ class AppRepository extends MongoComponent{
 
         return new Promise( (resolve, reject) => {
             AppRepository.prototype.schema.model
-            .aggregate(pipeline(_id, { dates }))
+            .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
