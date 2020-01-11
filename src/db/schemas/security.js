@@ -6,9 +6,9 @@ class SecuritySchema{};
 SecuritySchema.prototype.name = 'Security';
 
 SecuritySchema.prototype.schema = {
-    '2fa_set'           : { type: Boolean, required : false},
+    '2fa_set'           : { type: Boolean, required : true, default : false},
     '2fa_secret'        : { type: String, required : false},
-    'email_verified'    : { type: Boolean, required : false},
+    'email_verified'    : { type: Boolean, required : true, default : false},
     'bearerToken'       : { type : String, required : false}
 };
 

@@ -22,7 +22,7 @@ class Wallet extends ModelComponent{
 
     async register(){
         try{
-            await this.process('Register');
+            return await this.process('Register');
         }catch(err){
             throw err;
         }

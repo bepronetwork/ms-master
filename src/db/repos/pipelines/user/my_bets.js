@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import { pipeline_bets_by_currency, pipeline_bets_by_date } from '../filters';
 
 
-const pipeline_my_bets = (_id) => 
+const pipeline_my_bets = (_id, { currency, dates}) => 
     [
         //Stage 0
     {
@@ -28,7 +29,11 @@ const pipeline_my_bets = (_id) =>
             ]
           }
         }
-    }
+    },
+        ...pipeline_bets_by_currency({currency}) 
+        ,
+        ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to})    
+        ,
     ,{
         '$lookup': {
         'from': 'games', 

@@ -2,7 +2,6 @@ import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getAppAuth, deployApp } from '../../../methods';
 import { get_app } from '../../../models/apps';
-import { HerokuClientSingleton } from '../../../../src/logic/third-parties';
 const expect = chai.expect;
 
 context('Deploy App Duplicate', async () => {

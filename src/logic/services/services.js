@@ -67,175 +67,94 @@ function fromExponential(x) {
   }
 
 
-async function verifytransactionHashDepositUser(blockchain, transactionHash, platformAddress, decimals){
+
+async function verifytransactionHashDirectDeposit(currency, transactionHash, amount, platformAddress, decimals){
     try{
+        switch(currency){
+            /* If Ethereum */
+            case 'eth' : {
+                let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
+                let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
+                let blockNumber = await globals.web3.eth.getBlockNumber();
+                let confirmedCondition = () => ((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED);
+                if(!res_transaction_recipt || !res_transaction){throw new Error()}
 
-        /* Get Information of this transactionHash */
-        let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
-        let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
-        let blockNumber = await globals.web3.eth.getBlockNumber();
-        let confirmedCondition = () => ((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED);
-        if(!res_transaction_recipt || !res_transaction){throw new Error()}
+                while(confirmedCondition()){
+                    await delay(2*1000);
+                    /* Get Information of this transactionHash */
+                    blockNumber = await globals.web3.eth.getBlockNumber();
+                    res_transaction = await globals.web3.eth.getTransaction(transactionHash);
+                    res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
+                }
 
-        while(confirmedCondition()){
-            await delay(2*1000);
-            /* Get Information of this transactionHash */
-            blockNumber = await globals.web3.eth.getBlockNumber();
-            res_transaction = await globals.web3.eth.getTransaction(transactionHash);
-            res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
-        }
-
-        if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
-
-        let res_transaction_decoded = EtherscanSingleton.getTransactionDataCasino(res_transaction, res_transaction_recipt);
-
-        /* Verify if receiver of Transaction is platformAddress */
-        if(new String(res_transaction_decoded.tokensTransferedTo).toLowerCase() != new String(platformAddress).toLowerCase()){
-            throw false;
-        }
-
-
-        /* If confirmed it was mined and not reverted */
-        if(!res_transaction_recipt.status || !res_transaction.blockHash){
-            throw false;
-        }
-
-        /* Verify if the Token Amount is the same */
-        let amount = Numbers.fromDecimals(Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)), decimals);
-    
-        /* Verify if Transaction was Succeded */
-        // TO DO 
-
-        return {
-            isValid : true,
-            from :  res_transaction.from,
-            amount
-        };
-
-    }catch(err){
-        return {
-            isValid : false
-        };
-    }
-};
-
-async function verifytransactionHashWithdrawUser(blockchain, transactionHash, transferedAmount, platformAddress, decimals){
-    try{
-
-        
-        /* Get Information of this transactionHash */
-        let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
-        let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
-        let res_transaction_decoded = EtherscanSingleton.getTransactionDataCasinoWithdraw(res_transaction_recipt);
-        
-        /* Verify if sender of Transaction is platformAddress */
-        if(new String(res_transaction_decoded.tokensTransferedFrom).toLowerCase() != new String(platformAddress).toLowerCase()){
-            throw false;
-        }
-        if(
-            Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
-            != Numbers.toSmartContractDecimals(new Number(transferedAmount), decimals)){
-            throw false;
-        }
-
-        return {
-            isValid : true,
-            tokensTransferedFrom : res_transaction_decoded.tokensTransferedFrom,
-            tokensTransferedTo  : res_transaction_decoded.tokensTransferedTo,
-            tokenAmount : res_transaction_decoded.tokenAmount,
-            from :  res_transaction.from 
-        };
-
-    }catch(err){
-        return {
-            isValid : false
-        };
-    }
-};
-
-async function verifytransactionHashWithdrawApp(blockchain, transactionHash, transferedAmount, platformAddress, decimals){
-    try{
-        /* Get Information of this transactionHash */
-        let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
-        let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
-        let res_transaction_decoded = EtherscanSingleton.getTransactionDataCasinoWithdraw(res_transaction_recipt);
-        
-        /* Verify if sender of Transaction is platformAddress */
-        if(new String(res_transaction_decoded.tokensTransferedFrom).toLowerCase() != new String(platformAddress).toLowerCase()){
-            throw false;
-        }
-
-        /* Verify if the Token Amount is the same */
-        if(
-            Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
-            != Numbers.toSmartContractDecimals(new Number(transferedAmount), decimals)){
-            throw false;
-        }
-
-        return {
-            isValid : true,
-            tokensTransferedFrom : res_transaction_decoded.tokensTransferedFrom,
-            tokensTransferedTo  : res_transaction_decoded.tokensTransferedTo,
-            tokenAmount : res_transaction_decoded.tokenAmount,
-            from :  res_transaction.from 
-        };
-
-    }catch(err){
-        return {
-            isValid : false
-        };
-    }
-}
-
-
-async function verifytransactionHashDirectDeposit(blockchain, transactionHash, amount, platformAddress, decimals){
-    try{
-
-        let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
-        let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
-        let blockNumber = await globals.web3.eth.getBlockNumber();
-        let confirmedCondition = () => ((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED);
-        if(!res_transaction_recipt || !res_transaction){throw new Error()}
-
-        while(confirmedCondition()){
-            await delay(2*1000);
-            /* Get Information of this transactionHash */
-            blockNumber = await globals.web3.eth.getBlockNumber();
-            res_transaction = await globals.web3.eth.getTransaction(transactionHash);
-            res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
-        }
-
-        if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
-        
-        let res_transaction_decoded = EtherscanSingleton.getTransactionDataERC20(res_transaction);
+                if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
+                let res_transaction_decoded = {
+                    from : res_transaction_recipt.from,
+                    tokensTransferedTo : res_transaction.to,
+                    status : res_transaction_recipt.status,
+                    blockHash : res_transaction.blockHash,
+                    amount : res_transaction.value
+                }
                 
-        /* Verify if receiver of Transaction is platformAddress */
-        if(new String(res_transaction_decoded.tokensTransferedTo).toLowerCase() != new String(platformAddress).toLowerCase()){
-            throw false;
+                /* Verify if receiver of Transaction is platformAddress */
+                if(new String(res_transaction_decoded.tokensTransferedTo).toLowerCase() != new String(platformAddress).toLowerCase()){
+                    throw false;
+                }
+
+                /* If confirmed it was mined and not reverted */
+                if(!res_transaction_recipt.status || !res_transaction.blockHash){
+                    throw false;
+                }
+                return {
+                    isValid : true,
+                    from :  res_transaction.from,
+                    amount : parseFloat(globals.web3.utils.fromWei(new String(res_transaction_decoded.amount).toString()))
+                };
+            }
+            /* If Other ERC-20 Token */
+            default : {
+                let res_transaction = await globals.web3.eth.getTransaction(transactionHash);
+                let res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
+                let blockNumber = await globals.web3.eth.getBlockNumber();
+                let confirmedCondition = () => ((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED);
+                if(!res_transaction_recipt || !res_transaction){throw new Error()}
+                while(confirmedCondition()){
+                    await delay(2*1000);
+                    /* Get Information of this transactionHash */
+                    blockNumber = await globals.web3.eth.getBlockNumber();
+                    res_transaction = await globals.web3.eth.getTransaction(transactionHash);
+                    res_transaction_recipt = await globals.web3.eth.getTransactionReceipt(transactionHash);
+                }
+
+                if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
+                
+                let res_transaction_decoded = EtherscanSingleton.getTransactionDataERC20(res_transaction);
+                /* Verify if receiver of Transaction is platformAddress */
+                if(new String(res_transaction_decoded.tokensTransferedTo).toLowerCase() != new String(platformAddress).toLowerCase()){
+                    throw false;
+                }
+
+                /* If confirmed it was mined and not reverted */
+                if(!res_transaction_recipt.status || !res_transaction.blockHash){
+                    throw false;
+                }
+                /* Verify if the Token Amount is the same */
+        
+                if(
+                    Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
+                    != Numbers.toSmartContractDecimals(new Number(amount), decimals)){
+                    throw new Error("Amount is Wrong");
+                }
+
+                return {
+                    isValid : true,
+                    from :  res_transaction.from,
+                    amount : Numbers.fromDecimals(Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)), decimals)
+                };
+            }
         }
-
-        /* If confirmed it was mined and not reverted */
-        if(!res_transaction_recipt.status || !res_transaction.blockHash){
-            throw false;
-        }
-        /* Verify if the Token Amount is the same */
- 
-        if(
-            Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
-            != Numbers.toSmartContractDecimals(new Number(amount), decimals)){
-            throw new Error("Amount is Wrong");
-        }
-
-        /* Verify if Transaction was Succeded */
-        // TO DO 
-
-        return {
-            isValid : true,
-            from :  res_transaction.from,
-            amount : Numbers.fromDecimals(Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)), decimals)
-        };
-
     }catch(err){
+        console.log(err)
         return {
             isValid : false
         };
@@ -251,12 +170,9 @@ function generateRandomID(){
 export {
     services,
     generateRandomID,
-    verifytransactionHashDepositUser,
     getServices,
     verifytransactionHashDirectDeposit,
     fromDecimals,
-    verifytransactionHashWithdrawApp,
     fromExponential,
-    verifytransactionHashWithdrawUser,
     fromBigNumberToInteger
 }

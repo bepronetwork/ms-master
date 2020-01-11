@@ -4,7 +4,7 @@ import { throwError } from '../../../controllers/Errors/ErrorManager';
 import axios from 'axios';
 import delay from 'delay';
 
-const PIPELINE_ID = '7f30e3e7-f914-4977-8de8-6bb773f5da35';
+const PIPELINE_ID = '5e68b1f9-557a-4272-8f4f-a0836c7e1437';
 const STACK_ID = "heroku-18";
 const REGION_ID = "us";
 const TEAM = '333c131b-8367-4e04-9ff2-36fe2c6e337a';
@@ -26,6 +26,10 @@ class HerokuClient{
 
     async deleteApp({app}){
         return await heroku.delete(`/apps/${app}`).catch( (err) => {throw err});
+    }
+
+    async getAppPipelineDev(){
+        return await heroku.get(`/pipelines/${PIPELINE_ID}/pipeline-couplings`);
     }
 
     async setupClientPlatform({id, name}){    

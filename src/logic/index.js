@@ -25,8 +25,10 @@ import LogoLogic from './logo';
 import ColorLogic from './color';
 import LinkLogic from './link';
 import FooterLogic from './footer';
+import CurrencyLogic from './currency';
 
 export {
+    CurrencyLogic,
     UserLogic,
     TopBarLogic,
     LinkLogic,

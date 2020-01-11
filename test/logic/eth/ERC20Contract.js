@@ -66,14 +66,14 @@ class ERC20TokenContract{
         return options.token_amount;
     }
 
-    async transferTokenAmount({fromAccount, toAddress, tokenAmount, decimals}){
+    async transferTokenAmount({fromAccount, toAddress, tokenAmount, decimals, options, callback}){
         try{
             let amountWithDecimals = Numbers.toSmartContractDecimals(tokenAmount, decimals);
             let data = self.contract.getContract().methods.transfer(
                 toAddress,
                 amountWithDecimals
             ).encodeABI(); 
-            let res = await self.contract.send(fromAccount.getAccount(), data);  
+            let res = await self.contract.send(fromAccount.getAccount(), data, null , options, callback);  
             return res;
         }catch(err){
             throw err;

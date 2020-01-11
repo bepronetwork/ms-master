@@ -19,8 +19,10 @@ import { LogoSchema }  from './customization/logo';
 import { ColorSchema }  from './customization/color';
 import { LinkSchema } from './customization/link';
 import { FooterSchema } from './customization/footer';
+import { CurrencySchema } from './currency';
 
 export {
+    CurrencySchema,
     UserSchema,
     LinkSchema,
     TopBarSchema,
