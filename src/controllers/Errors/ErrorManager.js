@@ -19,23 +19,29 @@ class ErrorManager {
             switch(type){
                 case 'Login' : {  
                     // Verify object (Syntax Error)
-                    if(typeof object == 'undefined' || Object.is(object, null))
+                    if(typeof object == 'undefined' || Object.is(object, null)){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                    }
     
                     // Verify User
-                    if(typeof object.username == 'undefined' || Object.is(object.username, null))
+                    if(typeof object.username == 'undefined' || Object.is(object.username, null)){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                    }
     
                     // Verify User is in App
-                    if(!object.user_in_app)
+                    if(!object.user_in_app){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
+                    }
+                 
+                    // Verify Password
+                    if(!Object.is(object.verifiedAccount, Boolean) && object.verifiedAccount !== true){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_PASSWORD)); break;
+                    }
+
                     // is 2FA Setup
                     if(object.has2FASet){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_HAS_2FA)); break;
                     }
-                    // Verify Password
-                    if(!Object.is(object.verifiedAccount, Boolean) && object.verifiedAccount !== true)
-                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WRONG_PASSWORD));
                     break;
                 };
                 case 'Auth' : {
@@ -87,18 +93,12 @@ class ErrorManager {
                     // Verify User is Already Existent
                     if(object.alreadyExists)
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_USER));
-                    //Verify User Address
-                    if(object.isAddressAlreadyRegistered)
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_ADDRESS_IS_NOT_VALID));
                     break;
                 };
                 case 'UpdateWallet': {
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null))
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
-                    // Verify if Address of User is the Same as the Deposit one
-                    if(!object.isValidAddress)
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_ADDRESS_IS_NOT_VALID));
                     // Verify User is in App
                     if(!object.user_in_app)
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
@@ -229,6 +229,27 @@ class ErrorManager {
                     }
                     break;
                 };
+
+                case 'AddCurrencyWallet' : {
+                    // TO DO : Better Error Management
+                    // Verify App
+                    if(typeof object == 'undefined' || Object.is(object, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
+                    }
+                    // Verify Bank_address
+                    if(typeof object.bank_address == 'undefined' || Object.is(object.bank_address, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
+                    }
+                    //Verify Currency exists 
+                    if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
+                    }
+                    if(object.app.wallet.find( w => new String(w.currency._id).toLowerCase() == new String(object.currency._id).toLowerCase()))
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.CURRENCY_ALREADY_EXISTENT)); break;
+                    
+                    break;
+                };
+
                 case 'EditGameTableLimit' : {
                     // Verify App
                     if(typeof object == 'undefined' || Object.is(object, null))
@@ -462,7 +483,7 @@ class ErrorManager {
             throw err
         }
     }
-
+    
     affiliate = function (object, type){
         try{
             switch(type){
@@ -481,6 +502,15 @@ class ErrorManager {
             switch(type){
                
             }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    currency = function (object, type){
+        try{
+          
         }catch(err){
             throw err
         }
@@ -609,8 +639,8 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
                         break;
                     }
-                    /* Verify if betAmount is less or equal than 0.01 */
-                    if(bet.betAmount < 0.01){
+                    /* Verify if betAmount is less or equal than 0.0000001 */
+                    if(bet.betAmount <= 0){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
@@ -643,8 +673,6 @@ class ErrorManager {
                     if(parseFloat(bet.possibleWinAmount) > parseFloat(bet.tableLimit)){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.TABLE_LIMIT_SUPRASSED));                
                     }
-                    if(bet.isUserWithdrawingAPI || bet.isAppWithdrawingAPI)
-                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WITHDRAW_IN_PLACE));
                     /* Verify if Affiliate Return is higher than total Bet Amount Lost Amount */
                     if(bet.totalAffiliateReturn > bet.betAmount){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));

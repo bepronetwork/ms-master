@@ -16,14 +16,15 @@ import {
     SecurityRepository
 } from '../db/repos';
 import Numbers from './services/numbers';
-import { verifytransactionHashDepositUser, verifytransactionHashWithdrawUser, verifytransactionHashDirectDeposit } from './services/services';
-import { Deposit, Withdraw, AffiliateLink } from '../models';
+import { verifytransactionHashDirectDeposit } from './services/services';
+import { Deposit, Withdraw, AffiliateLink, Wallet } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import codes from './categories/codes';
 import { globals } from '../Globals';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
+import { fromPeriodicityToDates } from './utils/date';
 let error = new ErrorManager();
 
 
@@ -160,18 +161,12 @@ const processActions = {
             user = await UsersRepository.prototype.findUser(input_params.username);
         }
 
-        let isAddressAlreadyRegistered = (await UsersRepository.prototype.findUserByAddress({
-            address : params.address,
-            app     : params.app
-        })) ? true : false;
-
         let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if(params.password)
 		    hash_password = new Security(params.password).hash();
 
 		let normalized = {
-            isAddressAlreadyRegistered,
 			alreadyExists	: alreadyExists,
 			username 		: params.username,
             full_name		: params.full_name,
@@ -179,21 +174,21 @@ const processActions = {
             name 			: params.name,
             address         : params.address,
 			hash_password,
-            wallet 			: params.wallet,
             register_timestamp : new Date(),
 			nationality		: params.nationality,
             age				: params.age,
             security        : params.security,
             email			: params.email,
             affiliateLink,
-			app_id			: params.app,
+            app			: app,
+            app_id      : app.id,
 			external_user	: params.user_external_id ? true : false,
 			external_id		: params.user_external_id
         }
 		return normalized;
 	},
 	__summary : async (params) => {
-		let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user)
+		let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user, params.opts);
 		let normalized = {
 			...res
 		}
@@ -201,7 +196,7 @@ const processActions = {
     },
     __updateWallet : async (params) => {
         try{
-
+            const { currency } = params;
             if(params.amount <= 0){throwError('INVALID_AMOUNT')}
 
             /* Get User Id */
@@ -209,43 +204,28 @@ const processActions = {
             let app = await AppRepository.prototype.findAppById(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
+            const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
             /* Verify if the transactionHash was created */
-            let { isValid, from, amount } = await verifytransactionHashDepositUser(
-                app.blockchain, params.transactionHash, 
-                app.platformAddress , app.decimals)
-
-            /* Verify if the transactionHash was created */
-            let deposit_data = await verifytransactionHashDirectDeposit(
-            app.blockchain, params.transactionHash, params.amount, 
-            app.platformAddress , app.decimals);
-
-            let isDirectDeposit = deposit_data.isValid;
-
-            if(isDirectDeposit){
-                amount = deposit_data.amount;
-                isValid = deposit_data.isValid;
-                from = deposit_data.from;
-            }else{
-                // Nothing
-            }
+            let { amount, isValid, from } = await verifytransactionHashDirectDeposit(
+                new String(wallet.currency.ticker).toLowerCase(), params.transactionHash, params.amount, 
+                appWallet.bank_address, appWallet.currency.decimals);
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
             let wasAlreadyAdded = deposit ? true : false;
-
-            /* Verify if User Address is Valid */
-            let isValidAddress = (new String(user.address).toLowerCase() == new String(from).toLowerCase());
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
 
             let res = {
-                isValidAddress,
                 app,
                 user_in_app,
+                user                : user,
                 wasAlreadyAdded,
                 user_id             : user._id,
-                wallet              : user.wallet._id,
+                wallet              : wallet,
                 creationDate        : new Date(),
                 transactionHash     : params.transactionHash,
                 from                : from,
@@ -269,7 +249,9 @@ const processActions = {
     __getBets : async (params) => {
         let bets = await UsersRepository.prototype.getBets({
             id : params.user,
-            size : params.size
+            size : params.size,
+            currency : params.currency,
+            dates : fromPeriodicityToDates({periodicity : params.periodicity})
         });
 		return bets;
     },
@@ -327,12 +309,21 @@ const progressActions = {
     },
 	__register : async (params) => {
         try{
-            const { affiliate } = params;
+            const { affiliate, app } = params;
+
+            /* Register of Available Wallets on App */
+            params.wallet = await Promise.all(app.wallet.map( async w => {
+                return (await (new Wallet({
+                    currency : w.currency
+                })).register())._doc._id;
+            }))
+
             let user = await self.save(params);
+
             /* Register of Affiliate Link */
             let affiliateLinkObject = await (new AffiliateLink({
                 userAffiliated : user._id,
-                app_id : params.app_id,
+                app_id : params.app.id,
                 affiliateLink : params.affiliateLink
             })).register();
             
@@ -344,8 +335,9 @@ const progressActions = {
             let promisesId = affiliateLinkObject.parentAffiliatedLinks.map( async paf => 
                 await AffiliateRepository.prototype.addAffiliateLinkChild(paf.affiliate, affiliateLinkObject._id)    
             )
-
             await Promise.all(promisesId);
+
+            
             /* Add to App */
             await AppRepository.prototype.addUser(params.app_id, user);
             user = await UsersRepository.prototype.findUserById(user._id);
@@ -355,18 +347,27 @@ const progressActions = {
         }
 	},
 	__summary : async (params) => {
-		return params;
+        let normalized = {
+            type : new String(params.type).toLowerCase().trim(),
+            user : new String(params.app).trim(),
+            opts : {
+                dates : fromPeriodicityToDates({periodicity : params.periodicity}),
+                currency : params.currency
+                // Add more here if needed
+            }
+        }
+		return normalized;
     },
     __updateWallet : async (params) => {
         try{
             /* Create Deposit Object */
             let deposit = new Deposit({
-                user                    : params.user,
+                user                    : params.user_id,
                 transactionHash         : params.transactionHash,
                 creation_timestamp      : params.creationDate,                    
                 last_update_timestamp   : params.creationDate,                             
                 address                 : params.from,                         // Deposit Address 
-                currency                : params.currencyTicker,
+                currency                : params.wallet.currency._id,
                 amount                  : params.amount,
             })
 

@@ -47,7 +47,7 @@ class GamesRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.findByIdAndUpdate(
                 id, 
-                { $set: { "tableLimit" : Numbers.toFloat(tableLimit) } },
+                { $set: { "tableLimit" : parseFloat(tableLimit) } },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){reject(err)}
@@ -75,7 +75,7 @@ class GamesRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.findByIdAndUpdate(
                 id, 
-                { $set: { "edge" : Numbers.toFloat(edge) } },
+                { $set: { "edge" : parseFloat(edge) } },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){reject(err)}

@@ -25,11 +25,13 @@ import Logo from './logo';
 import Footer from './footer';
 import Link from './link';
 import Typography from './typography';
+import Currency from './currency';
 
 export {
     User,
     Link,
     Color,
+    Currency,
     Footer,
     Logo,
     Chat,

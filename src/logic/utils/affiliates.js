@@ -1,5 +1,5 @@
 
-export function getAffiliatesReturn({affiliateLink, lostAmount}){
+export function getAffiliatesReturn({affiliateLink, lostAmount, currency}){
     const { parentAffiliatedLinks } = affiliateLink;
     
     /* Get indirect values for parent affiliate */ 
@@ -8,9 +8,12 @@ export function getAffiliatesReturn({affiliateLink, lostAmount}){
 
         if(!isActive){ return null }
         if(!percentageOnLoss || (percentageOnLoss <= 0) || percentageOnLoss >= 1){return null}
+
+        const parentAffiliateWalletId = parentAffiliatedLink.affiliate.wallet.find( w => new String(w.currency).toString() == new String(currency).toString());
+
         return {
             amount                      : parseFloat(lostAmount*percentageOnLoss),
-            parentAffiliateWalletId     : parentAffiliatedLink.affiliate.wallet._id
+            parentAffiliateWalletId     : parentAffiliateWalletId._id
         }
 
     }).filter(el => el != null)

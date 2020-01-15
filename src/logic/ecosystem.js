@@ -3,7 +3,7 @@
 
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
-import { TokensRepository, BlockchainsRepository, AuthorizedsRepository } from '../db/repos';
+import { BlockchainsRepository, AuthorizedsRepository, CurrencyRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 let error = new ErrorManager();
@@ -32,7 +32,7 @@ const processActions = {
     __getEcosystemData : async () => {
 
         // Get Currencies
-        let currencies = await TokensRepository.prototype.getAll();
+        let currencies = await CurrencyRepository.prototype.getAll();
         // Get Blockchains
         let blockchains = await BlockchainsRepository.prototype.getAll();
         // Get Address Authorized

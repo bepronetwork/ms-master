@@ -3,6 +3,8 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
+import { AppRepository } from '../db/repos';
+import { Wallet } from '../models';
 let error = new ErrorManager();
 
 
@@ -25,7 +27,16 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { wallet } = params;
+        var { app } = params;
+
+        app = await AppRepository.prototype.findAppById(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        /* Register of Available Wallets on App */
+        const wallet = await Promise.all(app.wallet.map( async w => {
+            return (await (new Wallet({
+                currency : w.currency
+            })).register())._doc._id;
+        }))
 
 		return {
             wallet

@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import CasinoContract from "./logic/eth/CasinoContract";
 import interfaces from "./logic/eth/interfaces";
 import ERC20TokenContract from "./logic/eth/ERC20Contract";
+import CasinoContractETH from './logic/eth/CasinoContractETH';
 
 let ETH_NETWORK = __config.default.eth.network;
 
@@ -20,12 +21,21 @@ class GlobalsTest{
         this.web3 = new Web3(new Web3.providers.HttpProvider(constants.eth_url));
     }
 
-    getCasinoContract(address, tokenAddress){
+    getCasinoContract(address, tokenAddress, eth_account){
         return new CasinoContract({
             web3 : this.web3,
             contractDeployed : constants.casino,
-            erc20TokenContract : tokenAddress,
+            account : eth_account,
+            erc20TokenContract : this.getERC20Contract(tokenAddress),
             contractAddress : address
+        })
+    }
+
+    getCasinoETHContract(address, eth_account){
+        return new CasinoContractETH({
+            web3 : this.web3,
+            contractAddress : address,
+            account : eth_account
         })
     }
 

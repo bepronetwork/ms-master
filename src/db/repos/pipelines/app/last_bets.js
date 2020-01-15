@@ -91,6 +91,7 @@ const pipeline_last_bets = (_id) =>
             'betAmount': '$bet.betAmount', 
             'timestamp': '$bet.timestamp', 
             'isWon': '$bet.isWon', 
+            'currency' : '$bet.currency',
             'winAmount': '$bet.winAmount', 
             'username': '$user.username', 
             'game': '$game.name'

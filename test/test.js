@@ -11,6 +11,7 @@ import Numbers from './logic/services/numbers';
 import { HerokuClientSingleton } from '../src/logic/third-parties';
 import { getAppAuth } from './methods'; 
 import { get_app } from './models/apps';
+import { getEcosystemCasinoGames } from './methods';
 
 const testConfig = require('./config/config').default;
 const expect = chai.expect;
@@ -100,9 +101,9 @@ const runTests = async () => {
     await ( async () => {
         /* SETUP TEST */
         context('Setup Ecosystem of the Test', async () =>  {
+            
             it('🍳(setup)🍳', mochaAsync(async () => {
                 try{    
-                    
                     let USER_ETH_AMOUNT = await global.userAccount.getBalance();
                     let APP_ETH_AMOUNT = await global.ownerAccount.getBalance();
                     let MASTER_ETH_AMOUNT = await global.masterAccount.getBalance();
@@ -147,14 +148,12 @@ const runTests = async () => {
         });
     })();
 
-    mocha.addFile('./test/tests/AppTest.js');
+    mocha.addFile('./test/tests/ecosystem');
+    mocha.addFile('./test/tests/admin');
     mocha.addFile('./test/tests/app');
-    mocha.addFile('./test/tests/AffiliatesTest.js');
-    mocha.addFile('./test/tests/FunctionalTest.js');
-    mocha.addFile('./test/tests/EcosystemTest.js');
-    mocha.addFile('./test/tests/AdminTest.js');
-    mocha.addFile('./test/tests/BetTest.js');
     mocha.addFile('./test/tests/user');
+    //mocha.addFile('./test/tests/AffiliatesTest.js');
+    //mocha.addFile('./test/tests/FunctionalTest.js');
     
     mocha
     .timeout(1000*60*1000)
@@ -162,26 +161,58 @@ const runTests = async () => {
     .on('fail', function(test, err) {
         console.log(err);
         console.log('Test fail');
+        afterTests();
         process.exit(1);
     })
     .on('end', async () =>  {
-        console.log('All done');
+        console.log("All tests done with Succeess")
+        afterTests();
+        process.exit(0)
+    });
+};
+
+
+const afterTests = async () => {
+    try{
+        console.log('Running After Tests Scripts..');
         const app = global.test.app;
         let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
         const { hosting_id } = res_app.data.message;
         /* Remove App from Heroku because it compounds $$ */
         let res = await HerokuClientSingleton.deleteApp({app : hosting_id})
-        expect(res).to.not.be.null;
-        process.exit(0)
-    });
-};
+        console.log('\nAfter Tests Run!');
+    }catch(err){
+        console.log(err)
+    }
+}
+
+const beforeTests = async () => {
+    try{
+        console.log("Running Before Tests Scripts...")
+        /* Remove all current Heroku Instances in dev */
+        // WARNING!! DO NEVER CHANGE THE LINE BELOW, it is only removing the developments instances, not production ones
+        let app_ids = (await HerokuClientSingleton.getAppPipelineDev()).filter( i => i.stage == 'staging');
+        console.log(`Removing ${app_ids.length} redundant test hosting apps from HEROKU...`)
+        for(var i = 0; i < app_ids.length; i++){
+            let app = app_ids[i].app;
+            await HerokuClientSingleton.deleteApp({app : app.id});
+        }
+        console.log(`Done!`)
+    }catch(err){
+        console.log(err)
+    }
+}
 
 const test = async () => {
     describe('BetProtocol-API', async () => {
         before(done => {
             describe('tests', async () => {
                 // Wait for all Connection on App to bet set
-                await delay(5*1000);
+                await beforeTests();
+                await delay(5*1000);                    
+                let res = await getEcosystemCasinoGames();
+                global.test.ECOSYSTEM_GAMES = res.data.message;
+                
                 await runTests();
                 done()
             })

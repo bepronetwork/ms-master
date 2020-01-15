@@ -22,7 +22,6 @@ class App extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Wallet(params),
                     new AffiliateSetup({...params, 
                         structures : [
                             {
@@ -169,20 +168,19 @@ class App extends ModelComponent{
         }
     }
 
-
-    /**
+     /**
      * @param {String} 
      * @return {bool || Exception}  
      */
 
-    async addBlockchainInformation(){
+    async addCurrencyWallet(){
         try{
-            let app = await this.process('AddBlockchainInformation');
-            return MapperAddBlockchainSingleton.output('AddBlockchain', app);
+            return await this.process('AddCurrencyWallet');
         }catch(err){
             throw err;
         }
     }
+
     
      /**
      * @param {String} 

@@ -20,8 +20,10 @@ import { ColorSchema }  from './customization/color';
 import { LinkSchema } from './customization/link';
 import { FooterSchema } from './customization/footer';
 import { TypographySchema } from './typography';
+import { CurrencySchema } from './currency';
 
 export {
+    CurrencySchema,
     UserSchema,
     LinkSchema,
     TopBarSchema,

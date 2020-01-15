@@ -80,6 +80,7 @@ const pipeline_biggest_user_winners = (_id) =>
         '$project': {
             '_id': '$bet._id', 
             'betAmount': '$bet.betAmount', 
+            'currency' : '$bet.currency',
             'timestamp': '$bet.timestamp', 
             'isWon': '$bet.isWon', 
             'winAmount': '$bet.winAmount', 

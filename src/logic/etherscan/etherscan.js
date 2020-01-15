@@ -1,4 +1,4 @@
-import { casino, ierc20 } from '../eth/interfaces/index';
+import { casino, ierc20, casinoETH } from '../eth/interfaces/index';
 
 const abiDecoder = require('abi-decoder'); // NodeJS
 
@@ -8,6 +8,8 @@ class Etherscan{
     constructor(){
         this.abiDecoder = abiDecoder;
         this.abiDecoder.addABI(casino.abi);
+        this.abiDecoderETH = abiDecoder;
+        this.abiDecoderETH.addABI(casinoETH.abi);
         this.abiDecoderERC20 = abiDecoder;
         this.abiDecoderERC20.addABI(ierc20.abi);
     }
@@ -48,6 +50,25 @@ class Etherscan{
         }
 
         return res;   
+    }
+
+    getTransactionData = (transaction_data_encoded) => {
+        const input = transaction_data_encoded.input;
+        const decodedInput = this.abiDecoderETH.decodeMethod(input);
+        const functionName = decodedInput.name;
+        const functionParams = decodedInput.params;
+        let tokensTransferedTo = functionParams[0].value;
+      
+        /* Response Object */
+        let res = {
+            tokensTransferedTo : tokensTransferedTo,
+            functionName : functionName,
+            from : transaction_data_encoded.from,
+            tokenAmount : functionParams[1].value
+        }
+
+        return res;
+        
     }
 
     getTransactionDataERC20 = (transaction_data_encoded) => {

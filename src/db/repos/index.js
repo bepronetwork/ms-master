@@ -12,7 +12,6 @@ import WithdrawRepository from './withdraw';
 import BetResultSpacesRepository from './betResultSpace';
 import AuthorizedsRepository from './ecosystem/authorized';
 import BlockchainsRepository from './ecosystem/blockchain';
-import TokensRepository from './ecosystem/token';
 import SecurityRepository from './security';
 import ResultSpaceEcoRepository from './ecosystem/resultSpace';
 import AffiliateRepository from './affiliate';
@@ -29,10 +28,12 @@ import ColorRepository from './color';
 import LinkRepository from './link';
 import FooterRepository from './footer';
 import TypographyRepository from './typography';
+import CurrencyRepository from './currency';
 
 export{
     ChatRepository,
     FooterRepository,
+    CurrencyRepository,
     TopBarRepository,
     LinkRepository,
     ColorRepository,
@@ -47,7 +48,6 @@ export{
     UsersRepository,
     SecurityRepository,
     AppRepository,
-    TokensRepository,
     ResultSpaceEcoRepository,
     BlockchainsRepository,
     AuthorizedsRepository,
