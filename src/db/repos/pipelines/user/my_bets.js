@@ -30,11 +30,11 @@ const pipeline_my_bets = (_id, { currency, dates}) =>
           }
         }
     },
-        ...pipeline_bets_by_currency({currency}) 
-        ,
-        ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to})    
-        ,
-    ,{
+    ...pipeline_bets_by_currency({currency}) 
+    ,
+    ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to})    
+    ,
+    {
         '$lookup': {
         'from': 'games', 
         'localField': 'bet.game', 
