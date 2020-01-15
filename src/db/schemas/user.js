@@ -10,7 +10,6 @@ UserSchema.prototype.schema = {
     username            : { type: String, required : true},
     name                : { type: String, required : true},
     full_name           : { type: String},
-    address             : { type : String, required : true },
     nationality         : { type: String},
     age                 : { type: Number},
     email               : { type: String, required : true},

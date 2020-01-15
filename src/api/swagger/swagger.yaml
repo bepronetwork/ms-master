@@ -1373,7 +1373,6 @@ definitions:
       - username
       - name             
       - email
-      - address 
       - app       
     properties:
       username:
@@ -1407,12 +1406,6 @@ definitions:
         minLength: 1
         description: |
           App Id
-      address:
-        type : string
-        example: 0x98g2giqehr9vn8342
-        minLength: 1
-        description: |
-          User Address
   UserInfoGetRequest : 
     type: object
     required:
@@ -1895,11 +1888,6 @@ definitions:
         example: "Bet.pt"
         description: |
           App Name
-      address:
-        type : string
-        example: "0x239847523487rehweiru"
-        description: |
-          App Address Management 
       description :
         type : string
         format: description

@@ -95,7 +95,8 @@ module.exports = {
     },
     async registerApp(params) {
         return request(global.server)
-        .post('/api/app/create').send(params)
+        .post('/api/app/create')
+        .send(params)
         .then(res => detectServerError(res))
         
     },
@@ -112,7 +113,6 @@ module.exports = {
         .set("authorization", "Bearer " + bearerToken).set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async getUserAuth(params, bearerToken, payload) {
         return request(global.server)
@@ -484,28 +484,6 @@ module.exports = {
 
             /* Deposit Tokens Directly */
             return await casinoContract.sendTokensToCasinoContract(amountWithDecimals);
-
-        }catch(err){
-            throw err;
-        }
-    },
-    async withdrawApp({amount, platformAddress, tokenAddress,acc=null}){
-        try{
-            let erc20Contract = globalsTest.getERC20Contract(tokenAddress);
-
-            let casinoContract = new CasinoContract({
-                web3 : global.web3,
-                account : acc ? acc : global.ownerAccount,
-                erc20TokenContract : erc20Contract,
-                contractAddress: platformAddress,
-                decimals: 18
-            })
-           
-            /* Deposit Tokens */
-            return await casinoContract.withdrawApp({
-                amount,
-                receiverAddress : global.ownerAccount.getAddress()
-            });
 
         }catch(err){
             throw err;

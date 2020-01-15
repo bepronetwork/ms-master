@@ -385,7 +385,6 @@ class AppRepository extends MongoComponent{
          * @input Type
          * @output Pipeline
          */
-
         switch (type){
             case 'users' : pipeline = pipeline_user_stats; break;
             case 'games' : pipeline = pipeline_game_stats; break;

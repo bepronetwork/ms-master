@@ -1,8 +1,13 @@
 import {
     getApp,
     authAdmin,
-    getAppAuth
-} from '../../../methods';
+    getAppAuth,
+    getAppSummary,
+    getAppLastBets,
+    getAppUsers,
+    getAppBiggestBetWinners,
+    getAppBiggestUserWinners,
+    getAppPopularNumbers} from '../../../methods';
 
 import chai from 'chai';
 import models from '../../../models';
@@ -28,20 +33,12 @@ import {
 } from '../../output/AppTestMethod';
 import { mochaAsync } from '../../../utils';
 
-import {
-    getAppAuth,
-    getAppSummary,
-    getAppLastBets,
-    getAppUsers,
-    getAppBiggestBetWinners,
-    getAppBiggestUserWinners,
-    getAppPopularNumbers
-
-} from '../../../methods';
 import { getUserInfo } from '../../../services';
 
 const expect = chai.expect;
 const ticker = 'dai'
+
+
 context('App Data', async () =>  {
     var admin, app, currency;
 
@@ -67,31 +64,31 @@ context('App Data', async () =>  {
 
 
     it('GET USERS DATA - should forbid the access', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'USERS', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'USERS', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model);
         GETUSERSDATAShouldForbidTheAccess(res.data, expect);
     })); 
 
     it('GET REVENUE DATA - should forbid the access ', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'REVENUE', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'REVENUE', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model);
         GETREVENUEDATAShouldForbidTheAccess(res.data, expect);
     })); 
 
     it('GET GAMES DATA - should forbid the access ', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'GAMES', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'GAMES', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model);
         GETGAMESDATAShouldForbidTheAccess(res.data, expect);
     })); 
 
     it('GET BEST DATA - should forbid the access ', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'BETS', 'weekly');
+        let users_call_model = models.apps.get_summary(app.id, 'BETS', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model);
         GETBESTDATAShouldForbidTheAccess(res.data, expect);
     })); 
 
     it('GET WALLET DATA - should forbid the access ', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'WALLET');
+        let users_call_model = models.apps.get_summary(app.id, 'WALLET', 'weekly',currency._id);
         let res = await getAppSummary(users_call_model);
         GETWALLETDATAShouldForbidTheAccess(res.data, expect);
     })); 
@@ -99,7 +96,8 @@ context('App Data', async () =>  {
     
     it('GET users - should allow', mochaAsync(async () => {
         let postData = {
-            app : app.id
+            app : app.id,
+            currency : currency._id
         };
         let res = await getAppUsers(postData, app.bearerToken, {id : app.id});
         GETUsersShouldAllow(res.data, expect);
@@ -108,7 +106,8 @@ context('App Data', async () =>  {
     it('GET last Bets - should allow', mochaAsync(async () => {
         let postData = {
             app : app.id,
-            size : 30
+            size : 30,
+            currency : currency._id
         };
         let res = await getAppLastBets(postData);
         GETLastBetsShouldAllow(res.data, expect);
@@ -117,7 +116,8 @@ context('App Data', async () =>  {
     it('GET Biggest Bet Winners - should allow', mochaAsync(async () => {
         let postData = {
             app : app.id,
-            size : 30
+            size : 30,
+            currency : currency._id
         };
         let res = await getAppBiggestBetWinners(postData);
         GETBiggestBetWinnersShouldAllow(res.data, expect);
@@ -126,7 +126,8 @@ context('App Data', async () =>  {
     it('GET Biggest User Winners - should allow', mochaAsync(async () => {
         let postData = {
             app : app.id,
-            size : 30
+            size : 30,
+            currency : currency._id
         };
         let res = await getAppBiggestUserWinners(postData);
         GETBiggestUserWinnersShouldAllow(res.data, expect);
@@ -147,7 +148,7 @@ context('App Data', async () =>  {
     })); 
 
     it('GET REVENUE DATA - should allow', mochaAsync(async () => {
-        let users_call_model = models.apps.get_summary(app.id, 'REVENUE', null, currency._id);
+        let users_call_model = models.apps.get_summary(app.id, 'REVENUE', 'weekly', currency._id);
         let res = await getAppSummary(users_call_model, app.bearerToken, {id : app.id});
         GETREVENUEDATAShouldAllow(res.data, expect);
     })); 

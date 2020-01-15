@@ -88,6 +88,7 @@ async function verifytransactionHashDirectDeposit(currency, transactionHash, amo
                 }
 
                 if((blockNumber - res_transaction_recipt.blockNumber) < CONFIRMATION_NEEDED){throw new Error()}
+                
                 let res_transaction_decoded = {
                     from : res_transaction_recipt.from,
                     tokensTransferedTo : res_transaction.to,

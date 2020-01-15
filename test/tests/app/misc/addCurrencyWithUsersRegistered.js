@@ -7,7 +7,7 @@ import models from '../../../models';
 const expect = chai.expect;
 
 context('Add Currency Wallet', async () => {
-    var app, ercTokenTicker = 'USDT';
+    var app, ercTokenTicker = 'DAI';
 
     before( async () =>  {
         app = global.test.app;

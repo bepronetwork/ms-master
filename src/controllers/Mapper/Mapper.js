@@ -43,11 +43,7 @@ let outputs = {
             "name"                  : object.name,
             "description"           : object.description,
             "isValid"               : object.isValid,
-            "currencyTicker"        : object.currencyTicker,
-            "decimals"              : object.decimals,
-            "platformAddress"       : object.platformAddress,
-            "platformBlockchain"    : object.platformBlockchain,
-            "platformTokenAddress"  : object.platformTokenAddress,
+            "currencies"            : object.wallet.map( w => { return {bank_address : w.bank_address, ...w.currency}}),
             "licensesId"            : object.licensesId,
             "customization"         : object.customization,
             "integrations"          : {

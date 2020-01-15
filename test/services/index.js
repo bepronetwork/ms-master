@@ -72,7 +72,6 @@ export async function getApp({app}){
 }
 
 export async function getUserInfo({user, app}){
-    console.log(user, app)
     return (await loginUser({
         username : user.username,
         password : user.password,
