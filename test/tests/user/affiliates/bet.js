@@ -7,7 +7,7 @@ import { provideFunds } from '../../../utils/env';
 const expect = chai.expect;
 const ticker = 'dai';
 const depositAmount = 1;
-const ethDepositAmount = 1;
+const ethDepositAmount = 0.1;
 const betAmount = 0.03;
 const metaName = 'linear_dice_simple';
 
@@ -43,15 +43,16 @@ context('Bet', async () => {
         var user_3_before_info = await getUserInfo({user : user_3.message, app});
         
         /* Get Info for User3 before Bet */
-        const user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
-        const user_2 = {...user_2_before_info, eth_account : user_2.eth_account};
-        const user_3 = {...user_3_before_info, eth_account : user_3.eth_account};
+        user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
+        user_2 = {...user_2_before_info, eth_account : user_2.eth_account};
+        user_3 = {...user_3_before_info, eth_account : user_3.eth_account};
 
         /* Get Info for App before Bet */
         const app_data_before = (await getApp({app})).data.message;
 
         /* Send Tokens to User */
         await provideFunds({account : user_3.eth_account, ethAmount : ethDepositAmount, tokenAmount : depositAmount, erc20Address : currency.address});
+
         /* Deposit for User */
         await createUserDeposit({user : user_3, tokenAmount : depositAmount, app : app, currency : currency, depositAddress : currencyWallet.bank_address});
 
@@ -178,9 +179,9 @@ context('Bet', async () => {
         var user_3_before_info = await getUserInfo({user : user_3.message, app});
 
         /* Get Info for User3 before Bet */
-        const user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
-        const user_2 = {...user_2_before_info, eth_account : user_2.eth_account};
-        const user_3 = {...user_3_before_info, eth_account : user_3.eth_account};
+        user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
+        user_2 = {...user_2_before_info, eth_account : user_2.eth_account};
+        user_3 = {...user_3_before_info, eth_account : user_3.eth_account};
 
         /* Get Info for App before Bet */
         const app_data_before = (await getApp({app})).data.message;

@@ -111,43 +111,8 @@ module.exports = {
         expect(data.message.customization.topBar).to.be.an('object');
         expect(data.message.customization.topBar).to.include({ isActive: data.message.customization.topBar.isActive, _id: data.message.customization.topBar._id });
         expect(data.message.customization.topBar.isActive).to.not.be.null;
-        expect(data.message.customization.topBar.isActive).to.be.false;
         expect(data.message.customization.topBar._id).to.not.be.null;
         expect(data.message.customization.topBar._id).to.be.an('string');
-        expect(data.message.customization.banners).to.not.be.null;
-        expect(data.message.customization.banners).to.be.an('object');
-        expect(data.message.customization.banners).to.include({ ids: data.message.customization.banners.ids, autoDisplay: data.message.customization.banners.autoDisplay, _id: data.message.customization.banners._id });
-        expect(data.message.customization.banners.ids).to.not.be.null;
-        expect(data.message.customization.banners.ids).to.be.an('array').that.is.empty;
-        expect(data.message.customization.banners.autoDisplay).to.not.be.null;
-        expect(data.message.customization.banners.autoDisplay).to.be.false;
-        expect(data.message.customization.banners._id).to.not.be.null;
-        expect(data.message.customization.banners._id).to.be.an('string');
-        expect(data.message.withdraws).to.not.be.null;
-        expect(data.message.withdraws).to.be.an('array').that.is.empty;
-        expect(data.message.deposits).to.not.be.null;
-        expect(data.message.deposits).to.be.an('array').that.is.empty;
-        expect(data.message.licensesId).to.not.be.null;
-        expect(data.message.licensesId).to.be.an('array').that.is.empty;
-        expect(data.message.countriesAvailable).to.not.be.null;
-        expect(data.message.countriesAvailable).to.be.an('array').that.is.empty;
-        expect(data.message.games).to.not.be.null;
-        expect(data.message.games).to.be.an('array').that.is.empty;
-        expect(data.message.affiliateSetup).to.not.be.null;
-        expect(data.message.affiliateSetup).to.be.an('object');
-        expect(data.message.affiliateSetup).to.include({ isActive: data.message.affiliateSetup.isActive, affiliateStructures: data.message.affiliateSetup.affiliateStructures, _id: data.message.affiliateSetup._id, });
-        expect(data.message.affiliateSetup.isActive).to.not.be.null;
-        expect(data.message.affiliateSetup.isActive).to.be.true;
-        expect(data.message.affiliateSetup.affiliateStructures).to.not.be.null;
-        expect(data.message.affiliateSetup.affiliateStructures).to.be.an('array');
-        expect(data.message.affiliateSetup.affiliateStructures.isActive).to.not.be.null;
-        expect(data.message.affiliateSetup.affiliateStructures._id).to.not.be.null;
-        expect(data.message.affiliateSetup.affiliateStructures.level).to.not.be.null;
-        expect(data.message.affiliateSetup.affiliateStructures.percentageOnLoss).to.not.be.null;
-        expect(data.message.affiliateSetup._id).to.not.be.null;
-        expect(data.message.affiliateSetup._id).to.be.an('String');
-        expect(data.message.wallet).to.not.be.null;
-        expect(data.message.wallet).to.be.an('array');
     },
     shouldGetAppData(data, expect) {
         expect(data.status).to.not.be.null;
@@ -162,43 +127,10 @@ module.exports = {
         expect(data.message.description).to.not.be.null;
         expect(data.message.description).to.be.an('string');
         expect(data.message.isValid).to.not.be.null;
-        expect(data.message.isValid).to.be.false;
         expect(data.message.licensesId).to.not.be.null;
         expect(data.message.licensesId).to.be.an('array').that.is.empty;
         expect(data.message.customization).to.not.be.null;
         expect(data.message.customization).to.be.an('object');
-        expect(data.message.customization).to.include({ _id: data.message.customization._id, topBar: data.message.customization.topBar, banners: data.message.customization.banners });
-        expect(data.message.customization._id).to.not.be.null;
-        expect(data.message.customization._id).to.be.an('string');
-        expect(data.message.customization.topBar).to.not.be.null;
-        expect(data.message.customization.topBar).to.be.an('object');
-        expect(data.message.customization.topBar).to.include({ isActive: data.message.customization.topBar.isActive, _id: data.message.customization.topBar._id });
-        expect(data.message.customization.topBar.isActive).to.not.be.null;
-        expect(data.message.customization.topBar.isActive).to.be.false;
-        expect(data.message.customization.topBar._id).to.not.be.null;
-        expect(data.message.customization.topBar._id).to.be.an('string');
-        expect(data.message.customization.banners).to.not.be.null;
-        expect(data.message.customization.banners).to.be.an('object');
-        expect(data.message.customization.banners).to.include({ ids: data.message.customization.banners.ids, autoDisplay: data.message.customization.banners.autoDisplay, _id: data.message.customization.banners._id });
-        expect(data.message.customization.banners.ids).to.not.be.null;
-        expect(data.message.customization.banners.ids).to.be.an('array').that.is.empty;
-        expect(data.message.customization.banners.autoDisplay).to.not.be.null;
-        expect(data.message.customization.banners.autoDisplay).to.be.false;
-        expect(data.message.customization.banners._id).to.not.be.null;
-        expect(data.message.customization.banners._id).to.be.an('string');
-        expect(data.message.integrations).to.not.be.null;
-        expect(data.message.integrations).to.be.an('object');
-        expect(data.message.integrations).to.include({ chat: data.message.integrations.chat });
-        expect(data.message.integrations.chat).to.not.be.null;
-        expect(data.message.integrations.chat).to.be.an('object');
-        expect(data.message.integrations.chat).to.include({ publicKey: data.message.integrations.chat.publicKey });
-        expect(data.message.integrations.chat.publicKey).to.not.be.null;
-        expect(data.message.integrations.chat.publicKey).to.be.an('string');
-        expect(data.message.countriesAvailable).to.not.be.null;
-        expect(data.message.countriesAvailable).to.be.an('array').that.is.empty;
-        expect(data.message.games).to.not.be.null;
-        expect(data.message.games).to.be.an('array').that.is.empty;
-        
     },
     shouldIntegrateServicesIntoApp(data, expect){
         expect(data.status).to.not.be.null;
@@ -878,7 +810,5 @@ module.exports = {
         expect(data.status).to.not.be.null;
         expect(data.status).to.equal(200);
         expect(data.message).to.not.be.null;
-        expect(data.message).to.be.an('object');
-        expect(data.message.playBalance).to.not.be.null;
     },
 }
