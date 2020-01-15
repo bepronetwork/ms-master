@@ -6,7 +6,7 @@ import { deploySmartContract, deploySmartContractETH } from '../../../utils/eth'
 const expect = chai.expect;
 
 context('Add Currency Wallet', async () => {
-    var app, ercTokenTicker = 'DAI';
+    var app, ercTokenTicker = 'sai';
 
     before( async () =>  {
         app = global.test.app;
