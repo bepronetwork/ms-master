@@ -56,6 +56,7 @@ class UsersRepository extends MongoComponent{
     }
 
     getBets({id, size=15, dates, currency}){ 
+        console.log("dates ", dates, curency);
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
