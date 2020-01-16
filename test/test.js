@@ -43,7 +43,7 @@ const CONST = {
         BET_AMOUNT : 0.05,
         WITHDRAW_AMOUNT : 2,
     },
-    currencyTicker : 'DAI',
+    currencyTicker : 'SAI',
     maxWithdrawal : 100,
     erc20Address : testConfig.eth.erc20Address,
     maxDeposit : 100,

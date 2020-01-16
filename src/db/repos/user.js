@@ -70,7 +70,20 @@ class UsersRepository extends MongoComponent{
             throw err;
         }
     }
-   
+
+    setEmptyWallet(user_id){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findByIdAndUpdate(
+                user_id, 
+                { $set: { "wallet" : [] } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
 
     findUser(username){
         return new Promise( (resolve, reject) => {

@@ -329,6 +329,20 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
+
+    setEmptyWallet(app_id){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findByIdAndUpdate(
+                app_id, 
+                { $set: { "wallet" : [] } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
   
     findUserByExternalId(app_id, user_external_id){
         try{

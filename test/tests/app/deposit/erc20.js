@@ -8,13 +8,14 @@ import models from '../../../models';
 import Numbers from '../../../logic/services/numbers';
 
 const expect = chai.expect;
-const erc20Ticker = 'DAI';
+const erc20Ticker = 'SAI';
 
 context(`ERC20 (${erc20Ticker})`, async () => {
     var app, currencyWallet, depositAmount, tx;
 
     before( async () =>  {
         app = (await getAppAuth(get_app(global.test.app.id), global.test.app.bearerToken, {id : global.test.app.id})).data.message;
+        console.log(app.wallet);
         currencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(erc20Ticker).toLowerCase());
         depositAmount = 20;
     });
