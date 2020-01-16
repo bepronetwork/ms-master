@@ -17,8 +17,8 @@ class AddSecurityToUsers{
             /* Add Affiliate Setup to Apps */
             var users_all = await UsersRepository.prototype.getAll();
             // start the progress bar with a total value of 200 and start value of 0
-            bar1.start(user_all.length, 0);
-            for( var i = 0; i < user_all.length; i++){
+            bar1.start(users_all.length, 0);
+            for( var i = 0; i < users_all.length; i++){
                 let user = users_all[i];
                 let security = new Security();
                 let res = await security.register();
