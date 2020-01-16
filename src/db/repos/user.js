@@ -176,6 +176,19 @@ class UsersRepository extends MongoComponent{
         });
     }
 
+    setSecurityId(user_id, securityId){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: user_id },
+                { $set: { "security": securityId } },
+                { 'new' : true })
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     async getAll(){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find().lean().populate(foreignKeys)

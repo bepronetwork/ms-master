@@ -8,21 +8,19 @@ class Security extends ModelComponent{
 
         let db = new SecurityRepository();
 
-        super(
-            {
+        super({
                 name : 'Security', 
                 logic : new SecurityLogic({db : db}), 
                 db : db,
                 self : null, 
                 params : params,
                 children : []
-            }
-            );
+        });
     }
 
     async register(){
         try{
-            await this.process('Register');
+           return await this.process('Register');
         }catch(err){
             throw err;
         }
