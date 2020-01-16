@@ -32,9 +32,9 @@ class ChangeWalletsForAppsUsersAndAffiliates{
             }
             bar1.stop();
 
+            var users_all = await UsersRepository.prototype.getAll();
             bar2.start(users_all.length, 0);
             /* Add Affiliate Setup to Apps */
-            var users_all = await UsersRepository.prototype.getAll();
             // start the progress bar with a total value of 200 and start value of 0
             for( var i = 0; i < users_all.length; i++){   
                 let user = users_all[i];
