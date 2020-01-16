@@ -209,6 +209,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
   /users/register:
     x-swagger-router-controller: user
     post:
@@ -239,6 +240,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /users/auth:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Login User
+      operationId: authUser
+      description: Login User Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AuthUserRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/login:
     x-swagger-router-controller: user
     post:
@@ -258,6 +289,66 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UserLoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/login/2fa:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Login User
+      operationId: loginUser2FA
+      description: Login User Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/User2FALoginRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/2fa/set:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Setup 2fa
+      operationId: setUser2FA
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/UserSet2FARequest'
       responses:
         "200":
           description: Success
@@ -410,6 +501,36 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AppSummaryRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/wallet/currency/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Currency Wallet
+      operationId: addCurrencyWallet
+      description: Add Currency Wallet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddCurrencyWallet'
       responses:
         "200":
           description: Success
@@ -1084,36 +1205,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/addBlockchainInformation:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Add Blockchain Information into the Setup
-      operationId: addBlockchainInformation
-      description: Add Blockchain Information into the Setup
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppBlockchainInformationRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /app/games/add:
     x-swagger-router-controller: app
     post:
@@ -1282,7 +1373,6 @@ definitions:
       - username
       - name             
       - email
-      - address 
       - app       
     properties:
       username:
@@ -1316,12 +1406,6 @@ definitions:
         minLength: 1
         description: |
           App Id
-      address:
-        type : string
-        example: 0x98g2giqehr9vn8342
-        minLength: 1
-        description: |
-          User Address
   UserInfoGetRequest : 
     type: object
     required:
@@ -1421,11 +1505,49 @@ definitions:
         example: 53vi230283vv234fg2v37243
         description: |
           Unique identifier of the App Id
+  UserSet2FARequest : 
+    type: object
+    required : 
+      - user
+      - 2fa_token
+      - 2fa_secret
+    properties:
+      user:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          User Id
+      2fa_token:
+        type : string
+        example: "765075"
+        minLength: 1
+        description: |
+          Token Prior to the set of 2FA
+      2fa_secret:
+        type : string
+        example: "XDQXYCP5AC6FA32FQXDGJSPBIDYNKK5W"
+        minLength: 1
+        description: |
+          Secret Token 2FA
+  User2FALoginRequest : 
+    type: object
+    required : 
+      - 2fa_token
+    properties:
+      2fa_token:
+        type : string
+        format: username
+        example: "765075"
+        minLength: 1
+        description: |
+          Token to Unlock Login Data
   UserSummaryRequest:
     type: object
     required:
       - type
       - user
+      - currency
     properties:
       type:
         type : string
@@ -1441,6 +1563,18 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+      periodicity :
+        type : string
+        format: name
+        example: "Weekly"
+        description: |
+          Periodicity of Data
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   AppGameEditEdge : 
     type: object
     required:
@@ -1465,6 +1599,30 @@ definitions:
         example: 3245
         description: |
           New Edge
+  AppAddCurrencyWallet : 
+    type: object
+    required:
+      - app
+      - bank_address
+      - currency_id
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      currency_id:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Currency id
+      bank_address:
+        type : string
+        example: 0x9898347569837456983
+        description: |
+          Bank Address for Platform Use and bank
   AppGameEditTableLimit : 
     type: object
     required:
@@ -1730,11 +1888,6 @@ definitions:
         example: "Bet.pt"
         description: |
           App Name
-      address:
-        type : string
-        example: "0x239847523487rehweiru"
-        description: |
-          App Address Management 
       description :
         type : string
         format: description
@@ -1866,6 +2019,7 @@ definitions:
       - app
       - amount
       - transactionHash
+      - currency
     properties:
       amount:
         type : number
@@ -1884,11 +2038,18 @@ definitions:
         example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
         description: |
           Transaction Hash
+      currency : 
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          Currency Type
   UserBetsRequest : 
     type: object
     required:
       - user
       - size
+      - currency
     properties:
       size:
         type : number
@@ -1901,6 +2062,18 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+      periodicity :
+        type : string
+        format: name
+        example: "Weekly"
+        description: |
+          Periodicity of Data
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   UpdateUserWalletRequest : 
     type: object
     required:
@@ -1908,6 +2081,7 @@ definitions:
       - amount
       - transactionHash
       - app
+      - currency
     properties:
       amount:
         type : number
@@ -1932,11 +2106,18 @@ definitions:
         example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
         description: |
           Transaction Hash
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   AppSummaryRequest:
     type: object
     required:
       - type
       - app
+      - currency
     properties:
       type:
         type : string
@@ -1958,6 +2139,12 @@ definitions:
         example: "Weekly"
         description: |
          Periodicity of Data
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   AppAddGameRequest : 
     type: object
     required:
@@ -1995,59 +2182,6 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
-  AppBlockchainInformationRequest : 
-    type: object
-    required:
-      - app
-    properties:
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      currencyTicker : 
-        type : string
-        example: "DAI"
-        description: |
-           Currency Ticker for the Address
-      platformAddress :
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Blockchain Address for the Platform 
-      platformTokenAddress :
-        type : string
-        example: "0xdf9ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Token Address for the Platform
-      platformBlockchain :
-        type : string
-        example: "eth"
-        description: |
-          Blockchain reduce name
-      decimals :
-        type : number
-        example: 18
-        description: |
-          Blockchain Contract Decimal Reading 
-      address :
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Address that will be used for deposit and withdrawals
-      croupierAddress : 
-        type : string
-        example: "0x539ac1406CDd80D1be443f61ba0acAA3da80027F"
-        description: |
-          Address that will be used for controlling the operator
-      authorizedAddresses : 
-        type : array
-        items : 
-          type : string
-          example: ["0x539ac1406CDd80D1be443f61ba0acAA3da80027F"]
-          description: |
-            Address that manages withdraws
   AuthAdminRequest : 
     type: object
     required:
@@ -2058,6 +2192,16 @@ definitions:
         example: "Aweruithwe4837592837"
         description: |
           Admin Id
+  AuthUserRequest : 
+    type: object
+    required:
+      - user
+    properties:
+      user:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          User Id
   GetGamesFromAppRequest : 
     type: object
     required:
@@ -2076,6 +2220,7 @@ definitions:
       - game
       - result
       - nonce
+      - currency
     properties:
       user:
         type : string
@@ -2095,6 +2240,12 @@ definitions:
         example: "we23v3934ng9341"
         description: |
           Game Id
+      currency :
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Currency Id
       nonce :
         type : number
         example: 3453456

@@ -100,6 +100,20 @@ async function addGame (req, res) {
         MiddlewareSingleton.respondError(res, err);
 	}
 }
+
+// JSON WebToken Security Functions
+async function addCurrencyWallet(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.addCurrencyWallet();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 // JSON WebToken Security Functions
 async function getGame (req, res) {
 	try{
@@ -236,20 +250,6 @@ async function getPopularNumbers (req, res) {
         MiddlewareSingleton.respondError(res, err);
 	}
 }
-
-async function addBlockchainInformation (req, res) {
-    try{
-        SecuritySingleton.verify({type : 'app', req});
-        let params = req.body;
-		let app = new App(params);
-        let data = await app.addBlockchainInformation();
-        MiddlewareSingleton.respond(res, data);
-	}catch(err){
-        MiddlewareSingleton.respondError(res, err);
-	}
-}
-
-
 
 async function editAffiliateStructure (req, res) {
     try{
@@ -396,7 +396,7 @@ export {
     getApp,
     editFooter,
     createGame,
-    addBlockchainInformation,
+    addCurrencyWallet,
     getPopularNumbers,
     getBiggestBetWinners,
     getBiggestUserWinners,

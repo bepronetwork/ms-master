@@ -68,7 +68,7 @@ class CasinoLogic{
      */
 
     getRealOdd(betAmount, houseEdge=0){
-        return Numbers.toFloat(MathSingleton.multiplyAbsolutes(betAmount, parseInt(houseEdge))/100);
+        return MathSingleton.multiplyAbsolutes(betAmount, parseFloat(houseEdge))/100;
     }
 
 
@@ -82,7 +82,7 @@ class CasinoLogic{
                     if(item.value <= 0){ throwError('BAD_BET')}
                     array.push({
                         place : item.place,
-                        value : Numbers.toFormatBet(item.value)
+                        value : parseFloat(item.value)
                     });
                 } 
                 return array;
@@ -199,8 +199,8 @@ class CasinoLogic{
                         let probability = userResultSpace.reduce( (acc, result) => {
                             return acc+resultSpace[result.place].probability;
                         }, 0);
-                        let odd = Numbers.toFloat(this.probabilityToOdd(probability));
-                        totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                        let odd = parseFloat(this.probabilityToOdd(probability));
+                        totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                             if(item.value <= 0){ throw throwError('BAD_BET')}
                             return acc+item.value;
                         }, 0))
@@ -222,8 +222,8 @@ class CasinoLogic{
                         let probability = userResultSpace.reduce( (acc, result) => {
                             return acc+resultSpace[result.place].probability;
                         }, 0);
-                        let odd = Numbers.toFloat(this.probabilityToOdd(probability));
-                        totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                        let odd = parseFloat(this.probabilityToOdd(probability));
+                        totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                             if(item.value <= 0){ throw throwError('BAD_BET')}
                             return acc+item.value;
                         }, 0))
@@ -239,8 +239,8 @@ class CasinoLogic{
                 }
             }
 
-
             return {
+                possibleWinAmount : parseFloat(maxWin),
                 winAmount : parseFloat(winAmount),
                 totalBetAmount : parseFloat(totalBetAmount),
                 isWon
@@ -274,7 +274,7 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, probability : 0, place : 0, value : 0});
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;
@@ -294,7 +294,7 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, place : 0, value : 0});
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;
@@ -314,7 +314,7 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, place : 0, value : 0});
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;
@@ -334,7 +334,7 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, place : 0, value : 0});
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;
@@ -348,10 +348,10 @@ class CasinoLogic{
                     let probability = userResultSpace.reduce( (acc, result) => {
                         return acc+resultSpace[result.place].probability;
                     }, 0);
-                    let odd = Numbers.toFloat(this.probabilityToOdd(probability));
+                    let odd = parseFloat(this.probabilityToOdd(probability));
                     // ERROR : More than 1 
                     if(userResultSpace.length != 1){ throw throwError('BAD_BET')}
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;
@@ -366,8 +366,8 @@ class CasinoLogic{
                     let probability = userResultSpace.reduce( (acc, result) => {
                         return acc+resultSpace[result.place].probability;
                     }, 0);
-                    let odd = Numbers.toFloat(this.probabilityToOdd(probability));
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    let odd = parseFloat(this.probabilityToOdd(probability));
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;
@@ -382,8 +382,8 @@ class CasinoLogic{
                     let probability = userResultSpace.reduce( (acc, result) => {
                         return acc+resultSpace[result.place].probability;
                     }, 0);
-                    let odd = Numbers.toFloat(this.probabilityToOdd(probability));
-                    totalBetAmount = Numbers.toFormatBet(userResultSpace.reduce( (acc, item) => {
+                    let odd = parseFloat(this.probabilityToOdd(probability));
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
                         return acc+item.value;

@@ -13,12 +13,6 @@ import Random from "../tools/Random";
 import { generateEthAccount, userDepositToContract } from "../utils/eth";
 import { getNonce } from '../lib';
 
-const initialState = {
-    user : {
-        eth_balance : 0.03,
-        token_balance : 5,
-    }
-}
 
 export async function createUser({app_id, affiliateLink}){
     /* Create ETH Account */
@@ -31,7 +25,7 @@ export async function createUser({app_id, affiliateLink}){
         affiliateLink : affiliateLink
     }));
     await registerUser(userPostData);
-
+    
     /* Login User */
     var data = (await loginUser(userPostData)).data;
     data.message.password = userPostData.password;
@@ -40,15 +34,16 @@ export async function createUser({app_id, affiliateLink}){
 }
 
 
-export async function createUserDeposit({user, tokenAmount, app}){
-    const { platformAddress, id : app_id} = app;
+export async function createUserDeposit({user, tokenAmount, app, currency,  depositAddress}){
+    const { id : app_id} = app;
     const { id : user_id, eth_account, bearerToken } = user;
-    let res_eth = await userDepositToContract({eth_account, platformAddress, tokenAmount : tokenAmount});
+    let res_eth = await userDepositToContract({eth_account, platformAddress : depositAddress, tokenAmount : tokenAmount});
     
     return await updateUserWallet({
         user :  user_id,
         amount : tokenAmount,
         app: app_id,
+        currency : currency._id,
         nonce : getNonce(),
         transactionHash: res_eth.transactionHash
     }, bearerToken, {id : user_id});
@@ -85,7 +80,7 @@ export async function getUserInfo({user, app}){
 }
 
 
-export async function bet({user, result, game, app}){
+export async function bet({user, result, game, app, currency}){
     const { id : app_id} = app;
     const { _id : game_id } = game;
     const { id : user_id, bearerToken } = user;
@@ -95,7 +90,8 @@ export async function bet({user, result, game, app}){
         user: user_id,
         app: app_id,
         nonce: getNonce(),
-        result
+        result,
+        currency
     }   
 
     return await placeBet(postData, bearerToken, {id : user_id});

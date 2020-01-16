@@ -51,6 +51,35 @@ class AffiliateRepository extends MongoComponent{
         })
     }
 
+
+    setEmptyWallet(affiliate_id){
+        return new Promise( (resolve,reject) => {
+            AffiliateRepository.prototype.schema.model.findByIdAndUpdate(
+                affiliate_id, 
+                { $set: { "wallet" : [] } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    addCurrencyWallet(_id, wallet){
+        return new Promise( (resolve,reject) => {
+            AffiliateRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: _id, wallet : {$nin : [wallet._id] } }, 
+                { $push: { "wallet" : wallet} },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     getAll = async() => {
         return new Promise( (resolve,reject) => {
             AffiliateRepository.prototype.schema.model.find().lean().populate()

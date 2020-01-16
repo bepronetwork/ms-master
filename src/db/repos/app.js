@@ -74,11 +74,11 @@ class AppRepository extends MongoComponent{
         });
     }
 
-    addBlockchainInformation(app_id, params){
+    addCurrencyWallet(app_id, wallet){
         return new Promise( (resolve,reject) => {
-            AppRepository.prototype.schema.model.findByIdAndUpdate(
-                app_id, 
-                { $set: params },
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id, wallet : {$nin : [wallet._id] } }, 
+                { $push: { "wallet" : wallet._id} },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){reject(err)}
@@ -87,6 +87,21 @@ class AppRepository extends MongoComponent{
             )
         });
     }
+
+    addCurrency(app_id, currency){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id, currencies : {$nin : [currency._id] } }, 
+                { $push: { "currencies" : currency} },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 
     addDeposit(app_id, deposit){
         return new Promise( (resolve,reject) => {
@@ -314,6 +329,20 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
+
+    setEmptyWallet(app_id){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findByIdAndUpdate(
+                app_id, 
+                { $set: { "wallet" : [] } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
   
     findUserByExternalId(app_id, user_external_id){
         try{
@@ -362,7 +391,7 @@ class AppRepository extends MongoComponent{
      * @param {Mongoose Id} _id 
      */
 
-    async getSummaryStats(type, _id, { dates }){ 
+    async getSummaryStats(type, _id, { dates, currency }){ 
 
         let pipeline;
 
@@ -370,7 +399,6 @@ class AppRepository extends MongoComponent{
          * @input Type
          * @output Pipeline
          */
-
         switch (type){
             case 'users' : pipeline = pipeline_user_stats; break;
             case 'games' : pipeline = pipeline_game_stats; break;
@@ -382,7 +410,7 @@ class AppRepository extends MongoComponent{
 
         return new Promise( (resolve, reject) => {
             AppRepository.prototype.schema.model
-            .aggregate(pipeline(_id, { dates }))
+            .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

@@ -37,7 +37,5 @@ context('Add TopBar Info', async () => {
         expect(postData.textColor).to.be.equal(topBar.textColor);
         expect(postData.text).to.be.equal(topBar.text);
         expect(postData.isActive).to.be.equal(topBar.isActive);
-
-
     }));
 });

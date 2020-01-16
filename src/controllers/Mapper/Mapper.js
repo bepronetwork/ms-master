@@ -27,9 +27,7 @@ let outputs = {
                 "isValid"     : object.app.isValid,
                 "services"    : object.app.services,
                 "games"       : object.app.games,
-                "wallet"    : {
-                    "playBalance" : object.app.wallet ? object.app.wallet.playBalance : 0
-                },
+                "wallet"        : object.app.wallet
             },
             "security" : {
                 "id"                    : object.security._id,    
@@ -45,11 +43,7 @@ let outputs = {
             "name"                  : object.name,
             "description"           : object.description,
             "isValid"               : object.isValid,
-            "currencyTicker"        : object.currencyTicker,
-            "decimals"              : object.decimals,
-            "platformAddress"       : object.platformAddress,
-            "platformBlockchain"    : object.platformBlockchain,
-            "platformTokenAddress"  : object.platformTokenAddress,
+            "currencies"            : object.wallet.map( w => { return {bank_address : w.bank_address, ...w.currency._doc}}),
             "licensesId"            : object.licensesId,
             "customization"         : object.customization,
             "integrations"          : {
@@ -90,6 +84,10 @@ let outputs = {
             "hosting_id"            : object.hosting_id,
             "web_url"               : object.web_url,
             "services"              : object.services,
+            "users"                 : object.users.map( u => { return {
+                "wallet" : u.wallet, 
+                ...u
+            }}),
             "customization"         : object.customization,
             "withdraws"             : object.withdraws,
             "deposits"              : object.deposits,
@@ -100,9 +98,8 @@ let outputs = {
             "countriesAvailable"    : object.countriesAvailable,
             "games"                 : object.games,
             "affiliateSetup"        : object.affiliateSetup,
-            "wallet"    : {
-                "playBalance" : object.wallet.playBalance
-            },
+            "wallet"                : object.wallet
+            
         }
     },
     user : (object) => {
@@ -112,10 +109,8 @@ let outputs = {
             "id"        : object._id,
             "name"      : object.name,
             "address"   : object.address,
-            "wallet"    : {
-                "playBalance" : object.wallet.playBalance,
-                "affiliateBalance"  : object.affiliate.wallet.playBalance,
-            },
+            "wallet"    : object.wallet,
+            "affiliateWallet" : object.affiliate.wallet,
             "withdraws" : object.withdraws,
             "bearerToken" : object.bearerToken,
             "deposits"  : object.deposits,
@@ -123,7 +118,13 @@ let outputs = {
             "integrations" : object.integrations,
             "affiliateId"  : object.affiliateLink._id,
             "affilateLinkInfo" : object.affiliateLink,
-            "affiliateInfo" : object.affiliate
+            "affiliateInfo" : object.affiliate,
+            "security" : {
+                "id"                    : object.security._id,    
+                "2fa_set"               : object.security['2fa_set'],
+                "email_verified"        : object.security['email_verified'],
+                "bearerToken"           : object.security['bearerToken'],
+            }
         }
     },
     deposit : (object) => {

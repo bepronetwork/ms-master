@@ -1,7 +1,7 @@
-const fromPeriodicityToDates = ({periodicity}) =>{
+const fromPeriodicityToDates = ({periodicity='monthly'}) =>{
     var ret = {};
 
-    switch(periodicity){
+    switch(new String(periodicity).toLowerCase().trim()){
         case 'weekly' : {
             ret = {
                 from : getLastWeek(),

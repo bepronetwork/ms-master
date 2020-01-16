@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import { pipeline_bets_by_date } from '../filters';
+import { pipeline_bets_by_date, pipeline_bets_by_currency } from '../filters';
 
 
-const pipeline_revenue_stats = (_id, { dates }) => 
+const pipeline_revenue_stats = (_id, { dates, currency }) => 
     [
         //Stage 0
     {
@@ -16,46 +16,49 @@ const pipeline_revenue_stats = (_id, { dates }) =>
           'foreignField': '_id', 
           'as': 'games'
         }
-      }, {
-        '$project': {
-          'games.bets': true, 
-          'games.edge': true, 
-          '_id': false
+        }, {
+            '$project': {
+            'games.bets': true, 
+            'games.edge': true, 
+            '_id': false
+            }
+        }, {
+            '$unwind': {
+            'path': '$games'
+            }
+        }, {
+            '$project': {
+            'bets': '$games.bets', 
+            'edge': '$games.edge'
         }
-      }, {
-        '$unwind': {
-          'path': '$games'
-        }
-      }, {
-        '$project': {
-          'bets': '$games.bets', 
-          'edge': '$games.edge'
-        }
-      }, {
-        '$unwind': {
-          'path': '$bets'
-        }
-      }, {
-        '$lookup': {
-          'from': 'bets', 
-          'localField': 'bets', 
-          'foreignField': '_id', 
-          'as': 'bet'
-        }
-      }, {
-        '$project': {
-          'bet': {
-            '$arrayElemAt': [
-              '$bet', 0
-            ]
-          }, 
-          'fee': {
-            '$arrayElemAt': [
-              '$bet.fee', 0
-            ]
-          }
-        }
-      }, 
+        }, {
+            '$unwind': {
+            'path': '$bets'
+            }
+        }, {
+            '$lookup': {
+            'from': 'bets', 
+            'localField': 'bets', 
+            'foreignField': '_id', 
+            'as': 'bet'
+            }
+        },
+        {
+            '$project': {
+            'bet': {
+                '$arrayElemAt': [
+                '$bet', 0
+                ]
+            }, 
+            'fee': {
+                '$arrayElemAt': [
+                '$bet.fee', 0
+                ]
+            }
+            }
+        }, 
+        ...pipeline_bets_by_currency({currency}) 
+        ,
         ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to}) 
     ,{
         '$group': {

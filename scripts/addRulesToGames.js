@@ -44,7 +44,6 @@ class AddRulesToGames{
             bar1.start(app_all.length + gamesEco, 0);
                  
             await Promise.all(gamesEco.map( g => {
-                console.log(g._id)
                 bar1.increment();
                 return GamesEcoRepository.prototype.editRules({id : g._id, rules : gamesInfo[g.metaName].rules});
             }));

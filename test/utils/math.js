@@ -5,7 +5,7 @@ class math{
 
     multiplyAbsolutes(...args){
         return args.reduce((acc, arg) => {
-            return acc*this.toFloat(arg);
+            return acc*parseFloat(arg);
         }, 1);
     }
 
@@ -27,7 +27,7 @@ function getRandom(min, max){
 
 function getRandomBetResult({game, betAmount}){
     var indexes = [];
-    var availableAmount = Numbers.toFloat(betAmount);
+    var availableAmount = betAmount;
     var cycle = getRandom(1, game.resultSpace.length-1);
     for(var i = 0; i < cycle; i++){
         if(i == 0){

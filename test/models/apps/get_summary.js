@@ -1,2 +1,2 @@
-const get_summary = (app, type, periodicity) => {return { app , type, periodicity }}
+const get_summary = (app, type, periodicity, currency) => {return { app , type, periodicity, currency }}
 export default get_summary;

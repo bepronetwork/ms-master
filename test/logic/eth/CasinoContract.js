@@ -43,11 +43,10 @@ class CasinoContract{
     async __init__(){
         try{ 
             let contractDepolyed = await this.deploy();
-            let response = await this.sendTokensToCasinoContract(self.tokenTransferAmount);
             this.__assert(contractDepolyed);
             return {
                 amount : self.tokenAddress,
-                transactionHash : response.transactionHash
+                transactionHash : contractDepolyed.transactionHash
             };
         }catch(err){
             throw err;
@@ -183,7 +182,7 @@ class CasinoContract{
             if(!res || (parseFloat(res) == 0)){
                 return 0;
             }else{
-                return Numbers.toFloat(Numbers.fromDecimals(res.amount, decimals))
+                return Numbers.fromDecimals(res.amount, decimals)
             }
         }catch(err){
             throw err;
