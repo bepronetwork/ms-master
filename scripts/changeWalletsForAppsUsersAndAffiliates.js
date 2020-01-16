@@ -1,5 +1,5 @@
 
-import { UsersRepository, AffiliateLinkRepository, AffiliateRepository } from "../src/db/repos";
+import { UsersRepository, AffiliateLinkRepository, AffiliateRepository, AppRepository } from "../src/db/repos";
 import { AffiliateLink, Affiliate } from "../src/models";
 const _cliProgress = require('cli-progress');
  
@@ -16,10 +16,10 @@ class ChangeWalletsForAppsUsersAndAffiliates{
     async start(){
         try{
             /* Get all Apps */
-            bar1.start(users_all.length, 0);
 
             var app_all = await AppRepository.prototype.getAll();
-            console.log("all apps", app_all)
+            bar1.start(app_all.length, 0);
+            console.log("all apps", app_all.length);
             for( var i = 0; i < app_all.length; i++){   
                 let app = app_all[i];
                 try{
