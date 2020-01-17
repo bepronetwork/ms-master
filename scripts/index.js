@@ -20,6 +20,8 @@ require('../app');
             await AddRulesToGames.default.prototype.start();
             let AddTypographyToApp = require('./addTypographyToApp');
             await AddTypographyToApp.default.prototype.start();
-            */
+            let ChangeWalletsForAppsUsersAndAffiliates = require('./changeWalletsForAppsUsersAndAffiliates');
+           await ChangeWalletsForAppsUsersAndAffiliates.default.prototype.start();
+           */
     }, 5*1000)
 })()

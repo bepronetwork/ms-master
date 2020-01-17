@@ -5,7 +5,7 @@ import { editAppStructure, getApp, getUserInfo, createUserDeposit } from '../../
 import { provideFunds } from '../../../utils/env';
 
 const expect = chai.expect;
-const ticker = 'dai';
+const ticker = 'SAI';
 const depositAmount = 1;
 const ethDepositAmount = 0.1;
 const betAmount = 0.03;

@@ -56,7 +56,7 @@ class UsersRepository extends MongoComponent{
     }
 
     getBets({id, size=15, dates, currency}){ 
-        console.log("dates ", dates, curency);
+        console.log("dates ", dates, currency);
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
@@ -70,7 +70,20 @@ class UsersRepository extends MongoComponent{
             throw err;
         }
     }
-   
+
+    setEmptyWallet(user_id){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findByIdAndUpdate(
+                user_id, 
+                { $set: { "wallet" : [] } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
 
     findUser(username){
         return new Promise( (resolve, reject) => {
@@ -160,6 +173,19 @@ class UsersRepository extends MongoComponent{
                     resolve(item);
                 }
             )
+        });
+    }
+
+    setSecurityId(user_id, securityId){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: user_id },
+                { $set: { "security": securityId } },
+                { 'new' : true })
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
         });
     }
 

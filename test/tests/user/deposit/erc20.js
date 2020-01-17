@@ -7,7 +7,7 @@ import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
 import { getNonce } from '../../../lib';
 import { shouldntUpdateWalletWithPendingTransaction } from '../../output/AppTestMethod'
 const expect = chai.expect;
-const erc20Ticker = 'DAI';
+const erc20Ticker = 'SAI';
 const depositAmount = 4;
 const ethDepositAmount = 0.002;
 

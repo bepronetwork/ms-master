@@ -27,7 +27,7 @@ import { getRandom } from '../../../utils/math';
 
 const expect = chai.expect;
 const betAmount = 1;
-const currencyTicker = 'dai';
+const currencyTicker = 'SAI';
 const metaName = 'linear_dice_simple';
 
 context(`Errors ex : ${currencyTicker.toUpperCase()}`, async () =>  {
