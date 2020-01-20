@@ -4,7 +4,7 @@ import chai from 'chai';
 import { addCustomAffiliateStructureToUser, createUser, editAppStructure, getApp } from '../../../services';
 
 const expect = chai.expect;
-const ticker = 'dai';
+const ticker = 'SAI';
 
 
 const inputs = {
