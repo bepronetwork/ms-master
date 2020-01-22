@@ -38,8 +38,6 @@ class ChangeWalletsForAppsUsersAndAffiliates{
             // start the progress bar with a total value of 200 and start value of 0
             for( var i = 0; i < users_all.length; i++){   
                 let user = users_all[i];
-                console.log("user ", user._id);
-                console.log("affialte ", user.affiliate._id)
                 try{    
                     await UsersRepository.prototype.setEmptyWallet(user._id);
                     await AffiliateRepository.prototype.setEmptyWallet(user.affiliate._id);

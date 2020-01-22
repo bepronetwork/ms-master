@@ -8,8 +8,7 @@ export function getAffiliatesReturn({affiliateLink, lostAmount, currency}){
 
         if(!isActive){ return null }
         if(!percentageOnLoss || (percentageOnLoss <= 0) || percentageOnLoss >= 1){return null}
-
-        const parentAffiliateWalletId = parentAffiliatedLink.affiliate.wallet.find( w => new String(w.currency).toString() == new String(currency).toString());
+        const parentAffiliateWalletId = parentAffiliatedLink.affiliate.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
         return {
             amount                      : parseFloat(lostAmount*percentageOnLoss),
