@@ -1,4 +1,5 @@
 import { PUBLIC_KEY, PRIVATE_KEY } from '../../config';
+import Log from '../../models/log';
 
 const jwt   = require('jsonwebtoken');
 // use 'utf8' to get string instead of byte array  (512 bit key)
@@ -67,6 +68,27 @@ class Middleware{
             });
         }
     }
+
+    log(req) {
+        try {
+            let log = new Log({
+                ip          : "192.0.0.1",
+                countryCode : 1,
+                route       : "/test",
+                process     : "test",
+                creator     : "test",
+                time        : new Date()
+            });
+            console.log(log);
+            // let data = await log.register();
+            // MiddlewareSingleton.respond(res, data);
+            return true;
+        } catch(e) {
+            console.log(e);
+            return true;
+        }
+    }
+
 }
 
 let MiddlewareSingleton = new Middleware();

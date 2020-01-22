@@ -537,6 +537,15 @@ class ErrorManager {
         }
     }
 
+    log = function (object, type){
+        try{
+            switch(type){
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     link = function (object, type){
         try{
             switch(type){
