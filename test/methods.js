@@ -5,6 +5,7 @@ import CasinoContract from './logic/eth/CasinoContract';
 import { globalsTest } from './GlobalsTest';
 import Numbers from './logic/services/numbers';
 import decode from 'unescape';
+import { detectValidationErrors } from './utils';
 
 module.exports = {
     async registerUser(params) {

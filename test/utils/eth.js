@@ -60,8 +60,8 @@ export async function deploySmartContract({eth_account, tokenAddress, decimals})
             erc20TokenContract : erc20Contract,
             decimals : decimals
         })
-       
-        let res = await casino.__init__();
+        let res = await casino.__init__()
+
         return {    
             casino : casino,
             platformTokenAddress    : global.CONSTANTS.erc20Address,
@@ -96,7 +96,7 @@ export async function deploySmartContractETH({eth_account, decimals}){
     }
 }
 
-export async function userDepositToContract({eth_account, platformAddress, tokenAmount}){
+export async function userDepositToContract({eth_account, platformAddress, tokenAmount, currency}){
     try{
         let erc20Contract = globalsTest.getERC20Contract(global.CONSTANTS.erc20Address);
 
@@ -105,9 +105,9 @@ export async function userDepositToContract({eth_account, platformAddress, token
             account : eth_account,
             erc20TokenContract : erc20Contract,
             contractAddress: platformAddress,
-            decimals : globalsTest.constants.tokenDecimals,
+            decimals : currency.decimals,
         })
-       
+    
         /* Deposit Tokens */
         return await casinoContract.depositFunds({amount : tokenAmount});
 
