@@ -1,7 +1,7 @@
-import { mochaAsync, getCurrencyWallet } from '../../../utils';
+import { mochaAsync, getCurrencyWallet, detectValidationErrors } from '../../../utils';
 import { getAppAuth, authAdmin } from '../../../methods';
 import chai from 'chai';
-import { editAppStructure, getApp, getUserInfo, createUserDeposit } from '../../../services';
+import { editAppStructure, getApp, getUserInfo, createUserDeposit, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
 
 const expect = chai.expect;
@@ -9,7 +9,7 @@ const ticker = 'SAI';
 const depositAmount = 1;
 const ethDepositAmount = 0.1;
 const betAmount = 0.03;
-const metaName = 'linear_dice_simple';
+const metaName = 'european_roulette_simple';
 
 const inputs = {
     structures : [{level : 1, percentageOnLoss : 0.04}, {level : 2, percentageOnLoss : 0.03}, {level : 3, percentageOnLoss : 0.02}]
@@ -17,7 +17,7 @@ const inputs = {
 
 
 context('Bet', async () => {
-    var app, user_1, user_2, user_3, currencyWallet, currency, game, admin;
+    var app, user_1, user_2, user_3, user_4, user_5, currencyWallet, currency, game, admin;
 
 
     before( async () =>  {
@@ -26,21 +26,24 @@ context('Bet', async () => {
         game = app.games.find( game => game.metaName == metaName);
         currencyWallet = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         currency = currencyWallet.currency;
-    
+
     });
 
     it('it should set Bet for user and losts should be sent to parent Users (standard affiliate)', mochaAsync(async () => {
         
         await editAppStructure({app, structures : inputs.structures});
+
         user_1 = global.test.user_1;
         user_2 = global.test.user_2;
         user_3 = global.test.user_3;
+        user_4 = global.test.user_4;
+        user_5 = global.test.user_5;
         /* Get Info for User 1 before Bet */
-        var user_1_before_info = await getUserInfo({user : user_1.message, app});
+        var user_1_before_info = await getUserInfo({user : user_1, app});
         /* Get Info for User 2 before Bet */
-        var user_2_before_info = await getUserInfo({user : user_2.message, app});
+        var user_2_before_info = await getUserInfo({user : user_2, app});
         /* Get Info for User 2 before Bet */
-        var user_3_before_info = await getUserInfo({user : user_3.message, app});
+        var user_3_before_info = await getUserInfo({user : user_3, app});
         
         /* Get Info for User3 before Bet */
         user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
@@ -49,24 +52,22 @@ context('Bet', async () => {
 
         /* Get Info for App before Bet */
         const app_data_before = (await getApp({app})).data.message;
-
         /* Send Tokens to User */
         await provideFunds({account : user_3.eth_account, ethAmount : ethDepositAmount, tokenAmount : depositAmount, erc20Address : currency.address});
-
         /* Deposit for User */
         await createUserDeposit({user : user_3, tokenAmount : depositAmount, app : app, currency : currency, depositAddress : currencyWallet.bank_address});
-
         /* Get Info for User 2 before Bet */
-        user_3_before_info = await getUserInfo({user : user_3.message, app});
+        user_3_before_info = await getUserInfo({user : user_3 , app});
         var wasWon = true;
         /* Creater User Bet */
         while(wasWon){
-            var BET_GAME = app_data_before.games.find( game => game.metaName == 'european_roulette_simple');
             var BET_RESULT = [{
                 place: 0, value: betAmount
             }];
             /* Verify that was Lost */
-            var bet_res = await bet({user : user_3, game : BET_GAME, result : BET_RESULT, app});
+            var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
+            detectValidationErrors(bet_res);
+
             const { message } = bet_res.data;
             wasWon = message.isWon;
         }
@@ -74,11 +75,11 @@ context('Bet', async () => {
         /* Confirm Bet was valid */
         expect(status).to.equal(200);
         /* Get Info for User 1 After Bet */
-        const user_1_after_info = await getUserInfo({user : user_1.message, app});
+        const user_1_after_info = await getUserInfo({user : user_1, app});
         /* Get Info for User 2 After Bet */
-        const user_2_after_info = await getUserInfo({user : user_2.message, app});
+        const user_2_after_info = await getUserInfo({user : user_2, app});
         /* Get Info for User3 After Bet */
-        const user_3_after_info = await getUserInfo({user : user_3.message, app});
+        const user_3_after_info = await getUserInfo({user : user_3, app});
 
         /* Check that Affiliate With Structure x got his amount */
         var { percentageOnLoss : user_1_percentageOnLoss } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_1_after_info.affiliateInfo._id).affiliateStructure;
@@ -93,21 +94,24 @@ context('Bet', async () => {
         const app_data_after = (await getApp({app})).data.message;
         /* Verify balance on App */
         const affiliateReturns = betAmount*(user_2_percentageOnLoss+user_1_percentageOnLoss);
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns));
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns).toFixed(6));
         /* Verify Balance on User 3 */
-        expect(parseFloat(getCurrencyWallet({wallet : getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}), ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount));
+        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
 
     }));
 
     it('it should set Bet for user and losts should be sent to parent Users (custom affiliate)', mochaAsync(async () => {
+        user_4 = global.test.user_4;
+        user_5 = global.test.user_5;
+
         /* Get Info for User 4 before Bet */
-        var user_4_before_info = await getUserInfo({user : res_4.message, app});
+        var user_4_before_info = await getUserInfo({user : user_4, app});
         /* Get Info for User 5 before Bet */
-        var user_5_before_info = await getUserInfo({user : res_5.message, app});
+        var user_5_before_info = await getUserInfo({user : user_5, app});
         
         /* Get Info for User3 before Bet */
-        const user_4 = {...user_4_before_info, eth_account : res_4.eth_account};
-        const user_5 = {...user_5_before_info, eth_account : res_5.eth_account};
+        user_4 = {...user_4_before_info, eth_account : user_4.eth_account};
+        user_5 = {...user_5_before_info, eth_account : user_5.eth_account};
 
         /* Get Info for App before Bet */
         const app_data_before = (await getApp({app})).data.message;
@@ -116,7 +120,6 @@ context('Bet', async () => {
         const depositAmount = 3;
         const ethDepositAmount = 0.1;
         const betAmount = 0.2;
-        const BET_GAME = app_data_before.games.find( game => game.metaName == 'european_roulette_simple');
         const BET_RESULT = [{
             place: 0, value: betAmount
         }];
@@ -127,14 +130,14 @@ context('Bet', async () => {
         await createUserDeposit({user : user_5, tokenAmount : depositAmount, app : app_data_before, currency, depositAddress : currencyWallet.bank_address});
 
         /* Get Info for User 4 before Bet */
-        user_5_before_info = await getUserInfo({user : res_5.message, app});
+        user_5_before_info = await getUserInfo({user : user_5, app});
         
         var wasWon = true;
         var bet_res;
         /* Creater User Bet */
         while(wasWon){
             /* Verify that was Lost */
-            bet_res = await bet({user : user_5, game : BET_GAME, result : BET_RESULT, app});
+            bet_res = await bet({user : user_5, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
             wasWon = message.isWon;
         }
@@ -144,25 +147,25 @@ context('Bet', async () => {
         expect(status).to.equal(200);
 
         /* Get Info for User 4 After Bet */
-        const user_4_after_info = await getUserInfo({user : res_4.message, app});
+        const user_4_after_info = await getUserInfo({user : user_4, app});
         /* Get Info for User 5 After Bet */
-        const user_5_after_info = await getUserInfo({user : res_5.message, app});
+        const user_5_after_info = await getUserInfo({user : user_5, app});
 
         /* Check that Affiliate With Structure x got his amount */
         var { percentageOnLoss : user_4_percentageOnLoss } = user_5.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_4_after_info.affiliateInfo._id).affiliateStructure;
         
         /* Verify Affiliate Balance on User 4,5 */
         expect(getCurrencyWallet({wallet : user_4_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(betAmount*user_4_percentageOnLoss);
-        expect(getCurrencyWallet({wallet : user_4_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
+        expect(getCurrencyWallet({wallet : user_5_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
 
         /* Get Info for App After Bet */
         const app_data_after = (await getApp({app})).data.message;
         const affiliateReturns = betAmount*(user_4_percentageOnLoss);
 
         /* Verify balance on App */
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns));
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns).toFixed(6));
         /* Verify Balance on User 5 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-betAmount));
+        expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
 
     }));
 
@@ -172,11 +175,11 @@ context('Bet', async () => {
         expect(res_editAppStructure.data.status).to.equal(200);
 
         /* Get Info for User 1 before Bet */
-        var user_1_before_info = await getUserInfo({user : user_1.message, app});
+        var user_1_before_info = await getUserInfo({user : user_1, app});
         /* Get Info for User 2 before Bet */
-        var user_2_before_info = await getUserInfo({user : user_2.message, app});
+        var user_2_before_info = await getUserInfo({user : user_2, app});
         /* Get Info for User 2 before Bet */
-        var user_3_before_info = await getUserInfo({user : user_3.message, app});
+        var user_3_before_info = await getUserInfo({user : user_3, app});
 
         /* Get Info for User3 before Bet */
         user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
@@ -194,13 +197,13 @@ context('Bet', async () => {
         }];
 
         /* Get Info for User 2 before Bet */
-        user_3_before_info = await getUserInfo({user : user_3.message, app});
+        user_3_before_info = await getUserInfo({user : user_3, app});
         var wasWon = true;
 
         /* Creater User Bet */
         while(wasWon){
             /* Verify that was Lost */
-            var bet_res = await bet({user : user_3, game : BET_GAME, result : BET_RESULT, app});
+            var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
             wasWon = message.isWon;
         }
@@ -209,11 +212,11 @@ context('Bet', async () => {
         /* Confirm Bet was valid */
         expect(status).to.equal(200);
         /* Get Info for User 1 After Bet */
-        const user_1_after_info = await getUserInfo({user : user_1.message, app});
+        const user_1_after_info = await getUserInfo({user : user_1, app});
         /* Get Info for User 2 After Bet */
-        const user_2_after_info = await getUserInfo({user : user_2.message, app});
+        const user_2_after_info = await getUserInfo({user : user_2, app});
         /* Get Info for User3 After Bet */
-        const user_3_after_info = await getUserInfo({user : user_3.message, app});
+        const user_3_after_info = await getUserInfo({user : user_3, app});
 
         /* Check that Affiliate With Structure x got his amount */
         var { percentageOnLoss : user_2_percentageOnLoss } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_2_after_info.affiliateInfo._id).affiliateStructure;
@@ -226,7 +229,7 @@ context('Bet', async () => {
         expect(user_1_isActive).to.equal(false);
 
         /* Confirm User 1 has the affiliate balance equal to before */
-        expect(parseFloat(getCurrencyWallet({wallet : user_1_after_info.affiliateInfo.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : user_1_before_info.affiliateInfo.wallet, ticker}).playBalance));
+        expect(parseFloat(getCurrencyWallet({wallet : user_1_after_info.affiliateInfo.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_1_before_info.affiliateInfo.wallet, ticker}).playBalance).toFixed(6));
         expect(getCurrencyWallet({wallet : user_3_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
 
         /* Get Info for App After Bet */
@@ -237,7 +240,7 @@ context('Bet', async () => {
         expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns));
 
         /* Verify Balance on User 3 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount));
+        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
     }));
 
 });
