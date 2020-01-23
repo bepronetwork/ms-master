@@ -60,12 +60,12 @@ class AppRepository extends MongoComponent{
         });
     }
 
-    addTypography(app_id, typography){
-        return new Promise( (resolve,reject) => {
-            AppRepository.prototype.schema.model.findOneAndUpdate(
-                { _id: app_id, typography : {$nin : [typography._id] } }, 
-                { $push: { "typography" : typography } },
-                { 'new': true })
+
+
+
+    async addTypography(_id, typography){
+        return new Promise( async (resolve,reject) => {
+            await AppRepository.prototype.schema.model.updateOne({_id}, { typography })
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -234,7 +234,6 @@ class AppRepository extends MongoComponent{
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
         }
-        
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
@@ -263,6 +262,21 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    removeTypography(_id){ 
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findByIdAndUpdate(
+                    _id, 
+                    { $set: { "typography" : [] }})
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
 
     async addServices(app_id, services){
         try{

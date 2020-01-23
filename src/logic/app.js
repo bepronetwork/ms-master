@@ -596,29 +596,30 @@ const progressActions = {
     },
     __editTypography: async (params) => {
         let { app, typography } = params;
+
+        await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
+
         //1 - Eliminar todos os typographys de app [array vazio]
         //2 - Eliminar todos os ids velhos de typography
         //3- Gravar todos id novos typographys
         //4 - Colocar os Ids do Typography em app, replace typography
 
-        let all = await TypographyRepository.prototype.schema.model.find({});
-        for (let item of all) {
-            await TypographyRepository.prototype.schema.model.deleteOne({ _id: item.id});
-        }
-
+        let list = [];
         for (let correspondentTypographyType of typography) {
             let rTypography = await TypographyRepository.prototype.setTypography({
                 local: correspondentTypographyType.local,
                 url: correspondentTypographyType.url,
                 format: correspondentTypographyType.format,
             });
-            let json = await AppRepository.prototype.addTypography(params.app, rTypography);
+            list.push(rTypography);
         }
+
+        await AppRepository.prototype.addTypography(app._id, list);
 
         // }));
 
         /* Rebuild the App */
-        await HerokuClientSingleton.deployApp({ app: app.hosting_id })
+        await HerokuClientSingleton.deployApp({ app: app.hosting_id });
         // Save info on Typography Part
         return params;
     },

@@ -1,5 +1,6 @@
 import MongoComponent from './MongoComponent';
 import { TypographySchema } from '../schemas';
+import { AppRepository } from '.';
 
 /**
  * Accounts database interaction class.
@@ -76,6 +77,21 @@ class TypographyRepository extends MongoComponent{
                 resolve(docs);
             })
         })
+    }
+
+    async cleanTypographyOfApp(_id){
+        return new Promise( async (resolve,reject) => {
+            let App = await AppRepository.prototype.schema.model.findById({_id});
+
+            if(App.typography != undefined) {
+                for(let typography of App.typography) {
+                    await TypographyRepository.prototype.schema.model.deleteOne({_id: typography._id});
+                }
+                await AppRepository.prototype.schema.model.updateOne({_id}, { typography: [] });
+                resolve(true);
+            }
+            resolve(true);
+        });
     }
 
 }
