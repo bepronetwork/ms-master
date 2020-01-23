@@ -15,7 +15,7 @@ let __private = {};
 
 
 /**
- * Login logic.
+ * Log logic.
  *
  * @class
  * @memberof logic
@@ -29,7 +29,7 @@ const processActions = {
 }
 
 /**
- * Login logic.
+ * Log logic.
  *
  * @class progressActions
  * @memberof logic

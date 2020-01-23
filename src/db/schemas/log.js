@@ -7,14 +7,13 @@ LogSchema.prototype.name = 'Log';
 
 LogSchema.prototype.schema = {
     ip          : {type: String, required : true},
-    countryCode : {type: Number, required : true},
+    countryCode : {type: String, required : true},
     route       : {type: String, required : false},
     process     : {type : String, required : false},
-    creator     : {type : String, required : false},
-    time        : {type : Date, required : false}
+    creator     : {type : JSON, required : false}
 }
 
-LogSchema.prototype.model = db.model(LogSchema.prototype.name, new db.Schema(LogSchema.prototype.schema));
+LogSchema.prototype.model = db.model(LogSchema.prototype.name, new db.Schema(LogSchema.prototype.schema, { timestamps: true }));
 
 export {
     LogSchema

@@ -17,7 +17,6 @@ import SecuritySingleton from '../helpers/security';
 
 async function registAdmin (req, res) {
     try{
-        // MiddlewareSingleton.log(req);
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.register();

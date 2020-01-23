@@ -69,23 +69,25 @@ class Middleware{
         }
     }
 
-    log(req) {
+    async log(req) {
         try {
-            let log = new Log({
-                ip          : "192.0.0.1",
-                countryCode : 1,
-                route       : "/test",
-                process     : "test",
-                creator     : "test",
-                time        : new Date()
-            });
-            console.log(log);
-            // let data = await log.register();
-            // MiddlewareSingleton.respond(res, data);
+            const data = {
+                ip          : req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+                process     : req.swagger.operation.definition.operationId,
+                countryCode : req.ipInfo.error ? "LH" : req.ipInfo.country,
+                route       : req.swagger.operation.pathToDefinition[1],
+                creator     : {
+                    adminId     : req.body.admin_id ? req.body.admin_id : null,
+                    appId       : req.body.app_id   ? req.body.app_id   : null,
+                    userId      : req.body.user_id  ? req.body.user_id  : null
+                }
+            };
+            let log = new Log(data);
+            let a = await log.register();
+            console.log(a);
             return true;
         } catch(e) {
-            console.log(e);
-            return true;
+            return false;
         }
     }
 

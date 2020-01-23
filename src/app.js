@@ -2,6 +2,7 @@
 /** MACROS */
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')()
+const expressIp = require('express-ip');
 /** CODE */
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ import { PORT } from './config';
 //---------CODING-CHOICES--------------//
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
-
+app.use(expressIp().getIpInfoMiddleware);
 
 //--------RUN APP-------------------//
 
