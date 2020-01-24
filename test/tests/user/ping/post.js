@@ -38,6 +38,11 @@ context(`Log post Ping`, async () =>  {
         expect(res.data.status).to.equals(200);
     }));
 
+    it('should Post Log - global', mochaAsync(async () => {
+        var res = await pingPost({type: "global"}, {}, {});
+        expect(res.data.status).to.equals(200);
+    }));
+
     it('should Post Log - Empty', mochaAsync(async () => {
         var res = await pingPost({type: "error"}, {}, {});
         expect(res.data.status).to.not.equals(200);

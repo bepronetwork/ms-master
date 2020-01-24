@@ -16,7 +16,8 @@ import MiddlewareSingleton from '../helpers/middleware';
  */
 
 async function getEcosystemData(req, res) {
-    try{
+    try {
+        await MiddlewareSingleton.log({type: "global", req});
         let ecosystem = new Ecosystem();
         let data = await ecosystem.getEcosystemData();
         MiddlewareSingleton.respond(res, data);
@@ -27,6 +28,7 @@ async function getEcosystemData(req, res) {
 
 async function getCasinoGames(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let ecosystem = new Ecosystem();
         let data = await ecosystem.getCasinoGames();
         MiddlewareSingleton.respond(res, data);

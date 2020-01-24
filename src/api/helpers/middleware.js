@@ -9,7 +9,6 @@ var publicKEY  =  new String("-----BEGIN PUBLIC KEY-----\n" + PUBLIC_KEY + "\n--
 class Middleware{
     constructor(){}
 
-
     sign(payload){
         try{
             let token = jwt.sign({ id : 'Auth/' + payload }, privateKEY, { algorithm: 'RS256' });
@@ -29,12 +28,10 @@ class Middleware{
         }
     };
 
-
     decode(token){
         return jwt.decode(token, {complete: true});
         //returns null if token is invalid
     }
-
     respond(res, data){
         try{
             res.json({
@@ -59,7 +56,6 @@ class Middleware{
                 }
             });
         }catch(err){
-            // console.error(err)
             res.json({
                 data : {
                     status : 404,
@@ -72,13 +68,11 @@ class Middleware{
     async log(json) {
         const {type, req} = json;
         try {
-            const  id = JSON.parse(req.headers['payload']);
+            // return true;
+            const id = JSON.parse(req.headers['payload']);
 
-            if(type!="admin" && type!="user" && type!="app") {
+            if(type!="admin" && type!="user" && type!="app" && type!="global") {
                 throw {code: 404, message: "type not defined"};
-            }
-            if(Object.entries(id).length === 0 && id.constructor === Object){
-                throw {code: 404, message: "id empty"};
             }
 
             const data = {
@@ -86,17 +80,16 @@ class Middleware{
                 process     : req.swagger.operation.definition.operationId,
                 countryCode : req.ipInfo.error ? "LH" : req.ipInfo.country,
                 route       : req.swagger.operation.pathToDefinition[1],
-                creatorId   : id.id,
+                creatorId   : id.id == undefined ? null : id.id,
                 creatorType : type
             };
-            let log = new Log(data);
+            const log = new Log(data);
             await log.register();
             return true;
-        } catch(e) {
-            throw e;
+        } catch(error) {
+            return false;
         }
     }
-
 }
 
 let MiddlewareSingleton = new Middleware();

@@ -17,6 +17,7 @@ import SecuritySingleton from '../helpers/security';
 
 async function registAdmin (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.register();
@@ -28,6 +29,7 @@ async function registAdmin (req, res) {
 
 async function loginAdmin(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login();
@@ -40,6 +42,7 @@ async function loginAdmin(req, res) {
 async function setAdmin2FA(req, res) {
     try{
         SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.set2FA();
@@ -52,6 +55,7 @@ async function setAdmin2FA(req, res) {
 
 async function loginAdmin2FA(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login2FA();
@@ -66,6 +70,7 @@ async function loginAdmin2FA(req, res) {
 async function authAdmin (req, res) {
     try{
         SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.auth();
