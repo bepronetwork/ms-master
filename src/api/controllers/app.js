@@ -18,7 +18,6 @@ import MiddlewareSingleton from '../helpers/middleware';
 
 async function createApp (req, res) {
     try{
-        MiddlewareSingleton.log(req);
         let params = req.body;
 		let app = new App(params);
         let data = await app.register();

@@ -1326,18 +1326,47 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /ping/post:
+    x-swagger-router-controller: ping
+    post:
+      tags:
+      - ping
+      summary: Test Ping
+      operationId: pingPost
+      description: Test Ping for post.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ping
+          description: Ping Object for test
+          required: true
+          schema:
+            $ref: '#/definitions/PingPost'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
-  
 # complex objects have schema definitions
 definitions:
-  AdminRegisterRequest : 
+  AdminRegisterRequest :
     type: object
     required:
       - username
-      - name             
-      - email    
-      - password 
+      - name
+      - email
+      - password
     properties:
       username:
         type : string
@@ -2282,3 +2311,14 @@ definitions:
     properties:
       message:
         type: string
+  PingPost:
+    type: object
+    required :
+      - type
+    properties:
+      type:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Type Auth

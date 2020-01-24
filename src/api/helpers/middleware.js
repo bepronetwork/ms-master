@@ -59,7 +59,7 @@ class Middleware{
                 }
             });
         }catch(err){
-            console.error(err)
+            // console.error(err)
             res.json({
                 data : {
                     status : 404,
@@ -69,25 +69,31 @@ class Middleware{
         }
     }
 
-    async log(req) {
+    async log(json) {
+        const {type, req} = json;
         try {
+            const  id = JSON.parse(req.headers['payload']);
+
+            if(type!="admin" && type!="user" && type!="app") { 
+                throw {code: 404, message: "type not defined"};
+            }
+            if(Object.entries(id).length === 0 && id.constructor === Object){
+                throw {code: 404, message: "id empty"};
+            }
+
             const data = {
                 ip          : req.headers['x-forwarded-for'] || req.connection.remoteAddress,
                 process     : req.swagger.operation.definition.operationId,
                 countryCode : req.ipInfo.error ? "LH" : req.ipInfo.country,
                 route       : req.swagger.operation.pathToDefinition[1],
-                creator     : {
-                    adminId     : req.body.admin_id ? req.body.admin_id : null,
-                    appId       : req.body.app_id   ? req.body.app_id   : null,
-                    userId      : req.body.user_id  ? req.body.user_id  : null
-                }
+                creatorId   : id,
+                creatorType : type
             };
             let log = new Log(data);
-            let a = await log.register();
-            console.log(a);
+            await log.register();
             return true;
         } catch(e) {
-            return false;
+            throw e;
         }
     }
 
