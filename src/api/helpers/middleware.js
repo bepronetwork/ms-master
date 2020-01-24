@@ -74,7 +74,7 @@ class Middleware{
         try {
             const  id = JSON.parse(req.headers['payload']);
 
-            if(type!="admin" && type!="user" && type!="app") { 
+            if(type!="admin" && type!="user" && type!="app") {
                 throw {code: 404, message: "type not defined"};
             }
             if(Object.entries(id).length === 0 && id.constructor === Object){
@@ -86,7 +86,7 @@ class Middleware{
                 process     : req.swagger.operation.definition.operationId,
                 countryCode : req.ipInfo.error ? "LH" : req.ipInfo.country,
                 route       : req.swagger.operation.pathToDefinition[1],
-                creatorId   : id,
+                creatorId   : id.id,
                 creatorType : type
             };
             let log = new Log(data);
