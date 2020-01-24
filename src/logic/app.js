@@ -596,13 +596,8 @@ const progressActions = {
     },
     __editTypography: async (params) => {
         let { app, typography } = params;
-
+        //This Function Clening the typography from collection typographies and from the App document (typography field)
         await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
-
-        //1 - Eliminar todos os typographys de app [array vazio]
-        //2 - Eliminar todos os ids velhos de typography
-        //3- Gravar todos id novos typographys
-        //4 - Colocar os Ids do Typography em app, replace typography
 
         let list = [];
         for (let correspondentTypographyType of typography) {
