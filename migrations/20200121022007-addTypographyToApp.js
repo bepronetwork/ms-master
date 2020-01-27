@@ -21,7 +21,7 @@ module.exports = {
         }
     ];
 
-    let apps = await db.collection('apps').find().limit(10).toArray();
+    let apps = await db.collection('apps').find().toArray();
     for(let app of apps) {
       let newList = [];
       for (let typography of listTypography) {
