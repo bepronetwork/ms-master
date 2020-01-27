@@ -572,7 +572,7 @@ const progressActions = {
             })
         }));
         /* Rebuild the App */
-//         await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
         // Save info on Customization Part
         return params;
     },
@@ -614,7 +614,7 @@ const progressActions = {
         // }));
 
         /* Rebuild the App */
-        await HerokuClientSingleton.deployApp({ app: app.hosting_id });
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
         // Save info on Typography Part
         return params;
     },
