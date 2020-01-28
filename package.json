@@ -100,6 +100,7 @@
         "request-promise": "^4.2.4",
         "requestify": "^0.2.5",
         "serve-favicon": "~2.4.2",
+        "sib-api-v3-sdk": "^7.1.4",
         "socket.io": "^2.0.4",
         "stream-chat": "^1.1.5",
         "stripe": "^5.5.0",
