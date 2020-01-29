@@ -215,6 +215,10 @@ class ErrorManager {
                     if(typeof object == 'undefined' || Object.is(object, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
                     }
+                    console.log(`${parseFloat(object.maxDeposit)} < ${parseFloat(object.amount)}`);
+                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
+                        throw {code: -1, message: "Amount maior que maxDeposit!"};
+                    }
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION)); break; 
