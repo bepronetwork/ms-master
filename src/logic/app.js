@@ -18,6 +18,7 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { HerokuClientSingleton } from './third-parties';
+import { SendInBlue } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -329,9 +330,16 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
         let app = await self.save(params);
-        await AdminsRepository.prototype.addApp(params.admin_id, app);
+        let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
         let bearerToken = MiddlewareSingleton.sign(app._id);
         await AppRepository.prototype.createAPIToken(app._id, bearerToken);
+        let email = admin.email;
+        let attributes = {
+            NOME: admin.name,
+            APP: app._id
+        }
+        let listIds = [2]
+        await SendInBlue.prototype.createContact(email, attributes, listIds);
 		return app;
 	},
 	__summary : async (params) => {

@@ -8,6 +8,7 @@ import {
 
 import chai from 'chai';
 import Security from '../../../../src/controllers/Security/Security';
+import SendInBlue from '../../../../src/logic/third-parties/sendInBlue/index';
 import { detectValidationErrors, mochaAsync } from '../../../utils';
 
 import {
