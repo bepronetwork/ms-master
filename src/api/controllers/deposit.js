@@ -18,7 +18,7 @@ async function setMaxDeposit(req, res) {
         let params = req.body;
         // SecuritySingleton.verify({type : 'app', req});
 		let wallet = new Wallet(params);
-		let data = await wallet.setMaxDeposit();
+        let data = await wallet.setMaxDeposit();
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);

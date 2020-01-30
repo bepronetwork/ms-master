@@ -186,5 +186,9 @@
     "046" : {
         "key" : "CURRENCY_ALREADY_EXISTENT",
         "message"   : "Currency is already existent in this App, please contract support"
+    },
+    "047" : {
+        "key" : "OVERFLOW_DEPOSIT",
+        "message"   : "Deposit max exceeded"
     }
 }
