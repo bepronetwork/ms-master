@@ -39,8 +39,29 @@ context(`${ticker}`, async () => {
         let res = await updateAppWallet(postData, app.bearerToken, {id : app.id});
         detectValidationErrors(res);
         shouldntUpdateWalletWithPendingTransaction(res.data, expect);
-    })); 
-    
+    }));
+
+    it('should amount > max deposit', mochaAsync(async () => {
+        let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
+
+        let tx = await bankContract.sendFundsToCasinoContract(0.4);
+
+        const postData = {
+            app : app.id,
+            amount : 0.4,
+            transactionHash : tx.transactionHash,
+            currency : currencyWallet.currency._id
+        }
+
+        let res = updateAppWallet(postData, app.bearerToken, {id : app.id});
+
+        let ret = await Promise.resolve(await res);
+
+        expect(ret.data.status).to.not.be.null;
+        expect(ret.data.status).to.be.equal(47);
+    }));
+
+
     it('should update Wallet with verified transaction', mochaAsync(async () => {
         let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
         

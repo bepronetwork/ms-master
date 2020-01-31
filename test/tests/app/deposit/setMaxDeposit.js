@@ -22,7 +22,7 @@ context(`Set Max Deposit`, async () => {
         let dataMaxDeposit = await setAppMaxDeposit({
             app_id: app.id,
             wallet_id: currencyWallet._id,
-            amount: 1,
+            amount: 0.3,
         }, app.bearerToken, {id : app.id});
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
