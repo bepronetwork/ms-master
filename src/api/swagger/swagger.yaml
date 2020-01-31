@@ -1362,14 +1362,14 @@ definitions:
   SetMaxDeposit :
     type: object
     required:
-      - app_id
+      - app
       - wallet_id
       - amount
     properties:
-      app_id:
+      app:
         type : string
         description: |
-          Unique identifier of the user app
+          ID app
       wallet_id:
         type : string
         description: |

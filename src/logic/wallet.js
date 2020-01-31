@@ -60,7 +60,7 @@ const processActions = {
 	},
 	__updateMaxDeposit : async (params) => {
 		try{
-			const app = await AppRepository.prototype.findAppById(params.app_id);
+			const app = await AppRepository.prototype.findAppById(params.app);
 			if(!app){throwError('APP_NOT_EXISTENT')}
 			const wallet = app.wallet.find( w => new String(w._id).toString() == new String(params.wallet_id).toString());
 			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
