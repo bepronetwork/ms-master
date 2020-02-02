@@ -1,0 +1,14 @@
+[
+    {
+        "template" : "registerAdmin",
+        "templateId" : 2,
+        "listIds": [2]
+    },
+
+    {
+        "template" : "registerApp",
+        "templateId" : 3,
+        "listIds": [2]
+    }
+
+]

@@ -28,11 +28,12 @@ class SendInBlue {
         return data;
     }
 
-    async addContactsToList(listId, contactEmails) {
-        //contactEmails is an array of emails
-        //listId insert id (number) from the contact list
+    async updateContact(email, attributes) {
+        // email => email what you desire to update
+        // attributes => parameters what you desire to update
         const apiInstance = new SibApiV3Sdk.ContactsApi();
-        const data = await apiInstance.addContactToList(listId, contactEmails);
+        const updateContact = { attributes }
+        const data = await apiInstance.updateContact(email, updateContact);
         return data;
     }
 
@@ -43,56 +44,22 @@ class SendInBlue {
     }
 
     async getContacts() {
-        const apiInstance = await new SibApiV3Sdk.ContactsApi();
+        const apiInstance = new SibApiV3Sdk.ContactsApi();
         const data = await apiInstance.getContacts();
         return data;
     }
 
-    async getLits() {
-        const apiInstance = new SibApiV3Sdk.ContactsApi();
-        const data = await apiInstance.getLists();
+    async getSmtpTemplates(){
+        const apiInstance = new SibApiV3Sdk.SMTPApi();
+        const data = await apiInstance.getSmtpTemplates();
+        return console.log(data);
+    }
+
+    async sendTemplate(templateId, emailTo) {
+        const apiInstance = new SibApiV3Sdk.SMTPApi();
+        const sendEmail = {emailTo};
+        const data = await apiInstance.sendTemplate(templateId, sendEmail);
         return data;
-    }
-
-    async sendTestEmail(campaignId, emailTo) {
-        //campaignId => Id (number) of the campaign
-        //emailTo => If you want to specify who to send email to, put email array
-        const campaigns = new SibApiV3Sdk.EmailCampaignsApi();
-        const data = await campaigns.sendTestEmail(campaignId, emailTo);
-        return data;
-    }
-
-    async getCampaign() {
-        const apiInstance = new SibApiV3Sdk.EmailCampaignsApi();
-        let campaignId = 1;
-        const res = await apiInstance.getEmailCampaign(campaignId);
-        return res;
-    }
-
-    async sendEmailCampaign() {
-        const apiInstance = new SibApiV3Sdk.EmailCampaignsApi();
-        let campaignId = 1;
-        const campaign = await apiInstance.getEmailCampaign(campaignId);
-        const subject = campaign.subject
-        const body = campaign.htmlContent
-        const to = ["matheus@betprotocol.com"]
-        const contentType = "html"
-        let email = { subject, to, contentType, body }
-        email;
-        let sendReport = { email }
-        const data = await apiInstance.sendReport(campaignId, sendReport);
-        return data;
-    }
-
-    async updateContact() {
-        const apiInstance = new SibApiV3Sdk.ContactsApi();
-        const email = "paulohr.abreu@gmail.com";
-        const attributes = {
-            APP: "5e3312bcd7f0d4316fa083a1"
-        };
-        const updateContact = {attributes}
-        const data = await apiInstance.updateContact(email, updateContact);
-        return data);
     }
 }
 
