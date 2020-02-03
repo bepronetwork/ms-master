@@ -9,6 +9,7 @@ import { AdminsRepository, SecurityRepository, AppRepository } from '../db/repos
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
+import { SendInBlue } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -180,7 +181,7 @@ const progressActions = {
         let email = user.email;
         let attributes = {
             NOME: user.name
-        }
+        };
         for (let templateJson of mail) {
             if (templateJson.template === "registerAdmin") {
                 let templateId = templateJson.templateId;
@@ -189,7 +190,7 @@ const progressActions = {
                 await SendInBlue.prototype.sendTemplate(templateId, [email]);
             }
         }
-        return user
+        return user;
     }
 }
 

@@ -7,7 +7,7 @@
 
     {
         "template" : "registerApp",
-        "templateId" : 3,
+        "templateId" : 2,
         "listIds": [2]
     }
 

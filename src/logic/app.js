@@ -18,6 +18,7 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { HerokuClientSingleton } from './third-parties';
+import { mail } from '../mocks';
 import { SendInBlue } from './third-parties';
 let error = new ErrorManager();
 
@@ -333,6 +334,17 @@ const progressActions = {
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
         let bearerToken = MiddlewareSingleton.sign(app._id);
         await AppRepository.prototype.createAPIToken(app._id, bearerToken);
+        let email = admin.email;
+        let attributes = {
+            APP: app._id
+        };
+        for (let templateJson of mail) {
+            if (templateJson.template === "registerApp") {
+                let templateId = templateJson.templateId;
+                await SendInBlue.prototype.updateContact(email, attributes);
+                await SendInBlue.prototype.sendTemplate(templateId, [email]);
+            }
+        }
 		return app;
 	},
 	__summary : async (params) => {
