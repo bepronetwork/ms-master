@@ -4,13 +4,11 @@ var defaultClient = SibApiV3Sdk.ApiClient.instance;
 
 // Configure API key authorization: api-key
 var apiKey = defaultClient.authentications['api-key'];
-// apiKey.apiKey = process.env.SENDINBLUE_API_KEY
-apiKey.apiKey = "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"
+apiKey.apiKey = process.env.SENDINBLUE_API_KEY
 
 // Configure API key authorization: partner-key
 var partnerKey = defaultClient.authentications['partner-key'];
-// partnerKey.apiKey = process.env.SENDINBLUE_API_KEY
-partnerKey.apiKey = "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"
+partnerKey.apiKey = process.env.SENDINBLUE_API_KEY
 
 
 class SendInBlue {

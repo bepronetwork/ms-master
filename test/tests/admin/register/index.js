@@ -45,7 +45,7 @@ context('Register', async () => {
             let admin = BOILERPLATES.admins.NORMAL_REGISTER;
             const email = admin.email;
             const attributes = {
-                NOME: admin.name
+                NAME: admin.name
             };
             for (let addContact of mail) {
                 if (addContact.template === "registerAdmin") {

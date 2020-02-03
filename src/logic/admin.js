@@ -180,7 +180,7 @@ const progressActions = {
         let user = await self.save(params);
         let email = user.email;
         let attributes = {
-            NOME: user.name
+            NAME: user.name
         };
         for (let templateJson of mail) {
             if (templateJson.template === "registerAdmin") {
