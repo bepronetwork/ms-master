@@ -8,6 +8,8 @@ import LogicComponent from './logicComponent';
 import { AdminsRepository, SecurityRepository, AppRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
+import { mail } from '../mocks';
+import { SendInBlue } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -27,9 +29,9 @@ let __private = {};
  * @param {function} params - Function Params
  **/
 
-  
+
 const processActions = {
-	__login : async (params) => {
+    __login: async (params) => {
         // Get User by Username
         let admin = await __private.db.findAdmin(params.username);
         if(!admin){throwError('USER_NOT_EXISTENT')};
@@ -40,31 +42,31 @@ const processActions = {
         let normalized = {
             has2FASet,
             bearerToken,
-            username : admin.username,
-            password : params.password,
-            security_id : admin.security._id,
-            verifiedAccount : Security.prototype.unhashPassword(params.password, admin.hash_password),
+            username: admin.username,
+            password: params.password,
+            security_id: admin.security._id,
+            verifiedAccount: Security.prototype.unhashPassword(params.password, admin.hash_password),
             ...admin
         }
-        
-		return normalized;
+
+        return normalized;
     },
-    __login2FA : async (params) => {
+    __login2FA: async (params) => {
         // Get User by Username
         let admin = await __private.db.findAdmin(params.username);
 
-        if(!admin){throwError('USER_NOT_EXISTENT')};
-        if(!admin.security){throwError()};
+        if (!admin) { throwError('USER_NOT_EXISTENT') };
+        if (!admin.security) { throwError() };
 
         var has2FASet = admin.security['2fa_set'];
         var secret2FA = admin.security['2fa_secret'];
 
         // is 2FA not Setup
-        if((!has2FASet) || (!secret2FA)){throwError('USER_HAS_2FA_DEACTIVATED')}
-    
+        if ((!has2FASet) || (!secret2FA)) { throwError('USER_HAS_2FA_DEACTIVATED') }
+
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
-            secret : secret2FA,
-            token : params['2fa_token']
+            secret: secret2FA,
+            token: params['2fa_token']
         });
 
         let bearerToken = MiddlewareSingleton.sign(admin._id);
@@ -74,42 +76,43 @@ const processActions = {
             secret2FA,
             bearerToken,
             isVerifiedToken2FA,
-            username : admin.username,
-            password : params.password,
-            security_id : admin.security._id,
-            verifiedAccount : Security.prototype.unhashPassword(params.password, admin.hash_password),
+            username: admin.username,
+            password: params.password,
+            security_id: admin.security._id,
+            verifiedAccount: Security.prototype.unhashPassword(params.password, admin.hash_password),
             ...admin
         }
 
         return normalized;
     },
-    __auth  : async (params) => {
+    __auth: async (params) => {
         // Get User by Username
         let admin = await __private.db.findAdminById(params.admin);
-        if(!admin){throwError('USER_NOT_EXISTENT')};
-        if(!admin.security){throwError()};
+
+        if (!admin) { throwError('USER_NOT_EXISTENT') };
+        if (!admin.security) { throwError() };
         let normalized = admin;
         return normalized;
     },
-    __set2FA : async (params) => {
+    __set2FA: async (params) => {
         // Get User by Username
         let admin = await __private.db.findAdminById(params.admin);
 
-        if(!admin){throwError('USER_NOT_EXISTENT')};
-        if(!admin.security){throwError()};
+        if (!admin) { throwError('USER_NOT_EXISTENT') };
+        if (!admin.security) { throwError() };
 
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
-            secret : params['2fa_secret'],
-            token : params['2fa_token']
+            secret: params['2fa_secret'],
+            token: params['2fa_token']
         })
 
 
         let normalized = {
-            newSecret : params['2fa_secret'],
-            username : admin.username,
+            newSecret: params['2fa_secret'],
+            username: admin.username,
             isVerifiedToken2FA,
-            admin_id : params.admin,
-            security_id : admin.security._id,
+            admin_id: params.admin,
+            security_id: admin.security._id,
             ...admin
         }
 
@@ -161,31 +164,31 @@ const processActions = {
  **/
 
 const progressActions = {
-    __login : async (params) => {
+    __login: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
         let bearerToken;
-        if(params.app){
+        if (params.app) {
             /* Create BearerToken for App */
             bearerToken = MiddlewareSingleton.sign(params.app._id);
             await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
         }
 
-        return {...params, app : {...params.app, bearerToken}};
+        return { ...params, app: { ...params.app, bearerToken } };
     },
-    __login2FA : async (params) => {    
+    __login2FA: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
         let bearerToken;
-        if(params.app){
+        if (params.app) {
             /* Create BearerToken for App */
             bearerToken = MiddlewareSingleton.sign(params.app._id);
             await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
         }
-        return {...params, app : {...params.app, bearerToken}};
+        return { ...params, app: { ...params.app, bearerToken } };
     },
-    __auth  : async (params) => {
+    __auth: async (params) => {
         return params;
     },
-    __set2FA : async (params) => {
+    __set2FA: async (params) => {
         let {
             newSecret,
             security_id
@@ -201,11 +204,16 @@ const progressActions = {
         } else {
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
-            console.log(admin.app._id);
-            console.log(admin);
             AppRepository.prototype.addAdmin(String(admin.app._id), admin);
         }
-        // console.log(admin);
+        let email = admin.email;
+        let attributes = {
+            NAME: admin.name
+        };
+        let templateId  = mail.registerAdmin.templateId;
+        let listIds     = mail.registerAdmin.listIds;
+        await SendInBlue.prototype.createContact(email, attributes, listIds);
+        await SendInBlue.prototype.sendTemplate(templateId, [email]);
         return admin
     },
     __addAdmin : async (params) => {
@@ -238,19 +246,19 @@ const progressActions = {
 
 
 class AdminLogic extends LogicComponent {
-	constructor(scope) {
-		super(scope);
-		self = this;
-		__private = {
-			//ADD
-			db : scope.db,
-			__normalizedSelf : null
-		};
+    constructor(scope) {
+        super(scope);
+        self = this;
+        __private = {
+            //ADD
+            db: scope.db,
+            __normalizedSelf: null
+        };
 
-		library = {
-			process : processActions,
-			progress : progressActions
-		}
+        library = {
+            process: processActions,
+            progress: progressActions
+        }
     }
 
 
@@ -261,23 +269,23 @@ class AdminLogic extends LogicComponent {
 	 * @returns {user} user
 	 * @throws {string} On schema.validate failure
 	 */
-	async objectNormalize(params, processAction) {
-		try{			
-			switch(processAction) {
-				case 'Login' : {
-					return await library.process.__login(params); break;
+    async objectNormalize(params, processAction) {
+        try {
+            switch (processAction) {
+                case 'Login': {
+                    return await library.process.__login(params); break;
                 };
-                case 'Login2FA' : {
-					return await library.process.__login2FA(params); 
+                case 'Login2FA': {
+                    return await library.process.__login2FA(params);
                 };
-                case 'Auth' : {
-					return await library.process.__auth(params); 
+                case 'Auth': {
+                    return await library.process.__auth(params);
                 };
-                case 'Set2FA' : {
-					return await library.process.__set2FA(params); 
-				};
-				case 'Register' : {
-					return await library.process.__register(params); break;
+                case 'Set2FA': {
+                    return await library.process.__set2FA(params);
+                };
+                case 'Register': {
+                    return library.process.__register(params); break;
                 };
                 case 'AddAdmin' : {
                     return await library.process.__addAdmin(params); break;
@@ -296,13 +304,13 @@ class AdminLogic extends LogicComponent {
 	 * @throws {string} On schema.validate failure
 	 */
 
-	testParams(params, action){
-		try{
-			error.admin(params, action);
-		}catch(err){
-			throw err;
-		}
-	}
+    testParams(params, action) {
+        try {
+            error.admin(params, action);
+        } catch (err) {
+            throw err;
+        }
+    }
 
 
 	async progress(params, progressAction){

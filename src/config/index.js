@@ -41,6 +41,8 @@ export const FRONTEND_BRANCH = ENV == 'production' ? 'master' : 'dev';
 
 export const GITHUB_LAYOUT_REPO = process.env.GITHUB_LAYOUT_REPO;
 
+export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
+
 /* Variables */
 
 var ETH_NETWORK = config.eth;
