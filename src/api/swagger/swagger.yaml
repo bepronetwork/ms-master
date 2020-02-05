@@ -59,6 +59,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/admins/add:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Register User Data
+      operationId: addAdmin
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AddAdminRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /admins/register:
     x-swagger-router-controller: admin
     post:
@@ -2260,11 +2290,36 @@ definitions:
               type: number
             value :
               type: number
-  GeneralResponse : 
+  AddAdminRequest:
+    type: object
+    required:
+      - email
+      - app
+      - admin
+    properties:
+      email:
+        type: string
+        format: string
+        example: "paulo@gmail.com"
+        description: |
+          Email for admin
+      app:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          App Id
+      admin:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Admin Current Id
+  GeneralResponse :
     type: object
     required:
       - data
-      - meta            
+      - meta
     properties:
       data:
         type : object

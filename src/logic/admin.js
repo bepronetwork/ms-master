@@ -33,6 +33,7 @@ const processActions = {
         // Get User by Username
         let admin = await __private.db.findAdmin(params.username);
         if(!admin){throwError('USER_NOT_EXISTENT')};
+        if(admin.registered === false){throwError()};
         if(!admin.security){throwError()};
         let has2FASet = admin.security['2fa_set'];
         let bearerToken = MiddlewareSingleton.sign(admin._id);
@@ -87,7 +88,7 @@ const processActions = {
         let admin = await __private.db.findAdminById(params.admin);
         if(!admin){throwError('USER_NOT_EXISTENT')};
         if(!admin.security){throwError()};
-        let normalized = admin;        
+        let normalized = admin;
         return normalized;
     },
     __set2FA : async (params) => {
@@ -96,7 +97,7 @@ const processActions = {
 
         if(!admin){throwError('USER_NOT_EXISTENT')};
         if(!admin.security){throwError()};
-    
+
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
             secret : params['2fa_secret'],
             token : params['2fa_token']
@@ -114,22 +115,42 @@ const processActions = {
 
         return normalized;
     },
-	__register : (params) => {
-		// TO DO : Hash Password on Client Side
-		let password = new Security(params.password).hash();
+	__register : async (params) => {
+        let admin = await __private.db.findAdminEmail(params.email);
+        let registered = false;
+        if(!admin) { registered = true; }
+
+        let password = new Security(params.password).hash();
+
 		let normalized = {
 			username 		: params.username,
 			name 			: params.name,
             hash_password   : password,
             security 	    : params.security,
-			email			: params.email
+            email			: params.email,
+            registered      : registered
 		}
-	
 		return normalized;
-	}
+    },
+    __addAdmin : async (params) => {
+        let admin = await __private.db.findAdminById(params.admin);
+        if(!admin){throwError('USER_NOT_EXISTENT')};
+        let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( (new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) ).getTime());
+
+        let password = new Security(String((new Date()).getTime())).hash();
+		let normalized = {
+			username 		: `user${String((new Date()).getTime())}`,
+			name 			: `name${String((new Date()).getTime())}`,
+            hash_password   : password,
+            security 	    : params.security,
+            email			: params.email,
+            app             : admin.app,
+            bearerToken     : bearerToken,
+            registered      : false
+		}
+		return normalized;
+    }
 }
-
-
 
 /**
  * Login logic.
@@ -139,7 +160,6 @@ const processActions = {
  * @param {function} params - Function Params
  **/
 
-  
 const progressActions = {
     __login : async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
@@ -175,8 +195,24 @@ const progressActions = {
         return params;
     },
 	__register : async (params) => {
-        let user = await self.save(params);
-		return user
+        let admin = null;
+        if(params.registered === true) {
+            admin = await self.save(params);
+        } else {
+            params.registered = true;
+            admin = await __private.db.updateAdmin(params);
+            console.log(admin.app._id);
+            console.log(admin);
+            AppRepository.prototype.addAdmin(String(admin.app._id), admin);
+        }
+        // console.log(admin);
+        return admin
+    },
+    __addAdmin : async (params) => {
+        let resultAdmin = await self.save(params);
+        await SecurityRepository.prototype.setBearerToken(String(resultAdmin.security), params.bearerToken);
+		let admin = await __private.db.findAdminById(resultAdmin._id);
+        return admin
     }
 }
 
@@ -241,9 +277,11 @@ class AdminLogic extends LogicComponent {
 					return await library.process.__set2FA(params); 
 				};
 				case 'Register' : {
-					return library.process.__register(params); break;
-				};
-				
+					return await library.process.__register(params); break;
+                };
+                case 'AddAdmin' : {
+                    return await library.process.__addAdmin(params); break;
+                }
 			}
 		}catch(error){
 			throw error;
@@ -268,25 +306,26 @@ class AdminLogic extends LogicComponent {
 
 
 	async progress(params, progressAction){
-		try{			
+		try{
 			switch(progressAction) {
 				case 'Login' : {
-					return await library.progress.__login(params); 
+					return await library.progress.__login(params);
                 };
                 case 'Login2FA' : {
-					return await library.progress.__login2FA(params); 
+					return await library.progress.__login2FA(params);
                 };
                 case 'Auth' : {
-					return await library.progress.__auth(params); 
+					return await library.progress.__auth(params);
                 };
                 case 'Set2FA' : {
-					return await library.progress.__set2FA(params); 
+					return await library.progress.__set2FA(params);
 				};
 				case 'Register' : {
-					return await library.progress.__register(params); 
+					return await library.progress.__register(params);
                 };
-                
-				
+                case 'AddAdmin' : {
+					return await library.progress.__addAdmin(params);
+                };
 			}
 		}catch(error){
 			throw error;

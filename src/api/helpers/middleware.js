@@ -18,6 +18,23 @@ class Middleware{
         }
     };
 
+    generateTokenDate(time) {
+        try{
+            let token = jwt.sign({ time }, privateKEY, { algorithm: 'RS256' });
+            return token;
+        }catch(err){
+            throw err;
+        }
+    }
+    resultTokenDate(token) {
+        try{
+            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+            return response;
+        }catch (err){
+            return false;
+        }
+    }
+
     verify({token, payload, id}){
         try{
             let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });

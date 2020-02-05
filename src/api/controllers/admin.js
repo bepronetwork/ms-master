@@ -75,7 +75,20 @@ async function authAdmin (req, res) {
 	}
 }
 
+async function addAdmin (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'admin', req});
+        let params = req.body;
+		let admin = new Admin(params);
+		let data = await admin.addAdmin();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 export {
+    addAdmin,
 	registAdmin,
 	loginAdmin,
     loginAdmin2FA,

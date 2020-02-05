@@ -74,6 +74,20 @@ class AppRepository extends MongoComponent{
         });
     }
 
+    addAdmin(app_id, admin){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id, listAdmins : {$nin : [admin._id] } }, 
+                { $push: { "listAdmins" : admin} },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     addCurrencyWallet(app_id, wallet){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findOneAndUpdate(

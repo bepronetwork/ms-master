@@ -3,7 +3,9 @@ import {
     getApp,
     addAppServices,
     authAdmin,
-    getAppAuth
+    getAppAuth,
+    addAdmin,
+    registerAdmin
 } from '../../../methods';
 
 import chai from 'chai';
@@ -22,13 +24,13 @@ import { mochaAsync, genData, detectValidationErrors } from '../../../utils';
 const expect = chai.expect;
 
 context('Normal', async () =>  {
-    var admin, app;
+    var admin, app, dataAdminAdd;
 
 
     before( async () =>  {
         admin = global.test.admin;
+        dataAdminAdd = {email: null, bearerToken: null};
     });
-
 
     it('should regist the App with admin id provided', mochaAsync(async () => {
         let app_call_model = genData(models.apps.app_normal_register(admin.id));
@@ -53,15 +55,37 @@ context('Normal', async () =>  {
         global.test.app = res.data.message;
         detectValidationErrors(res);
         shouldGetAppDataAuth(res.data, expect);
+    }));
 
-    })); 
+    it('should add Admin', mochaAsync(async () => {
+        dataAdminAdd.email = `p${(new Date()).getTime()}@gmail.com`;
+        let res = await addAdmin({
+            email			: dataAdminAdd.email,
+            app             : app.id,
+            admin           : admin.id
+        }, admin.security.bearerToken, { id : admin.id});
+        dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
+        console.log(res);
+        expect(1).to.not.be.null;
+    }));
+
+    it('should Confirm Admin with token', mochaAsync(async () => {
+        var res = await registerAdmin({
+            email       : dataAdminAdd.email,
+            bearerToken : dataAdminAdd.bearerToken,
+            name        : `name${(new Date()).getTime()}`,
+            username    : `user${(new Date()).getTime()}`,
+            password    : `password${(new Date()).getTime()}`
+        });
+        expect(1).to.not.be.null;
+    }));
 
     it('should Get App Data', mochaAsync(async () => {
         let get_app_model = models.apps.get_app(app.id);
         let res = await getApp(get_app_model);
         detectValidationErrors(res);
         shouldGetAppData(res.data, expect);
-    })); 
+    }));
 
 
     it('should Integrate Services into App', mochaAsync(async () => {

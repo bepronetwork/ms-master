@@ -19,7 +19,14 @@ module.exports = {
         .post('/api/admins/register')
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async addAdmin(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/admins/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
     },
     async loginAdmin(params) {
         return request(global.server)
