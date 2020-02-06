@@ -98,7 +98,7 @@ context('Normal', async () =>  {
         var res = await registerAdmin({
             email       : dataAdminAdd.email,
             bearerToken : MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() ),
-            name        : `name${(new Date()).getTime()}`,
+            name        : 'Paul',
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
@@ -109,7 +109,7 @@ context('Normal', async () =>  {
         var res = await registerAdmin({
             email       : dataAdminAdd.email,
             bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA',
-            name        : `name${(new Date()).getTime()}`,
+            name        : 'Paul',
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
@@ -120,7 +120,7 @@ context('Normal', async () =>  {
         var res = await registerAdmin({
             email       : dataAdminAdd.email,
             bearerToken : dataAdminAdd.bearerToken,
-            name        : `name${(new Date()).getTime()}`,
+            name        : 'Paul',
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });

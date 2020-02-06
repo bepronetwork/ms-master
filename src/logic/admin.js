@@ -156,7 +156,7 @@ const processActions = {
         let password = new Security(String((new Date()).getTime())).hash();
 		let normalized = {
 			username 		: `user${params.admin}${String((new Date()).getTime())}`,
-			name 			: `name${params.admin}${String((new Date()).getTime())}`,
+			name 			: 'Paul',
             hash_password   : password,
             security 	    : params.security,
             email			: params.email,
@@ -211,28 +211,41 @@ const progressActions = {
         return params;
     },
 	__register : async (params) => {
-        let admin = null;
+        let admin       = null;
+        let email       = params.email;
+        let listIds     = mail.registerAdmin.listIds;
+        let templateId  = mail.registerAdmin.templateId;
+        let attributes  = {
+            NOME: params.name
+        };
+
         if(params.registered === true) {
             admin = await self.save(params);
+            // await SendInBlue.prototype.createContact(email, attributes, listIds);
         } else {
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
         }
-        let email = admin.email;
-        let attributes = {
-            NAME: admin.name
-        };
-        let templateId  = mail.registerAdmin.templateId;
-        let listIds     = mail.registerAdmin.listIds;
-        await SendInBlue.prototype.createContact(email, attributes, listIds);
-        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        // await SendInBlue.prototype.sendTemplate(templateId, [email]);
         return admin
     },
     __addAdmin : async (params) => {
         let resultAdmin = await self.save(params);
         await SecurityRepository.prototype.setBearerToken(String(resultAdmin.security), params.bearerToken);
 		let admin = await __private.db.findAdminById(resultAdmin._id);
+
+        let email = admin.email;
+        let attributes = {
+            NOME    : params.name,
+            TOKEN   : params.bearerToken,
+            APP     : params.app._id
+        };
+
+        let templateId  = mail.multiplesAdmins.templateId;
+        let listIds     = mail.multiplesAdmins.listIds;
+        // await SendInBlue.prototype.createContact(email, attributes, listIds);
+        // await SendInBlue.prototype.sendTemplate(templateId, [email]);
         return admin
     }
 }
