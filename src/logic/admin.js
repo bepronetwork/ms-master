@@ -122,9 +122,19 @@ const processActions = {
         let admin = await __private.db.findAdminEmail(params.email);
         let registered = false;
         if(!admin) { registered = true; }
-
+        if(admin != null && admin.security != null && admin.security != undefined) {
+            const payload = MiddlewareSingleton.resultTokenDate(params.bearerToken);
+            if(!payload) {
+                throwError('TOKEN_EXPIRED');
+            }
+            if( Number((new Date()).getTime()) > Number(payload.time) ) {
+                throwError('TOKEN_EXPIRED');
+            }
+            if(String(admin.security.bearerToken) !== String(params.bearerToken)) {
+                throwError('TOKEN_INVALID');
+            }
+        }
         let password = new Security(params.password).hash();
-
 		let normalized = {
 			username 		: params.username,
 			name 			: params.name,
@@ -138,12 +148,15 @@ const processActions = {
     __addAdmin : async (params) => {
         let admin = await __private.db.findAdminById(params.admin);
         if(!admin){throwError('USER_NOT_EXISTENT')};
-        let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( (new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) ).getTime());
+        let app = await AppRepository.prototype.findAppById(admin.app._id);
+        if(!app){throwError('USER_NOT_EXISTENT')};
+        if(String(app._id) !== String(params.app)) {throwError('APP_INVALID')};
 
+        let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() );
         let password = new Security(String((new Date()).getTime())).hash();
 		let normalized = {
-			username 		: `user${String((new Date()).getTime())}`,
-			name 			: `name${String((new Date()).getTime())}`,
+			username 		: `user${params.admin}${String((new Date()).getTime())}`,
+			name 			: `name${params.admin}${String((new Date()).getTime())}`,
             hash_password   : password,
             security 	    : params.security,
             email			: params.email,
@@ -204,7 +217,7 @@ const progressActions = {
         } else {
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
-            AppRepository.prototype.addAdmin(String(admin.app._id), admin);
+            await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
         }
         let email = admin.email;
         let attributes = {

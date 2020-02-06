@@ -22,6 +22,7 @@ import {
 
 } from '../../output/AppTestMethod';
 import { mochaAsync, genData, detectValidationErrors } from '../../../utils';
+import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
 
 const expect = chai.expect;
 
@@ -90,8 +91,29 @@ context('Normal', async () =>  {
             admin           : admin.id
         }, admin.security.bearerToken, { id : admin.id});
         dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
-        console.log(res);
-        expect(1).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should Confirm Admin with token invalid', mochaAsync(async () => {
+        var res = await registerAdmin({
+            email       : dataAdminAdd.email,
+            bearerToken : MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() ),
+            name        : `name${(new Date()).getTime()}`,
+            username    : `user${(new Date()).getTime()}`,
+            password    : `password${(new Date()).getTime()}`
+        });
+        expect(res.data.status).to.equal(50);
+    }));
+
+    it('should Confirm Admin with token expired', mochaAsync(async () => {
+        var res = await registerAdmin({
+            email       : dataAdminAdd.email,
+            bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA',
+            name        : `name${(new Date()).getTime()}`,
+            username    : `user${(new Date()).getTime()}`,
+            password    : `password${(new Date()).getTime()}`
+        });
+        expect(res.data.status).to.equal(49);
     }));
 
     it('should Confirm Admin with token', mochaAsync(async () => {
@@ -102,7 +124,7 @@ context('Normal', async () =>  {
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
-        expect(1).to.not.be.null;
+        expect(res.data.status).to.equal(200);
     }));
 
     it('should Get App Data', mochaAsync(async () => {
@@ -111,7 +133,6 @@ context('Normal', async () =>  {
         detectValidationErrors(res);
         shouldGetAppData(res.data, expect);
     }));
-
 
     it('should Integrate Services into App', mochaAsync(async () => {
         let service_call_add_model = models.apps.add_services(app.id, [101, 201]);

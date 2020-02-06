@@ -186,5 +186,17 @@
     "046" : {
         "key" : "CURRENCY_ALREADY_EXISTENT",
         "message"   : "Currency is already existent in this App, please contract support"
+    },
+    "049" : {
+        "key" : "TOKEN_EXPIRED",
+        "message"   : "Expired Token"
+    },
+    "050" : {
+        "key" : "TOKEN_INVALID",
+        "message"   : "Token Invalid"
+    },
+    "051" : {
+        "key" : "APP_INVALID",
+        "message"   : "App not is valid"
     }
 }

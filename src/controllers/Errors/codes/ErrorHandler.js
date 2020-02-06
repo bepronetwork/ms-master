@@ -60,8 +60,11 @@ ErrorHandler.prototype.KEYS =  {
     'BAD_REQUEST'                           : "043",
     'DEPLOY_ERROR'                          : "044",
     'CURRENCY_NOT_EXISTENT'                 : "045",
-    'CURRENCY_ALREADY_EXISTENT'             : "046"
-}; 
+    'CURRENCY_ALREADY_EXISTENT'             : "046",
+    'TOKEN_EXPIRED'                         : "049",
+    'TOKEN_INVALID'                         : "050",
+    'APP_INVALID'                           : "051"
+};
 
 
   /***************************
