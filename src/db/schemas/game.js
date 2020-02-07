@@ -23,6 +23,7 @@ GameSchema.prototype.schema = {
     result              : [{ type: Number}],
     bets                : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bet'}], 
     isClosed            : { type: Boolean , required : true, default : false},
+    maxBet              : { type: Number, default : 0}
 }
 
 GameSchema.prototype.model = db.model(GameSchema.prototype.name, new db.Schema(GameSchema.prototype.schema));

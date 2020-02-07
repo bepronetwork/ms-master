@@ -108,6 +108,20 @@ class GamesRepository extends MongoComponent{
             })
         })
     }
+
+    setMaxBet = async(params) =>{
+        return new Promise((resolve, reject) => {
+            GamesRepository.prototype.schema.model.findByIdAndUpdate(
+                params.game, 
+                { $set: { "maxBet" : parseFloat(params.maxBet) } },
+                { 'new': true }
+            )
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        })
+    }
 }
 
 GamesRepository.prototype.schema = new GameSchema();

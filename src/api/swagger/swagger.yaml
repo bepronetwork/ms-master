@@ -1296,6 +1296,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/games/bet/max:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - bet
+      summary: Set Max of a Bet
+      operationId: setMaxBet
+      description: Set a Max Value for a Bet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: bet
+          description: Bet Information
+          required: true
+          schema:
+            $ref: '#/definitions/MaxBetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"   
   /app/games/get:
     x-swagger-router-controller: app
     post:
@@ -2260,6 +2290,31 @@ definitions:
               type: number
             value :
               type: number
+  MaxBetRequest:
+    type: object
+    required:
+      - app
+      - game
+      - betMax
+    properties:
+      app :
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          App Id
+      game :
+        type : string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Game Id
+      betMax :
+        type : number
+        format : string
+        example : 0
+        description: |
+          Bet Max Value
   GeneralResponse : 
     type: object
     required:

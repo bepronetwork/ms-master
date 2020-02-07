@@ -8,6 +8,7 @@ import LogicComponent from './logicComponent';
 import { markets } from './markets';
 import MarketsSingleton from './markets/Markets';
 import { ResultSpace } from '../models';
+import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 
 
@@ -27,40 +28,52 @@ let __private = {};
  * @param {function} params - Function Params
  **/
 
-	  
+
 const processActions = {
-	__register : async (params) => {
+	__register: async (params) => {
 
 		let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app)
 
 		let normalized = {
-			name    			: params.name,
-			edge        		: params.edge,
-            app           	    : app._id,
-            resultSpace         : params.resultSpace,
-            betSystem           : params.betSystem,
-            timestamp           : new Date(),
-            image_url           : params.image_url,
-            metaName            : params.metaName,
-            rules               : params.rules,
-            description         : params.description,
-            metadataJSON        : params.metadataJSON
+			name: params.name,
+			edge: params.edge,
+			app: app._id,
+			resultSpace: params.resultSpace,
+			betSystem: params.betSystem,
+			timestamp: new Date(),
+			image_url: params.image_url,
+			metaName: params.metaName,
+			rules: params.rules,
+			description: params.description,
+			metadataJSON: params.metadataJSON
 		}
 
 		return normalized;
 	},
-	__get : async (params) => {
+	__get: async (params) => {
 
 		let game = await GamesRepository.prototype.findGameById(params.id)
-		
+
 		let normalized = {
-			name    			: game.name,
-			description         : game.description,
-            edge        		: game.edge,
-            events              : game.events,
-            rules               : game.rules
+			name: game.name,
+			description: game.description,
+			edge: game.edge,
+			events: game.events,
+			rules: game.rules
 		}
 
+		return normalized;
+	},
+
+	__setMaxBet: async (params) => {
+		let app = await AppRepository.prototype.findAppById(paramas.app);
+		if(!app){throwError('APP_NOT_EXISTENT')}
+		let game = app.games.find(g => g._id == params.game);
+		if(!game){throwError('GAME_NOT_EXISTENT')}
+		normalized = {
+			maxBet: params.maxBet,
+			game: game._id
+		}
 		return normalized;
 	}
 }
@@ -75,30 +88,36 @@ const processActions = {
  * @param {function} params - Function Params
  **/
 
-  
+
 const progressActions = {
-	__register : async (params) => {
-        let dependentObjects = params.resultSpace.map( async resultSpace => {
-            let resultSpaceObject = new ResultSpace(resultSpace);
-            return await resultSpaceObject.register();
-        });
-        let resultSpacesIds = await Promise.all(dependentObjects);
-        // Generate new Params Setup
-        
-        params = {
-            ...params,
-            resultSpace : resultSpacesIds
-        }
-        let game = await self.save(params);
+	__register: async (params) => {
+		let dependentObjects = params.resultSpace.map(async resultSpace => {
+			let resultSpaceObject = new ResultSpace(resultSpace);
+			return await resultSpaceObject.register();
+		});
+		let resultSpacesIds = await Promise.all(dependentObjects);
+		// Generate new Params Setup
 
-        await AppRepository.prototype.addGame(params.app, game);
+		params = {
+			...params,
+			resultSpace: resultSpacesIds
+		}
+		let game = await self.save(params);
 
-        return game;
+		await AppRepository.prototype.addGame(params.app, game);
+
+		return game;
 	},
-	__get : async (params) => {
+	
+	__get: async (params) => {
 		return params
-    },
-    // TO DO : Create Resolve Part
+	},
+
+	__setMaxBet: async (params) => {
+		let game = await GamesRepository.prototype.setMaxBet(params);
+		return game;
+	}
+	// TO DO : Create Resolve Part
 }
 /**
  * Main Game logic.
@@ -121,21 +140,21 @@ const progressActions = {
  */
 
 
-class GameLogic extends LogicComponent{
+class GameLogic extends LogicComponent {
 	constructor(scope) {
 		super(scope);
 		self = this;
 		__private = {
 			//ADD
-			db : scope.db,
-			__normalizedSelf : null
+			db: scope.db,
+			__normalizedSelf: null
 		};
 
 		library = {
-			process  : processActions,
-			progress : progressActions
+			process: processActions,
+			progress: progressActions
 		}
-    }
+	}
 
 
     /**
@@ -146,47 +165,53 @@ class GameLogic extends LogicComponent{
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
-		try{			
-			switch(processAction) {
-				case 'Register' : {
-					return await library.process.__register(params); break;
+		try {
+			switch (processAction) {
+				case 'Register': {
+					return await library.process.__register(params);
 				};
-				case 'Get' : {
-					return await library.process.__get(params); break;
+				case 'Get': {
+					return await library.process.__get(params);
+				};
+				case 'SetMaxBet': {
+					return await library.process.__setMaxBet(params);
 				};
 			}
-		}catch(report){
+		} catch (report) {
 			throw `Failed to validate game schema: game \n See Stack Trace : ${report}`;
 		}
 	}
 
-	 /**
-	 * Tests game schema.
-	 *
-	 * @param {game} game
-	 * @returns {game} game
-	 * @throws {string} On schema.validate failure
-	 */
+	/**
+	* Tests game schema.
+	*
+	* @param {game} game
+	* @returns {game} game
+	* @throws {string} On schema.validate failure
+	*/
 
-	testParams(params, action){
-		try{
+	testParams(params, action) {
+		try {
 			error.game(params, action);
-		}catch(err){
+		} catch (err) {
 			throw err;
 		}
 	}
 
-	async progress(params, progressAction){
-		try{			
-			switch(progressAction) {
-				case 'Register' : {
-					return await library.progress.__register(params); break;
+	async progress(params, progressAction) {
+		try {
+			switch (progressAction) {
+				case 'Register': {
+					return await library.progress.__register(params);
 				};
-				case 'Get' : {
-					return await library.progress.__get(params); break;
+				case 'Get': {
+					return await library.progress.__get(params);
+				};
+				case 'SetMaxBet': {
+					return await library.progress.__setMaxBet(params);
 				};
 			}
-		}catch(report){
+		} catch (report) {
 			throw `Failed to validate user schema: User \n See Stack Trace : ${report}`;
 		}
 	}
