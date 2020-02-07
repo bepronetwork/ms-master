@@ -151,12 +151,14 @@ const processActions = {
         let app = await AppRepository.prototype.findAppById(admin.app._id);
         if(!app){throwError('USER_NOT_EXISTENT')};
         if(String(app._id) !== String(params.app)) {throwError('APP_INVALID')};
-
+        let adminEmail = (await __private.db.findAdminEmail(params.email));
+        if(adminEmail && adminEmail.registered === true) { throwError()}
         let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() );
         let password = new Security(String((new Date()).getTime())).hash();
 		let normalized = {
+            adminEmail      : adminEmail,
 			username 		: `user${params.admin}${String((new Date()).getTime())}`,
-			name 			: 'Paul',
+			name 			: 'nameTMP',
             hash_password   : password,
             security 	    : params.security,
             email			: params.email,
@@ -221,31 +223,40 @@ const progressActions = {
 
         if(params.registered === true) {
             admin = await self.save(params);
-            // await SendInBlue.prototype.createContact(email, attributes, listIds);
+            await SendInBlue.prototype.createContact(email, attributes, listIds);
         } else {
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
         }
-        // await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        await SendInBlue.prototype.sendTemplate(templateId, [email]);
         return admin
     },
     __addAdmin : async (params) => {
-        let resultAdmin = await self.save(params);
-        await SecurityRepository.prototype.setBearerToken(String(resultAdmin.security), params.bearerToken);
-		let admin = await __private.db.findAdminById(resultAdmin._id);
-
-        let email = admin.email;
         let attributes = {
             NOME    : params.name,
             TOKEN   : params.bearerToken,
             APP     : params.app._id
         };
-
+        let resultAdmin;
+        let email = params.email;
         let templateId  = mail.multiplesAdmins.templateId;
         let listIds     = mail.multiplesAdmins.listIds;
-        // await SendInBlue.prototype.createContact(email, attributes, listIds);
-        // await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        let securityId;
+
+        if(!params.adminEmail) {
+            delete params['adminEmail'];
+            resultAdmin = await self.save(params);
+            securityId = String(resultAdmin.security);
+            await SendInBlue.prototype.createContact(email, attributes, listIds);
+        } else {
+            resultAdmin = params.adminEmail;
+            securityId = String(resultAdmin.security._id);
+            await SendInBlue.prototype.updateContact(email, attributes);
+        }
+        await SecurityRepository.prototype.setBearerToken(securityId, params.bearerToken);
+		let admin = await __private.db.findAdminById(resultAdmin._id);
+        await SendInBlue.prototype.sendTemplate(templateId, [email]);
         return admin
     }
 }

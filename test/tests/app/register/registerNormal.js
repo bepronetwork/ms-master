@@ -91,6 +91,18 @@ context('Normal', async () =>  {
             admin           : admin.id
         }, admin.security.bearerToken, { id : admin.id});
         dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should add Admin again', mochaAsync(async () => {
+        let res = await addAdmin({
+            email			: dataAdminAdd.email,
+            app             : app.id,
+            admin           : admin.id
+        }, admin.security.bearerToken, { id : admin.id});
+        dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
+        expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(200);
     }));
 
@@ -102,6 +114,7 @@ context('Normal', async () =>  {
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
+        expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(50);
     }));
 
@@ -113,6 +126,7 @@ context('Normal', async () =>  {
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
+        expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(49);
     }));
 
@@ -124,6 +138,7 @@ context('Normal', async () =>  {
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
+        expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(200);
     }));
 
