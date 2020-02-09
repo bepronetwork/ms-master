@@ -28,9 +28,9 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
 	// install middleware
 	swaggerExpress.register(app);
     globals.verify();
-    await globals.connect();
-    console.log("Connected to DB")
-	app.listen(PORT,async () => {
+    await globals.__init__();
+
+    app.listen(PORT,async () => {
         Logger.success("Listening in port", PORT);
 	});
 

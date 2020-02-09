@@ -61,6 +61,20 @@ class WalletsRepository extends MongoComponent{
             })
         })
     }
+
+    addDepositAddress(wallet_id, address){        
+        return new Promise( (resolve,reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: wallet_id, "depositAddresses" : {$nin : [address] } }, 
+                { $push: { "depositAddresses" : address } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
+    }
 }
 
 WalletsRepository.prototype.schema = new WalletSchema();

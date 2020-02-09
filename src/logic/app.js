@@ -17,7 +17,8 @@ import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
-import { HerokuClientSingleton } from './third-parties';
+import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
+
 let error = new ErrorManager();
 
 
@@ -98,7 +99,9 @@ const processActions = {
        return normalized;
     },
     __addCurrencyWallet : async (params) => {
-        var { bank_address, currency_id, app } = params;
+        
+        var { currency_id, app, passphrase } = params;
+
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
 
@@ -106,7 +109,7 @@ const processActions = {
 
         return  {
             currency, 
-            bank_address,
+            passphrase,
             app : app
         }
     },
@@ -158,21 +161,21 @@ const processActions = {
 		return res;
     },
     __updateWallet : async (params) => {
-        var { currency, app } = params;
-
+        var { currency, id, wBT } = params;
         /* Get App Id */
-        if(params.amount <= 0){throwError('INVALID_AMOUNT')}
-        app = await AppRepository.prototype.findAppById(app);
+        var app = await AppRepository.prototype.findAppById(id);
         if(!app){throwError('APP_NOT_EXISTENT')}
         const wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
         /* Verify if the transactionHash was created */
-        let { isValid, from, amount } = await verifytransactionHashDirectDeposit(
-            new String(wallet.currency.ticker).toLowerCase(), params.transactionHash, params.amount, 
-            wallet.bank_address, wallet.currency.decimals);
+        const { state, entries, value : amount, type, txid : transactionHash } = wBT;
+        
+        const from = entries[0].address;
+        const isValid = ((state == 'confirmed') && (type == 'receive'));
+
         /* Verify if this transactionHashs was already added */
-        let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
+        let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
 
         let wasAlreadyAdded = deposit ? true : false;
     
@@ -181,7 +184,7 @@ const processActions = {
             app_id              : app._id,
             wallet              : wallet,
             creationDate        : new Date(),
-            transactionHash     : params.transactionHash,
+            transactionHash     : transactionHash,
             from                : from,
             amount              : amount,
             wasAlreadyAdded,
@@ -362,31 +365,71 @@ const progressActions = {
 		return res;
     },
     __addCurrencyWallet : async (params) => {
-        const { currency, bank_address, app } = params;
+        const { currency, passphrase, app } = params;
+        /* Create Wallet on Bitgo */
+        var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
+            label : `${app._id}-${currency.ticker}`,
+            passphrase,
+            currency : currency.ticker
+        })
+        /* Record webhooks */
+        await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
+        /* Create Policy for Day */
+        await BitGoSingleton.addPolicyToWallet({
+            ticker : currency.ticker,
+            bitGoWalletId : bitgo_wallet.id(),
+            timeWindow : 'day'
+        })
+
+        /* Create Policy for Transaction */
+        await BitGoSingleton.addPolicyToWallet({
+            ticker : currency.ticker,
+            bitGoWalletId : bitgo_wallet.id(),
+            timeWindow : 'hour',
+        })
+
+        /* Create Policy for Hour */
+        await BitGoSingleton.addPolicyToWallet({
+            ticker : currency.ticker,
+            bitGoWalletId : bitgo_wallet.id(),
+            timeWindow : 'transaction',
+        })
+
+        /* No Bitgo Wallet created */
+        if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+
+        /* Save Wallet on DB */
         let wallet = (await (new Wallet({
             currency : currency._id,
-            bank_address
+            bitgo_id : bitgo_wallet.id(),
+            bank_address : receiveAddress
         })).register())._doc;
 
+        /* Add Currency to Platform */
         await AppRepository.prototype.addCurrency(app._id, currency._id);
         await AppRepository.prototype.addCurrencyWallet(app._id, wallet);
+
+
         /* Add Wallet to all Users */
+    
         await Promise.all(await app.users.map( async u => {
             let w = (await (new Wallet({
-                currency : currency._id,
+                currency : currency._id
             })).register())._doc;
             await UsersRepository.prototype.addCurrencyWallet(u._id, w);
 
             let wAffiliate = (await (new Wallet({
-                currency : currency._id,
+                currency : currency._id
             })).register())._doc;
             await AffiliateRepository.prototype.addCurrencyWallet(u.affiliate, wAffiliate);
-
         }));
+        
+
         return {
             currency_id : currency._id,
-            bank_address
+            keys : keys,
+            bank_address : receiveAddress
         }
     },
     __addServices : async (params) => {

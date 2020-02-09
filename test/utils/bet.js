@@ -3,6 +3,7 @@ const expect = chai.expect;
 
 export async function digestBetResult({newBalance, res, previousBalance}){
     const { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta} = res.data.message;
+    console.log(winAmount, isWon, user_delta, newBalance, previousBalance)
     if(isWon){
         // Confirm delta is positive
         expect(user_delta).to.be.greaterThan(0);
