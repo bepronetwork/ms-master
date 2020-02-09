@@ -43,7 +43,7 @@ const CONST = {
         BET_AMOUNT : 0.05,
         WITHDRAW_AMOUNT : 2,
     },
-    currencyTicker : 'SAI',
+    currencyTicker : 'ETH',
     maxWithdrawal : 100,
     erc20Address : testConfig.eth.erc20Address,
     maxDeposit : 100,
@@ -126,6 +126,8 @@ const runTests = async () => {
                         throw new Error(`ETH is less than 1 for Master \nPlease recharge ETH for Address : ${global.masterAccount.getAddress()}`)
                     }
 
+                    /*
+
                     if(USER_TOKEN_AMOUNT < 50){
                         throw new Error(`Tokens are less than 50 for User \nPlease recharge Tokens for Address : ${global.userAccount.getAddress()}`)
                     }
@@ -137,7 +139,7 @@ const runTests = async () => {
                     if(MASTER_TOKEN_AMOUNT < 50){
                         throw new Error(`Tokens are less than 50 for Master \nPlease recharge Tokens for Address : ${global.userAccount.getAddress()}`)
                     }
-
+                    */
                     expect(true).to.equal(true);      
                     return;
                 }catch(err){
@@ -152,9 +154,6 @@ const runTests = async () => {
     mocha.addFile('./test/tests/admin');
     mocha.addFile('./test/tests/app');
     mocha.addFile('./test/tests/user');
-    //mocha.addFile('./test/tests/AffiliatesTest.js');
-    //mocha.addFile('./test/tests/FunctionalTest.js');
-    
     mocha
     .timeout(1000*60*1000)
     .run()

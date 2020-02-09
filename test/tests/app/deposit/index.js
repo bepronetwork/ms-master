@@ -1,4 +1,4 @@
 context('Deposit', async () => {
-    require('./erc20');
+    //require('./erc20');
     require('./eth');
 });

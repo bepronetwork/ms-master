@@ -1,4 +1,5 @@
 import { generateEthAccountWithTokensAndEthereum, fundEthAccountWithTokensAndEthereum } from "./eth";
+import { WalletsRepository } from "../../src/db/repos";
 
 export async function createEthAccount({ethAmount, tokenAmount}){
     /* Create User Address and give it ETH */
@@ -7,8 +8,8 @@ export async function createEthAccount({ethAmount, tokenAmount}){
 }
 
 
-export async function provideFunds({account, ethAmount, tokenAmount, erc20Address}){
-    /* Create User Address and give it ETH */
-    return await fundEthAccountWithTokensAndEthereum({account, ethAmount ,tokenAmount, erc20Address});
+export async function provideFunds({wallet,  amount}){
+    /* Update Balance of App */
+    await WalletsRepository.prototype.updatePlayBalance(wallet, amount);
 }
 

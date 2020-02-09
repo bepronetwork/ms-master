@@ -70,6 +70,17 @@ class DepositRepository extends MongoComponent{
         });
     }
 
+    deleteDepositByTransactionHash(transactionHash){
+        return new Promise( (resolve, reject) => {
+            DepositRepository.prototype.schema.model
+            .findOneAndDelete({ transactionHash })
+            .exec( (err, Deposit) => {
+                if(err) { reject(err)}
+                resolve(Deposit)            
+            });
+        });
+    }
+
 
     confirmDeposit(id, new_deposit_params){
         return new Promise( (resolve, reject) => {
