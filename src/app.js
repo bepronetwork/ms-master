@@ -5,12 +5,10 @@ import { Logger } from './helpers/logger';
 /** MACROS */
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
-var url = require("url");
 
 /** CODE */
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-const proxy = url.parse(QUOTA_GUARD_URL);
 
 // Scheduler   
 
