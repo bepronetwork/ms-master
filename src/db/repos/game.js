@@ -43,6 +43,16 @@ class GamesRepository extends MongoComponent{
         });
     }
 
+    findGameByIdAndNotPopulate = async(_id) => {
+        return new Promisse((resolve, reject) => {
+            GamesRepository.prototype.schema.model.findById(_id)
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     editTableLimit({id, tableLimit}){
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.findByIdAndUpdate(
@@ -106,7 +116,7 @@ class GamesRepository extends MongoComponent{
                 if(err){reject(err)}
                 resolve(docs);
             })
-        })
+        });
     }
 
     setMaxBet = async(params) =>{
@@ -120,7 +130,7 @@ class GamesRepository extends MongoComponent{
                 if(err){reject(err)}
                 resolve(item);
             })
-        })
+        });
     }
 }
 
