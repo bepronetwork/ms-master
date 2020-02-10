@@ -2,7 +2,6 @@ const BitGo = require('bitgo');
 import { BITGO_ACCESS_TOKEN, IS_DEVELOPMENT, BITGO_ENTERPRISE_ID, MS_MASTER_URL, QUOTA_GUARD_URL } from '../../../config';
 import { normalizePolicy, getCurrencyAmountFromBitGo } from './helpers';
 
-console.log("Proxy : ", QUOTA_GUARD_URL)
 class BitGoClass {
     constructor(){
         this.bitgo = new BitGo.BitGo({ accessToken: BITGO_ACCESS_TOKEN, proxy : QUOTA_GUARD_URL }); // defaults to testnet. add env: 'prod' if you want to go against mainnet
