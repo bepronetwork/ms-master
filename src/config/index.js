@@ -47,6 +47,8 @@ export const BITGO_ACCESS_TOKEN = process.env.BITGO_KEY;
 
 export const BITGO_ENTERPRISE_ID = process.env.BITGO_ENTERPRISE_ID;
 
+export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
+
 /* Variables */
 
 var ETH_NETWORK = config.eth;

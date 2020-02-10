@@ -33,7 +33,8 @@ jobs: # a collection of steps
             echo 'export MS_WITHDRAW_URL=https://sandbox-ms-withdraw.betprotocol.com' >> $BASH_ENV
             echo 'export GITHUB_LAYOUT_REPO=layout-1' >> $BASH_ENV 
             echo 'export BITGO_ENTERPRISE_ID=5e2ee3674141b74006f37e0b0fdf6813' >> $BASH_ENV                 
-            echo 'export BITGO_KEY=v2x92e2f04df992113ea3e1fd47e91ef1255ede95954bd1c07df792a9d9f76585ae' >> $BASH_ENV                 
+            echo 'export BITGO_KEY=v2x9c8c188179741a91e4778ae69e76116a2ef3980dacb035737c0feb55b76367c1' >> $BASH_ENV                 
+            echo 'export QUOTA_GUARD_URL=http://1uf1vgmue9ztet:3k1ajq0eev28rmx06uvrj2ox8t@eu-west-static-04.quotaguard.com:9293' >> $BASH_ENV
             source $BASH_ENV
       - run: # run tests
           name: test
