@@ -37,24 +37,24 @@ context(`Set Max Deposit`, async () => {
         expect(dataMaxDeposit.data.status).to.not.be.null;
     }));
 
-    it('should set max for erc20 success', mochaAsync(async () => {
-        updateCurrencyWallet('SAI', app);
-        let dataMaxDeposit = await setAppMaxDeposit({
-            app: app.id,
-            wallet_id: currencyWallet._id,
-            amount: 30,
-        }, app.bearerToken, {id : app.id});
-        expect(dataMaxDeposit.data.status).to.be.equal(200);
-        expect(dataMaxDeposit.data.status).to.not.be.null;
-    }));
-    it('should set max for erc20 not auth', mochaAsync(async () => {
-        updateCurrencyWallet('SAI', app);
-        let dataMaxDeposit = await setAppMaxDeposit({
-            app: app.id,
-            wallet_id: currencyWallet._id,
-            amount: 30,
-        }, null, {id : app.id});
-        expect(dataMaxDeposit.data.status).to.be.equal(304);
-        expect(dataMaxDeposit.data.status).to.not.be.null;
-    }));
+    // it('should set max for erc20 success', mochaAsync(async () => {
+    //     updateCurrencyWallet('SAI', app);
+    //     let dataMaxDeposit = await setAppMaxDeposit({
+    //         app: app.id,
+    //         wallet_id: currencyWallet._id,
+    //         amount: 30,
+    //     }, app.bearerToken, {id : app.id});
+    //     expect(dataMaxDeposit.data.status).to.be.equal(200);
+    //     expect(dataMaxDeposit.data.status).to.not.be.null;
+    // }));
+    // it('should set max for erc20 not auth', mochaAsync(async () => {
+    //     updateCurrencyWallet('SAI', app);
+    //     let dataMaxDeposit = await setAppMaxDeposit({
+    //         app: app.id,
+    //         wallet_id: currencyWallet._id,
+    //         amount: 30,
+    //     }, null, {id : app.id});
+    //     expect(dataMaxDeposit.data.status).to.be.equal(304);
+    //     expect(dataMaxDeposit.data.status).to.not.be.null;
+    // }));
 });
