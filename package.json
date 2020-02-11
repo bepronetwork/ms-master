@@ -68,7 +68,7 @@
         "faker": "^4.1.0",
         "file-saver": "^2.0.2",
         "heroku-client": "^3.1.0",
-        "int64-buffer" : "^0.99.1007",
+        "int64-buffer": "^0.99.1007",
         "inquirer": "^6.5.2",
         "ip": "^1.1.5",
         "isomorphic-fetch": "^2.2.1",
