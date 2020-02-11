@@ -449,37 +449,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /users/updateWallet: 
-    x-swagger-router-controller: user
-    post:
-      tags:
-      - user
-      summary: Update Wallet Amount for the User
-      operationId: updateWallet
-      description: Update Wallet Amount for the User
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: user
-          description: User Information
-          required: true
-          schema:
-            $ref: '#/definitions/UpdateUserWalletRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  
+
   /app/create:
     x-swagger-router-controller: app
     post:
@@ -810,7 +780,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
+  /app/address/get : 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Get Address Deposit for User
+      operationId: getDepositAddress
+      description: Change Footer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppUserDepositAddressRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/deploy : 
     x-swagger-router-controller: app
     post:
@@ -1083,25 +1082,22 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/updateWallet: 
+  /app/webhookBitgoDeposit: 
     x-swagger-router-controller: app
     post:
       tags:
       - app
       summary: Update Wallet Amount for the App
-      operationId: updateWalletApp
+      operationId: webhookBitgoDeposit
       description: Update Wallet Amount for the App
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/UpdateAppWalletRequest'
+        - in: query
+          name : id
+          type : string
       responses:
         "200":
           description: Success
@@ -1650,7 +1646,7 @@ definitions:
     type: object
     required:
       - app
-      - bank_address
+      - passphrase
       - currency_id
     properties:
       app:
@@ -1665,11 +1661,11 @@ definitions:
         example: "wertwertwertwert"
         description: |
           Currency id
-      bank_address:
+      passphrase:
         type : string
-        example: 0x9898347569837456983
+        example: "pass!,*%%a,,"
         description: |
-          Bank Address for Platform Use and bank
+          Passphrase to protect the wallet
   AppGameEditTableLimit : 
     type: object
     required:
@@ -2022,6 +2018,31 @@ definitions:
         example : 50
         description: |
           size
+  AppUserDepositAddressRequest : 
+    type: object
+    required:
+      - app
+      - currency
+      - id
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      currency :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Currency ID
+      id :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User ID
   AppBiggestWinnersRequest : 
     type: object
     required:
@@ -2060,37 +2081,6 @@ definitions:
           User Id
       offset :
         type : number
-  UpdateAppWalletRequest : 
-    type: object
-    required:
-      - app
-      - amount
-      - transactionHash
-      - currency
-    properties:
-      amount:
-        type : number
-        example: 203
-        description: |
-          Amount added or taken from Wallet
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      transactionHash :
-        type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
-        description: |
-          Transaction Hash
-      currency : 
-        type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
-        description: |
-          Currency Type
   UserBetsRequest : 
     type: object
     required:
@@ -2115,44 +2105,6 @@ definitions:
         example: "Weekly"
         description: |
           Periodicity of Data
-      currency :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          Currency ID
-  UpdateUserWalletRequest : 
-    type: object
-    required:
-      - user
-      - amount
-      - transactionHash
-      - app
-      - currency
-    properties:
-      amount:
-        type : number
-        example: 203
-        description: |
-          Amount added or taken from Wallet
-      user :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      transactionHash :
-        type : string
-        format: name
-        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
-        description: |
-          Transaction Hash
       currency :
         type : string
         format: name

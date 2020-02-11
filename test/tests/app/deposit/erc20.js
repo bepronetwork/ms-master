@@ -57,7 +57,7 @@ context(`ERC20 (${erc20Ticker})`, async () => {
         let ret = await Promise.resolve(await res);
 
         expect(ret.data.status).to.not.be.null;
-        expect(ret.data.status).to.be.equal(47);
+        expect(ret.data.status).to.be.equal(48);
     }));
 
     it('should update Wallet with verified transaction', mochaAsync(async () => {

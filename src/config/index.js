@@ -37,9 +37,17 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
-export const FRONTEND_BRANCH = ENV == 'production' ? 'master' : 'dev';
+export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
+
+export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
 
 export const GITHUB_LAYOUT_REPO = process.env.GITHUB_LAYOUT_REPO;
+
+export const BITGO_ACCESS_TOKEN = process.env.BITGO_KEY;
+
+export const BITGO_ENTERPRISE_ID = process.env.BITGO_ENTERPRISE_ID;
+
+export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
 
 /* Variables */
 

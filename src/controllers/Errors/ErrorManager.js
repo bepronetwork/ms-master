@@ -242,8 +242,8 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
                     }
                     // Verify Bank_address
-                    if(typeof object.bank_address == 'undefined' || Object.is(object.bank_address, null)){
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
+                    if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
                     }
                     //Verify Currency exists 
                     if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
@@ -563,6 +563,16 @@ class ErrorManager {
     }
 
     color = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    address = function (object, type){
         try{
             switch(type){
                

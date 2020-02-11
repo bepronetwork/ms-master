@@ -61,9 +61,9 @@ ErrorHandler.prototype.KEYS =  {
     'DEPLOY_ERROR'                          : "044",
     'CURRENCY_NOT_EXISTENT'                 : "045",
     'CURRENCY_ALREADY_EXISTENT'             : "046",
-    'OVERFLOW_DEPOSIT'                      : "047"
+    'NO_PASSPHRASE_WALLET'                  : "047",
+    'OVERFLOW_DEPOSIT'                      : "048"
 };
-
 
   /***************************
  * 

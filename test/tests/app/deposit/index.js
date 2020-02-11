@@ -1,5 +1,5 @@
 context('Deposit', async () => {
+    //require('./erc20');
     require('./setMaxDeposit');
-    require('./erc20');
     require('./eth');
 });

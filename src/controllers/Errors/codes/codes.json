@@ -188,6 +188,10 @@
         "message"   : "Currency is already existent in this App, please contract support"
     },
     "047" : {
+        "key" : "NO_PASSPHRASE_WALLET",
+        "message"   : "No Passphrase was provided"
+    },
+    "048" : {
         "key" : "OVERFLOW_DEPOSIT",
         "message"   : "Deposit max exceeded"
     }
