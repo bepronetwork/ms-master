@@ -14,12 +14,12 @@ const expect = chai.expect;
 
 
  const currenciesBetAmount = {
-    'SAI' : 0.2,
+    // add other currencies here
     'eth' : 0.001
 }
 
 const limitTableBetAmount = {
-    'SAI' : 0.1,
+        // add other currencies here
     'eth' : 0.0006
 }
 

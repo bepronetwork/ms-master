@@ -188,11 +188,15 @@
         "message"   : "Currency is already existent in this App, please contract support"
     },
     "047" : {
-        "key" : "MAX_BET_ACHIEVED",
-        "message"   : "Maximum bet reached, please reduce your bet"
+        "key" : "NO_PASSPHRASE_WALLET",
+        "message"   : "No Passphrase was provided"
     },
     "048" : {
         "key" : "MAX_BET_NOT_EXISTENT",
         "message"   : "Maximum Bet not existent on this Game, please verify it"
+    },
+    "049" : {
+        "key" : "MAX_BET_ACHIEVED",
+        "message"   : "Maximum bet reached, please reduce your bet"
     }
 }

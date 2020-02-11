@@ -13,11 +13,12 @@ import {
     WithdrawRepository, 
     AffiliateLinkRepository, 
     AffiliateRepository, 
-    SecurityRepository
+    SecurityRepository,
+    AddressRepository
 } from '../db/repos';
 import Numbers from './services/numbers';
 import { verifytransactionHashDirectDeposit } from './services/services';
-import { Deposit, Withdraw, AffiliateLink, Wallet } from '../models';
+import { Deposit, Withdraw, AffiliateLink, Wallet, Address } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import codes from './categories/codes';
 import { globals } from '../Globals';
@@ -25,6 +26,7 @@ import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
+import { BitGoSingleton } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -194,26 +196,53 @@ const processActions = {
 		}
 		return normalized;
     },
+    __getDepositAddress : async (params) => {
+        var { currency, id, app } = params;
+        console.log("Id ", id);
+        /* Get User Id */
+        let user = await UsersRepository.prototype.findUserById(id);
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        if(!user){throwError('USER_NOT_EXISTENT')}
+        const app_wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+        const user_wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+
+        return {
+            app_wallet,
+            user,
+            user_wallet
+        };
+
+    },
     __updateWallet : async (params) => {
         try{
-            const { currency } = params;
-            if(params.amount <= 0){throwError('INVALID_AMOUNT')}
+            var { currency, id, wBT } = params;
 
-            /* Get User Id */
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            let app = await AppRepository.prototype.findAppById(params.app);
+            var app = await AppRepository.prototype.findAppById(id);
             if(!app){throwError('APP_NOT_EXISTENT')}
-            if(!user){throwError('USER_NOT_EXISTENT')}
-            const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
-            const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
-            if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+            const app_wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!app_wallet || !app_wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
             /* Verify if the transactionHash was created */
-            let { amount, isValid, from } = await verifytransactionHashDirectDeposit(
-                new String(wallet.currency.ticker).toLowerCase(), params.transactionHash, params.amount, 
-                appWallet.bank_address, appWallet.currency.decimals);
+            const { state, entries, value : amount, type, txid : transactionHash } = wBT;
+
+            const from = entries[0].address;
+            const to = entries[1].address;
+            console.log("to ", to);
+            let address = await AddressRepository.prototype.findByAddress(to);
+            console.log(address);
+            const isValid = ((state == 'confirmed') && (type == 'receive'));
+
+            /* Get User Id */
+            let user = await UsersRepository.prototype.findUserById(address.user);
+            if(!user){throwError('USER_NOT_EXISTENT')}
+            const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+
+
             /* Verify if this transactionHashs was already added */
-            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.transactionHash);
+            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
@@ -227,9 +256,9 @@ const processActions = {
                 user_id             : user._id,
                 wallet              : wallet,
                 creationDate        : new Date(),
-                transactionHash     : params.transactionHash,
+                transactionHash     : transactionHash,
                 from                : from,
-                currencyTicker      : app.currencyTicker,
+                currencyTicker      : wallet.currency.ticker,
                 amount              : amount,
                 isValid
             }
@@ -358,6 +387,36 @@ const progressActions = {
         }
 		return normalized;
     },
+    __getDepositAddress : async (params) => {
+        const { app_wallet, user_wallet, user } = params;
+        var wallet = await BitGoSingleton.getWallet({ticker : app_wallet.currency.ticker, id : app_wallet.bitgo_id});
+        // See if address is already provided
+        let bitgo_id = user_wallet.depositAddresses[0] ? user_wallet.depositAddresses[0].bitgo_id : null;
+        let address = await BitGoSingleton.generateDepositAddress({wallet, label : user._id, id : bitgo_id });
+
+        if(!bitgo_id){
+            //Request to Bitgo to create Address not Existent
+            let addressObject = (await (new Address({currency : user_wallet.currency._id, user : user._id, address: address.address, bitgo_id : address.id})).register())._doc;
+            // Add Deposit Address to User Deposit Addresses
+            await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
+        }else{
+            //Request to Bitgo to create Address Existent
+        }    
+
+        if(address.address){
+            //Address Existent
+            return {
+                address : address.address,
+                currency : user_wallet.currency.ticker
+            }
+        }else{
+            // Not existent
+            return {
+                message : 'Waiting for address initialization'
+            }
+        }
+       
+    },
     __updateWallet : async (params) => {
         try{
             /* Create Deposit Object */
@@ -463,6 +522,9 @@ class UserLogic extends LogicComponent {
 				case 'Summary' : {
 					return await library.process.__summary(params); break;
                 };
+                case 'GetDepositAddress' : {
+					return await library.process.__getDepositAddress(params); 
+                };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); 
                 };
@@ -518,6 +580,9 @@ class UserLogic extends LogicComponent {
 				};
 				case 'Summary' : {
 					return await library.progress.__summary(params); 
+                };
+                case 'GetDepositAddress' : {
+					return await library.progress.__getDepositAddress(params); 
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); 

@@ -26,8 +26,8 @@ import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getRandom } from '../../../utils/math';
 
 const expect = chai.expect;
-const betAmount = 1;
-const currencyTicker = 'SAI';
+const betAmount = 0.002;
+const currencyTicker = 'ETH';
 const metaName = 'linear_dice_simple';
 
 context(`Errors ex : ${currencyTicker.toUpperCase()}`, async () =>  {

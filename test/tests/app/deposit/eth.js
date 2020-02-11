@@ -1,10 +1,12 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
-import { getAppAuth, updateAppWallet } from '../../../methods';
+import { getAppAuth, webhookConfirmDepositFromBitgo } from '../../../methods';
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
-import { shouldntUpdateWalletWithPendingTransaction } from '../../output/AppTestMethod';
+import { shouldntUpdateWalletWithAlreadyPresentTransaction } from '../../output/AppTestMethod';
 import Numbers from '../../../logic/services/numbers';
+import { bitgoDepositExample } from './examples/bitgoDepositExample';
+import { DepositRepository } from '../../../../src/db/repos';
 
 const expect = chai.expect;
 const ticker = 'ETH';
@@ -15,10 +17,15 @@ context(`${ticker}`, async () => {
     before( async () =>  {
         app = (await getAppAuth(get_app(global.test.app.id), global.test.app.bearerToken, {id : global.test.app.id})).data.message;
         currencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        depositAmount = 0.3;
+        depositAmount = 0.2;
     });
 
-    it('should´nt update wallet with pending transaction', mochaAsync(async () => {
+    it('should update wallet with deposit (webhook)', mochaAsync(async () => {
+        let body = bitgoDepositExample();
+        // Remove Test Wallet Transaction Example
+        await DepositRepository.prototype.deleteDepositByTransactionHash(body.webhookNotifications[0].hash)
+
+        // User master address of app to work as the Bank Address
         let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
         /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
         tx = await new Promise( async  (resolve, reject) => {
@@ -28,51 +35,18 @@ context(`${ticker}`, async () => {
                 });
             }catch(err){reject(err)}
         });
-
-        const postData = {
-            app : app.id,
-            amount : depositAmount,
-            transactionHash : tx,
-            currency : currencyWallet.currency._id
-        };
-
-        let res = await updateAppWallet(postData, app.bearerToken, {id : app.id});
+             
+        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        const { status } = res.data;
         detectValidationErrors(res);
-        shouldntUpdateWalletWithPendingTransaction(res.data, expect);
+        expect(status).to.equal(200);
     })); 
     
-    it('should update Wallet with verified transaction', mochaAsync(async () => {
-        let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
-        
-        let tx = await bankContract.sendFundsToCasinoContract(depositAmount);
+    it('shouldnt update Wallet with already checked tx', mochaAsync(async () => {
+        let body = bitgoDepositExample();
 
-        const postData = {
-            app : app.id,
-            amount : depositAmount,
-            transactionHash : tx.transactionHash,
-            currency : currencyWallet.currency._id
-        }
-
-        let res = updateAppWallet(postData, app.bearerToken, {id : app.id});
-        let res_replay_atack = await updateAppWallet(postData,  app.bearerToken, {id : app.id});
-
-        let ret = await Promise.resolve(await res);
-        let status_1 = ret.data.status;
-        const { status } = res_replay_atack.data;
-
-        // Confirm either one or the other tx got phroibited
-        if(status_1 == 200){
-            expect(status_1).to.be.equal(200);
-            expect(status).to.be.equal(14);
-        }else{
-            expect(status_1).to.be.equal(14);
-            expect(status).to.be.equal(200);
-        }
-        /* Verify if new wallet has that info */
-        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
-        global.test.app = res_app.data.message;
-        
-        const walletCurrencyApp = global.test.app.wallet.find( c => new String(c.currency.ticker).toLowerCase() == ticker.toLowerCase());
-        expect(walletCurrencyApp.playBalance).to.be.equal(parseFloat(depositAmount));
+        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        detectValidationErrors(res);
+        shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
     })); 
 });
