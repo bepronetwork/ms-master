@@ -21,12 +21,14 @@ import { ColorSchema }  from './customization/color';
 import { LinkSchema } from './customization/link';
 import { FooterSchema } from './customization/footer';
 import { CurrencySchema } from './currency';
+import { AddressSchema } from './address';
 
 export {
     CurrencySchema,
     UserSchema,
     LinkSchema,
     TopBarSchema,
+    AddressSchema,
     FooterSchema,
     ColorSchema,
     BannersSchema,

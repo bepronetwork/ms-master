@@ -149,11 +149,9 @@ module.exports = {
         expect(res_deploy.casinoContract).to.not.be.null;
         expect(res_deploy.casinoContract).to.be.an('object');
     },
-    shouldntUpdateWalletWithPendingTransaction(data,expect){
+    shouldntUpdateWalletWithAlreadyPresentTransaction(data,expect){
         expect(data.status).to.not.be.null;
-        expect(data.status).to.equal(10);
-        expect(data.message).to.not.be.null;
-        expect(data.message).to.be.an('string');
+        expect(data.message[0].code).to.equal(11); 
     },
     shouldUpdateWalletWithVerifiedTransactionERC20(data, expect){
         expect(data.status).to.not.be.null;

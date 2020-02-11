@@ -9,7 +9,9 @@ WalletSchema.prototype.name = 'Wallet';
 WalletSchema.prototype.schema = {
     playBalance                 : { type: Number, required : true, default : 0},
     currency                    : { type : mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true },
-    bank_address                : { type: String, default : 0}, //Only Need on App
+    bank_address                : { type: String}, 
+    bitgo_id                    : { type: String} ,
+    depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}]
 }
 
 WalletSchema.prototype.model = db.model(WalletSchema.prototype.name, new db.Schema(WalletSchema.prototype.schema));

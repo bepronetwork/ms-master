@@ -10,15 +10,17 @@ import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getRandom } from '../../../utils/math';
 import { digestBetResult } from '../../../utils/bet';
+import { provideFunds } from '../../../utils/env';
 const expect = chai.expect;
+const ethDepositAmount = 0.1;
 
  const currenciesBetAmount = {
-    'SAI' : 0.2,
+    // add other currencies here
     'eth' : 0.001
 }
 
 const limitTableBetAmount = {
-    'SAI' : 0.1,
+    // add other currencies here
     'eth' : 0.0006
 }
 
@@ -36,7 +38,14 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
   
     it(`${metaName} - ${key} - should allow bet for the User - Simple Bet (Tails)`, mochaAsync(async () => {
+
+
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        var currencyWallet = (user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
+        /* Send Tokens to User */
+        await provideFunds({wallet : currencyWallet._id, amount : ethDepositAmount});
+        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+
         const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
         let postData = {  
@@ -49,6 +58,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: 0, value: betAmount
             }]
         };
+
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());

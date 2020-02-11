@@ -118,18 +118,13 @@ async function getBets (req, res) {
 	}
 }
 
-/**
- * @param {*} req
- * @param {*} res
-*/
-
-async function updateWallet (req, res) {
+async function getDepositAddress(req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
-        let data = await user.updateWallet();
+        let data = await user.getDepositAddress();
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -143,8 +138,8 @@ export {
     getUserInfo,
     userSummary,
     getBets,
-    updateWallet,
     setUser2FA,
     loginUser2FA,
+    getDepositAddress,
     authUser
 }

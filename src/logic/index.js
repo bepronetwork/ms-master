@@ -27,11 +27,14 @@ import ColorLogic from './color';
 import LinkLogic from './link';
 import FooterLogic from './footer';
 import CurrencyLogic from './currency';
+import AddressLogic from './address';
+
 
 export {
     CurrencyLogic,
     UserLogic,
     TopBarLogic,
+    AddressLogic,
     LinkLogic,
     FooterLogic,
     ColorLogic,

@@ -31,6 +31,7 @@ const processActions = {
 		let normalized = {
             playBalance : 0,
             currency : params.currency,
+            bitgo_id : params.bitgo_id,
             bank_address : params.bank_address
         }
 		return normalized;
