@@ -35,7 +35,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         game = app.games.find( game => game.metaName == metaName);
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
     });
-
   
     it(`${metaName} - ${key} - should allow bet for the User - Simple Bet (Tails)`, mochaAsync(async () => {
 
@@ -66,6 +65,30 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
         expect(await digestBetResult({newBalance : userPosBetCurrencyWallet.playBalance, res : res, previousBalance : userPreBetCurrencyWallet.playBalance}), true);
+    }));
+
+    it(`${metaName} - ${key} - shouldnt allow bet for the User - Maximum Bet Archieved`, mochaAsync(async () => {
+
+
+        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        var currencyWallet = (user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
+        /* Send Tokens to User */
+        await provideFunds({wallet : currencyWallet._id, amount : ethDepositAmount});
+        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+
+        let postData = {  
+            game: game._id,
+            user: user.id,
+            app: app.id,
+            currency : currency._id,
+            nonce: getRandom(123,2384723),
+            result: [{
+                place: 0, value: 3
+            }]
+        };
+
+        var res = await placeBet(postData, user.bearerToken, {id : user.id});
+        expect(res.data.status).to.equal(49);
     }));
 
 
