@@ -32,7 +32,8 @@ const processActions = {
             playBalance : 0,
             currency : params.currency,
             bitgo_id : params.bitgo_id,
-            bank_address : params.bank_address
+            bank_address : params.bank_address,
+            hashed_passphrase : params.hashed_passphrase
         }
 		return normalized;
 	},

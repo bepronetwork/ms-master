@@ -18,6 +18,7 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
+import { Security } from '../controllers/Security';
 
 let error = new ErrorManager();
 
@@ -366,12 +367,15 @@ const progressActions = {
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
+
         /* Create Wallet on Bitgo */
         var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
             label : `${app._id}-${currency.ticker}`,
             passphrase,
             currency : currency.ticker
         })
+
+
         /* Record webhooks */
         await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
@@ -399,11 +403,13 @@ const progressActions = {
         /* No Bitgo Wallet created */
         if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
 
+        /* Hash Passphrase */
         /* Save Wallet on DB */
         let wallet = (await (new Wallet({
             currency : currency._id,
             bitgo_id : bitgo_wallet.id(),
-            bank_address : receiveAddress
+            bank_address : receiveAddress,
+            hashed_passphrase : Security.prototype.encryptData(passphrase)
         })).register())._doc;
 
         /* Add Currency to Platform */
