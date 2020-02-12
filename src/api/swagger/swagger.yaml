@@ -2247,7 +2247,7 @@ definitions:
     required:
       - app
       - game
-      - betMax
+      - maxBet
     properties:
       app :
         type : string
