@@ -35,6 +35,16 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         game = app.games.find( game => game.metaName == metaName);
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
     });
+
+    it('it should Set Maximum Bet', mochaAsync(async () => {
+        let postData = {
+            app : admin.app.id,
+            game : game._id,
+            maxBet : 0.4
+        }
+        let res = await setMaxBet(postData, admin.app.bearerToken, {id : admin.app.id});
+        expect(res.data.status).to.equal(200);
+    }));
   
     it(`${metaName} - ${key} - should allow bet for the User - Simple Bet (Tails)`, mochaAsync(async () => {
 

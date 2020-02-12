@@ -119,7 +119,7 @@ class GamesRepository extends MongoComponent{
         });
     }
 
-    setMaxBet = async(params) =>{
+    setMaxBet(params){
         return new Promise((resolve, reject) => {
             GamesRepository.prototype.schema.model.findByIdAndUpdate(
                 params.game, 

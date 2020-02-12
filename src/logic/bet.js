@@ -199,7 +199,6 @@ const processActions = {
                 serverHashedSeed    :   CryptographySingleton.hashSeed(serverSeed),
                 serverSeed          :   serverSeed
             }
-            console.log("NORMALIZEDD:::: ",normalized)
             return normalized;
         }catch(err){
             throw err;
