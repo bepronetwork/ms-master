@@ -120,8 +120,7 @@ async function getBets (req, res) {
 
 async function getDepositAddress(req, res) {
     try{
-        SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
