@@ -43,15 +43,13 @@ export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
 
 export const GITHUB_LAYOUT_REPO = process.env.GITHUB_LAYOUT_REPO;
 
-<<<<<<< HEAD
 export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
-=======
+
 export const BITGO_ACCESS_TOKEN = process.env.BITGO_KEY;
 
 export const BITGO_ENTERPRISE_ID = process.env.BITGO_ENTERPRISE_ID;
 
 export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
->>>>>>> dev
 
 /* Variables */
 
