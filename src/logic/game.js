@@ -66,7 +66,7 @@ const processActions = {
 	},
 
 	__setMaxBet: async (params) => {
-		let app = await AppRepository.prototype.findAppById(paramas.app);
+		let app = await AppRepository.prototype.findAppById(params.app);
 		if(!app){throwError('APP_NOT_EXISTENT')}
 		let game = app.games.find(g => g._id == params.game);
 		if(!game){throwError('GAME_NOT_EXISTENT')}
