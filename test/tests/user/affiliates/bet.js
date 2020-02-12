@@ -25,7 +25,6 @@ context('Bet', async () => {
         game = app.games.find( game => game.metaName == metaName);
         currencyWallet = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         currency = currencyWallet.currency;
-        console.log(game);
     });
 
     it('it should Set Maximum Bet', mochaAsync(async () => {
@@ -34,11 +33,9 @@ context('Bet', async () => {
             game : game._id,
             maxBet : 2
         }
-        console.log ("MAXBETTT: ",postData);
-        console.log ("BEARER: ",admin.app.bearerToken);
-        console.log ("PAYLOAD: ",{id : admin.app.id});
         let res = await setMaxBet(postData, admin.app.bearerToken, {id : admin.app.id});
-        console.log(res);
+        console.log("RESSSS:: ",res)
+        expect(res.data.status).to.equal(200);
     }));
 
     it('it should set Bet for user and losts should be sent to parent Users (standard affiliate)', mochaAsync(async () => {

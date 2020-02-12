@@ -2261,9 +2261,9 @@ definitions:
         example: "we23v3934ng9341"
         description: |
           Game Id
-      betMax :
+      maxBet :
         type : number
-        format : string
+        format : number
         example : 0
         description: |
           Bet Max Value
