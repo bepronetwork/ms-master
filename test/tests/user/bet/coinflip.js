@@ -3,7 +3,8 @@ import {
     editTableLimit,
     placeBet,
     authAdmin,
-    getAppAuth
+    getAppAuth,
+    setMaxBet
 } from '../../../methods';
 
 import chai from 'chai';
@@ -36,7 +37,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
     });
 
-    it('it should Set Maximum Bet', mochaAsync(async () => {
+    it('it should Set Maximum Bet - Coin Flip', mochaAsync(async () => {
         let postData = {
             app : admin.app.id,
             game : game._id,
