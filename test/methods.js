@@ -4,8 +4,6 @@ import account from './logic/eth/models/account';
 import CasinoContract from './logic/eth/CasinoContract';
 import { globalsTest } from './GlobalsTest';
 import Numbers from './logic/services/numbers';
-import decode from 'unescape';
-import { detectValidationErrors } from './utils';
 
 module.exports = {
     async registerUser(params) {
@@ -100,6 +98,12 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
         
+    },
+    async getDepositAddress(params){
+        return request(global.server)
+        .post(`/api/app/address/get`)
+        .send(params)
+        .then(res => detectServerError(res))
     },
     async registerApp(params) {
         return request(global.server)
@@ -332,22 +336,17 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async updateAppWallet(params, bearerToken, payload){
+    async webhookConfirmDepositFromBitgo(params, id, currency_id){
         return request(global.server)
-        .post('/api/app/updateWallet')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
+        .post(`/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`)
         .send(params)
         .then(res => detectServerError(res))
     },
-    async updateUserWallet(params, bearerToken, payload){
+    async updateUserWallet(params, id, app_id, currency_id){
         return request(global.server)
-        .post('/api/users/updateWallet')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
+        .post(`/api/users/updateWallet?id=${id}&app=${app_id}&currency=${currency_id}`)
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async requestWithdraw(params, bearerToken, payload){
         return request(global.server)

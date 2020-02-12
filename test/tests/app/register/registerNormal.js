@@ -115,7 +115,7 @@ context('Normal', async () =>  {
             password    : `password${(new Date()).getTime()}`
         });
         expect(res.data.status).to.not.be.null;
-        expect(res.data.status).to.equal(50);
+        expect(res.data.status).to.equal(49);
     }));
 
     it('should Confirm Admin with token expired', mochaAsync(async () => {
@@ -127,7 +127,7 @@ context('Normal', async () =>  {
             password    : `password${(new Date()).getTime()}`
         });
         expect(res.data.status).to.not.be.null;
-        expect(res.data.status).to.equal(49);
+        expect(res.data.status).to.equal(48);
     }));
 
     it('should Confirm Admin with token', mochaAsync(async () => {

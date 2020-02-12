@@ -1,9 +1,11 @@
 
 import {
-	Game, App, Bet, Event, AffiliateLink
+	Game, App, Bet, Event, AffiliateLink, User
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
+import { BitGoSingleton } from '../../logic/third-parties';
+import { getNormalizedTicker } from '../../logic/third-parties/bitgo/helpers';
 
 /**
  * Description of the function.
@@ -356,12 +358,35 @@ async function getUsers(req, res) {
  * @param {*} res
  */
 
-async function updateWalletApp (req, res) {
+async function webhookBitgoDeposit (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
+        req.body.id = req.query.id;
+        req.body.currency = req.query.currency;
         let params = req.body;
-		let app = new App(params);
-        let data = await app.updateWallet();
+        console.log("Web Hooks : ", params.webhookNotifications.length);
+        let data = await Promise.all(params.webhookNotifications.map( async wB => {
+            try{
+                // Get Info from WebToken
+                const wBT = await BitGoSingleton.getTransaction({id : wB.transfer, wallet_id : wB.wallet, ticker : getNormalizedTicker({ticker : wB.coin })});
+                if(!wBT){return null}
+                // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
+                var isApp = !wBT.label;
+                console.log("Label ", wBT.label);
+                params.wBT = wBT;
+
+                if(isApp){
+                    let app = new App(params);
+                    return await app.updateWallet();
+                }else{
+                    // is User
+                    let user = new User(params);
+                    return await user.updateWallet();
+                }
+            }catch(err){
+                console.log(err);
+                return err;
+            }
+       }))
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -417,5 +442,5 @@ export {
     deployApp,
     getLastBets,
     addServices,
-    updateWalletApp
+    webhookBitgoDeposit
 };

@@ -187,15 +187,19 @@
         "key" : "CURRENCY_ALREADY_EXISTENT",
         "message"   : "Currency is already existent in this App, please contract support"
     },
-    "049" : {
+    "047" : {
+        "key" : "NO_PASSPHRASE_WALLET",
+        "message"   : "No Passphrase was provided"
+    },
+    "048" : {
         "key" : "TOKEN_EXPIRED",
         "message"   : "Expired Token"
     },
-    "050" : {
+    "049" : {
         "key" : "TOKEN_INVALID",
         "message"   : "Token Invalid"
     },
-    "051" : {
+    "050" : {
         "key" : "APP_INVALID",
         "message"   : "App not is valid"
     }

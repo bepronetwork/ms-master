@@ -1,6 +1,10 @@
+import { PRIVATE_KEY } from '../../config';
+
 var bcrypt = require('bcrypt');
 var twoFactor = require('node-2fa');
 var SALT_ROUNDS = 10;
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr(PRIVATE_KEY);
 
 class Security {
 
@@ -36,6 +40,15 @@ class Security {
             throw error;
         }
     }
+
+    encryptData(data){
+        return cryptr.encrypt(data);
+    }
+
+    decryptData(data){
+        return cryptr.decrypt(data);
+    }
+
 
     generateSecret2FA({name='BetProtocol', account_id}){
         try{

@@ -61,11 +61,11 @@ ErrorHandler.prototype.KEYS =  {
     'DEPLOY_ERROR'                          : "044",
     'CURRENCY_NOT_EXISTENT'                 : "045",
     'CURRENCY_ALREADY_EXISTENT'             : "046",
-    'TOKEN_EXPIRED'                         : "049",
-    'TOKEN_INVALID'                         : "050",
-    'APP_INVALID'                           : "051"
+    'NO_PASSPHRASE_WALLET'                  : "047",
+    'TOKEN_EXPIRED'                         : "048",
+    'TOKEN_INVALID'                         : "049",
+    'APP_INVALID'                           : "050"
 };
-
 
   /***************************
  * 

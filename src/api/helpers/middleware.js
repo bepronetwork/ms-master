@@ -8,7 +8,6 @@ var publicKEY  =  new String("-----BEGIN PUBLIC KEY-----\n" + PUBLIC_KEY + "\n--
 class Middleware{
     constructor(){}
 
-
     sign(payload){
         try{
             let token = jwt.sign({ id : 'Auth/' + payload }, privateKEY, { algorithm: 'RS256' });
