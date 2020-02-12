@@ -75,6 +75,13 @@ context(`${ticker}`, async () => {
 
         let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
         const { status } = res.data;
+
+        await setAppMaxDeposit({
+            app: app.id,
+            wallet_id: currencyWallet._id,
+            amount: 0.4,
+        }, app.bearerToken, {id : app.id});
+
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
         detectValidationErrors(res);
