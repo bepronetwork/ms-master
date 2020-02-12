@@ -70,7 +70,7 @@ const processActions = {
 		if(!app){throwError('APP_NOT_EXISTENT')}
 		let game = app.games.find(g => g._id == params.game);
 		if(!game){throwError('GAME_NOT_EXISTENT')}
-		normalized = {
+		let normalized = {
 			maxBet: params.maxBet,
 			game: game._id
 		}
