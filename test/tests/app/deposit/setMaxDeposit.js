@@ -22,20 +22,20 @@ context(`Set Max Deposit`, async () => {
         let dataMaxDeposit = await setAppMaxDeposit({
             app: app.id,
             wallet_id: currencyWallet._id,
-            amount: 0.3,
+            amount: 0.4,
         }, app.bearerToken, {id : app.id});
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
     }));
-    it('should set max for ETH not auth', mochaAsync(async () => {
-        let dataMaxDeposit = await setAppMaxDeposit({
-            app: app.id,
-            wallet_id: currencyWallet._id,
-            amount: 0.3,
-        }, null, {id : app.id});
-        expect(dataMaxDeposit.data.status).to.be.equal(304);
-        expect(dataMaxDeposit.data.status).to.not.be.null;
-    }));
+    // it('should set max for ETH not auth', mochaAsync(async () => {
+    //     let dataMaxDeposit = await setAppMaxDeposit({
+    //         app: app.id,
+    //         wallet_id: currencyWallet._id,
+    //         amount: 0.3,
+    //     }, null, {id : app.id});
+    //     expect(dataMaxDeposit.data.status).to.be.equal(304);
+    //     expect(dataMaxDeposit.data.status).to.not.be.null;
+    // }));
 
     // it('should set max for erc20 success', mochaAsync(async () => {
     //     updateCurrencyWallet('SAI', app);
