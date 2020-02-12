@@ -2,12 +2,11 @@ import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getAppAuth, addCurrencyWalletToApp, getEcosystemData,  getAppUsers} from '../../../methods';
 import { get_app } from '../../../models/apps';
-import { deploySmartContract } from '../../../utils/eth';
 import models from '../../../models';
 const expect = chai.expect;
 
 context('Add Currency Wallet', async () => {
-    var app, ercTokenTicker = 'dai';
+    var app, ercTokenTicker = '';
 
     before( async () =>  {
         app = global.test.app;
@@ -21,17 +20,9 @@ context('Add Currency Wallet', async () => {
         const eco_currencies = eco_data.currencies;
         const currency = eco_currencies.find( c => new String(c.ticker).toLowerCase() == ercTokenTicker.toLowerCase())
 
-        let { platformAddress } = await deploySmartContract({
-            tokenAddress : currency.address, 
-            decimals : currency.decimals,
-            eth_account : global.ownerAccount,
-            authorizedAddresses : [global.ownerAccount.getAddress()],
-            croupierAddress : eco_data.addresses[0]
-        });
-
         const postData = {
             app : app.id,
-            bank_address : platformAddress,
+            passphrase : 'test',
             currency_id : currency._id
         };
 

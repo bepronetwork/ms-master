@@ -29,10 +29,12 @@ import LinkRepository from './link';
 import FooterRepository from './footer';
 import TypographyRepository from './typography';
 import CurrencyRepository from './currency';
+import AddressRepository from './address';
 
 export{
     ChatRepository,
     FooterRepository,
+    AddressRepository,
     CurrencyRepository,
     TopBarRepository,
     LinkRepository,

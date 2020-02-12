@@ -1,14 +1,13 @@
 import { mochaAsync, getCurrencyWallet, detectValidationErrors } from '../../../utils';
 import { getAppAuth, authAdmin } from '../../../methods';
 import chai from 'chai';
-import { editAppStructure, getApp, getUserInfo, createUserDeposit, bet } from '../../../services';
+import { editAppStructure, getApp, getUserInfo, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
 
 const expect = chai.expect;
-const ticker = 'SAI';
-const depositAmount = 1;
+const ticker = 'ETH';
 const ethDepositAmount = 0.1;
-const betAmount = 0.03;
+const betAmount = 0.01;
 const metaName = 'european_roulette_simple';
 
 const inputs = {
@@ -26,7 +25,6 @@ context('Bet', async () => {
         game = app.games.find( game => game.metaName == metaName);
         currencyWallet = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         currency = currencyWallet.currency;
-
     });
 
     it('it should set Bet for user and losts should be sent to parent Users (standard affiliate)', mochaAsync(async () => {
@@ -52,10 +50,11 @@ context('Bet', async () => {
 
         /* Get Info for App before Bet */
         const app_data_before = (await getApp({app})).data.message;
+
+        var user_3_currrencyWallet = (user_3.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
-        await provideFunds({account : user_3.eth_account, ethAmount : ethDepositAmount, tokenAmount : depositAmount, erc20Address : currency.address});
-        /* Deposit for User */
-        await createUserDeposit({user : user_3, tokenAmount : depositAmount, app : app, currency : currency, depositAddress : currencyWallet.bank_address});
+        await provideFunds({wallet : user_3_currrencyWallet._id, amount : ethDepositAmount});
+
         /* Get Info for User 2 before Bet */
         user_3_before_info = await getUserInfo({user : user_3 , app});
         var wasWon = true;
@@ -117,17 +116,15 @@ context('Bet', async () => {
         const app_data_before = (await getApp({app})).data.message;
 
         /* Const */
-        const depositAmount = 3;
-        const ethDepositAmount = 0.1;
-        const betAmount = 0.2;
         const BET_RESULT = [{
             place: 0, value: betAmount
         }];
 
+
+        var user_5_currrencyWallet = (user_5.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
-        await provideFunds({account : user_5.eth_account, ethAmount : ethDepositAmount, tokenAmount : depositAmount, erc20Address : currency.address});
-        /* Deposit for User */
-        await createUserDeposit({user : user_5, tokenAmount : depositAmount, app : app_data_before, currency, depositAddress : currencyWallet.bank_address});
+        console.log("Wallet Id : ", user_5_currrencyWallet._id)
+        await provideFunds({wallet : user_5_currrencyWallet._id, amount : ethDepositAmount});
 
         /* Get Info for User 4 before Bet */
         user_5_before_info = await getUserInfo({user : user_5, app});
@@ -190,7 +187,6 @@ context('Bet', async () => {
         const app_data_before = (await getApp({app})).data.message;
 
         /* Const */
-        const betAmount = 0.2;
 
         const BET_RESULT = [{
             place: 0, value: betAmount

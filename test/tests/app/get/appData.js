@@ -36,7 +36,7 @@ import { mochaAsync } from '../../../utils';
 import { getUserInfo } from '../../../services';
 
 const expect = chai.expect;
-const ticker = 'SAI'
+const ticker = 'ETH'
 
 
 context('App Data', async () =>  {

@@ -392,7 +392,7 @@ class AppRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_get_by_external_id(app_id,user_external_id))
+                .aggregate(pipeline_get_by_external_id(app_id, user_external_id))
                 .exec( (err, user) => {
                     if(err) { reject(err)}
                     let ret;

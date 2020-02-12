@@ -408,18 +408,9 @@ class App extends ModelComponent{
     async updateWallet(){
         const { app } = this.self.params;
         try{
-            /* Close Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, true);
             let res = await this.process('UpdateWallet');
-            /* Open Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, false);
             return MapperWalletSingleton.output('WalletTransaction', res);
         }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not withdrawing atm */
-                /* Open Mutex */
-                await AppRepository.prototype.changeWithdrawPosition(app, false);
-            }
             throw err;
         }
     }

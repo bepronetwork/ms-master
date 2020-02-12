@@ -28,11 +28,14 @@ import FooterLogic from './footer';
 import TypographyLogic from './typography';
 
 import CurrencyLogic from './currency';
+import AddressLogic from './address';
+
 
 export {
     CurrencyLogic,
     UserLogic,
     TopBarLogic,
+    AddressLogic,
     LinkLogic,
     FooterLogic,
     ColorLogic,

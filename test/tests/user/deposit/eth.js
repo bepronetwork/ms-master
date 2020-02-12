@@ -1,11 +1,12 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
-import { getAppAuth, updateUserWallet, getUserAuth } from '../../../methods';
+import { getAppAuth, webhookConfirmDepositFromBitgo, getDepositAddress } from '../../../methods';
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
 import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
 import { getNonce } from '../../../lib';
-import { shouldntUpdateWalletWithPendingTransaction } from '../../output/AppTestMethod';
+import { bitgoDepositExample } from '../../app/deposit/examples/bitgoDepositExample';
+import { DepositRepository } from '../../../../src/db/repos';
 import delay from 'delay';
 const expect = chai.expect;
 const ticker = 'ETH';
@@ -22,7 +23,28 @@ context(`${ticker}`, async () => {
         bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, eth_account);
     });
 
-    it('should´nt update wallet with pending transaction', mochaAsync(async () => {
+    it('should update wallet with deposit (webhook)', mochaAsync(async () => {
+        // Wait for Wallet Init
+        await delay(180*1000);
+        
+        let body = bitgoDepositExample();
+        await DepositRepository.prototype.deleteDepositByTransactionHash(body.webhookNotifications[0].hash)
+        // Get User Deposit Address - create deposit address on bitgo
+        var res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
+        expect(res.data.status).to.equal(200);
+        expect(res.data.message.address).to.be.undefined;
+        // Waiting 100 seconds for the address to be get intializaed
+        console.log("Waiting for 3 minutes seconds for wallet init...");
+        await delay(180*1000);
+        // Get User Deposit Address - already initialized
+        res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
+        expect(res.data.status).to.equal(200);
+        expect(res.data.message.address).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+        const { address }  = res.data.message;
+
+        // Deposit
+        let bankContract = globalsTest.getCasinoETHContract(address, global.ownerAccount);
         /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
         tx = await new Promise( async  (resolve, reject) => {
             try{
@@ -32,69 +54,17 @@ context(`${ticker}`, async () => {
             }catch(err){reject(err)}
         });
 
-        const postData = {
-            app : app.id,
-            amount : depositAmount,
-            nonce : getNonce(),
-            transactionHash : tx,
-            user : user.id,
-            currency : currencyWallet.currency._id
-        }
-
-        let res = await updateUserWallet(postData, user.bearerToken, {id : user.id});
+              
+        res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        const { status } = res.data;
         detectValidationErrors(res);
-        shouldntUpdateWalletWithPendingTransaction(res.data, expect);
-    })); 
-    
-    it('should update Wallet with verified transaction', mochaAsync(async () => {
-        await delay(3*1000);
-        
-        tx = await bankContract.sendFundsToCasinoContract(depositAmount);
-
-        const postData = {
-            app : app.id,
-            amount : depositAmount,
-            nonce : getNonce(),
-            transactionHash : tx.transactionHash,
-            user : user.id,
-            currency : currencyWallet.currency._id
-        }
-        let res = updateUserWallet(postData, user.bearerToken, {id : user.id});
-        let res_replay_atack = await updateUserWallet(postData,  user.bearerToken, {id : user.id});
-
-        let ret = await Promise.resolve(await res);
-        let status_1 = ret.data.status;
-        const { status } = res_replay_atack.data;
-        
-        // Confirm either one or the other tx got phroibited
-        if(status_1 == 200){
-            expect(status_1).to.be.equal(200);
-            expect(status).to.be.equal(14);
-        }else{
-            expect(status_1).to.be.equal(14);
-            expect(status).to.be.equal(200);
-        }
-
-        let res_user = await getUserAuth({user : user.id}, user.bearerToken, {id : user.id});
-        detectValidationErrors(res_user);
-        global.test.user = res_user.data.message;
-        const walletCurrencyUser = global.test.user.wallet.find( c => new String(c.currency.ticker).toLowerCase() == ticker.toLowerCase());
-        expect(walletCurrencyUser.playBalance).to.be.equal(parseFloat(depositAmount));
+        expect(status).to.equal(200);
     })); 
 
     it('should not allow double deposit after first confirmed', mochaAsync(async () => {
-
-        const postData = {
-            app : app.id,
-            amount : depositAmount,
-            nonce : getNonce(),
-            transactionHash : tx.transactionHash,
-            user : user.id,
-            currency : currencyWallet.currency._id
-        }
-
-        let res = await updateUserWallet(postData,  user.bearerToken, {id : user.id});
-        expect(res.data.status).to.equal(11);
+        let body = bitgoDepositExample();
+        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        expect(res.data.message[0].code).to.equal(11);
 
     }));
     
