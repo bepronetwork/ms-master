@@ -19,7 +19,35 @@ consumes:
 produces:
   - application/json
 paths:
-  /ecosystem/all : 
+  /deposit/max/set :
+    x-swagger-router-controller: deposit
+    post:
+      tags:
+      - deposit
+      summary: Set max deposit
+      operationId: setMaxDeposit
+      description: Set max deposit Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: deposit
+          description: Set max deposit
+          required: true
+          schema:
+            $ref: '#/definitions/SetMaxDeposit'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /ecosystem/all :
     x-swagger-router-controller: ecosystem
     get:
       tags:
@@ -1419,6 +1447,25 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
+  SetMaxDeposit :
+    type: object
+    required:
+      - app
+      - wallet_id
+      - amount
+    properties:
+      app:
+        type : string
+        description: |
+          ID app
+      wallet_id:
+        type : string
+        description: |
+          Unique identifier of the wallet
+      amount:
+        type : number
+        description: |
+          Max value for deposit
   AdminRegisterRequest :
     type: object
     required:

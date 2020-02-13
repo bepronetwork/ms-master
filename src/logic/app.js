@@ -182,6 +182,7 @@ const processActions = {
         let wasAlreadyAdded = deposit ? true : false;
     
         return  {
+            maxDeposit          : (wallet.max_deposit == undefined) ? 0 : wallet.max_deposit,
             app                 : app,
             app_id              : app._id,
             wallet              : wallet,

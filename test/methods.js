@@ -357,6 +357,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async setAppMaxDeposit(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/deposit/max/set')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async updateUserWallet(params, id, app_id, currency_id){
         return request(global.server)
         .post(`/api/users/updateWallet?id=${id}&app=${app_id}&currency=${currency_id}`)

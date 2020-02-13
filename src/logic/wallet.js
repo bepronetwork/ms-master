@@ -6,6 +6,7 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import { WalletsRepository, UsersRepository, AppRepository } from '../db/repos';
 import DepositsRepository from '../db/repos/deposit';
+import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 
 
@@ -58,6 +59,22 @@ const processActions = {
 		}catch(err){
 			throw err;
 		}
+	},
+	__updateMaxDeposit : async (params) => {
+		try{
+			const app = await AppRepository.prototype.findAppById(params.app);
+			if(!app){throwError('APP_NOT_EXISTENT')}
+			const wallet = app.wallet.find( w => new String(w._id).toString() == new String(params.wallet_id).toString());
+			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
+
+			let normalized = {
+				wallet_id	: {_id: params.wallet_id},
+				amount 		: params.amount
+			}
+			return normalized;
+		}catch(err){
+			throw err;
+		}
 	}
 }
 
@@ -90,6 +107,13 @@ const progressActions = {
 			params.amount
 		);
 		// 2 - Return Confirmation Object
+		return wallet;
+	},
+	__updateMaxDeposit : async (params) => {
+		let wallet = await WalletsRepository.prototype.updateMaxDeposit(
+			params.wallet_id,
+			params.amount
+		);
 		return wallet;
 	}
 }
@@ -140,7 +164,7 @@ class WalletLogic extends LogicComponent {
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
-		try{			
+		try{
 			switch(processAction) {
 				case 'Register' : {
 					return library.process.__register(params); break;
@@ -148,6 +172,9 @@ class WalletLogic extends LogicComponent {
 				case 'ConfirmDeposit' : {
 					return await library.process.__confirmDeposit(params);
 				};
+				case 'UpdateMaxDeposit' : {
+					return await library.process.__updateMaxDeposit(params);
+				}
 			}
 		}catch(report){
 			throw `Failed to validate Wallet schema: Wallet \n See Stack Trace : ${report}`;
@@ -173,13 +200,16 @@ class WalletLogic extends LogicComponent {
 
 
 	async progress(params, progressAction){
-		try{			
+		try{
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params);
 				}
 				case 'ConfirmDeposit' : {
 					return await library.progress.__confirmDeposit(params);
+				}
+				case 'UpdateMaxDeposit' : {
+					return await library.progress.__updateMaxDeposit(params);
 				}
 			}
 		}catch(report){

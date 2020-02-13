@@ -202,5 +202,9 @@
     "050" : {
         "key" : "APP_INVALID",
         "message"   : "App not is valid"
+    },
+    "051" : {
+        "key" : "OVERFLOW_DEPOSIT",
+        "message"   : "Deposit max exceeded"
     }
 }

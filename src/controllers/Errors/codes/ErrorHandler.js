@@ -64,7 +64,8 @@ ErrorHandler.prototype.KEYS =  {
     'NO_PASSPHRASE_WALLET'                  : "047",
     'TOKEN_EXPIRED'                         : "048",
     'TOKEN_INVALID'                         : "049",
-    'APP_INVALID'                           : "050"
+    'APP_INVALID'                           : "050",
+    'OVERFLOW_DEPOSIT'                      : "051"
 };
 
   /***************************
