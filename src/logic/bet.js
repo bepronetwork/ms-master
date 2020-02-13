@@ -87,13 +87,14 @@ const processActions = {
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
             let app = user.app_id;
-            var maxBetValue = game.maxBet;
+            if(game){var maxBetValue = game.maxBet}
+            
 
             /* No Mapping Error Verification */
             if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
             if(!game){throwError('GAME_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
-            if(maxBetValue === undefined || maxBetValue === null){throwError('MAX_BET_NOT_EXISTENT')}
+            if(maxBetValue){if(maxBetValue === undefined || maxBetValue === null){throwError('MAX_BET_NOT_EXISTENT')}}
             
             var affiliateReturns = [], totalAffiliateReturn = 0;
             var user_delta, app_delta;
@@ -126,7 +127,7 @@ const processActions = {
             }); 
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
-            if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}
+            if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
 
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
