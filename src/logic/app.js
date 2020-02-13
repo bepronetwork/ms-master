@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository 
+    AffiliateRepository, CurrencyRepository, TypographyRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
@@ -315,6 +315,15 @@ const processActions = {
             app
         };
     },
+    __editTypography: async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if (!app) { throwError('APP_NOT_EXISTENT') };
+        return {
+            ...params,
+            app
+        };
+    },
     __getUsers : async (params) => {
         return params;
     }
@@ -620,7 +629,7 @@ const progressActions = {
             })
         }));
         /* Rebuild the App */
-//         await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
         // Save info on Customization Part
         return params;
     },
@@ -640,6 +649,30 @@ const progressActions = {
         })
 
         // Save info on Customization Part
+        return params;
+    },
+    __editTypography: async (params) => {
+        let { app, typography } = params;
+        //This Function Clening the typography from collection typographies and from the App document (typography field)
+        await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
+
+        let list = [];
+        for (let correspondentTypographyType of typography) {
+            let rTypography = await TypographyRepository.prototype.setTypography({
+                local: correspondentTypographyType.local,
+                url: correspondentTypographyType.url,
+                format: correspondentTypographyType.format,
+            });
+            list.push(rTypography);
+        }
+
+        await AppRepository.prototype.addTypography(app._id, list);
+
+        // }));
+
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        // Save info on Typography Part
         return params;
     },
     __getUsers : async (params) => {
@@ -756,6 +789,9 @@ class AppLogic extends LogicComponent{
                 case 'EditColors' : {
                     return await library.process.__editColors(params); break;
                 };
+                case 'EditTypography': {
+                    return await library.process.__editTypography(params); break;
+                };
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
                 };
@@ -856,6 +892,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditFooter' : {
                     return await library.progress.__editFooter(params); break;
+                };
+                case 'EditTypography': {
+                    return await library.progress.__editTypography(params); break;
                 };
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;

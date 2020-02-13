@@ -1,5 +1,6 @@
 import populate_integrations_all from "../integrations/all";
 import populate_customization_all from "../customization/all";
+import populate_typography from "../typography/index";
 import populate_wallet_all from "../wallet/all";
 
 let populate_app_all = [
@@ -64,6 +65,12 @@ let populate_app_all = [
         model : 'Customization',
         select : { '__v': 0 },
         populate : populate_customization_all
+    },
+    {
+        path : 'typography',
+        model : 'Typography',
+        select : { '__v': 0 },
+        populate : populate_typography
     },
 ] 
 

@@ -588,6 +588,16 @@ class ErrorManager {
         }
     }
 
+    typography = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     affiliateSetup = function (object, type){
         try{
             switch(type){

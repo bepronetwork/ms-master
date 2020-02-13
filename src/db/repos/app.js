@@ -60,6 +60,20 @@ class AppRepository extends MongoComponent{
         });
     }
 
+
+
+
+    async addTypography(_id, typography){
+        return new Promise( async (resolve,reject) => {
+            await AppRepository.prototype.schema.model.updateOne({_id}, { typography })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
+    }
+
     addUser(app_id, user){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findOneAndUpdate(
@@ -234,7 +248,6 @@ class AppRepository extends MongoComponent{
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
         }
-        
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
@@ -263,6 +276,21 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    removeTypography(_id){ 
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findByIdAndUpdate(
+                    _id, 
+                    { $set: { "typography" : [] }})
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
 
     async addServices(app_id, services){
         try{
@@ -317,6 +345,22 @@ class AppRepository extends MongoComponent{
             await AppRepository.prototype.schema.model.findOneAndUpdate(
                 { _id: app_id }, 
                 { $set : { "customization" : customization_id } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async setTypographyId(app_id, typography_id){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: app_id }, 
+                { $set : { "typography" : typography_id } },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){throw(err)}
@@ -435,6 +479,16 @@ class AppRepository extends MongoComponent{
     async getAll(){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.find().lean().populate(foreignKeys)
+            .exec( (err, docs) => {
+                if(err){reject(err)}
+                resolve(docs);
+            })
+        })
+    }
+
+    async getAllBySize(limit){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.find().lean().populate(foreignKeys).limit(limit)
             .exec( (err, docs) => {
                 if(err){reject(err)}
                 resolve(docs);

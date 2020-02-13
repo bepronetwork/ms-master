@@ -27,6 +27,7 @@ import LogoRepository from './logo';
 import ColorRepository from './color';
 import LinkRepository from './link';
 import FooterRepository from './footer';
+import TypographyRepository from './typography';
 import CurrencyRepository from './currency';
 import AddressRepository from './address';
 
@@ -61,5 +62,6 @@ export{
     EventsRepository,
     DepositRepository,
     BetsRepository,
-    AdminsRepository
+    AdminsRepository,
+    TypographyRepository
 }  

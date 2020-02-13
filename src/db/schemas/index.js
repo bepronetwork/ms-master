@@ -19,6 +19,7 @@ import { LogoSchema }  from './customization/logo';
 import { ColorSchema }  from './customization/color';
 import { LinkSchema } from './customization/link';
 import { FooterSchema } from './customization/footer';
+import { TypographySchema } from './typography';
 import { CurrencySchema } from './currency';
 import { AddressSchema } from './address';
 
@@ -45,5 +46,6 @@ export {
     EventSchema,
     WithdrawSchema,
     AdminSchema,
-    ResultSpaceSchema
+    ResultSpaceSchema,
+    TypographySchema
 }
