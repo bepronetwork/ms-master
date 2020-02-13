@@ -151,6 +151,19 @@ async function createBet (req, res) {
 	}
 }
 
+async function setMaxBet (req, res) {
+    try {
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+        let game = new Game(params);
+        let data = await game.setMaxBet();
+        MiddlewareSingleton.respond(res, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+    
+}
+
 
 async function resolveBet (req, res) {
     try{
@@ -482,5 +495,6 @@ export {
     getLastBets,
     addServices,
     editTypography,
+    setMaxBet,
     webhookBitgoDeposit
 };

@@ -65,7 +65,9 @@ ErrorHandler.prototype.KEYS =  {
     'TOKEN_EXPIRED'                         : "048",
     'TOKEN_INVALID'                         : "049",
     'APP_INVALID'                           : "050",
-    'OVERFLOW_DEPOSIT'                      : "051"
+    'OVERFLOW_DEPOSIT'                      : "051",
+    'MAX_BET_NOT_EXISTENT'                  : "052",
+    'MAX_BET_ACHIEVED'                      : "053"
 };
 
   /***************************

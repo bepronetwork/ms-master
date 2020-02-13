@@ -1,5 +1,5 @@
 import { mochaAsync, getCurrencyWallet, detectValidationErrors } from '../../../utils';
-import { getAppAuth, authAdmin } from '../../../methods';
+import { getAppAuth, authAdmin, setMaxBet } from '../../../methods';
 import chai from 'chai';
 import { editAppStructure, getApp, getUserInfo, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
@@ -26,6 +26,16 @@ context('Bet', async () => {
         currencyWallet = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         currency = currencyWallet.currency;
     });
+
+    it('it should Set Maximum Bet - Affiliates', mochaAsync(async () => {
+        let postData = {
+            app : admin.app.id,
+            game : game._id,
+            maxBet : 0.2
+        }
+        let res = await setMaxBet(postData, admin.app.bearerToken, {id : admin.app.id});
+        expect(res.data.status).to.equal(200);
+    }));
 
     it('it should set Bet for user and losts should be sent to parent Users (standard affiliate)', mochaAsync(async () => {
         
