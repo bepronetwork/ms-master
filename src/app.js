@@ -4,8 +4,8 @@ import { Logger } from './helpers/logger';
 
 /** MACROS */
 var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')();
-
+var app = require('express')()
+const expressIp = require('express-ip');
 /** CODE */
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -16,7 +16,7 @@ var bodyParser = require('body-parser');
 //---------CODING-CHOICES--------------//
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
-
+app.use(expressIp().getIpInfoMiddleware);
 
 //--------RUN APP-------------------//
 

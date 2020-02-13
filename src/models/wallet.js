@@ -36,6 +36,14 @@ class Wallet extends ModelComponent{
         }
     }
 
+    async setMaxDeposit(){
+        try {
+            return await this.process('UpdateMaxDeposit');
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 export default Wallet;

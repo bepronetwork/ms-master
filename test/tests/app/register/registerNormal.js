@@ -3,11 +3,15 @@ import {
     getApp,
     addAppServices,
     authAdmin,
-    getAppAuth
+    getAppAuth,
+    addAdmin,
+    registerAdmin
 } from '../../../methods';
 
+import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
+import { SendInBlue } from '../../../../src/logic/third-parties';
 
 import {
     shouldCreateTheApp,
@@ -18,57 +22,138 @@ import {
 
 } from '../../output/AppTestMethod';
 import { mochaAsync, genData, detectValidationErrors } from '../../../utils';
+import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
 
 const expect = chai.expect;
 
 context('Normal', async () =>  {
-    var admin, app;
+    var admin, app, dataAdminAdd;
 
-
-    before( async () =>  {
+    before(async () => {
         admin = global.test.admin;
+        dataAdminAdd = {email: null, bearerToken: null};
     });
 
-
-    it('should regist the App with admin id provided', mochaAsync(async () => {
+    it('should regist the App with admin id provided', mochaAsync( async () => {
         let app_call_model = genData(models.apps.app_normal_register(admin.id));
         var res = await registerApp(app_call_model);
         detectValidationErrors(res);
         shouldCreateTheApp(res.data, expect);
     }));
-    
+
+    it('Should update a contact', mochaAsync(async () => {
+        try {
+            const email = admin.email;
+            const attributes = {
+                NAME: faker.name.firstName()
+            };
+            await SendInBlue.prototype.updateContact(email, attributes);
+        } catch (err) {
+            console.log(err)
+        }
+    }));
+
+    it('Shouldnt update a contact that not exists', mochaAsync(async () => {
+        try {
+            const email = faker.internet.email();
+            const attributes = {
+                NAME: faker.name.firstName()
+            };
+            await SendInBlue.prototype.updateContact(email, attributes);
+        } catch (err) {
+            expect(err.status).to.equal(404);
+        }
+    }));
+
     it('should auth admin', mochaAsync(async () => {
         let res = await authAdmin({
-            admin : admin.id
-        }, admin.security.bearerToken, { id : admin.id});
+            admin: admin.id
+        }, admin.security.bearerToken, { id: admin.id });
         app = res.data.message.app;
         detectValidationErrors(res);
         shouldGetNewBearerToken(res.data, expect);
-    })); 
+    }));
 
     it('should Get App Data Auth', mochaAsync(async () => {
         let get_app_model = models.apps.get_app(app.id);
-        let res = await getAppAuth(get_app_model, app.bearerToken, {id : app.id});
+        let res = await getAppAuth(get_app_model, app.bearerToken, { id: app.id });
         /* Set app Global Variable for Further Test */
         global.test.app = res.data.message;
         detectValidationErrors(res);
         shouldGetAppDataAuth(res.data, expect);
+    }));
 
-    })); 
+    it('should add Admin', mochaAsync(async () => {
+        dataAdminAdd.email = `p${(new Date()).getTime()}@gmail.com`;
+        let res = await addAdmin({
+            email			: dataAdminAdd.email,
+            app             : app.id,
+            admin           : admin.id
+        }, admin.security.bearerToken, { id : admin.id});
+        dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should add Admin again', mochaAsync(async () => {
+        let res = await addAdmin({
+            email			: dataAdminAdd.email,
+            app             : app.id,
+            admin           : admin.id
+        }, admin.security.bearerToken, { id : admin.id});
+        dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should Confirm Admin with token invalid', mochaAsync(async () => {
+        var res = await registerAdmin({
+            email       : dataAdminAdd.email,
+            bearerToken : MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() ),
+            name        : 'Paul',
+            username    : `user${(new Date()).getTime()}`,
+            password    : `password${(new Date()).getTime()}`
+        });
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(49);
+    }));
+
+    it('should Confirm Admin with token expired', mochaAsync(async () => {
+        var res = await registerAdmin({
+            email       : dataAdminAdd.email,
+            bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA',
+            name        : 'Paul',
+            username    : `user${(new Date()).getTime()}`,
+            password    : `password${(new Date()).getTime()}`
+        });
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(48);
+    }));
+
+    it('should Confirm Admin with token', mochaAsync(async () => {
+        var res = await registerAdmin({
+            email       : dataAdminAdd.email,
+            bearerToken : dataAdminAdd.bearerToken,
+            name        : 'Paul',
+            username    : `user${(new Date()).getTime()}`,
+            password    : `password${(new Date()).getTime()}`
+        });
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
 
     it('should Get App Data', mochaAsync(async () => {
         let get_app_model = models.apps.get_app(app.id);
         let res = await getApp(get_app_model);
         detectValidationErrors(res);
         shouldGetAppData(res.data, expect);
-    })); 
-
+    }));
 
     it('should Integrate Services into App', mochaAsync(async () => {
         let service_call_add_model = models.apps.add_services(app.id, [101, 201]);
-        let res = await addAppServices(service_call_add_model, app.bearerToken, {id : app.id});
+        let res = await addAppServices(service_call_add_model, app.bearerToken, { id: app.id });
         detectValidationErrors(res);
         shouldIntegrateServicesIntoApp(res.data, expect);
-    })); 
+    }));
 
 });

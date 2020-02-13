@@ -14,7 +14,8 @@ AdminSchema.prototype.schema = {
     hash_password       : { type: String, required : true},
     app                 : { type: mongoose.Schema.Types.ObjectId, ref: 'App'},
     security            : { type: mongoose.Schema.Types.ObjectId, ref: 'Security'},
-    metadata            : { type : JSON}
+    metadata            : { type: JSON},
+    registered          : { type: Boolean }
 };
 
 AdminSchema.prototype.modelSet = false;
@@ -23,7 +24,6 @@ AdminSchema.prototype.model = null;
 
 // Mongoose o only allows once per type
 AdminSchema.prototype.model = db.model('Admin', new db.Schema(AdminSchema.prototype.schema));
-      
 
 export {
     AdminSchema

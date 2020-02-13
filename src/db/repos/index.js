@@ -24,9 +24,11 @@ import CustomizationRepository from './customization';
 import TopBarRepository from './topBar';
 import BannersRepository from './banners';
 import LogoRepository from './logo';
+import LogRepository from './log';
 import ColorRepository from './color';
 import LinkRepository from './link';
 import FooterRepository from './footer';
+import TypographyRepository from './typography';
 import CurrencyRepository from './currency';
 import AddressRepository from './address';
 
@@ -39,6 +41,7 @@ export{
     LinkRepository,
     ColorRepository,
     LogoRepository,
+    LogRepository,
     BannersRepository,
     CustomizationRepository,
     IntegrationsRepository,
@@ -61,5 +64,6 @@ export{
     EventsRepository,
     DepositRepository,
     BetsRepository,
-    AdminsRepository
+    AdminsRepository,
+    TypographyRepository
 }  

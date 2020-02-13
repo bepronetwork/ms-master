@@ -192,10 +192,26 @@
         "message"   : "No Passphrase was provided"
     },
     "048" : {
+        "key" : "TOKEN_EXPIRED",
+        "message"   : "Expired Token"
+    },
+    "049" : {
+        "key" : "TOKEN_INVALID",
+        "message"   : "Token Invalid"
+    },
+    "050" : {
+        "key" : "APP_INVALID",
+        "message"   : "App not is valid"
+    },
+    "051" : {
+        "key" : "OVERFLOW_DEPOSIT",
+        "message"   : "Deposit max exceeded"
+    },
+    "052" : {
         "key" : "MAX_BET_NOT_EXISTENT",
         "message"   : "Maximum Bet not existent on this Game, please verify it"
     },
-    "049" : {
+    "053" : {
         "key" : "MAX_BET_ACHIEVED",
         "message"   : "Maximum bet reached, please reduce your bet"
     }
