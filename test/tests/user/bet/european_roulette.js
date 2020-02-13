@@ -3,7 +3,8 @@ import {
     editTableLimit,
     placeBet,
     authAdmin,
-    getAppAuth
+    getAppAuth,
+    setMaxBet
 } from '../../../methods';
 
 import chai from 'chai';
@@ -34,6 +35,15 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
     });
 
+    it('it should Set Maximum Bet - European Roulette', mochaAsync(async () => {
+        let postData = {
+            app : admin.app.id,
+            game : game._id,
+            maxBet : 0.2
+        }
+        let res = await setMaxBet(postData, admin.app.bearerToken, {id : admin.app.id});
+        expect(res.data.status).to.equal(200);
+    }));
   
     it(`${metaName} - ${key} - should allow bet for the User - Simple Bet (Tails)`, mochaAsync(async () => {
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;

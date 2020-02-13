@@ -50,6 +50,14 @@ class Game extends ModelComponent{
         }
     }
 
+    async setMaxBet(){
+        try {
+            return await this.process('SetMaxBet');
+        } catch (err) {
+            throw err;
+        }
+    }
+
 }
 
 export default Game;

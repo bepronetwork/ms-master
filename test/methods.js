@@ -254,8 +254,15 @@ module.exports = {
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
-        .then(res => detectServerError(res))
-        
+        .then(res => detectServerError(res)) 
+    },
+    async setMaxBet(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/games/bet/max')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res)) 
     },
     async editTableLimit(params, bearerToken, payload){
         return request(global.server)

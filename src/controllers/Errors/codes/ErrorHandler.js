@@ -61,7 +61,9 @@ ErrorHandler.prototype.KEYS =  {
     'DEPLOY_ERROR'                          : "044",
     'CURRENCY_NOT_EXISTENT'                 : "045",
     'CURRENCY_ALREADY_EXISTENT'             : "046",
-    'NO_PASSPHRASE_WALLET'                  : "047"
+    'NO_PASSPHRASE_WALLET'                  : "047",
+    'MAX_BET_NOT_EXISTENT'                  : "048",
+    'MAX_BET_ACHIEVED'                      : "049"
 }; 
 
 
