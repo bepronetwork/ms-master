@@ -16,6 +16,7 @@ import { CustomizationSchema } from './customization';
 import { TopBarSchema } from './customization/topBar';
 import { BannersSchema } from './customization/banners';
 import { LogoSchema }  from './customization/logo';
+import { LogSchema }  from './log';
 import { ColorSchema }  from './customization/color';
 import { LinkSchema } from './customization/link';
 import { FooterSchema } from './customization/footer';
@@ -33,6 +34,7 @@ export {
     ColorSchema,
     BannersSchema,
     LogoSchema,
+    LogSchema,
     CustomizationSchema,
     ChatSchema,
     AppSchema,

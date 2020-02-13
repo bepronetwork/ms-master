@@ -262,7 +262,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async pingPost(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/ping/post')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
     },
     async editTableLimit(params, bearerToken, payload){
         return request(global.server)

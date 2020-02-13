@@ -24,6 +24,7 @@ import CustomizationRepository from './customization';
 import TopBarRepository from './topBar';
 import BannersRepository from './banners';
 import LogoRepository from './logo';
+import LogRepository from './log';
 import ColorRepository from './color';
 import LinkRepository from './link';
 import FooterRepository from './footer';
@@ -40,6 +41,7 @@ export{
     LinkRepository,
     ColorRepository,
     LogoRepository,
+    LogRepository,
     BannersRepository,
     CustomizationRepository,
     IntegrationsRepository,

@@ -17,6 +17,7 @@ import SecuritySingleton from '../helpers/security';
 
 async function registUser (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.register();
@@ -28,6 +29,7 @@ async function registUser (req, res) {
 
 async function loginUser (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.login();
@@ -42,6 +44,7 @@ async function loginUser (req, res) {
 async function setUser2FA(req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.set2FA();
@@ -53,6 +56,7 @@ async function setUser2FA(req, res) {
 
 async function loginUser2FA(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.login2FA();
@@ -65,6 +69,7 @@ async function loginUser2FA(req, res) {
 async function authUser (req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.auth();
@@ -77,6 +82,7 @@ async function authUser (req, res) {
 async function getUserInfo (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getInfo();
@@ -89,6 +95,7 @@ async function getUserInfo (req, res) {
 async function userSummary (req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.summary();
@@ -101,6 +108,7 @@ async function userSummary (req, res) {
 async function getBets (req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getBets();
@@ -112,6 +120,7 @@ async function getBets (req, res) {
 
 async function getDepositAddress(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
