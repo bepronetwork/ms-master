@@ -31,7 +31,7 @@ context('Bet', async () => {
         let postData = {
             app : admin.app.id,
             game : game._id,
-            maxBet : 0.5
+            maxBet : 0.2
         }
         let res = await setMaxBet(postData, admin.app.bearerToken, {id : admin.app.id});
         expect(res.data.status).to.equal(200);
