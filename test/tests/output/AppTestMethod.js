@@ -149,6 +149,10 @@ module.exports = {
         expect(res_deploy.casinoContract).to.not.be.null;
         expect(res_deploy.casinoContract).to.be.an('object');
     },
+    shouldntUpdateWalletWithMaxDepositOverflow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.message[0].code).to.equal(51); 
+    },
     shouldntUpdateWalletWithAlreadyPresentTransaction(data,expect){
         expect(data.status).to.not.be.null;
         expect(data.message[0].code).to.equal(11); 

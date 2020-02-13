@@ -3,7 +3,7 @@ import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getAppAuth, webhookConfirmDepositFromBitgo, setAppMaxDeposit } from '../../../methods';
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
-import { shouldntUpdateWalletWithAlreadyPresentTransaction } from '../../output/AppTestMethod';
+import { shouldntUpdateWalletWithAlreadyPresentTransaction, shouldntUpdateWalletWithMaxDepositOverflow } from '../../output/AppTestMethod';
 import Numbers from '../../../logic/services/numbers';
 import { bitgoDepositExample } from './examples/bitgoDepositExample';
 import { DepositRepository } from '../../../../src/db/repos';
@@ -75,15 +75,14 @@ context(`${ticker}`, async () => {
 
         let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
         const { status } = res.data;
-
         await setAppMaxDeposit({
             app: app.id,
             wallet_id: currencyWallet._id,
             amount: 0.4,
         }, app.bearerToken, {id : app.id});
-
         expect(status).to.not.be.null;
-        expect(status).to.equal(51);
+        expect(status).to.equal(200);
+        shouldntUpdateWalletWithMaxDepositOverflow(res.data, expect);
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
         detectValidationErrors(res);
