@@ -85,6 +85,11 @@ const processActions = {
 
         return normalized;
     },
+    __getAdminAll: async (params) => {
+        let app = await AppRepository.prototype.findAppById(params.app);
+        let res = await __private.db.findAdminByApp(app._id);
+        return res;
+    },
     __auth: async (params) => {
         // Get User by Username
         let admin = await __private.db.findAdminById(params.admin);
@@ -124,13 +129,19 @@ const processActions = {
         if(!admin) { registered = true; }
         if(admin != null && admin.security != null && admin.security != undefined) {
             const payload = MiddlewareSingleton.resultTokenDate(params.bearerToken);
+            console.log(payload);
+            console.log(params.bearerToken);
             if(!payload) {
+                console.log(1);
                 throwError('TOKEN_EXPIRED');
             }
+            console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
             if( Number((new Date()).getTime()) > Number(payload.time) ) {
+                console.log(2);
                 throwError('TOKEN_EXPIRED');
             }
             if(String(admin.security.bearerToken) !== String(params.bearerToken)) {
+                console.log(2);
                 throwError('TOKEN_INVALID');
             }
         }
@@ -199,6 +210,9 @@ const progressActions = {
             await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
         }
         return { ...params, app: { ...params.app, bearerToken } };
+    },
+    __getAdminAll: async (params) => {
+        return params;
     },
     __auth: async (params) => {
         return params;
@@ -327,6 +341,9 @@ class AdminLogic extends LogicComponent {
                 case 'AddAdmin' : {
                     return await library.process.__addAdmin(params); break;
                 }
+                case 'GetAdminAll' : {
+                    return await library.process.__getAdminAll(params); break;
+                }
 			}
 		}catch(error){
 			throw error;
@@ -370,6 +387,9 @@ class AdminLogic extends LogicComponent {
                 };
                 case 'AddAdmin' : {
 					return await library.progress.__addAdmin(params);
+                };
+                case 'GetAdminAll' : {
+					return await library.progress.__getAdminAll(params);
                 };
 			}
 		}catch(error){

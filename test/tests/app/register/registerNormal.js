@@ -5,7 +5,8 @@ import {
     authAdmin,
     getAppAuth,
     addAdmin,
-    registerAdmin
+    registerAdmin,
+    getAdminByApp
 } from '../../../methods';
 
 import faker from 'faker';
@@ -73,6 +74,16 @@ context('Normal', async () =>  {
         detectValidationErrors(res);
         shouldGetNewBearerToken(res.data, expect);
     }));
+
+    it('should Get Admin by App', mochaAsync(async () => {
+        let res = await getAdminByApp({
+            admin: admin.id,
+            app: app.id
+        }, admin.security.bearerToken, { id: admin.id });
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
 
     it('should Get App Data Auth', mochaAsync(async () => {
         let get_app_model = models.apps.get_app(app.id);

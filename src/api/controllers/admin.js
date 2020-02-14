@@ -27,6 +27,17 @@ async function registAdmin (req, res) {
 	}
 }
 
+async function getAdminAll(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+		let admin = new Admin(params);
+        let data = await admin.getAdminAll();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
 async function loginAdmin(req, res) {
     try{
         await MiddlewareSingleton.log({type: "global", req});
@@ -98,5 +109,6 @@ export {
 	loginAdmin,
     loginAdmin2FA,
     authAdmin,
-    setAdmin2FA
+    setAdmin2FA,
+    getAdminAll
 }
