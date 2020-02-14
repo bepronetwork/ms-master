@@ -415,6 +415,7 @@ async function webhookBitgoDeposit (req, res) {
         req.body.currency = req.query.currency;
         let params = req.body;
         console.log("Web Hooks : ", params.webhookNotifications.length);
+        console.log("Req Body dos Web Hooks: ", req.body);
         let data = await Promise.all(params.webhookNotifications.map( async wB => {
             try{
                 // Get Info from WebToken
