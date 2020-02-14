@@ -40,6 +40,18 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updateMaxDeposit(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                max_deposit: amount
+            })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePlayBalance(id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,

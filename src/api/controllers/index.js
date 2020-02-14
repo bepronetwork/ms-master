@@ -4,6 +4,7 @@ import user from './user';
 import admin from './admin';
 import game from './game';
 import ecosystem from './ecosystem';
+import ping from './ping';
 
 export {
     app,
@@ -11,5 +12,6 @@ export {
     user,
     ecosystem,
     admin,
-    game
+    game,
+    ping
 }

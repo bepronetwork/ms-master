@@ -33,6 +33,16 @@ class Admin extends ModelComponent{
         }
     }
 
+    async getAdminAll() {
+        try{
+            let res = await this.process('GetAdminAll');
+            return res;
+            // return MapperSingleton.output('Admin', res);
+        }catch(err){
+            throw err;
+        }
+    }
+
     async login(){
         try{
             let res = await this.process('Login');
@@ -60,6 +70,14 @@ class Admin extends ModelComponent{
         }
     }
 
+    async addAdmin() {
+        try{
+            let res = await this.process('AddAdmin');
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
     async register(){
         try{
             return await this.process('Register');

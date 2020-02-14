@@ -149,6 +149,10 @@ module.exports = {
         expect(res_deploy.casinoContract).to.not.be.null;
         expect(res_deploy.casinoContract).to.be.an('object');
     },
+    shouldntUpdateWalletWithMaxDepositOverflow(data,expect){
+        expect(data.status).to.not.be.null;
+        expect(data.message[0].code).to.equal(51); 
+    },
     shouldntUpdateWalletWithAlreadyPresentTransaction(data,expect){
         expect(data.status).to.not.be.null;
         expect(data.message[0].code).to.equal(11); 
@@ -163,7 +167,7 @@ module.exports = {
         expect(data.message.app.games).to.not.be.null;
         expect(data.message.app.listAdmins).to.not.be.null;
         expect(data.message.app.listAdmins).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.listAdmins.length).to.equal(1);
+        expect(data.message.app.listAdmins.length).to.equal(2);
         expect(data.message.app.services).to.not.be.null;
         expect(data.message.app.services).to.be.an('array').that.not.is.empty;
         expect(data.message.app.services.length).to.equal(2);
@@ -319,7 +323,7 @@ module.exports = {
         expect(data.message.app.games).to.not.be.null;
         expect(data.message.app.listAdmins).to.not.be.null;
         expect(data.message.app.listAdmins).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.listAdmins.length).to.equal(1);
+        expect(data.message.app.listAdmins.length).to.equal(2);
         expect(data.message.app.services).to.not.be.null;
         expect(data.message.app.services).to.be.an('array').that.not.is.empty;
         expect(data.message.app.services.length).to.equal(2);
@@ -457,7 +461,7 @@ module.exports = {
         expect(data.message.app.games).to.be.an('array');
         expect(data.message.app.listAdmins).to.not.be.null;
         expect(data.message.app.listAdmins).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.listAdmins.length).to.equal(1);
+        expect(data.message.app.listAdmins.length).to.equal(2);
         expect(data.message.app.services).to.not.be.null;
         expect(data.message.app.services).to.be.an('array').that.not.is.empty;
         expect(data.message.app.services.length).to.equal(2);
@@ -597,7 +601,7 @@ module.exports = {
         expect(data.message.app.games).to.be.an('array');
         expect(data.message.app.listAdmins).to.not.be.null;
         expect(data.message.app.listAdmins).to.be.an('array').that.not.is.empty;
-        expect(data.message.app.listAdmins.length).to.equal(1);
+        expect(data.message.app.listAdmins.length).to.equal(2);
         expect(data.message.app.services).to.not.be.null;
         expect(data.message.app.services).to.be.an('array').that.not.is.empty;
         expect(data.message.app.services.length).to.equal(2);

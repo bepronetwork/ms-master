@@ -25,6 +25,14 @@ class Security extends ModelComponent{
             throw err;
         }
     }
+
+    // async addAdmin(){
+    //     try{
+    //        return await this.process('AddAmin');
+    //     }catch(err){
+    //         throw err;
+    //     }
+    // }
 }
 
 export default Security;

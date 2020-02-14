@@ -19,7 +19,35 @@ consumes:
 produces:
   - application/json
 paths:
-  /ecosystem/all : 
+  /deposit/max/set :
+    x-swagger-router-controller: deposit
+    post:
+      tags:
+      - deposit
+      summary: Set max deposit
+      operationId: setMaxDeposit
+      description: Set max deposit Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: deposit
+          description: Set max deposit
+          required: true
+          schema:
+            $ref: '#/definitions/SetMaxDeposit'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /ecosystem/all :
     x-swagger-router-controller: ecosystem
     get:
       tags:
@@ -48,6 +76,36 @@ paths:
       operationId: getCasinoGames
       produces:
         - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/admins/add:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Register User Data
+      operationId: addAdmin
+      description: Search for matching accounts in the system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/AddAdminRequest'
       responses:
         "200":
           description: Success
@@ -752,6 +810,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/typography : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Typography Information
+      operationId: editTypography
+      description: Change Typography
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppTypographyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/address/get : 
     x-swagger-router-controller: user
     post:
@@ -782,6 +872,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
   /app/deploy : 
     x-swagger-router-controller: app
     post:
@@ -933,6 +1024,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /admin/app/get:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Get Data for Admin
+      operationId: getAdminAll
+      description: Get Summary Data for Admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AdminGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
   /app/transactions:
     x-swagger-router-controller: app
     post:
@@ -1352,18 +1475,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /ping/post:
+    x-swagger-router-controller: ping
+    post:
+      tags:
+      - ping
+      summary: Test Ping
+      operationId: pingPost
+      description: Test Ping for post.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ping
+          description: Ping Object for test
+          required: true
+          schema:
+            $ref: '#/definitions/PingPost'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
-  
 # complex objects have schema definitions
 definitions:
-  AdminRegisterRequest : 
+  SetMaxDeposit :
+    type: object
+    required:
+      - app
+      - wallet_id
+      - amount
+    properties:
+      app:
+        type : string
+        description: |
+          ID app
+      wallet_id:
+        type : string
+        description: |
+          Unique identifier of the wallet
+      amount:
+        type : number
+        description: |
+          Max value for deposit
+  AdminRegisterRequest :
     type: object
     required:
       - username
-      - name             
-      - email    
-      - password 
+      - name
+      - email
+      - password
     properties:
       username:
         type : string
@@ -1793,6 +1964,31 @@ definitions:
       isActive : 
         type : boolean
         example: true
+  AppTypographyRequest : 
+    type: object
+    required:
+      - app
+      - typography
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      typography:
+        type : array
+        items : 
+          type: object
+          properties:
+            local :
+              type: array
+              items:
+                type: string
+            url :
+              type: string
+            format :
+              type: string
   AppDeploy : 
     type: object
     required:
@@ -1899,6 +2095,24 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+  AdminGetRequest:
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin id
   AppCreationRequest:
     type: object
     required:
@@ -2242,6 +2456,31 @@ definitions:
               type: number
             value :
               type: number
+  AddAdminRequest:
+    type: object
+    required:
+      - email
+      - app
+      - admin
+    properties:
+      email:
+        type: string
+        format: string
+        example: "paulo@gmail.com"
+        description: |
+          Email for admin
+      app:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          App Id
+      admin:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Admin Current Id
   MaxBetRequest:
     type: object
     required:
@@ -2271,7 +2510,7 @@ definitions:
     type: object
     required:
       - data
-      - meta            
+      - meta
     properties:
       data:
         type : object
@@ -2289,3 +2528,14 @@ definitions:
     properties:
       message:
         type: string
+  PingPost:
+    type: object
+    required :
+      - type
+    properties:
+      type:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Type Auth

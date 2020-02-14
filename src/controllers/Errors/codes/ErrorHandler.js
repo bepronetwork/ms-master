@@ -62,10 +62,13 @@ ErrorHandler.prototype.KEYS =  {
     'CURRENCY_NOT_EXISTENT'                 : "045",
     'CURRENCY_ALREADY_EXISTENT'             : "046",
     'NO_PASSPHRASE_WALLET'                  : "047",
-    'MAX_BET_NOT_EXISTENT'                  : "048",
-    'MAX_BET_ACHIEVED'                      : "049"
-}; 
-
+    'TOKEN_EXPIRED'                         : "048",
+    'TOKEN_INVALID'                         : "049",
+    'APP_INVALID'                           : "050",
+    'OVERFLOW_DEPOSIT'                      : "051",
+    'MAX_BET_NOT_EXISTENT'                  : "052",
+    'MAX_BET_ACHIEVED'                      : "053"
+};
 
   /***************************
  * 

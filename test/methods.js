@@ -17,7 +17,14 @@ module.exports = {
         .post('/api/admins/register')
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async addAdmin(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/admins/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
     },
     async loginAdmin(params) {
         return request(global.server)
@@ -103,7 +110,14 @@ module.exports = {
         .post('/api/app/create')
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async getAdminByApp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/admin/app/get')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
     },
     async getApp(params) {
         return request(global.server)
@@ -264,6 +278,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res)) 
     },
+    async pingPost(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/ping/post')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editTableLimit(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editTableLimit')
@@ -321,6 +343,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editTypographyApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/typography')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => { return res.body})
+    },
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/integrations/edit')
@@ -339,6 +369,14 @@ module.exports = {
     async webhookConfirmDepositFromBitgo(params, id, currency_id){
         return request(global.server)
         .post(`/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`)
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async setAppMaxDeposit(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/deposit/max/set')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
     },
