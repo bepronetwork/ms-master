@@ -410,7 +410,6 @@ async function getUsers(req, res) {
  */
 
 async function webhookBitgoDeposit (req, res) {
-    console.log("Req Body dos Web Hooks: ", req.body);
     try{
         req.body.id = req.query.id;
         req.body.currency = req.query.currency;
