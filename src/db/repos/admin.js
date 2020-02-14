@@ -84,6 +84,17 @@ class AdminsRepository{
         });
     }
 
+    findAdminByApp(app) {
+        return new Promise((resolve)=>{
+            AdminSchema.prototype.schema.model.find({app})
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     addApp(admin_id, app){
         return new Promise( (resolve,reject) => {
             AdminSchema.prototype.schema.model.findByIdAndUpdate(

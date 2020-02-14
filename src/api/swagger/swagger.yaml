@@ -1024,6 +1024,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /admin/app/get:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Get Data for Admin
+      operationId: getAdminAll
+      description: Get Summary Data for Admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AdminGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
   /app/transactions:
     x-swagger-router-controller: app
     post:
@@ -2063,6 +2095,24 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+  AdminGetRequest:
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin id
   AppCreationRequest:
     type: object
     required:

@@ -110,7 +110,14 @@ module.exports = {
         .post('/api/app/create')
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async getAdminByApp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/admin/app/get')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
     },
     async getApp(params) {
         return request(global.server)
