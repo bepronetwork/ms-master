@@ -87,6 +87,7 @@
         "logger": "0.0.1",
         "mf-utils-node": "^1.0.14",
         "migrate": "^1.6.2",
+        "migrate-mongo": "^7.0.1",
         "mocha": "^6.2.0",
         "mocha-each": "^2.0.1",
         "moment": "^2.21.0",
