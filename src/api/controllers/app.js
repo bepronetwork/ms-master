@@ -415,8 +415,9 @@ async function webhookBitgoDeposit (req, res) {
         req.body.id = req.query.id;
         req.body.currency = req.query.currency;
         let params = req.body;
-        console.log("Web Hooks : ", params.webhookNotifications.length);
-        let data = await Promise.all(params.webhookNotifications.map( async wB => {
+        params = Array.isArray(params) ? params : [params];
+        console.log("Web Hook Length : ", params.length);
+        let data = await Promise.all(params.map( async wB => {
             try{
                 // Get Info from WebToken
                 const wBT = await BitGoSingleton.getTransaction({id : wB.transfer, wallet_id : wB.wallet, ticker : getNormalizedTicker({ticker : wB.coin })});
