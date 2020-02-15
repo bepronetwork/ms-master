@@ -19,34 +19,6 @@ consumes:
 produces:
   - application/json
 paths:
-  /deposit/max/set :
-    x-swagger-router-controller: deposit
-    post:
-      tags:
-      - deposit
-      summary: Set max deposit
-      operationId: setMaxDeposit
-      description: Set max deposit Data
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: deposit
-          description: Set max deposit
-          required: true
-          schema:
-            $ref: '#/definitions/SetMaxDeposit'
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/GeneralResponse"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /ecosystem/all :
     x-swagger-router-controller: ecosystem
     get:
@@ -267,7 +239,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
+  /deposit/max/set :
+    x-swagger-router-controller: deposit
+    post:
+      tags:
+      - deposit
+      summary: Set max deposit
+      operationId: setMaxDeposit
+      description: Set max deposit Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: deposit
+          description: Set max deposit
+          required: true
+          schema:
+            $ref: '#/definitions/SetMaxDeposit'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/register:
     x-swagger-router-controller: user
     post:
@@ -1518,14 +1517,20 @@ definitions:
     properties:
       app:
         type : string
+        format: name
+        example: "wertwertwertwert"
         description: |
           ID app
       wallet_id:
         type : string
+        format: name
+        example: "wertwertwertwert"
         description: |
           Unique identifier of the wallet
       amount:
         type : number
+        format: number
+        example: 1
         description: |
           Max value for deposit
   AdminRegisterRequest :
