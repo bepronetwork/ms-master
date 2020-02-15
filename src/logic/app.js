@@ -182,7 +182,6 @@ const processActions = {
         let wasAlreadyAdded = deposit ? true : false;
     
         return  {
-            maxDeposit          : (wallet.max_deposit == undefined) ? 0 : wallet.max_deposit,
             app                 : app,
             app_id              : app._id,
             wallet              : wallet,
@@ -514,7 +513,7 @@ const progressActions = {
         await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
         
         /* Add Deposit to App */
-        await AppRepository.prototype.addDeposit(params.app_id, depositSaveObject._id)
+        await AppRepository.prototype.addDeposit(params.app._id, depositSaveObject._id)
 
         return params;
     },

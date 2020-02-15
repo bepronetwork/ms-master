@@ -50,7 +50,7 @@ context(`${ticker}`, async () => {
         shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
     }));
 
-    it('should amount > max deposit', mochaAsync(async () => {
+    it('should amount > max deposit APP', mochaAsync(async () => {
 
         let dataMaxDeposit = await setAppMaxDeposit({
             app: app.id,
