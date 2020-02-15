@@ -87,7 +87,19 @@ class UsersRepository extends MongoComponent{
 
     findUser(username){
         return new Promise( (resolve, reject) => {
-            UsersRepository.prototype.schema.model.findOne({'username' : username})
+            UsersRepository.prototype.schema.model.findOne({'username' : new String(username).toLowerCase().trim()})
+            .populate(populate_user)
+            .lean()
+            .exec( (err, user) => {
+                if(err) {reject(err)}
+                resolve(user);
+            });
+        });
+    }
+
+    findUserByEmail(email){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOne({'email' : new String(email).toLowerCase().trim()})
             .populate(populate_user)
             .lean()
             .exec( (err, user) => {

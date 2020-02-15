@@ -161,6 +161,7 @@ const processActions = {
         }else{
             // User is Intern 
             user = await UsersRepository.prototype.findUser(input_params.username);
+            email = await UsersRepository.prototype.findUserByEmail(input_params.email);
         }
 
         let alreadyExists = user ? true : false;
@@ -170,7 +171,7 @@ const processActions = {
 
 		let normalized = {
 			alreadyExists	: alreadyExists,
-			username 		: params.username,
+			username 		: new String(params.username).toLowerCase().trim(),
             full_name		: params.full_name,
             affiliate       : affiliate,
             name 			: params.name,
@@ -180,7 +181,7 @@ const processActions = {
 			nationality		: params.nationality,
             age				: params.age,
             security        : params.security,
-            email			: params.email,
+            email			: new String(params.email).toLowerCase().trim(),
             affiliateLink,
             app			: app,
             app_id      : app.id,
