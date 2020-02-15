@@ -225,19 +225,14 @@ const processActions = {
             if(!app_wallet || !app_wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
             /* Verify if the transactionHash was created */
-            const { state, entries, value : amount, type, txid : transactionHash, wallet : bitgo_id} = wBT;
+            const { state, entries, value : amount, type, txid : transactionHash, wallet : bitgo_id, label} = wBT;
 
             const from = entries[0].address;
             const to = entries[1].address;
-            console.log("to ", to);
-            console.log("bitgo id ", bitgo_id)
-
-            let address = await AddressRepository.prototype.findByBitgoId(bitgo_id);
-            console.log(address);
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
             /* Get User Id */
-            let user = await UsersRepository.prototype.findUserById(address.user);
+            let user = await UsersRepository.prototype.findUserById(label);
             if(!user){throwError('USER_NOT_EXISTENT')}
             const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
@@ -399,7 +394,7 @@ const progressActions = {
 
         if(!bitgo_id){
             //Request to Bitgo to create Address not Existent
-            let addressObject = (await (new Address({currency : user_wallet.currency._id, user : user._id, address: address.address, bitgo_id : address.wallet})).register())._doc;
+            let addressObject = (await (new Address({currency : user_wallet.currency._id, user : user._id, address: address.address, bitgo_id : address.id})).register())._doc;
             // Add Deposit Address to User Deposit Addresses
             await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
         }else{
