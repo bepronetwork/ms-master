@@ -230,7 +230,7 @@ const processActions = {
             const from = entries[0].address;
             const to = entries[1].address;
             console.log("to ", to);
-            console.lgo("bitgo id ", bitgo_id)
+            console.log("bitgo id ", bitgo_id)
 
             let address = await AddressRepository.prototype.findByBitgoId(bitgo_id);
             console.log(address);
