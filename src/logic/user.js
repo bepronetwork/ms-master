@@ -399,7 +399,7 @@ const progressActions = {
 
         if(!bitgo_id){
             //Request to Bitgo to create Address not Existent
-            let addressObject = (await (new Address({currency : user_wallet.currency._id, user : user._id, address: address.address, bitgo_id : address.id})).register())._doc;
+            let addressObject = (await (new Address({currency : user_wallet.currency._id, user : user._id, address: address.address, bitgo_id : address.wallet})).register())._doc;
             // Add Deposit Address to User Deposit Addresses
             await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
         }else{
