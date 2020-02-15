@@ -28,7 +28,7 @@ context(`${ticker}`, async () => {
         await delay(180*1000);
         
         let body = bitgoDepositExample();
-        await DepositRepository.prototype.deleteDepositByTransactionHash(body.webhookNotifications[0].hash)
+        await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
         // Get User Deposit Address - create deposit address on bitgo
         var res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
         expect(res.data.status).to.equal(200);

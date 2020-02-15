@@ -23,7 +23,7 @@ context(`${ticker}`, async () => {
     it('should update wallet with deposit (webhook)', mochaAsync(async () => {
         let body = bitgoDepositExample();
         // Remove Test Wallet Transaction Example
-        await DepositRepository.prototype.deleteDepositByTransactionHash(body.webhookNotifications[0].hash)
+        await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
 
         // User master address of app to work as the Bank Address
         let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
@@ -60,7 +60,7 @@ context(`${ticker}`, async () => {
 
         let body = bitgoDepositExample();
         // Remove Test Wallet Transaction Example
-        await DepositRepository.prototype.deleteDepositByTransactionHash(body.webhookNotifications[0].hash)
+        await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
 
         // User master address of app to work as the Bank Address
         let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
