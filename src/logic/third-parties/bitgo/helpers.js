@@ -88,5 +88,5 @@ export const getMaxWithdraw = ({ticker, timeWindow}) => {
 
 
 export const getNormalizedTicker = ({ticker}) => {    
-    return new String(ticker.substr(0)).toLowerCase();
+    return new String(ticker.substr(1)).toLowerCase();
 }
