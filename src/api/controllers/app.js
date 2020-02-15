@@ -415,7 +415,7 @@ async function webhookBitgoDeposit (req, res) {
         req.body.currency = req.query.currency;
         let params = req.body;
         let hooks = Array.isArray(params) ? params : [params];
-        console.log("Web Hook Length : ", params.length);
+        console.log("Web Hook Length : ", hooks.length);
         let data = await Promise.all(hooks.map( async wB => {
             try{
                 console.log("ticker ", getNormalizedTicker({ticker : wB.coin }))

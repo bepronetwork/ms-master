@@ -225,12 +225,14 @@ const processActions = {
             if(!app_wallet || !app_wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
             /* Verify if the transactionHash was created */
-            const { state, entries, value : amount, type, txid : transactionHash } = wBT;
+            const { state, entries, value : amount, type, txid : transactionHash, wallet : bitgo_id} = wBT;
 
             const from = entries[0].address;
             const to = entries[1].address;
             console.log("to ", to);
-            let address = await AddressRepository.prototype.findByAddress(to);
+            console.lgo("bitgo id ", bitgo_id)
+
+            let address = await AddressRepository.prototype.findByBitgoId(bitgo_id);
             console.log(address);
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
