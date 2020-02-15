@@ -151,7 +151,7 @@ module.exports = {
     },
     shouldntUpdateWalletWithMaxDepositOverflow(data,expect){
         expect(data.status).to.not.be.null;
-        expect(data.message[0].code).to.equal(200); 
+        expect(data.message.code).to.equal(200); 
     },
     shouldntUpdateWalletWithAlreadyPresentTransaction(data,expect){
         expect(data.status).to.not.be.null;
