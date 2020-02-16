@@ -24,7 +24,7 @@ context(`${ticker}`, async () => {
     });
 
 
-    it('should update wallet with deposit (webhook)', mochaAsync(async () => {
+    it('should amount > max deposit', mochaAsync(async () => {
         
         
         let dataMaxDeposit = await setAppMaxDeposit({
@@ -75,9 +75,9 @@ context(`${ticker}`, async () => {
             wallet_id: currencyWallet._id,
             amount: 0.4,
         }, app.bearerToken, {id : app.id});
-
+        console.log(res);
         expect(res.data.status).to.not.be.null;
-        expect(res.data.message[0].code).to.equal(51);
+        expect(res.data.message.code).to.equal(51);
 
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
