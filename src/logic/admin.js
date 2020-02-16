@@ -125,23 +125,21 @@ const processActions = {
     },
 	__register : async (params) => {
         let admin = await __private.db.findAdminEmail(params.email);
+        let adminUsername = await __private.db.findAdminUsername(params.username);
         let registered = false;
-        if(!admin) { registered = true; }
+        if(!admin && !adminUsername) {registered = true} 
+        if(admin && admin.registered === true) {throwError('ALREADY_EXISTING_EMAIL')}
+        if(adminUsername && adminUsername.registered === true) {throwError('USERNAME_ALREADY_EXISTS')}
         if(admin != null && admin.security != null && admin.security != undefined) {
             const payload = MiddlewareSingleton.resultTokenDate(params.bearerToken);
-            console.log(payload);
-            console.log(params.bearerToken);
             if(!payload) {
-                console.log(1);
                 throwError('TOKEN_EXPIRED');
             }
             console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
             if( Number((new Date()).getTime()) > Number(payload.time) ) {
-                console.log(2);
                 throwError('TOKEN_EXPIRED');
             }
             if(String(admin.security.bearerToken) !== String(params.bearerToken)) {
-                console.log(2);
                 throwError('TOKEN_INVALID');
             }
         }

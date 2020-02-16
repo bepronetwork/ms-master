@@ -67,7 +67,8 @@ ErrorHandler.prototype.KEYS =  {
     'APP_INVALID'                           : "050",
     'OVERFLOW_DEPOSIT'                      : "051",
     'MAX_BET_NOT_EXISTENT'                  : "052",
-    'MAX_BET_ACHIEVED'                      : "053"
+    'MAX_BET_ACHIEVED'                      : "053",
+    'USERNAME_ALREADY_EXISTS'               : "054"
 };
 
   /***************************
