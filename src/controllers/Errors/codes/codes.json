@@ -217,6 +217,6 @@
     },
     "054" : {
         "key" : "USERNAME_ALREADY_EXISTS",
-        "message"   : "The USERNAME is already exists"
+        "message"   : "The user is already in the App"
     }
 }
