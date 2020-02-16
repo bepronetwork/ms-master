@@ -73,6 +73,7 @@ class Middleware{
                 }
             });
         }catch(err){
+            console.log(err)
             res.json({
                 data : {
                     status : 404,

@@ -69,6 +69,18 @@ class AdminsRepository{
         });
     }
 
+    findAdminUsername(username) {
+        return new Promise( (resolve, reject) => {
+            AdminSchema.prototype.schema.model.findOne({'username' : username})
+            .populate(populate_admin)
+            .lean()
+            .exec( (err, user) => {
+                if(err) {reject(err)}
+                resolve(user);
+            });
+        });
+    }
+
     updateAdmin(param) {
         return new Promise( async (resolve,reject) => {
             let admin = await this.findAdminEmail(param.email);

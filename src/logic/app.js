@@ -390,8 +390,7 @@ const progressActions = {
             passphrase,
             currency : currency.ticker
         })
-
-
+        
         /* Record webhooks */
         await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 

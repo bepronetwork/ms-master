@@ -96,17 +96,17 @@ class ErrorManager {
                     break;
                 };
                 case 'UpdateWallet': {
+                    // Verify deposit not overflow
+                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
+                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
+                    }
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null))
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
                     // Verify User is in App
                     if(!object.user_in_app)
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
-                    // Verify deposit not overflow
-                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
-                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
-                    }
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded)
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION));

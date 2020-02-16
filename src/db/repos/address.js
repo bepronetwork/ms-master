@@ -48,6 +48,16 @@ class AddressRepository extends MongoComponent{
         });
     }
 
+    findByBitgoId(bitgo_id){ 
+        return new Promise( (resolve, reject) => {
+            AddressRepository.prototype.schema.model.findOne({'bitgo_id' : bitgo_id})
+            .exec( (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
 }
 
 AddressRepository.prototype.schema = new AddressSchema();

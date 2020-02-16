@@ -42,8 +42,13 @@ context('Login & Register', async () => {
         expect(res.data.status).to.equal(200);
     }));
 
-    it('should´nt register the user', mochaAsync(async () => {
-        var res = await registerUser(userPostData);
+    it('should´nt register the user same username', mochaAsync(async () => {
+        var res = await registerUser({...userPostData, email : `somthing${Random(100,243534562345)}@gmail.com`});
+        shouldntRegisterTheUser(res.data, expect);
+    }));
+
+    it('should´nt register the user same email', mochaAsync(async () => {
+        var res = await registerUser({...userPostData, username : '678im67im' + Random(10000, 23409234235463456)});
         shouldntRegisterTheUser(res.data, expect);
     }));
 
