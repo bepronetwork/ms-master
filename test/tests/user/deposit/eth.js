@@ -95,7 +95,7 @@ context(`${ticker}`, async () => {
         /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
         tx = await new Promise( async  (resolve, reject) => {
             try{
-                await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 23592}, async (tx) => {
+                await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 23593}, async (tx) => {
                     resolve(tx);
                 });
             }catch(err){reject(err)}
