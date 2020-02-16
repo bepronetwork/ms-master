@@ -150,7 +150,7 @@ const processActions = {
         const { affiliateLink, affiliate } = params;
         var input_params = params;
 		//Set up Password Structure
-        let user, hash_password;
+        let user, hash_password, email;
 
         let app = await AppRepository.prototype.findAppById(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
@@ -161,16 +161,17 @@ const processActions = {
         }else{
             // User is Intern 
             user = await UsersRepository.prototype.findUser(input_params.username);
+            email = await UsersRepository.prototype.findUserByEmail(input_params.email);
         }
 
-        let alreadyExists = user ? true : false;
+        let alreadyExists = (user || email) ? true : false;
         // TO DO : Hash Password on Client Side
         if(params.password)
 		    hash_password = new Security(params.password).hash();
 
 		let normalized = {
 			alreadyExists	: alreadyExists,
-			username 		: params.username,
+			username 		: new String(params.username).toLowerCase().trim(),
             full_name		: params.full_name,
             affiliate       : affiliate,
             name 			: params.name,
@@ -180,7 +181,7 @@ const processActions = {
 			nationality		: params.nationality,
             age				: params.age,
             security        : params.security,
-            email			: params.email,
+            email			: new String(params.email).toLowerCase().trim(),
             affiliateLink,
             app			: app,
             app_id      : app.id,
@@ -224,17 +225,14 @@ const processActions = {
             if(!app_wallet || !app_wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
             /* Verify if the transactionHash was created */
-            const { state, entries, value : amount, type, txid : transactionHash } = wBT;
+            const { state, entries, value : amount, type, txid : transactionHash, wallet : bitgo_id, label} = wBT;
 
             const from = entries[0].address;
             const to = entries[1].address;
-            console.log("to ", to);
-            let address = await AddressRepository.prototype.findByAddress(to);
-            console.log(address);
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
             /* Get User Id */
-            let user = await UsersRepository.prototype.findUserById(address.user);
+            let user = await UsersRepository.prototype.findUserById(label);
             if(!user){throwError('USER_NOT_EXISTENT')}
             const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};

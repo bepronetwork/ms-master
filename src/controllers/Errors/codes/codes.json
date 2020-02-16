@@ -214,5 +214,9 @@
     "053" : {
         "key" : "MAX_BET_ACHIEVED",
         "message"   : "Maximum bet reached, please reduce your bet"
+    },
+    "054" : {
+        "key" : "USERNAME_ALREADY_EXISTS",
+        "message"   : "The user is already in the App"
     }
 }
