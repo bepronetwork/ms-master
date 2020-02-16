@@ -150,7 +150,7 @@ const processActions = {
         const { affiliateLink, affiliate } = params;
         var input_params = params;
 		//Set up Password Structure
-        let user, hash_password;
+        let user, hash_password, email;
 
         let app = await AppRepository.prototype.findAppById(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
@@ -164,7 +164,7 @@ const processActions = {
             email = await UsersRepository.prototype.findUserByEmail(input_params.email);
         }
 
-        let alreadyExists = user ? true : false;
+        let alreadyExists = (user || email) ? true : false;
         // TO DO : Hash Password on Client Side
         if(params.password)
 		    hash_password = new Security(params.password).hash();
