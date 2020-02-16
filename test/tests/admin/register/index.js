@@ -40,6 +40,19 @@ context('Register', async () => {
         shouldRegisterTheAdmin(res.data, expect);
     }));
 
+    it('shouldnt register the Admin - Email Already Exists', mochaAsync(async () => {
+        var res = await registerAdmin(BOILERPLATES.admins.NORMAL_REGISTER);
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(8);
+    }));
+
+    it('shouldnt register the Admin - Username Already Exists', mochaAsync(async () => {
+        BOILERPLATES.admins.NORMAL_REGISTER.email = `${new Date().getTime()}be@gmail.com`;
+        var res = await registerAdmin(BOILERPLATES.admins.NORMAL_REGISTER);
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(54);
+    }));
+
     it('Shouldnt create a contact that already exists', mochaAsync(async () => {
         try {
             let admin = BOILERPLATES.admins.NORMAL_REGISTER;
