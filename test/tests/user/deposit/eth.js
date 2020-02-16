@@ -25,16 +25,13 @@ context(`${ticker}`, async () => {
 
 
     it('should amount > max deposit', mochaAsync(async () => {
-
         let dataMaxDeposit = await setAppMaxDeposit({
             app: app.id,
             wallet_id: currencyWallet._id,
             amount: 0.1,
         }, app.bearerToken, {id : app.id});
-
         // Wait for Wallet Init
         await delay(180*1000);
-
         let body = bitgoDepositExampleMaxDeposit();
         await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
         // Get User Deposit Address - create deposit address on bitgo
@@ -61,10 +58,7 @@ context(`${ticker}`, async () => {
                 });
             }catch(err){reject(err)}
         });
-
-              
         res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
-
         await setAppMaxDeposit({
             app: app.id,
             wallet_id: currencyWallet._id,
