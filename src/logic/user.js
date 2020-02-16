@@ -245,8 +245,9 @@ const processActions = {
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
-
+            
             let res = {
+                maxDeposit          : (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
                 app,
                 user_in_app,
                 user                : user,

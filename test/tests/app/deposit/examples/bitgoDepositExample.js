@@ -8,3 +8,14 @@ export const bitgoDepositExample = () => {
         "state": "new"
     }
 }
+
+export const bitgoDepositExampleMaxDeposit = () => {
+    return {
+        "wallet" : "5e486fa31693ec74049e6f7e104a9507",
+        "transfer" : "5e494f511ea7e70800629f39b0559338",
+        "hash" : "0xf0fc3f7f0740c916255d7d041837077d20c5e4485adecb4b0fdbd04e9a8118f8",
+        "coin": "teth",
+        "type": "transfer",
+        "state": "new"
+    }
+}

@@ -96,6 +96,11 @@ class ErrorManager {
                     break;
                 };
                 case 'UpdateWallet': {
+                    // Verify deposit not overflow
+                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
+                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
+                    }
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null))
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
@@ -214,11 +219,6 @@ class ErrorManager {
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
-                    }
-                    // Verify deposit not overflow
-                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
-                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
                     }
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded){
