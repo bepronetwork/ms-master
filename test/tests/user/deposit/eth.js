@@ -77,14 +77,6 @@ context(`${ticker}`, async () => {
         }, app.bearerToken, {id : app.id});
 
         let body = bitgoDepositExample();
-        await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
-
-        // Get User Deposit Address - already initialized
-        let res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
-        expect(res.data.status).to.equal(200);
-        expect(res.data.message.address).to.not.be.null;
-        expect(res.data.status).to.equal(200);
-        const { address }  = res.data.message;
 
         // Deposit
         let bankContract = globalsTest.getCasinoETHContract(address, global.ownerAccount);
@@ -97,7 +89,7 @@ context(`${ticker}`, async () => {
             }catch(err){reject(err)}
         });
 
-        res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
         const { status } = res.data;
         detectValidationErrors(res);
         expect(status).to.equal(200);
