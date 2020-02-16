@@ -28,7 +28,7 @@ context(`${ticker}`, async () => {
         let dataMaxDeposit = await setAppMaxDeposit({
             app: app.id,
             wallet_id: currencyWallet._id,
-            amount: 0.1,
+            amount: 0.01,
         }, app.bearerToken, {id : app.id});
         // Wait for Wallet Init
         await delay(180*1000);
