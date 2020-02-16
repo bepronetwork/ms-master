@@ -183,7 +183,6 @@ const processActions = {
     
         return  {
             app                 : app,
-            app_id              : app._id,
             wallet              : wallet,
             creationDate        : new Date(),
             transactionHash     : transactionHash,
