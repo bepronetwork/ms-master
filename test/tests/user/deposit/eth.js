@@ -75,7 +75,7 @@ context(`${ticker}`, async () => {
             wallet_id: currencyWallet._id,
             amount: 0.4,
         }, app.bearerToken, {id : app.id});
-        console.log(res);
+        console.log(res.data.message);
         expect(res.data.status).to.not.be.null;
         expect(res.data.message.code).to.equal(51);
 
