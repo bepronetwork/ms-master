@@ -40,6 +40,18 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updateMaxDeposit(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                max_deposit: amount
+            })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePlayBalance(id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
@@ -60,6 +72,20 @@ class WalletsRepository extends MongoComponent{
                 resolve(docs);
             })
         })
+    }
+
+    addDepositAddress(wallet_id, address){        
+        return new Promise( (resolve,reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: wallet_id, "depositAddresses" : {$nin : [address] } }, 
+                { $push: { "depositAddresses" : address } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
     }
 }
 

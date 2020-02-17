@@ -8,6 +8,7 @@ import MiddlewareSingleton from '../helpers/middleware';
 async function editGameTableLimit (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameTableLimit();
@@ -20,6 +21,7 @@ async function editGameTableLimit (req, res) {
 async function editGameEdge(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameEdge();

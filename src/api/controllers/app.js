@@ -1,9 +1,11 @@
 
 import {
-	Game, App, Bet, Event, AffiliateLink
+	Game, App, Bet, Event, AffiliateLink, User
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
+import { BitGoSingleton } from '../../logic/third-parties';
+import { getNormalizedTicker } from '../../logic/third-parties/bitgo/helpers';
 
 /**
  * Description of the function.
@@ -18,6 +20,7 @@ import MiddlewareSingleton from '../helpers/middleware';
 
 async function createApp (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.register();
@@ -30,6 +33,7 @@ async function createApp (req, res) {
 async function getAppAuth (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.getAuth();
@@ -41,6 +45,7 @@ async function getAppAuth (req, res) {
 
 async function getApp (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.get();
@@ -53,6 +58,7 @@ async function getApp (req, res) {
 
 async function getGames (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getGames();
@@ -66,6 +72,7 @@ async function getGames (req, res) {
 async function deployApp (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.deployApp();
@@ -79,6 +86,7 @@ async function deployApp (req, res) {
 async function createGame (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let game = new Game(params);
 		let data = await game.register();
@@ -92,6 +100,7 @@ async function createGame (req, res) {
 async function addGame (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.addGame();
@@ -105,6 +114,7 @@ async function addGame (req, res) {
 async function addCurrencyWallet(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.addCurrencyWallet();
@@ -118,6 +128,7 @@ async function addCurrencyWallet(req, res) {
 async function getGame (req, res) {
 	try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
 	    let params = req.body;
 		let game = new Game(params);
 		let data = await game.get();
@@ -130,6 +141,7 @@ async function getGame (req, res) {
 async function createBet (req, res) {
     try{
         SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let bet = new Bet(params);
 		let data = await bet.register();
@@ -139,11 +151,25 @@ async function createBet (req, res) {
 	}
 }
 
+async function setMaxBet (req, res) {
+    try {
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+        let game = new Game(params);
+        let data = await game.setMaxBet();
+        MiddlewareSingleton.respond(res, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+    
+}
+
 
 async function resolveBet (req, res) {
     try{
         // User Security Setup
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let bet = new Bet(params);
 		let data = await bet.resolve();
@@ -171,6 +197,7 @@ async function resolveGame (req, res) {
 async function summary (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.summary();
@@ -184,6 +211,7 @@ async function summary (req, res) {
 async function getTransactions (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getTransactions();
@@ -198,6 +226,7 @@ async function getTransactions (req, res) {
 async function addServices (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.addServices();
@@ -209,6 +238,7 @@ async function addServices (req, res) {
 
 async function getLastBets (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getLastBets();
@@ -220,6 +250,7 @@ async function getLastBets (req, res) {
 
 async function getBiggestBetWinners (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getBiggestBetWinners();
@@ -231,6 +262,7 @@ async function getBiggestBetWinners (req, res) {
 
 async function getBiggestUserWinners (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getBiggestUserWinners();
@@ -242,6 +274,7 @@ async function getBiggestUserWinners (req, res) {
 
 async function getPopularNumbers (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getPopularNumbers();
@@ -254,6 +287,7 @@ async function getPopularNumbers (req, res) {
 async function editAffiliateStructure (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editAffiliateStructure();
@@ -266,6 +300,7 @@ async function editAffiliateStructure (req, res) {
 async function editIntegration (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editIntegration();
@@ -279,6 +314,7 @@ async function editIntegration (req, res) {
 async function editTopBar (req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editTopBar();
@@ -291,6 +327,7 @@ async function editTopBar (req, res) {
 async function editBanners(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editBanners();
@@ -303,6 +340,7 @@ async function editBanners(req, res) {
 async function editLogo(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editLogo();
@@ -315,6 +353,7 @@ async function editLogo(req, res) {
 async function editColors(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editColors();
@@ -327,6 +366,7 @@ async function editColors(req, res) {
 async function editFooter(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editFooter();
@@ -336,9 +376,22 @@ async function editFooter(req, res) {
 	}
 }
 
+async function editTypography(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editTypography();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function getUsers(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getUsers();
@@ -356,12 +409,37 @@ async function getUsers(req, res) {
  * @param {*} res
  */
 
-async function updateWalletApp (req, res) {
+async function webhookBitgoDeposit (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
+        req.body.id = req.query.id;
+        req.body.currency = req.query.currency;
         let params = req.body;
-		let app = new App(params);
-        let data = await app.updateWallet();
+        let hooks = Array.isArray(params) ? params : [params];
+        console.log("Web Hook Length : ", hooks.length);
+        let data = await Promise.all(hooks.map( async wB => {
+            try{
+                console.log("ticker ", getNormalizedTicker({ticker : wB.coin }))
+                // Get Info from WebToken
+                const wBT = await BitGoSingleton.getTransaction({id : wB.transfer, wallet_id : wB.wallet, ticker : getNormalizedTicker({ticker : wB.coin })});
+                if(!wBT){return null}
+                // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
+                var isApp = !wBT.label;
+                console.log("Label ", wBT.label);
+                params.wBT = wBT;
+
+                if(isApp){
+                    let app = new App(params);
+                    return await app.updateWallet();
+                }else{
+                    // is User
+                    let user = new User(params);
+                    return await user.updateWallet();
+                }
+            }catch(err){
+                console.log(err);
+                return err;
+            }
+       }))
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -378,6 +456,7 @@ async function updateWalletApp (req, res) {
 async function createAffiliateCustom(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let affiliateLink = new AffiliateLink(params);
         let data = await affiliateLink.setCustomAffiliatePercentage();
@@ -417,5 +496,7 @@ export {
     deployApp,
     getLastBets,
     addServices,
-    updateWalletApp
+    editTypography,
+    setMaxBet,
+    webhookBitgoDeposit
 };

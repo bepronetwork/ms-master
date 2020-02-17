@@ -6,7 +6,7 @@ import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
 import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
 import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
-import { AffiliateSetup, Integrations, Customization } from '.';
+import { AffiliateSetup, Integrations, Customization, Typography } from '.';
 
 class App extends ModelComponent{
 
@@ -31,7 +31,8 @@ class App extends ModelComponent{
                         ]
                     }),
                     new Integrations(params),
-                    new Customization(params)
+                    new Customization(params),
+                    new Typography(params)
                 ]
             }
             );
@@ -372,6 +373,19 @@ class App extends ModelComponent{
         }
     }
 
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTypography(){
+        try{
+            return await this.process('EditTypography');
+        }catch(err){
+            throw err;
+        }
+    }
+
      /**
      * @param {String} 
      * @return {bool || Exception}  
@@ -394,18 +408,9 @@ class App extends ModelComponent{
     async updateWallet(){
         const { app } = this.self.params;
         try{
-            /* Close Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, true);
             let res = await this.process('UpdateWallet');
-            /* Open Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, false);
             return MapperWalletSingleton.output('WalletTransaction', res);
         }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not withdrawing atm */
-                /* Open Mutex */
-                await AppRepository.prototype.changeWithdrawPosition(app, false);
-            }
             throw err;
         }
     }

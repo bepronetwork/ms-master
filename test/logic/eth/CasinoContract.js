@@ -340,12 +340,8 @@ class CasinoContract{
 
     async depositFunds({amount}){
         try{
-            await this.allowWithdrawalFromContract({amount});
             let amountWithDecimals = Numbers.toSmartContractDecimals(amount, self.decimals);
-            let data = self.contract.getContract().methods.deposit(
-                amountWithDecimals
-            ).encodeABI(); 
-            return await self.contract.send(self.account.getAccount(), data);  
+            return await this.sendTokensToCasinoContract(amountWithDecimals);
         }catch(err){
             throw err
         }

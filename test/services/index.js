@@ -37,8 +37,7 @@ export async function createUser({app_id, affiliateLink}){
 export async function createUserDeposit({user, tokenAmount, app, currency,  depositAddress}){
     const { id : app_id} = app;
     const { id : user_id, eth_account, bearerToken } = user;
-    let res_eth = await userDepositToContract({eth_account, platformAddress : depositAddress, tokenAmount : tokenAmount});
-    
+    let res_eth = await userDepositToContract({eth_account, platformAddress : depositAddress, tokenAmount : tokenAmount, currency});
     return await updateUserWallet({
         user :  user_id,
         amount : tokenAmount,
@@ -72,11 +71,16 @@ export async function getApp({app}){
 }
 
 export async function getUserInfo({user, app}){
-    return (await loginUser({
-        username : user.username,
-        password : user.password,
+    let password = user.password ? user.password : user.message.password;
+    let username = user.username ? user.username : user.message.username;
+
+    let res =  (await loginUser({
+        username, 
+        password,
         app : app.id
-    })).data.message;
+    }));
+
+    return { ...res.data.message, password };
 }
 
 
@@ -91,7 +95,7 @@ export async function bet({user, result, game, app, currency}){
         app: app_id,
         nonce: getNonce(),
         result,
-        currency
+        currency : currency._id
     }   
 
     return await placeBet(postData, bearerToken, {id : user_id});

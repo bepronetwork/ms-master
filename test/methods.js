@@ -4,7 +4,6 @@ import account from './logic/eth/models/account';
 import CasinoContract from './logic/eth/CasinoContract';
 import { globalsTest } from './GlobalsTest';
 import Numbers from './logic/services/numbers';
-import decode from 'unescape';
 
 module.exports = {
     async registerUser(params) {
@@ -18,7 +17,14 @@ module.exports = {
         .post('/api/admins/register')
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async addAdmin(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/admins/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
     },
     async loginAdmin(params) {
         return request(global.server)
@@ -93,12 +99,25 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async getDepositAddress(params){
+        return request(global.server)
+        .post(`/api/app/address/get`)
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async registerApp(params) {
         return request(global.server)
         .post('/api/app/create')
         .send(params)
         .then(res => detectServerError(res))
-        
+    },
+    async getAdminByApp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/admin/app/get')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
     },
     async getApp(params) {
         return request(global.server)
@@ -249,8 +268,23 @@ module.exports = {
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
+        .then(res => detectServerError(res)) 
+    },
+    async setMaxBet(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/games/bet/max')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res)) 
+    },
+    async pingPost(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/ping/post')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
         .then(res => detectServerError(res))
-        
     },
     async editTableLimit(params, bearerToken, payload){
         return request(global.server)
@@ -309,6 +343,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editTypographyApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/typography')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => { return res.body})
+    },
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/integrations/edit')
@@ -324,22 +366,25 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async updateAppWallet(params, bearerToken, payload){
+    async webhookConfirmDepositFromBitgo(params, id, currency_id){
         return request(global.server)
-        .post('/api/app/updateWallet')
+        .post(`/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`)
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async setAppMaxDeposit(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/deposit/max/set')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
     },
-    async updateUserWallet(params, bearerToken, payload){
+    async updateUserWallet(params, id, app_id, currency_id){
         return request(global.server)
-        .post('/api/users/updateWallet')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
+        .post(`/api/users/updateWallet?id=${id}&app=${app_id}&currency=${currency_id}`)
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async requestWithdraw(params, bearerToken, payload){
         return request(global.server)

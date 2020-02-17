@@ -139,8 +139,8 @@ async function verifytransactionHashDirectDeposit(currency, transactionHash, amo
                 if(!res_transaction_recipt.status || !res_transaction.blockHash){
                     throw false;
                 }
+                
                 /* Verify if the Token Amount is the same */
-        
                 if(
                     Numbers.fromExponential(new Number(res_transaction_decoded.tokenAmount)) 
                     != Numbers.toSmartContractDecimals(new Number(amount), decimals)){

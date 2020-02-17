@@ -1,3 +1,7 @@
+import { Wallet } from "../../models";
+import SecuritySingleton from '../helpers/security';
+import MiddlewareSingleton from '../helpers/middleware';
+
 /**
 * Description of the function.
 *
@@ -9,8 +13,19 @@
 * @todo Add description of UsersController
 */
 
-
+async function setMaxDeposit(req, res) {
+    try{
+        let params = req.body;
+        SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
+		let wallet = new Wallet(params);
+        let data = await wallet.setMaxDeposit();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
 
 export {
-
+    setMaxDeposit
 }

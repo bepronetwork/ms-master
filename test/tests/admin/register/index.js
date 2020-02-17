@@ -2,13 +2,15 @@ import {
     registerAdmin,
     loginAdmin,
     authAdmin,
-    loginAdmin2FA, 
+    loginAdmin2FA,
     setAdmin2FA
 } from '../../../methods';
 
 import chai from 'chai';
 import Security from '../../../../src/controllers/Security/Security';
 import { detectValidationErrors, mochaAsync } from '../../../utils';
+import { SendInBlue } from '../../../../src/logic/third-parties';
+import { mail } from "../../../../src/mocks";
 
 import {
     shouldRegisterTheAdmin,
@@ -38,6 +40,33 @@ context('Register', async () => {
         shouldRegisterTheAdmin(res.data, expect);
     }));
 
+    it('shouldnt register the Admin - Email Already Exists', mochaAsync(async () => {
+        var res = await registerAdmin(BOILERPLATES.admins.NORMAL_REGISTER);
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(8);
+    }));
+
+    it('shouldnt register the Admin - Username Already Exists', mochaAsync(async () => {
+        BOILERPLATES.admins.NORMAL_REGISTER.email = `${new Date().getTime()}be@gmail.com`;
+        var res = await registerAdmin(BOILERPLATES.admins.NORMAL_REGISTER);
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(54);
+    }));
+
+    it('Shouldnt create a contact that already exists', mochaAsync(async () => {
+        try {
+            let admin = BOILERPLATES.admins.NORMAL_REGISTER;
+            const email = admin.email;
+            const attributes = {
+                NAME: admin.name
+            };
+            let listIds = mail.registerAdmin.listIds;
+            await SendInBlue.prototype.createContact(email, attributes, listIds);
+        } catch (err) {
+            expect(err.status).to.equal(400);
+        }
+    }));
+
     it('should login the Admin', mochaAsync(async () => {
         let res = await loginAdmin(BOILERPLATES.admins.NORMAL_LOGIN_USER);
         detectValidationErrors(res);
@@ -49,22 +78,23 @@ context('Register', async () => {
         let res_login = await loginAdmin(BOILERPLATES.admins.NORMAL_LOGIN_USER);
         ADMIN_ID = res_login.data.message.id;
         BEARER_TOKEN = res_login.data.message.bearerToken;
-        let secret = Security.prototype.generateSecret2FA({name : 'BetProtocol', account_id : ADMIN_ID});
+        let secret = Security.prototype.generateSecret2FA({ name: 'BetProtocol', account_id: ADMIN_ID });
         SECRET = secret;
         let token = Security.prototype.generateToken2FA(secret);
         var res = await setAdmin2FA({
-            '2fa_secret' : secret,
-            '2fa_token' : token,
-            admin : ADMIN_ID
-        }, BEARER_TOKEN, { id : ADMIN_ID});
+            '2fa_secret': secret,
+            '2fa_token': token,
+            admin: ADMIN_ID
+        }, BEARER_TOKEN, { id: ADMIN_ID });
         detectValidationErrors(res);
         shouldSet2FAForTheAdmin(res.data, expect);
     }));
 
     it('should login the Admin', mochaAsync(async () => {
         let token = Security.prototype.generateToken2FA(SECRET);
-        let res = await loginAdmin2FA({...BOILERPLATES.admins.NORMAL_LOGIN_USER,
-            '2fa_token' : token
+        let res = await loginAdmin2FA({
+            ...BOILERPLATES.admins.NORMAL_LOGIN_USER,
+            '2fa_token': token
         });
         ADMIN_ID = res.data.message.id;
         detectValidationErrors(res);
@@ -74,23 +104,25 @@ context('Register', async () => {
 
     it('should auth for Admin - BearerToken', mochaAsync(async () => {
         let token = Security.prototype.generateToken2FA(SECRET);
-        let res = await loginAdmin2FA({...BOILERPLATES.admins.NORMAL_LOGIN_USER,
-            '2fa_token' : token
+        let res = await loginAdmin2FA({
+            ...BOILERPLATES.admins.NORMAL_LOGIN_USER,
+            '2fa_token': token
         });
         ADMIN_ID = res.data.message.id;
         BEARER_TOKEN = res.data.message.bearerToken;
         res = await authAdmin({
-            admin : ADMIN_ID
-        }, BEARER_TOKEN, { id : ADMIN_ID});
+            admin: ADMIN_ID
+        }, BEARER_TOKEN, { id: ADMIN_ID });
         detectValidationErrors(res);
         global.test.admin = res.data.message;
         shouldAuthForAdminBearerToken(res.data, expect);
     }));
 
     it('shouldn´t login the Admin - WRONG TOKEN', mochaAsync(async () => {
-        let res = await loginAdmin2FA({...BOILERPLATES.admins.NORMAL_LOGIN_USER,
-            '2fa_token' : '345633',
-            'admin_id' : ADMIN_ID
+        let res = await loginAdmin2FA({
+            ...BOILERPLATES.admins.NORMAL_LOGIN_USER,
+            '2fa_token': '345633',
+            'admin_id': ADMIN_ID
         });
         detectValidationErrors(res);
         shouldntLoginTheAdminWRONGTOKEN(res.data, expect);

@@ -17,6 +17,7 @@ import SecuritySingleton from '../helpers/security';
 
 async function registAdmin (req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.register();
@@ -26,8 +27,20 @@ async function registAdmin (req, res) {
 	}
 }
 
+async function getAdminAll(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+		let admin = new Admin(params);
+        let data = await admin.getAdminAll();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
 async function loginAdmin(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login();
@@ -40,6 +53,7 @@ async function loginAdmin(req, res) {
 async function setAdmin2FA(req, res) {
     try{
         SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.set2FA();
@@ -52,6 +66,7 @@ async function setAdmin2FA(req, res) {
 
 async function loginAdmin2FA(req, res) {
     try{
+        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login2FA();
@@ -66,6 +81,7 @@ async function loginAdmin2FA(req, res) {
 async function authAdmin (req, res) {
     try{
         SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.auth();
@@ -75,10 +91,24 @@ async function authAdmin (req, res) {
 	}
 }
 
+async function addAdmin (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'admin', req});
+        let params = req.body;
+		let admin = new Admin(params);
+		let data = await admin.addAdmin();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 export {
+    addAdmin,
 	registAdmin,
 	loginAdmin,
     loginAdmin2FA,
     authAdmin,
-    setAdmin2FA
+    setAdmin2FA,
+    getAdminAll
 }

@@ -39,8 +39,27 @@ context(`ERC20 (${erc20Ticker})`, async () => {
         let res = await updateAppWallet(postData, app.bearerToken, {id : app.id});
         detectValidationErrors(res);
         shouldntUpdateWalletWithPendingTransaction(res.data, expect);
-    })); 
-    
+    }));
+
+    it('should amount > max deposit', mochaAsync(async () => {
+
+        let bankContract = globalsTest.getCasinoContract(currencyWallet.bank_address, currencyWallet.currency.address, global.ownerAccount);
+        let tx = await bankContract.sendTokensToCasinoContract(Numbers.toSmartContractDecimals(31, currencyWallet.currency.decimals))
+
+        const postData = {
+            app : app.id,
+            amount : 31,
+            transactionHash : tx.transactionHash,
+            currency : currencyWallet.currency._id
+        }
+
+        let res = updateAppWallet(postData, app.bearerToken, {id : app.id});
+        let ret = await Promise.resolve(await res);
+
+        expect(ret.data.status).to.not.be.null;
+        expect(ret.data.status).to.be.equal(48);
+    }));
+
     it('should update Wallet with verified transaction', mochaAsync(async () => {
         let bankContract = globalsTest.getCasinoContract(currencyWallet.bank_address, currencyWallet.currency.address, global.ownerAccount);
         let tx = await bankContract.sendTokensToCasinoContract(Numbers.toSmartContractDecimals(depositAmount, currencyWallet.currency.decimals))
@@ -69,8 +88,7 @@ context(`ERC20 (${erc20Ticker})`, async () => {
         /* Verify if new wallet has that info */
         let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
         global.test.app = res_app.data.message;
-        
         const walletCurrencyApp = global.test.app.wallet.find( c => new String(c.currency.ticker).toLowerCase() == erc20Ticker.toLowerCase());
         expect(walletCurrencyApp.playBalance).to.be.equal(parseFloat(depositAmount));
-    })); 
+    }));
 });

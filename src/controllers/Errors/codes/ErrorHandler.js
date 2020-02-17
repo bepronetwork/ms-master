@@ -60,9 +60,16 @@ ErrorHandler.prototype.KEYS =  {
     'BAD_REQUEST'                           : "043",
     'DEPLOY_ERROR'                          : "044",
     'CURRENCY_NOT_EXISTENT'                 : "045",
-    'CURRENCY_ALREADY_EXISTENT'             : "046"
-}; 
-
+    'CURRENCY_ALREADY_EXISTENT'             : "046",
+    'NO_PASSPHRASE_WALLET'                  : "047",
+    'TOKEN_EXPIRED'                         : "048",
+    'TOKEN_INVALID'                         : "049",
+    'APP_INVALID'                           : "050",
+    'OVERFLOW_DEPOSIT'                      : "051",
+    'MAX_BET_NOT_EXISTENT'                  : "052",
+    'MAX_BET_ACHIEVED'                      : "053",
+    'USERNAME_ALREADY_EXISTS'               : "054"
+};
 
   /***************************
  * 

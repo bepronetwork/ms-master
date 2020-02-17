@@ -96,6 +96,11 @@ class ErrorManager {
                     break;
                 };
                 case 'UpdateWallet': {
+                    // Verify deposit not overflow
+                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
+                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
+                    }
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null))
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
@@ -237,8 +242,8 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
                     }
                     // Verify Bank_address
-                    if(typeof object.bank_address == 'undefined' || Object.is(object.bank_address, null)){
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
+                    if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
                     }
                     //Verify Currency exists 
                     if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
@@ -537,6 +542,15 @@ class ErrorManager {
         }
     }
 
+    log = function (object, type){
+        try{
+            switch(type){
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     link = function (object, type){
         try{
             switch(type){
@@ -567,8 +581,28 @@ class ErrorManager {
         }
     }
 
+    address = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
 
     customization = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    typography = function (object, type){
         try{
             switch(type){
                

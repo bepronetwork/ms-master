@@ -99,9 +99,12 @@ class SecurityLogic extends LogicComponent {
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
-		try{			
+		try{
 			switch(processAction) {
 				case 'Register' : {
+					return library.process.__register(params); break;
+				};
+				case 'AddAdmin' : {
 					return library.process.__register(params); break;
 				};
 			}
@@ -134,7 +137,9 @@ class SecurityLogic extends LogicComponent {
 				case 'Register' : {
 					return await library.progress.__register(params);
 				}
-
+				case 'AddAdmin' : {
+					return await library.progress.__register(params);
+				};
 			}
 		}catch(error){
 			throw error;

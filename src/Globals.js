@@ -7,16 +7,23 @@ import { ETH_NETWORK, ETH_NET_NAME, DB_MONGO } from './config';
 import { IPRunning } from "./helpers/network";
 import { Logger } from "./helpers/logger";
 import bluebird from 'bluebird';
+import { BitGoSingleton } from "./logic/third-parties";
 
 class Globals{
     constructor(){
         this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_NETWORK.url));
     }
 
+    async __init__(){
+        /* Init BitGo */
+        await BitGoSingleton.__init__();
+        /* Init Mongo */
+        await this.startDatabase();
+    }
+
     verify(){
         //Display All and Confirm Running
         globals.log();
-
     }
 
     getCasinoContract(address, tokenAddress){
@@ -72,7 +79,7 @@ class Globals{
         Logger.info(`IP`, `${IPRunning()}`);
     }
 
-    async connect(){      
+    async startDatabase(){      
         // Main DB
         this.main_db = new Mongoose();
         this.main_db.set('useFindAndModify', false);

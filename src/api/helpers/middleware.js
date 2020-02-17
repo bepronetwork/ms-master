@@ -1,4 +1,5 @@
 import { PUBLIC_KEY, PRIVATE_KEY } from '../../config';
+import Log from '../../models/log';
 
 const jwt   = require('jsonwebtoken');
 // use 'utf8' to get string instead of byte array  (512 bit key)
@@ -8,7 +9,6 @@ var publicKEY  =  new String("-----BEGIN PUBLIC KEY-----\n" + PUBLIC_KEY + "\n--
 class Middleware{
     constructor(){}
 
-
     sign(payload){
         try{
             let token = jwt.sign({ id : 'Auth/' + payload }, privateKEY, { algorithm: 'RS256' });
@@ -17,6 +17,23 @@ class Middleware{
             throw err;
         }
     };
+
+    generateTokenDate(time) {
+        try{
+            let token = jwt.sign({ time }, privateKEY, { algorithm: 'RS256' });
+            return token;
+        }catch(err){
+            throw err;
+        }
+    }
+    resultTokenDate(token) {
+        try{
+            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+            return response;
+        }catch (err){
+            return false;
+        }
+    }
 
     verify({token, payload, id}){
         try{
@@ -28,12 +45,10 @@ class Middleware{
         }
     };
 
-
     decode(token){
         return jwt.decode(token, {complete: true});
         //returns null if token is invalid
     }
-
     respond(res, data){
         try{
             res.json({
@@ -58,13 +73,39 @@ class Middleware{
                 }
             });
         }catch(err){
-            console.error(err)
+            console.log(err)
             res.json({
                 data : {
                     status : 404,
-                    message : 'Internal Server Error'
+                    message : 'Contact Support, Action not Allowed'
                 }
             });
+        }
+    }
+
+    async log(json) {
+        const {type, req} = json;
+        try {
+            // return true;
+            const id = JSON.parse(req.headers['payload']);
+
+            if(type!="admin" && type!="user" && type!="app" && type!="global") {
+                throw {code: 404, message: "type not defined"};
+            }
+
+            const data = {
+                ip          : req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+                process     : req.swagger.operation.definition.operationId,
+                countryCode : req.ipInfo.error ? "LH" : req.ipInfo.country,
+                route       : req.swagger.operation.pathToDefinition[1],
+                creatorId   : id.id == undefined ? null : id.id,
+                creatorType : type
+            };
+            const log = new Log(data);
+            await log.register();
+            return true;
+        } catch(error) {
+            return false;
         }
     }
 }

@@ -22,19 +22,26 @@ import CustomizationLogic from './customization';
 import TopBarLogic from './topBar';
 import BannersLogic from './banners';
 import LogoLogic from './logo';
+import LogLogic from './log';
 import ColorLogic from './color';
 import LinkLogic from './link';
 import FooterLogic from './footer';
+import TypographyLogic from './typography';
+
 import CurrencyLogic from './currency';
+import AddressLogic from './address';
+
 
 export {
     CurrencyLogic,
     UserLogic,
     TopBarLogic,
+    AddressLogic,
     LinkLogic,
     FooterLogic,
     ColorLogic,
     LogoLogic,
+    LogLogic,
     EventsLogic,
     BannersLogic,
     AppLogic,
@@ -55,6 +62,7 @@ export {
     BetResultSpaceLogic,
     EventLogic,
     AdminLogic,
-    ResultSpaceLogic
+    ResultSpaceLogic,
+    TypographyLogic
 }
 
