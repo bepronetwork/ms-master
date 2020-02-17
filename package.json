@@ -60,6 +60,7 @@
         "delay": "^2.0.0",
         "dirichlet": "^1.0.1",
         "dotenv": "^8.1.0",
+        "event-lite" : "^0.1.2",
         "errors": "^0.3.0",
         "es6-promise": "^4.0.5",
         "express": "^4.17.1",
