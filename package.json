@@ -70,6 +70,7 @@
         "faker": "^4.1.0",
         "file-saver": "^2.0.2",
         "heroku-client": "^3.1.0",
+        "hi-base32": "^0.5.0",
         "inquirer": "^6.5.2",
         "int64-buffer": "^0.99.1007",
         "ip": "^1.1.5",
