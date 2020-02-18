@@ -27,6 +27,7 @@ import Link from './link';
 import Typography from './typography';
 import Currency from './currency';
 import Address from './address';
+import TopIcon from './topIcon';
 
 export {
     User,
@@ -57,5 +58,6 @@ export {
     Ecosystem,
     Withdraw,
     Admin,
-    Typography
+    Typography,
+    TopIcon
 }

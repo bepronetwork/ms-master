@@ -1,7 +1,7 @@
 import { CustomizationLogic } from '../logic';
 import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
-import { TopBar, Banners, Color, Logo, Footer } from '.';
+import { TopBar, Banners, Color, Logo, Footer, TopIcon } from '.';
 import { colors } from '../mocks';
 
 class Customization extends ModelComponent{
@@ -21,7 +21,8 @@ class Customization extends ModelComponent{
                     new TopBar(params),
                     new Banners(params),
                     new Logo(params),
-                    new Footer(params)
+                    new Footer(params),
+                    new TopIcon(params)
                 ]
             }
             );

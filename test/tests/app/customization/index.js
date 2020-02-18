@@ -4,4 +4,5 @@ context('Customization', async () => {
     require('./addLogo');
     require('./editColors');
     require('./editFooter');
+    require('./addTopIcon');
 });

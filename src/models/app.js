@@ -373,6 +373,19 @@ class App extends ModelComponent{
         }
     }
 
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTopIcon(){
+        try{
+            return await this.process('EditTopIcon');
+        }catch(err){
+            throw err;
+        }
+    }
+
     /**
      * @param {String} 
      * @return {bool || Exception}  
