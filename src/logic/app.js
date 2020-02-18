@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
@@ -306,6 +306,15 @@ const processActions = {
         };
     },
     __editFooter : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editTopIcon : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -649,6 +658,23 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editTopIcon : async (params) => {
+        let { app, topIcon } = params;
+        let topIconURL;
+        if(topIcon.includes("https")){
+            /* If it is a link already */
+            topIconURL = topIcon;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            topIconURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topIcon});
+        }
+
+        await TopIconRepository.prototype.findByIdAndUpdate(app.customization.topIcon._id, {
+            id : topIconURL
+        })
+        // Save info on Customization Part
+        return params;
+    },
     __editTypography: async (params) => {
         let { app, typography } = params;
         //This Function Clening the typography from collection typographies and from the App document (typography field)
@@ -787,6 +813,9 @@ class AppLogic extends LogicComponent{
                 case 'EditColors' : {
                     return await library.process.__editColors(params); break;
                 };
+                case 'EditTopIcon' : {
+                    return await library.process.__editTopIcon(params); break;
+                };
                 case 'EditTypography': {
                     return await library.process.__editTypography(params); break;
                 };
@@ -890,6 +919,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditFooter' : {
                     return await library.progress.__editFooter(params); break;
+                };
+                case 'EditTopIcon' : {
+                    return await library.progress.__editTopIcon(params); break;
                 };
                 case 'EditTypography': {
                     return await library.progress.__editTypography(params); break;

@@ -31,6 +31,7 @@ import FooterRepository from './footer';
 import TypographyRepository from './typography';
 import CurrencyRepository from './currency';
 import AddressRepository from './address';
+import TopIconRepository from './topIcon';
 
 export{
     ChatRepository,
@@ -65,5 +66,6 @@ export{
     DepositRepository,
     BetsRepository,
     AdminsRepository,
-    TypographyRepository
+    TypographyRepository,
+    TopIconRepository
 }  

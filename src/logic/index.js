@@ -27,9 +27,9 @@ import ColorLogic from './color';
 import LinkLogic from './link';
 import FooterLogic from './footer';
 import TypographyLogic from './typography';
-
 import CurrencyLogic from './currency';
 import AddressLogic from './address';
+import TopIconLogic from "./topIcon";
 
 
 export {
@@ -63,6 +63,7 @@ export {
     EventLogic,
     AdminLogic,
     ResultSpaceLogic,
-    TypographyLogic
+    TypographyLogic,
+    TopIconLogic
 }
 
