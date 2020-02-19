@@ -10,6 +10,7 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
 import { SendInBlue } from './third-parties';
+import { SENDINBLUE_EMAIL_TO } from '../config';
 let error = new ErrorManager();
 
 
@@ -248,7 +249,8 @@ const progressActions = {
         let attributes = {
             NOME    : params.name,
             TOKEN   : params.bearerToken,
-            APP     : params.app._id
+            APP     : params.app._id,
+            URL     : SENDINBLUE_EMAIL_TO
         };
         let resultAdmin;
         let email = params.email;

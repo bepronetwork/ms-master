@@ -51,6 +51,8 @@ export const BITGO_ENTERPRISE_ID = process.env.BITGO_ENTERPRISE_ID;
 
 export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
 
+export const SENDINBLUE_EMAIL_TO = process.env.SENDINBLUE_EMAIL_TO;
+
 /* Variables */
 
 var ETH_NETWORK = config.eth;
