@@ -43,7 +43,7 @@ const betResolvingActions = {
             game : params.gameMetaName
         });
         
-        return {winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash};
+        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
     },
     oracled : (params) => {
         let hmca_hash, outcome, isWon, outcomeResultSpace;

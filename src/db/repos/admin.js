@@ -47,7 +47,10 @@ class AdminsRepository{
 
     findAdmin(username){
         return new Promise( (resolve, reject) => {
-            AdminSchema.prototype.schema.model.findOne({'username' : username})
+            AdminSchema.prototype.schema.model.findOne({$or: [
+                {"username": username},
+                {"email": username}
+            ]})
             .populate(populate_admin)
             .lean()
             .exec( (err, user) => {
