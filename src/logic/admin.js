@@ -246,22 +246,16 @@ const progressActions = {
     },
     __addAdmin : async (params) => {
         if (process.env.ENV === "development"){
-            var attributes = {
-                NOME    : params.name,
-                TOKEN   : params.bearerToken,
-                APP     : params.app._id,
-                URL     : "sandbox.betprotocol.com"
-                
-            };
-        } 
-        if (process.env.ENV === "production"){
-            var attributes = {
-                NOME    : params.name,
-                TOKEN   : params.bearerToken,
-                APP     : params.app._id,
-                URL     : "app.betprotocol.com"
-            };
+            var urlSend = process.env.SENDINBLUE_EMAIL_TO_DEV;
+        } else if (process.env.ENV === "production"){
+            var urlSend = process.env.SENDINBLUE_EMAIL_TO_PROD;
         }
+        let attributes = {
+            NOME    : params.name,
+            TOKEN   : params.bearerToken,
+            APP     : params.app._id,
+            URL     : urlSend  
+        };
         let resultAdmin;
         let email = params.email;
         let templateId  = mail.multiplesAdmins.templateId;
