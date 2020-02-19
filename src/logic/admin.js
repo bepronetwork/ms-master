@@ -245,11 +245,23 @@ const progressActions = {
         return admin
     },
     __addAdmin : async (params) => {
-        let attributes = {
-            NOME    : params.name,
-            TOKEN   : params.bearerToken,
-            APP     : params.app._id
-        };
+        if (process.env.ENV === "development"){
+            var attributes = {
+                NOME    : params.name,
+                TOKEN   : params.bearerToken,
+                APP     : params.app._id,
+                URL     : "sandbox.betprotocol.com"
+                
+            };
+        } 
+        if (process.env.ENV === "production"){
+            var attributes = {
+                NOME    : params.name,
+                TOKEN   : params.bearerToken,
+                APP     : params.app._id,
+                URL     : "app.betprotocol.com"
+            };
+        }
         let resultAdmin;
         let email = params.email;
         let templateId  = mail.multiplesAdmins.templateId;
