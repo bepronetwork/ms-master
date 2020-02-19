@@ -97,7 +97,6 @@ class ErrorManager {
                 };
                 case 'UpdateWallet': {
                     // Verify deposit not overflow
-                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
                     if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
                     }

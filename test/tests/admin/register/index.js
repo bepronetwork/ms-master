@@ -67,8 +67,17 @@ context('Register', async () => {
         }
     }));
 
-    it('should login the Admin', mochaAsync(async () => {
-        let res = await loginAdmin(BOILERPLATES.admins.NORMAL_LOGIN_USER);
+    it('should login the Admin with username', mochaAsync(async () => {
+        let admin = BOILERPLATES.admins.NORMAL_LOGIN_USER;
+        let res = await loginAdmin({username : admin.username, password : admin.password});
+        detectValidationErrors(res);
+        shouldLoginTheAdmin(res.data, expect);
+        global.test.admin = res.message;
+    }));
+
+    it('should login the Admin with email', mochaAsync(async () => {
+        let admin = BOILERPLATES.admins.NORMAL_LOGIN_USER;
+        let res = await loginAdmin({username : admin.email, password : admin.password});
         detectValidationErrors(res);
         shouldLoginTheAdmin(res.data, expect);
         global.test.admin = res.message;
