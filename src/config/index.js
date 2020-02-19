@@ -51,9 +51,7 @@ export const BITGO_ENTERPRISE_ID = process.env.BITGO_ENTERPRISE_ID;
 
 export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
 
-export const SENDINBLUE_EMAIL_TO_DEV = process.env.SENDINBLUE_EMAIL_TO_DEV;
-
-export const SENDINBLUE_EMAIL_TO_PROD = process.env.SENDINBLUE_EMAIL_TO_PROD;
+export const SENDINBLUE_EMAIL_TO = process.env.SENDINBLUE_EMAIL_TO;
 
 /* Variables */
 
