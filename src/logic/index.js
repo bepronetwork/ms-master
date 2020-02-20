@@ -30,9 +30,10 @@ import TypographyLogic from './typography';
 import CurrencyLogic from './currency';
 import AddressLogic from './address';
 import TopIconLogic from "./topIcon";
-
+import TokenLogic from "./token";
 
 export {
+    TokenLogic,
     CurrencyLogic,
     UserLogic,
     TopBarLogic,

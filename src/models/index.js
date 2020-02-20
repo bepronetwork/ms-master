@@ -28,6 +28,7 @@ import Typography from './typography';
 import Currency from './currency';
 import Address from './address';
 import TopIcon from './topIcon';
+import Token from './token';
 
 export {
     User,
@@ -59,5 +60,6 @@ export {
     Withdraw,
     Admin,
     Typography,
-    TopIcon
+    TopIcon,
+    Token
 }

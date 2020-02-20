@@ -5,6 +5,11 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
+
+import {
+	Token
+} from '../../src/models';
+
 import { 
     UsersRepository, 
     AppRepository, 
@@ -74,6 +79,27 @@ const processActions = {
 				...user
 			}
         }
+        return normalized;
+    },
+    __resetPassword: async (params) => {
+        const user          = await __private.db.findUser(params.username_or_email);
+        const email         = await __private.db.findUserByEmail(params.username_or_email);
+        let alreadyExists   = (user || email);
+        // console.log(alreadyExists);
+        
+        if(!alreadyExists){
+            throwError();
+        }
+        let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000) )).getTime() );
+        let token = new Token({
+            user    : alreadyExists._id,
+            token   : bearerToken
+        });
+        let resultToken = await token.register();
+        if(!resultToken) {
+            throwError();
+        }
+        let normalized = {}
         return normalized;
     },
     __login2FA : async (params) => {
@@ -335,6 +361,9 @@ const progressActions = {
         await SecurityRepository.prototype.addSecret2FA(security_id, newSecret);
         return params;
     },
+    __resetPassword: async (params) => {
+        return params;
+    },
 	__register : async (params) => {
         try{
             const { affiliate, app } = params;
@@ -536,6 +565,9 @@ class UserLogic extends LogicComponent {
                 case 'GetInfo' : {
 					return await library.process.__getInfo(params); break;
                 };
+                case 'ResetPassword' : {
+					return await library.process.__resetPassword(params); break;
+                };
 			}
 		}catch(err){
 			throw err;
@@ -594,6 +626,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'GetInfo' : {
 					return await library.progress.__getInfo(params); break;
+                };
+                case 'ResetPassword' : {
+					return await library.progress.__resetPassword(params); break;
                 };
 			}
 		}catch(err){

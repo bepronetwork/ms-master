@@ -54,6 +54,15 @@ class User extends ModelComponent{
         }
     }
 
+    async resetPassword() {
+        try{
+            let res = await this.process('ResetPassword');
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async set2FA(){
         try{
             let res = await this.process('Set2FA');
