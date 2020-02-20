@@ -38,9 +38,9 @@ class TokenRepository extends MongoComponent{
         });
     }
 
-    findByUserId(user){ 
+    findByToken(token){ 
         return new Promise( (resolve, reject) => {
-            TokenRepository.prototype.schema.model.findOne({user})
+            TokenRepository.prototype.schema.model.findOne({token})
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

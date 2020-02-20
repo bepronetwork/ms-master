@@ -41,6 +41,18 @@ async function loginUser (req, res) {
 	}
 }
 
+async function setPassword(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "global", req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.setPassword();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function resetPassword(req, res) {
     try{
         await MiddlewareSingleton.log({type: "global", req});
@@ -153,5 +165,6 @@ export {
     loginUser2FA,
     getDepositAddress,
     authUser,
-    resetPassword
+    resetPassword,
+    setPassword
 }

@@ -63,6 +63,15 @@ class User extends ModelComponent{
         }
     }
 
+    async setPassword() {
+        try{
+            let res = await this.process('SetPassword');
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async set2FA(){
         try{
             let res = await this.process('Set2FA');

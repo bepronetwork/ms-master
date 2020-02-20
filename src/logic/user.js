@@ -19,7 +19,8 @@ import {
     AffiliateLinkRepository, 
     AffiliateRepository, 
     SecurityRepository,
-    AddressRepository
+    AddressRepository,
+    TokenRepository
 } from '../db/repos';
 import Numbers from './services/numbers';
 import { verifytransactionHashDirectDeposit } from './services/services';
@@ -100,6 +101,34 @@ const processActions = {
             throwError();
         }
         let normalized = {}
+        return normalized;
+    },
+    __setPassword: async (params) => {
+        const payload = MiddlewareSingleton.resultTokenDate(params.token);
+        if(!payload) {
+            throwError('TOKEN_EXPIRED');
+        }
+        console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
+        if( Number((new Date()).getTime()) > Number(payload.time) ) {
+            throwError('TOKEN_EXPIRED');
+        }
+        const findToken = await TokenRepository.prototype.findByToken(params.token);
+        console.log(findToken);
+        if(!findToken || (String(findToken.user) !== String(params.user_id)) ) {
+            throwError('TOKEN_INVALID');
+        }
+
+        let hash_password = new Security(params.password).hash();
+
+        let updatePassword = await UsersRepository.prototype.updateUser({id: params.user_id, param: {hash_password} });
+
+        if(!updatePassword) {
+            throwError();
+        }
+
+        let normalized = {
+        }
+
         return normalized;
     },
     __login2FA : async (params) => {
@@ -361,6 +390,9 @@ const progressActions = {
         await SecurityRepository.prototype.addSecret2FA(security_id, newSecret);
         return params;
     },
+    __setPassword: async (params) => {
+        return params;
+    },
     __resetPassword: async (params) => {
         return params;
     },
@@ -568,6 +600,9 @@ class UserLogic extends LogicComponent {
                 case 'ResetPassword' : {
 					return await library.process.__resetPassword(params); break;
                 };
+                case 'SetPassword' : {
+					return await library.process.__setPassword(params); break;
+                };
 			}
 		}catch(err){
 			throw err;
@@ -629,6 +664,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ResetPassword' : {
 					return await library.progress.__resetPassword(params); break;
+                };
+                case 'SetPassword' : {
+					return await library.progress.__setPassword(params); break;
                 };
 			}
 		}catch(err){
