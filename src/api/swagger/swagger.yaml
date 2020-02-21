@@ -478,7 +478,35 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
+  /users/push/auth:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Get Push Notifications Channel For user
+      operationId: pusherNotificationsAuth
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserPusherNotificationsAuth'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"            
   /app/create:
     x-swagger-router-controller: app
     post:
@@ -1808,6 +1836,21 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Currency ID
+  UserPusherNotificationsAuth : 
+    type: object
+    properties:
+      socket_id:
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+      channel_name :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+      user : 
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
   AppGameEditEdge : 
     type: object
     required:

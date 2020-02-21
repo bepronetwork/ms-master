@@ -392,6 +392,7 @@ async function editTopIcon(req, res) {
 async function editTypography(req, res) {
     try{
         SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editTypography();
@@ -428,16 +429,13 @@ async function webhookBitgoDeposit (req, res) {
         req.body.currency = req.query.currency;
         let params = req.body;
         let hooks = Array.isArray(params) ? params : [params];
-        console.log("Web Hook Length : ", hooks.length);
         let data = await Promise.all(hooks.map( async wB => {
             try{
-                console.log("ticker ", getNormalizedTicker({ticker : wB.coin }))
                 // Get Info from WebToken
                 const wBT = await BitGoSingleton.getTransaction({id : wB.transfer, wallet_id : wB.wallet, ticker : getNormalizedTicker({ticker : wB.coin })});
                 if(!wBT){return null}
                 // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
                 var isApp = !wBT.label;
-                console.log("Label ", wBT.label);
                 params.wBT = wBT;
 
                 if(isApp){

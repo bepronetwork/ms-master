@@ -1,11 +1,13 @@
 import { PORT, QUOTA_GUARD_URL } from './config';
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
+import PusherSingleton from './logic/third-parties/pusher';
 
 /** MACROS */
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')()
 const expressIp = require('express-ip');
+const cors = require('cors');
 /** CODE */
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -13,7 +15,8 @@ var bodyParser = require('body-parser');
 // Scheduler   
 
 
-//---------CODING-CHOICES--------------//
+//---------CODING-CHOICES--------------/
+app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(expressIp().getIpInfoMiddleware);
@@ -25,6 +28,7 @@ var config = {
 };
 
 
+
 SwaggerExpress.create(config, async (err, swaggerExpress) => {
     if (err) { throw err; }
     // set the ENV variables if Production
@@ -32,8 +36,7 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
 	swaggerExpress.register(app);
     globals.verify();
     await globals.__init__();
-
-    app.listen(PORT,async () => {
+    app.listen(PORT, async () => {
         Logger.success("Listening in port", PORT);
 	});
 
