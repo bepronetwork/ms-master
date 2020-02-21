@@ -3,6 +3,7 @@ import {
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
+import PusherSingleton from '../../logic/third-parties/pusher';
 
 /**
  * Description of the function.
@@ -120,7 +121,7 @@ async function getBets (req, res) {
 
 async function getDepositAddress(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
@@ -130,12 +131,33 @@ async function getDepositAddress(req, res) {
 	}
 }
 
+async function pusherNotificationsAuth(req, res) {
+    try{        
+        console.log("here")
+        SecuritySingleton.verify({type : 'user', req});
+        let params = req.body;
+        let data = PusherSingleton.authenticate({
+            socketId : params.socket_id,
+            channel : params.channel_name,
+            data : {
+                user_id : req.body.user
+            }
+        });
+        console.log("push ", data)
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+
 
 export {
 	registUser,
     loginUser,
     getUserInfo,
     userSummary,
+    pusherNotificationsAuth,
     getBets,
     setUser2FA,
     loginUser2FA,
