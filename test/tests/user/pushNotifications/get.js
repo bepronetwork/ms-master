@@ -20,12 +20,14 @@ context(`Get`, async () =>  {
         { 
             cluster : 'eu',
             forceTLS: true,
+            authTransport: 'jsonp',
             authEndpoint: 'http://localhost:8000/api/users/pusher/auth',
             auth : {
                 params : {
                     user : user.id
                 },
                 headers : {
+                    'content-type' : 'application/json',
                     'authorization' : `Bearer ${user.bearerToken}`,
                     payload : { 'id' : user.id}
                 }
