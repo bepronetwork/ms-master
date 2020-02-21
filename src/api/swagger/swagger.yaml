@@ -478,7 +478,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /users/push/auth:
+  /users/pusher/auth:
     x-swagger-router-controller: user
     post:
       tags:
