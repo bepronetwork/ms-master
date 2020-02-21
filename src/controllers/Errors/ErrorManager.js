@@ -487,6 +487,16 @@ class ErrorManager {
             throw err
         }
     }
+
+    mailSender = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
     
     affiliate = function (object, type){
         try{
