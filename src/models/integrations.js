@@ -2,6 +2,7 @@ import { IntegrationsLogic } from '../logic';
 import { IntegrationsRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
 import { Chat } from '.';
+import { MailSender} from '.';
 
 class Integrations extends ModelComponent{
 
@@ -17,7 +18,8 @@ class Integrations extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Chat
+                    new Chat,
+                    new MailSender
                 ]
             }
             );

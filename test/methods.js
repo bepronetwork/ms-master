@@ -367,6 +367,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editAppMailSenderIntegration(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/integrations/mailSender/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async resolveEvent(params, bearerToken){
         return request(global.server)
         .post('/api/app/games/events/resolve')

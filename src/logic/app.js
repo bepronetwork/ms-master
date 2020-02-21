@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
@@ -269,6 +269,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editMailSenderIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return params;
+    },
     __editTopBar : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
@@ -354,6 +360,7 @@ const progressActions = {
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
         let bearerToken = MiddlewareSingleton.sign(app._id);
         await AppRepository.prototype.createAPIToken(app._id, bearerToken);
+        console.log("AppID: ",app._id)
         let email = admin.email;
         let attributes = {
             APP: app._id
@@ -577,6 +584,16 @@ const progressActions = {
         }
         return params;
     },
+    __editMailSenderIntegration : async (params) => {
+        let { apiKey, templateIds } = params;
+        apiKey = await Security.prototype.encryptData(apiKey);
+        /* Update Integrations Id Type */
+        await MailSenderRepository.prototype.findByIdAndUpdate(_id, {
+            apiKey,
+            templateIds
+        })
+        return params;
+    },
     __editTopBar  : async (params) => {
         let { app, backgroundColor, textColor, text, isActive } = params;
         const { topBar } = app.customization;
@@ -795,6 +812,9 @@ class AppLogic extends LogicComponent{
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
+                case 'EditMailSenderIntegration' : {
+                    return await library.process.__editMailSenderIntegration(params); break;
+                };
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
                 };
@@ -904,6 +924,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditIntegration' : {
                     return await library.progress.__editIntegration(params); break;
+                };
+                case 'EditMailSenderIntegration' : {
+                    return await library.progress.__editMailSenderIntegration(params); break;
                 };
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;

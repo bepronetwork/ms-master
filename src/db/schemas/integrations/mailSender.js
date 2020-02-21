@@ -1,5 +1,6 @@
 import {globals} from "../../../Globals";
 import mongoose from 'mongoose';
+import { SendInBlueFunctions } from "../../../logic/third-parties";
 let db = globals.main_db;
 
 class MailSenderSchema{};
@@ -7,8 +8,8 @@ class MailSenderSchema{};
 MailSenderSchema.prototype.name = 'MailSender';
 
 MailSenderSchema.prototype.schema =  {
-    apiKey             : { type : String},
-    templateIds        : [{ type : String}],
+    apiKey             : { type : String, default : null},
+    templateIds        : [{ type : String, default : SendInBlueFunctions}],
 }
 
 
