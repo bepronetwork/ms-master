@@ -133,9 +133,7 @@ async function getDepositAddress(req, res) {
 
 async function pusherNotificationsAuth(req, res) {
     try{        
-        console.log("here")
         let params = req.body;
-        console.log(params)
         let data = PusherSingleton.authenticate({
             socketId : params.socket_id,
             channel : params.channel_name,
@@ -143,7 +141,6 @@ async function pusherNotificationsAuth(req, res) {
                 user_id : params.user
             }
         });
-        console.log("push ", data)
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
