@@ -15,6 +15,7 @@ schemes:
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
+  - 
 # format of the responses to the client (Accepts)
 produces:
   - application/json
@@ -480,15 +481,22 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /users/pusher/auth:
     x-swagger-router-controller: user
-    get:
+    post:
       tags:
       - user
       summary: Get Push Notifications Channel For user
       operationId: pusherNotificationsAuth
       consumes:
-        - application/json
+        - application/x-www-form-urlencoded
       produces:
         - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserPusherNotificationsAuth'
       responses:
         "200":
           description: Success
