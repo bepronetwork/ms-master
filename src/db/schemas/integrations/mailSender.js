@@ -8,8 +8,8 @@ class MailSenderSchema{};
 MailSenderSchema.prototype.name = 'MailSender';
 
 MailSenderSchema.prototype.schema =  {
-    apiKey             : { type : String, default : null},
-    templateIds        : [{ type : String, default : SendInBlueFunctions}],
+    apiKey        : { type : String, default : null },
+    templateIds   : { type : Array, default : SendInBlueFunctions }
 }
 
 

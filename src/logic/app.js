@@ -592,6 +592,10 @@ const progressActions = {
             apiKey,
             templateIds
         })
+        // await SendInBlue.prototype.loadingApiKey(params.app.id);
+        // for (let attribute of SendInBlueAttributes){
+        //     await SendInBlue.prototype.createAttribute(attribute);
+        // }
         return params;
     },
     __editTopBar  : async (params) => {

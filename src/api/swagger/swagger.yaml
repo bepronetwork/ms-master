@@ -2141,9 +2141,9 @@ definitions:
         items:
           type: object
           properties:
-            name:
+            functionName:
               type: string
-            templateId:
+            template_id:
               type: number
   AppEditAffiliateStructure : 
     type: object
