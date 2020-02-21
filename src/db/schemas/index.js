@@ -23,7 +23,8 @@ import { FooterSchema } from './customization/footer';
 import { TypographySchema } from './typography';
 import { CurrencySchema } from './currency';
 import { AddressSchema } from './address';
-import { TopIconSchema } from './customization/topIcon'
+import { TopIconSchema } from './customization/topIcon';
+import { MailSenderSchema } from './integrations/mailSender';
 
 export {
     CurrencySchema,
@@ -51,5 +52,6 @@ export {
     AdminSchema,
     ResultSpaceSchema,
     TypographySchema,
-    TopIconSchema
+    TopIconSchema,
+    MailSenderSchema
 }
