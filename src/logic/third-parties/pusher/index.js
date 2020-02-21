@@ -19,14 +19,13 @@ class PusherNotifications{
 
     trigger({user_id, message, eventType}){
         let event = events.find( e => e.toLowerCase() == eventType.toLowerCase());
-        console.log("rwtherhterthert")
         if(!event){console.err(`Event Type does not Exist, please choose either ${events.map( e => console.log)}`)};
-
+        console.log(`private-${user_id}`, event, message)
         let res = this.pusher.trigger(`private-${user_id}`, event, {
             type : event,
             message 
         });
-        console.log("a", res)
+
         return res;
     }
 
