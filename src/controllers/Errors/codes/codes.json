@@ -218,5 +218,9 @@
     "054" : {
         "key" : "USERNAME_ALREADY_EXISTS",
         "message"   : "The user is already in the App"
+    },
+    "055" : {
+        "key" : "USERNAME_OR_EMAIL_NOT_EXISTS",
+        "message"   : "User not found"
     }
 }

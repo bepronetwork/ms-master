@@ -213,6 +213,18 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async resetPassword(params) {
+        return request(global.server)
+        .post('/api/users/password/reset/ask')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async setPassword(params) {
+        return request(global.server)
+        .post('/api/users/password/reset/set')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getAppPopularNumbers(params) {
         return request(global.server)
         .post('/api/app/popularNumbers')

@@ -86,10 +86,9 @@ const processActions = {
         const user          = await __private.db.findUser(params.username_or_email);
         const email         = await __private.db.findUserByEmail(params.username_or_email);
         let alreadyExists   = (user || email);
-        // console.log(alreadyExists);
-        
+
         if(!alreadyExists){
-            throwError();
+            throwError("USERNAME_OR_EMAIL_NOT_EXISTS");
         }
         let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000) )).getTime() );
         let token = new Token({
@@ -106,9 +105,9 @@ const processActions = {
     __setPassword: async (params) => {
         const payload = MiddlewareSingleton.resultTokenDate(params.token);
         if(!payload) {
-            throwError('TOKEN_EXPIRED');
+            throwError('TOKEN_INVALID');
         }
-        console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
+        // console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
         if( Number((new Date()).getTime()) > Number(payload.time) ) {
             throwError('TOKEN_EXPIRED');
         }
