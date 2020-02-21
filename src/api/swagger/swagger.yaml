@@ -480,7 +480,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /users/pusher/auth:
     x-swagger-router-controller: user
-    post:
+    get:
       tags:
       - user
       summary: Get Push Notifications Channel For user
@@ -489,13 +489,6 @@ paths:
         - application/json
       produces:
         - application/json
-      parameters:
-        - in: body
-          name: user
-          description: User Information
-          required: true
-          schema:
-            $ref: '#/definitions/UserPusherNotificationsAuth'
       responses:
         "200":
           description: Success

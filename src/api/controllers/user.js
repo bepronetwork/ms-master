@@ -134,13 +134,13 @@ async function getDepositAddress(req, res) {
 async function pusherNotificationsAuth(req, res) {
     try{        
         console.log("here")
-        SecuritySingleton.verify({type : 'user', req});
-        let params = req.body;
+        let params = req.query;
+        console.log(params)
         let data = PusherSingleton.authenticate({
             socketId : params.socket_id,
             channel : params.channel_name,
             data : {
-                user_id : req.body.user
+                user_id : params.user
             }
         });
         console.log("push ", data)
