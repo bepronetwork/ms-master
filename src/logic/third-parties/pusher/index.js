@@ -1,4 +1,4 @@
-import Pusher from 'pusher-js';
+import Pusher from 'pusher';
 import { PUSHER_APP_ID, PUSHER_APP_KEY, PUSHER_APP_SECRET} from '../../../config';
 import { events } from './events';
 

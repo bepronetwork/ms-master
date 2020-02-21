@@ -4,7 +4,7 @@ import {
 } from '../../../methods';
 
 import chai from 'chai';
-import Pusher from 'pusher-js';
+import Pusher from 'pusher';
 import { mochaAsync } from '../../../utils';
 
 
