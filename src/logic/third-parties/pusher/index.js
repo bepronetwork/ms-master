@@ -18,7 +18,7 @@ class PusherNotifications{
     }
 
     trigger({user_id, message, eventType}){
-        let event = events.find(eventType);
+        let event = events.find( e => e.toLowerCase() == eventType.toLowerCase());
         console.log("rwtherhterthert")
         if(!event){console.err(`Event Type does not Exist, please choose either ${events.map( e => console.log)}`)};
 
