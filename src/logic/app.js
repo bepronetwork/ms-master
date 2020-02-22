@@ -18,7 +18,7 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
-import { SendInBlue } from './third-parties';
+import { SendInBlue, SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 let error = new ErrorManager();
@@ -588,17 +588,21 @@ const progressActions = {
         let { apiKey, templateIds } = params;
         apiKey = await Security.prototype.encryptData(apiKey);
         let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(params.app);
+        if (params.apiKey === mailSender.apiKey){
+            throwError()
+        }
         /* Update Integrations Id Type */
         await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
             apiKey,
             templateIds
         })
-        // if (mailSender.apiKey != null){
-        //     await SendInBlue.prototype.loadingApiKey(params.app.id);
-        //     for (let attribute of SendInBlueAttributes){
-        //         await SendInBlue.prototype.createAttribute(attribute);
-        //     }
-        // }
+        if (mailSender.apiKey != null){
+            let unhashed = await MailSenderRepository.prototype.unhashedApiKey(params.app)
+            await SendInBlue.prototype.loadingApiKey(unhashed);
+            for (let attribute of SendInBlueAttributes){
+                await SendInBlue.prototype.createAttribute(attribute);
+            }
+        }
         return params;
     },
     __editTopBar  : async (params) => {

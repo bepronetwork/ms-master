@@ -1,5 +1,3 @@
-import Security from '../../../controllers/Security/Security';
-
 var SibApiV3Sdk = require('sib-api-v3-sdk');
 
 var defaultClient = SibApiV3Sdk.ApiClient.instance;
@@ -19,13 +17,10 @@ class SendInBlue {
 
     constructor() { }
 
-    // async loadingApiKey(app_id) {
-    //     let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(app_id);
-    //     let hashed_apiKey = mailSender.apiKey;
-    //     let apiKeyApp = await Security.prototype.decryptData(hashed_apiKey);
-    //     apiKey.apiKey = apiKeyApp
-    //     partnerKey.apiKey = apiKeyApp
-    // }
+    async loadingApiKey(unhashed_apiKey) {
+        apiKey.apiKey = unhashed_apiKey
+        partnerKey.apiKey = unhashed_apiKey
+    }
 
     async createFolder(name) {
         const apiInstance = new SibApiV3Sdk.ContactsApi();

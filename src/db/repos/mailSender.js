@@ -2,6 +2,7 @@ import MongoComponent from './MongoComponent';
 import { MailSenderSchema } from '../schemas';
 import AppRepository from './app';
 import IntegrationsRepository from './integrations';
+import Security from '../../controllers/Security/Security';
 
 /**
  * Accounts database interaction class.
@@ -49,6 +50,13 @@ class MailSenderRepository extends MongoComponent{
                 if(err) { reject(err)}
                 resolve(item);
             });
+        });
+    }
+
+    unhashedApiKey(app_id){ 
+        return new Promise( async (resolve, reject) => {
+            let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(app_id)
+            resolve(await Security.prototype.decryptData(mailSender.apiKey));
         });
     }
 
