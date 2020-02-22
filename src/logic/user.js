@@ -69,6 +69,7 @@ const processActions = {
 
 		if(user){
 			normalized = {
+                app_id: app,
                 user_id: user._id,
                 has2FASet,
                 bearerToken,
@@ -389,11 +390,11 @@ const progressActions = {
         let user = await UsersRepository.prototype.findUserById(params.user_id);
         console.log("393", user);
         console.log(params.user_id);
-        let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app._id);
+        let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app_id);
         console.log(send);
         if(send){
             let templates    = send.templateIds.find((t)=>{ return t.functionName == "USER_LOGIN" });
-            let apiKey       = await MailSenderRepository.prototype.unhashedApiKey(params.app._id);
+            let apiKey       = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
             await SendInBlue.prototype.loadingApiKey(apiKey);
             let attributes = {
                 YOURNAME : user.name
