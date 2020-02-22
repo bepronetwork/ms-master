@@ -28,6 +28,9 @@ import Typography from './typography';
 import Currency from './currency';
 import Address from './address';
 import TopIcon from './topIcon';
+import Token from './token';
+import MailSender from './mailSender';
+import LoadingGif from "./loadingGif";
 
 export {
     User,
@@ -59,5 +62,8 @@ export {
     Withdraw,
     Admin,
     Typography,
-    TopIcon
+    TopIcon,
+    Token,
+    MailSender,
+    LoadingGif
 }

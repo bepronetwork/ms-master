@@ -226,6 +226,18 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async resetPassword(params) {
+        return request(global.server)
+        .post('/api/users/password/reset/ask')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async setPassword(params) {
+        return request(global.server)
+        .post('/api/users/password/reset/set')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getAppPopularNumbers(params) {
         return request(global.server)
         .post('/api/app/popularNumbers')
@@ -364,6 +376,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editLoadingGifCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/loadingGif')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editTypographyApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/typography')
@@ -375,6 +395,14 @@ module.exports = {
     async editAppIntegration(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/integrations/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAppMailSenderIntegration(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/integrations/mailSender/edit')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

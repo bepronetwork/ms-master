@@ -487,6 +487,16 @@ class ErrorManager {
             throw err
         }
     }
+
+    mailSender = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
     
     affiliate = function (object, type){
         try{
@@ -542,6 +552,27 @@ class ErrorManager {
     }
 
     topIcon = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    token = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    loadingGif = function (object, type){
         try{
             switch(type){
                

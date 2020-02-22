@@ -6,4 +6,5 @@ context('Customization', async () => {
     require('./editFooter');
     require('./addTopIcon');
     require('./addTypography');
+    require('./addLoadingGif');
 });

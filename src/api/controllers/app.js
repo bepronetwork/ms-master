@@ -310,6 +310,18 @@ async function editIntegration (req, res) {
 	}
 }
 
+async function editMailSenderIntegration (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editMailSenderIntegration();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
 
 async function editTopBar (req, res) {
     try{
@@ -383,6 +395,19 @@ async function editTopIcon(req, res) {
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editTopIcon();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function editLoadingGif(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.editLoadingGif();
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -510,5 +535,7 @@ export {
     editTypography,
     setMaxBet,
     webhookBitgoDeposit,
-    editTopIcon
+    editTopIcon,
+    editMailSenderIntegration,
+    editLoadingGif
 };

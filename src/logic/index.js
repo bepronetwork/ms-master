@@ -29,10 +29,14 @@ import FooterLogic from './footer';
 import TypographyLogic from './typography';
 import CurrencyLogic from './currency';
 import AddressLogic from './address';
-import TopIconLogic from "./topIcon";
+import TokenLogic from "./token";
+import TopIconLogic from './topIcon';
+import MailSenderLogic from './mailSender';
+import LoadingGifLogic from "./loadingGif";
 
 
 export {
+    TokenLogic,
     CurrencyLogic,
     UserLogic,
     TopBarLogic,
@@ -64,6 +68,8 @@ export {
     AdminLogic,
     ResultSpaceLogic,
     TypographyLogic,
-    TopIconLogic
+    TopIconLogic,
+    MailSenderLogic,
+    LoadingGifLogic
 }
 
