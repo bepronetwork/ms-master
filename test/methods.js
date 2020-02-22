@@ -38,7 +38,14 @@ module.exports = {
         .post('/api/users/login')
         .send(params)
         .then(res => detectServerError(res))
-
+    },
+    async getPushNotificationsChannel(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/push/auth')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
     },
     async authAdmin(params, bearerToken, payload) {
         return request(global.server)

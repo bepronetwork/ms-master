@@ -53,6 +53,12 @@ export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
 
 export const SENDINBLUE_EMAIL_TO = process.env.SENDINBLUE_EMAIL_TO;
 
+export const PUSHER_APP_ID = process.env.PUSHER_APP_ID;
+
+export const PUSHER_APP_KEY = process.env.PUSHER_APP_KEY;
+
+export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
+
 /* Variables */
 
 var ETH_NETWORK = config.eth;

@@ -15,7 +15,6 @@ import {
     AppRepository, 
     WalletsRepository, 
     DepositRepository, 
-    WithdrawRepository, 
     AffiliateLinkRepository, 
     AffiliateRepository, 
     SecurityRepository,
@@ -24,10 +23,7 @@ import {
     MailSenderRepository
 } from '../db/repos';
 import Numbers from './services/numbers';
-import { verifytransactionHashDirectDeposit } from './services/services';
-import { Deposit, Withdraw, AffiliateLink, Wallet, Address } from '../models';
-import CasinoContract from './eth/CasinoContract';
-import codes from './categories/codes';
+import { Deposit, AffiliateLink, Wallet, Address } from '../models';
 import { globals } from '../Globals';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -35,7 +31,8 @@ import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
 import { BitGoSingleton, SendInBlue } from './third-parties';
 import { SENDINBLUE_EMAIL_TO } from '../config';
-
+import { BitGoSingleton } from './third-parties';
+import PusherSingleton from './third-parties/pusher';
 let error = new ErrorManager();
 
 
@@ -539,7 +536,14 @@ const progressActions = {
             
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-
+            
+            /* Push Webhook Notification */
+            PusherSingleton.trigger({
+                user_id : params.user_id, 
+                message : `Deposited ${params.amount} ${params.wallet.currency.ticker} in your account`,
+                eventType : 'DEPOSIT'
+            })
+            console.log("done")
             return params;
         }catch(err){
             throw err;
