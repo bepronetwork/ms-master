@@ -98,7 +98,6 @@ const processActions = {
             user    : alreadyExists._id,
             token   : bearerToken
         });
-        console.log(1);
         let resultToken = await token.register();
         if(!resultToken) {
             throwError();
@@ -389,6 +388,26 @@ const progressActions = {
             await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
         }
 
+        let user = await UsersRepository.prototype.findUserById(params._id);
+        console.log("393", user);
+        let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app._id);
+        if(send){
+            let templates    = send.templateIds.find((t)=>{ return t.functionName == "USER_LOGIN" });
+            let apiKey       = await MailSenderRepository.prototype.unhashedApiKey(params.app._id);
+            await SendInBlue.prototype.loadingApiKey(apiKey);
+            let attributes = {
+                YOURNAME : user.name
+            };
+            let templateId  = templates.template_id;
+            let listIds     = templates.contactlist_Id;
+            try {
+                await SendInBlue.prototype.createContact(user.email, attributes, [listIds]);
+            }catch(e){
+                await SendInBlue.prototype.updateContact(user.email, attributes);
+            }
+            await SendInBlue.prototype.sendTemplate(templateId, [user.email]);
+        }
+
         return {...params, app : {...params.app, bearerToken}};
     },
     __login2FA : async (params) => {    
@@ -467,10 +486,28 @@ const progressActions = {
             )
             await Promise.all(promisesId);
 
-            
             /* Add to App */
             await AppRepository.prototype.addUser(params.app_id, user);
+
             user = await UsersRepository.prototype.findUserById(user._id);
+
+            let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app_id);
+            if(send){
+                let templates    = send.templateIds.find((t)=>{ return t.functionName == "USER_REGISTER" });
+                let apiKey       = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
+                await SendInBlue.prototype.loadingApiKey(apiKey);
+                let attributes = {
+                    YOURNAME : user.name
+                };
+                let templateId  = templates.template_id;
+                let listIds     = templates.contactlist_Id;
+                try {
+                    await SendInBlue.prototype.createContact(user.email, attributes, [listIds]);
+                }catch(e){
+                    await SendInBlue.prototype.updateContact(user.email, attributes);
+                }
+                await SendInBlue.prototype.sendTemplate(templateId, [user.email]);
+            }
             return user;
         }catch(err){
             throw err;
