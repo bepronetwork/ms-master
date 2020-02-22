@@ -30,6 +30,7 @@ import Address from './address';
 import TopIcon from './topIcon';
 import Token from './token';
 import MailSender from './mailSender';
+import LoadingGif from "./loadingGif";
 
 export {
     User,
@@ -63,5 +64,6 @@ export {
     Typography,
     TopIcon,
     Token,
-    MailSender
+    MailSender,
+    LoadingGif
 }

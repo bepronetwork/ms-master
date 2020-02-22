@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
@@ -321,6 +321,15 @@ const processActions = {
         };
     },
     __editTopIcon : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editLoadingGif : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -707,6 +716,23 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editLoadingGif : async (params) => {
+        let { app, loadingGif } = params;
+        let loadingGifURL;
+        if(loadingGif.includes("https")){
+            /* If it is a link already */
+            loadingGifURL = loadingGif;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            loadingGifURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : loadingGif});
+        }
+
+        await LoadingGifRepository.prototype.findByIdAndUpdate(app.customization.loadingGif._id, {
+            id : loadingGifURL
+        })
+        // Save info on Customization Part
+        return params;
+    },
     __editTypography: async (params) => {
         let { app, typography } = params;
         //This Function Clening the typography from collection typographies and from the App document (typography field)
@@ -851,6 +877,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopIcon' : {
                     return await library.process.__editTopIcon(params); break;
                 };
+                case 'EditLoadingGif' : {
+                    return await library.process.__editLoadingGif(params); break;
+                };
                 case 'EditTypography': {
                     return await library.process.__editTypography(params); break;
                 };
@@ -960,6 +989,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTopIcon' : {
                     return await library.progress.__editTopIcon(params); break;
+                };
+                case 'EditLoadingGif' : {
+                    return await library.progress.__editLoadingGif(params); break;
                 };
                 case 'EditTypography': {
                     return await library.progress.__editTypography(params); break;

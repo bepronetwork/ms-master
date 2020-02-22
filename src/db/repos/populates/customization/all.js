@@ -21,6 +21,11 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'loadingGif',
+        model : 'LoadingGif',
+        select : { '__v': 0},
+    },
+    {
         path : 'colors',
         model : 'Color',
         select : { '__v': 0},

@@ -5,4 +5,5 @@ context('Customization', async () => {
     require('./editColors');
     require('./editFooter');
     require('./addTopIcon');
+    require('./addLoadingGif');
 });

@@ -26,6 +26,7 @@ import { AddressSchema } from './address';
 import { TopIconSchema } from './customization/topIcon'
 import { TokenSchema } from './token';
 import { MailSenderSchema } from './integrations/mailSender';
+import { LoadingGifSchema } from "./customization/loadingGif";
 
 export {
     CurrencySchema,
@@ -55,5 +56,6 @@ export {
     TypographySchema,
     TopIconSchema,
     TokenSchema,
-    MailSenderSchema
+    MailSenderSchema,
+    LoadingGifSchema
 }

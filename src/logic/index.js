@@ -32,6 +32,8 @@ import AddressLogic from './address';
 import TokenLogic from "./token";
 import TopIconLogic from './topIcon';
 import MailSenderLogic from './mailSender';
+import LoadingGifLogic from "./loadingGif";
+
 
 export {
     TokenLogic,
@@ -67,6 +69,7 @@ export {
     ResultSpaceLogic,
     TypographyLogic,
     TopIconLogic,
-    MailSenderLogic
+    MailSenderLogic,
+    LoadingGifLogic
 }
 

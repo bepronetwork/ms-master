@@ -34,6 +34,7 @@ import AddressRepository from './address';
 import TopIconRepository from './topIcon';
 import TokenRepository from './token';
 import MailSenderRepository from './mailSender';
+import LoadingGifRepository from "./loadingGif";
 
 export{
     TokenRepository,
@@ -71,5 +72,6 @@ export{
     AdminsRepository,
     TypographyRepository,
     TopIconRepository,
-    MailSenderRepository
-}  
+    MailSenderRepository,
+    LoadingGifRepository
+}

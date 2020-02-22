@@ -94,6 +94,7 @@ async function authAdmin (req, res) {
 async function addAdmin (req, res) {
     try{
         SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
 		let data = await admin.addAdmin();
