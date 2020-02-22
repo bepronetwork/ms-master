@@ -69,6 +69,7 @@ const processActions = {
 
 		if(user){
 			normalized = {
+                user_id: user._id,
                 has2FASet,
                 bearerToken,
                 user_in_app,
@@ -385,8 +386,9 @@ const progressActions = {
             await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
         }
 
-        let user = await UsersRepository.prototype.findUserById(params._id);
+        let user = await UsersRepository.prototype.findUserById(params.user_id);
         console.log("393", user);
+        console.log(params.user_id);
         let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app._id);
         console.log(send);
         if(send){
