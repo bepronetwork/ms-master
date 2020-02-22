@@ -20,7 +20,8 @@ import {
     AffiliateRepository, 
     SecurityRepository,
     AddressRepository,
-    TokenRepository
+    TokenRepository,
+    MailSenderRepository
 } from '../db/repos';
 import Numbers from './services/numbers';
 import { verifytransactionHashDirectDeposit } from './services/services';
@@ -32,7 +33,9 @@ import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
-import { BitGoSingleton } from './third-parties';
+import { BitGoSingleton, SendInBlue } from './third-parties';
+import { SENDINBLUE_EMAIL_TO } from '../config';
+
 let error = new ErrorManager();
 
 
@@ -86,7 +89,7 @@ const processActions = {
         const user          = await __private.db.findUser(params.username_or_email);
         const email         = await __private.db.findUserByEmail(params.username_or_email);
         let alreadyExists   = (user || email);
-
+        
         if(!alreadyExists){
             throwError("USERNAME_OR_EMAIL_NOT_EXISTS");
         }
@@ -95,11 +98,32 @@ const processActions = {
             user    : alreadyExists._id,
             token   : bearerToken
         });
+        console.log(1);
         let resultToken = await token.register();
         if(!resultToken) {
             throwError();
         }
-        let normalized = {}
+        let app = await AppRepository.prototype.findAppById(alreadyExists.app_id);
+        if(!app){
+            throwError("APP_NOT_EXISTENT");
+        }
+        let send =  await MailSenderRepository.prototype.findApiKeyByAppId(app._id);
+        if(!send){
+            throwError();
+        }
+
+        let template    = send.templateIds.find((t)=>{ return t.functionName == "USER_RESET_PASSWORD" });
+        let apiKey      = await MailSenderRepository.prototype.unhashedApiKey(app._id);
+
+        let normalized = {
+            email       : alreadyExists.email,
+            name        : alreadyExists.name,
+            token       : bearerToken,
+            templates   : template,
+            user_id     : alreadyExists._id,
+            url         : app.web_url,
+            api_key     : apiKey
+        };
         return normalized;
     },
     __setPassword: async (params) => {
@@ -392,8 +416,26 @@ const progressActions = {
     __setPassword: async (params) => {
         return params;
     },
-    __resetPassword: async (params) => {
-        return params;
+    __resetPassword: async ({email, name, token, templates, user_id, url, api_key}) => {
+
+        await SendInBlue.prototype.loadingApiKey(api_key);
+
+        let attributes = {
+            YOURNAME    : name,
+            TOKEN       : token,
+            USER        : user_id,
+            URL         : url
+        };
+
+        let templateId  = templates.template_id;
+        let listIds     = templates.contactlist_Id;
+        try {
+            await SendInBlue.prototype.createContact(email, attributes, [listIds]);
+        }catch(e){
+            await SendInBlue.prototype.updateContact(email, attributes);
+        }
+        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        return {};
     },
 	__register : async (params) => {
         try{

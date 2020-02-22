@@ -29,8 +29,9 @@ import FooterLogic from './footer';
 import TypographyLogic from './typography';
 import CurrencyLogic from './currency';
 import AddressLogic from './address';
-import TopIconLogic from "./topIcon";
 import TokenLogic from "./token";
+import TopIconLogic from './topIcon';
+import MailSenderLogic from './mailSender';
 
 export {
     TokenLogic,
@@ -65,6 +66,7 @@ export {
     AdminLogic,
     ResultSpaceLogic,
     TypographyLogic,
-    TopIconLogic
+    TopIconLogic,
+    MailSenderLogic
 }
 

@@ -29,6 +29,7 @@ import Currency from './currency';
 import Address from './address';
 import TopIcon from './topIcon';
 import Token from './token';
+import MailSender from './mailSender';
 
 export {
     User,
@@ -61,5 +62,6 @@ export {
     Admin,
     Typography,
     TopIcon,
-    Token
+    Token,
+    MailSender
 }

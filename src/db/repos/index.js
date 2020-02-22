@@ -33,6 +33,7 @@ import CurrencyRepository from './currency';
 import AddressRepository from './address';
 import TopIconRepository from './topIcon';
 import TokenRepository from './token';
+import MailSenderRepository from './mailSender';
 
 export{
     TokenRepository,
@@ -69,5 +70,6 @@ export{
     BetsRepository,
     AdminsRepository,
     TypographyRepository,
-    TopIconRepository
+    TopIconRepository,
+    MailSenderRepository
 }  

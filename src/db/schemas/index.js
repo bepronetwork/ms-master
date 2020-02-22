@@ -25,6 +25,7 @@ import { CurrencySchema } from './currency';
 import { AddressSchema } from './address';
 import { TopIconSchema } from './customization/topIcon'
 import { TokenSchema } from './token';
+import { MailSenderSchema } from './integrations/mailSender';
 
 export {
     CurrencySchema,
@@ -53,5 +54,6 @@ export {
     ResultSpaceSchema,
     TypographySchema,
     TopIconSchema,
-    TokenSchema
+    TokenSchema,
+    MailSenderSchema
 }
