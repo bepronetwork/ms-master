@@ -3,7 +3,6 @@ context('App', async () => {
     require('./deploy');
     require('./games');
     require('./customization');
-    require('./typography');
     require('./misc');
     require('./affiliates');
     require('./deposit');
