@@ -14,7 +14,6 @@ context('Edit Loading Gif', async () => {
     });
 
     it('should be able to edit Loading Gif', mochaAsync(async () => {
-        console.log(app.id)
         const postData = {
             loadingGif  : image_data,
             app         : app.id

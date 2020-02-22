@@ -1,21 +1,41 @@
 import {
     getApp,
-    editAppMailSenderIntegration
+    editAppMailSenderIntegration,
+    registerUser,
+    loginUser
 } from '../../../methods';
 import chai from 'chai';
 import models from '../../../models';
 import { mochaAsync } from '../../../utils';
+import Random from '../../../tools/Random';
+import faker from 'faker';
+const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
+
 
 const expect = chai.expect;
 
 context('Mail Sender', async () =>  {
-    var admin, app;
+    var app, user, userPostData, secret;
 
 
     before( async () =>  {
         app = global.test.app;
-        admin = global.test.app;
     });
+
+    it('should register the User with SendInBlue API Key Null', mochaAsync(async () => {
+        userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
+            username: '678im67im' + Random(10000, 23409234235463456)
+        }));
+        var res = await registerUser(userPostData);
+        user = res.data.message;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should login the User with SendInBlue API Key Null', mochaAsync(async () => {
+        var res = await loginUser(userPostData);
+        user.bearerToken = res.data.message.bearerToken;
+        expect(res.data.status).to.equal(200);
+    }));
 
     it('should update the Mail Sender integration info from app', mochaAsync(async () => {
         let postData = {
