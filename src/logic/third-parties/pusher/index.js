@@ -17,15 +17,14 @@ class PusherNotifications{
         return this.pusher.authenticate(socketId, channel, data);
     }
 
-    trigger({user_id, message, eventType}){
+    trigger({channel_name, message, eventType, isPrivate=false}){
         let event = events.find( e => e.toLowerCase() == eventType.toLowerCase());
         if(!event){console.err(`Event Type does not Exist, please choose either ${events.map( e => console.log)}`)};
-        console.log(`private-${user_id}`, event, message)
-        let res = this.pusher.trigger(`private-${user_id}`, event, {
+        let channel = isPrivate ? `private-${channel_name}` : channel_name;
+        let res = this.pusher.trigger(channel, event.toLowerCase(), {
             type : event,
             message 
         });
-
         return res;
     }
 

@@ -33,6 +33,12 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async pingPusher(params) {
+        return request(global.server)
+        .post('/api/users/pusher/ping')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async loginUser(params) {
         return request(global.server)
         .post('/api/users/login')

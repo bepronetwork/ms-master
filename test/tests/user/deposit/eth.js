@@ -39,8 +39,6 @@ context(`${ticker}`, async () => {
         expect(res.data.status).to.equal(200);
         expect(res.data.message.address).to.be.undefined;
         // Waiting 100 seconds for the address to be get intializaed
-        console.log("Waiting for 3 minutes seconds for wallet init...");
-        await delay(180*1000);
         // Get User Deposit Address - already initialized
         res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
         expect(res.data.status).to.equal(200);
