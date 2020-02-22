@@ -577,10 +577,11 @@ const progressActions = {
             
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-            
+
             /* Push Webhook Notification */
             PusherSingleton.trigger({
-                user_id : params.user_id, 
+                channel_name : params.user_id, 
+                isPrivate : true,
                 message : `Deposited ${params.amount} ${params.wallet.currency.ticker} in your account`,
                 eventType : 'DEPOSIT'
             })
