@@ -26,7 +26,7 @@ context('Mail Sender', async () =>  {
                 { "template_id": 2, "functionName": "USER_LOGIN", "contactlist_Id"  : 2 },
                 { "template_id": 3, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
             ],
-            apiKey : faker.internet.ip()
+            apiKey : "erwerwerwerwerwewerwerwewerwewerwerwerwewe"
         }
         let res = await editAppMailSenderIntegration(postData, app.bearerToken , {id : app.id});
         expect(res.data.status).to.equal(200);
