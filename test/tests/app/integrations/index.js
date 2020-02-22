@@ -1,3 +1,4 @@
 context('Integrations', async () => {
-    require('./chat');
+    // require('./chat');
+    require('./mailSender');
 });

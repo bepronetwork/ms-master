@@ -587,14 +587,17 @@ const progressActions = {
     __editMailSenderIntegration : async (params) => {
         let { apiKey, templateIds } = params;
         apiKey = await Security.prototype.encryptData(apiKey);
+        let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(params.app);
         /* Update Integrations Id Type */
-        await MailSenderRepository.prototype.findByIdAndUpdate(_id, {
+        await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
             apiKey,
             templateIds
         })
-        // await SendInBlue.prototype.loadingApiKey(params.app.id);
-        // for (let attribute of SendInBlueAttributes){
-        //     await SendInBlue.prototype.createAttribute(attribute);
+        // if (mailSender.apiKey != null){
+        //     await SendInBlue.prototype.loadingApiKey(params.app.id);
+        //     for (let attribute of SendInBlueAttributes){
+        //         await SendInBlue.prototype.createAttribute(attribute);
+        //     }
         // }
         return params;
     },

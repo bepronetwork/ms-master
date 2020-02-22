@@ -1,5 +1,4 @@
 import Security from '../../../controllers/Security/Security';
-// import { AppRepository, IntegrationsRepository, MailSenderRepository } from '../../../db/repos';
 
 var SibApiV3Sdk = require('sib-api-v3-sdk');
 
@@ -21,9 +20,7 @@ class SendInBlue {
     constructor() { }
 
     // async loadingApiKey(app_id) {
-    //     let app = await AppRepository.prototype.findAppById(app_id);
-    //     let integration = await IntegrationsRepository.prototype.findById(app.integrations._id);
-    //     let mailSender = await MailSenderRepository.prototype.findById(integration.mailSender._id);
+    //     let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(app_id);
     //     let hashed_apiKey = mailSender.apiKey;
     //     let apiKeyApp = await Security.prototype.decryptData(hashed_apiKey);
     //     apiKey.apiKey = apiKeyApp

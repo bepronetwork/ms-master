@@ -1,5 +1,7 @@
 import MongoComponent from './MongoComponent';
 import { MailSenderSchema } from '../schemas';
+import AppRepository from './app';
+import IntegrationsRepository from './integrations';
 
 /**
  * Accounts database interaction class.
@@ -31,6 +33,18 @@ class MailSenderRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             MailSenderRepository.prototype.schema.model.findById(_id)
+            .exec( (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
+    findApiKeyByAppId(app_id){ 
+        return new Promise( async (resolve, reject) => {
+            let app = await AppRepository.prototype.findAppById({_id : app_id});
+            let integration = await IntegrationsRepository.prototype.findById(app.integrations);
+            MailSenderRepository.prototype.schema.model.findById(integration.mailSender)
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
