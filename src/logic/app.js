@@ -588,21 +588,24 @@ const progressActions = {
         let { apiKey, templateIds } = params;
         apiKey = await Security.prototype.encryptData(apiKey);
         let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(params.app);
-        if (params.apiKey === mailSender.apiKey){
-            throwError()
+        if(!mailSender){
+            throwError();
         }
-        /* Update Integrations Id Type */
         await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
             apiKey,
             templateIds
-        })
-        if (mailSender.apiKey != null){
-            let unhashed = await MailSenderRepository.prototype.unhashedApiKey(params.app)
-            await SendInBlue.prototype.loadingApiKey(unhashed);
-            for (let attribute of SendInBlueAttributes){
-                await SendInBlue.prototype.createAttribute(attribute);
-            }
+        });
+
+        let unhashed = await MailSenderRepository.prototype.unhashedApiKey(params.app)
+        await SendInBlue.prototype.loadingApiKey(unhashed);
+        for (let attribute of SendInBlueAttributes){
+            await SendInBlue.prototype.createAttribute(attribute).catch((e)=>{
+                if(e.response.body.message !== "Attribute name must be unique") {
+                    throwError();
+                }
+            });
         }
+
         return params;
     },
     __editTopBar  : async (params) => {
