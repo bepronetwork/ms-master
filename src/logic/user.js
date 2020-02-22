@@ -31,7 +31,6 @@ import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
 import { BitGoSingleton, SendInBlue } from './third-parties';
 import { SENDINBLUE_EMAIL_TO } from '../config';
-import { BitGoSingleton } from './third-parties';
 import PusherSingleton from './third-parties/pusher';
 let error = new ErrorManager();
 
