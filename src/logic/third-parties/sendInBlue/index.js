@@ -5,12 +5,10 @@ var defaultClient = SibApiV3Sdk.ApiClient.instance;
 // Configure API key authorization: api-key
 var apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.SENDINBLUE_API_KEY
-// apiKey.apiKey = "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"
 
 // Configure API key authorization: partner-key
 var partnerKey = defaultClient.authentications['partner-key'];
 partnerKey.apiKey = process.env.SENDINBLUE_API_KEY
-// partnerKey.apiKey = "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"
 
 
 class SendInBlue {
@@ -25,9 +23,9 @@ class SendInBlue {
     async createFolder(name) {
         const apiInstance = new SibApiV3Sdk.ContactsApi();
         // let name = "Test Folder"
-        let createFolder = {name};
+        let createFolder = { name };
         const data = await apiInstance.createFolder(createFolder);
-        return console.log(data);
+        return data;
     }
 
     async getFolders() {
@@ -35,7 +33,7 @@ class SendInBlue {
         let limit = 10;
         let offset = 0;
         const data = await apiInstance.getFolders(limit, offset);
-        return console.log(data);
+        return data;
     }
 
     async createList() {
@@ -44,13 +42,13 @@ class SendInBlue {
         let folderId = 3;
         let createList = { name, folderId };
         const data = await apiInstance.createList(createList);
-        return console.log(data);
+        return data;
     }
 
     async getLists() {
         const apiInstance = new SibApiV3Sdk.ContactsApi();
         const data = await apiInstance.getLists();
-        return console.log(data);
+        return data;
     }
 
     async createAttribute(attributeName) {
@@ -58,7 +56,7 @@ class SendInBlue {
         let attributeCategory = "normal";
         // let attributeName = "TOKEN";
         let type = "text";
-        let createAttribute = {type};
+        let createAttribute = { type };
         const data = await apiInstance.createAttribute(attributeCategory, attributeName, createAttribute);
         return data;
     }
@@ -97,7 +95,7 @@ class SendInBlue {
     async getSmtpTemplates() {
         const apiInstance = new SibApiV3Sdk.SMTPApi();
         const data = await apiInstance.getSmtpTemplates();
-        return console.log(data);
+        return data;
     }
 
     async sendTemplate(templateId, emailTo) {

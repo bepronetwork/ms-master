@@ -369,7 +369,6 @@ const progressActions = {
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
         let bearerToken = MiddlewareSingleton.sign(app._id);
         await AppRepository.prototype.createAPIToken(app._id, bearerToken);
-        console.log("AppID: ",app._id)
         let email = admin.email;
         let attributes = {
             APP: app._id
@@ -610,12 +609,10 @@ const progressActions = {
         for (let attribute of SendInBlueAttributes){
             await SendInBlue.prototype.createAttribute(attribute).catch((e)=>{
                 if(e.response.body.message !== "Attribute name must be unique") {
-                    console.log(e.response.body);
-                    throwError();
+                    // throwError();
                 }
             });
         }
-
         return params;
     },
     __editTopBar  : async (params) => {
