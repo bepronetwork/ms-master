@@ -5,7 +5,6 @@ import {
 import chai from 'chai';
 import models from '../../../models';
 import { mochaAsync } from '../../../utils';
-import faker from 'faker';
 
 const expect = chai.expect;
 

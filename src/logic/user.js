@@ -33,7 +33,6 @@ import { BitGoSingleton, SendInBlue } from './third-parties';
 import { SENDINBLUE_EMAIL_TO } from '../config';
 import PusherSingleton from './third-parties/pusher';
 
-
 let error = new ErrorManager();
 
 
