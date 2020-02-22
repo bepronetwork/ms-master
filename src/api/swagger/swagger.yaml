@@ -870,6 +870,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/customization/loadingGif : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Loading GIF
+      operationId: editLoadingGif
+      description: Add Some GIFs for loading page
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationLoadingGif'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/typography : 
     x-swagger-router-controller: app
     post:
@@ -2057,6 +2088,22 @@ definitions:
         description: |
           App id
       topIcon:
+        type : string
+        example: 876348bct3t2rc2t34
+        description : image blob or link
+  AppCustomizationLoadingGif : 
+    type: object
+    required:
+      - app
+      - loadingGif
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      loadingGif:
         type : string
         example: 876348bct3t2rc2t34
         description : image blob or link

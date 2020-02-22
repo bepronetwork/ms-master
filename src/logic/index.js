@@ -30,6 +30,7 @@ import TypographyLogic from './typography';
 import CurrencyLogic from './currency';
 import AddressLogic from './address';
 import TopIconLogic from "./topIcon";
+import LoadingGifLogic from "./loadingGif";
 
 
 export {
@@ -64,6 +65,7 @@ export {
     AdminLogic,
     ResultSpaceLogic,
     TypographyLogic,
-    TopIconLogic
+    TopIconLogic,
+    LoadingGifLogic
 }
 
