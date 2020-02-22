@@ -28,6 +28,8 @@ import Typography from './typography';
 import Currency from './currency';
 import Address from './address';
 import TopIcon from './topIcon';
+import Token from './token';
+import MailSender from './mailSender';
 import LoadingGif from "./loadingGif";
 
 export {
@@ -61,5 +63,7 @@ export {
     Admin,
     Typography,
     TopIcon,
+    Token,
+    MailSender,
     LoadingGif
 }

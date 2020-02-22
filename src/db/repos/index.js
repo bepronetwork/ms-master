@@ -32,9 +32,12 @@ import TypographyRepository from './typography';
 import CurrencyRepository from './currency';
 import AddressRepository from './address';
 import TopIconRepository from './topIcon';
+import TokenRepository from './token';
+import MailSenderRepository from './mailSender';
 import LoadingGifRepository from "./loadingGif";
 
 export{
+    TokenRepository,
     ChatRepository,
     FooterRepository,
     AddressRepository,
@@ -69,5 +72,6 @@ export{
     AdminsRepository,
     TypographyRepository,
     TopIconRepository,
+    MailSenderRepository,
     LoadingGifRepository
-}  
+}

@@ -268,6 +268,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /users/password/reset/ask:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Reset Password
+      operationId: resetPassword
+      description: reset password
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/ResetPasswordRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/password/reset/set:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Reset Password Set
+      operationId: setPassword
+      description: reset password set
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/setPasswordRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/register:
     x-swagger-router-controller: user
     post:
@@ -1083,6 +1143,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
+  /app/integrations/mailSender/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Mail Sender Integration
+      operationId: editMailSenderIntegration
+      description: Change Mail Sender API Key and templates
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditMailSenderIntegration'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/get/auth:
     x-swagger-router-controller: app
     post:
@@ -1689,7 +1781,48 @@ definitions:
         minLength: 1
         description: |
          Password Hashed
-  UserRegisterRequest: 
+  setPasswordRequest:
+    type: object
+    required:
+      - token
+      - password
+      - user_id
+    properties:
+      token:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          token
+      password:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          password
+      user_id:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          user id
+  ResetPasswordRequest:
+    type: object
+    required:
+      - username_or_email
+    properties:
+      username_or_email:
+        type : string
+        format: string
+        example: "Jamy_234"
+        minLength: 1
+        description: |
+         username or email
+
+  UserRegisterRequest:
     type: object
     required:
       - username
@@ -2206,7 +2339,33 @@ definitions:
         example: "3456g334"
       isActive : 
         type : boolean
-        example: true   
+        example: true
+  AppEditMailSenderIntegration : 
+    type: object
+    required:
+      - app
+      - apiKey
+      - templateIds
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      apiKey:
+        type : string
+        format: name
+        example: "gw293847ncv2"
+      templateIds:
+        type : array
+        items:
+          type: object
+          properties:
+            functionName:
+              type: string
+            template_id:
+              type: number
   AppEditAffiliateStructure : 
     type: object
     required:

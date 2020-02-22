@@ -306,6 +306,20 @@ class App extends ModelComponent{
         }
     }
 
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async editMailSenderIntegration(){
+        try{
+            return await this.process('EditMailSenderIntegration');
+        }catch(err){
+            throw err;
+        }
+    }
+
     /**
      * @param {String} 
      * @return {bool || Exception}  

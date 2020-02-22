@@ -68,7 +68,8 @@ ErrorHandler.prototype.KEYS =  {
     'OVERFLOW_DEPOSIT'                      : "051",
     'MAX_BET_NOT_EXISTENT'                  : "052",
     'MAX_BET_ACHIEVED'                      : "053",
-    'USERNAME_ALREADY_EXISTS'               : "054"
+    'USERNAME_ALREADY_EXISTS'               : "054",
+    'USERNAME_OR_EMAIL_NOT_EXISTS'          : "055"
 };
 
   /***************************

@@ -5,6 +5,11 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
+
+import {
+	Token
+} from '../../src/models';
+
 import { 
     UsersRepository, 
     AppRepository, 
@@ -13,6 +18,9 @@ import {
     AffiliateLinkRepository, 
     AffiliateRepository, 
     SecurityRepository,
+    AddressRepository,
+    TokenRepository,
+    MailSenderRepository
 } from '../db/repos';
 import Numbers from './services/numbers';
 import { Deposit, AffiliateLink, Wallet, Address } from '../models';
@@ -21,8 +29,10 @@ import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
-import { BitGoSingleton } from './third-parties';
+import { BitGoSingleton, SendInBlue } from './third-parties';
+import { SENDINBLUE_EMAIL_TO } from '../config';
 import PusherSingleton from './third-parties/pusher';
+
 let error = new ErrorManager();
 
 
@@ -59,6 +69,8 @@ const processActions = {
 
 		if(user){
 			normalized = {
+                app_id: app,
+                user_id: user._id,
                 has2FASet,
                 bearerToken,
                 user_in_app,
@@ -70,6 +82,74 @@ const processActions = {
 				...user
 			}
         }
+        return normalized;
+    },
+    __resetPassword: async (params) => {
+        const user          = await __private.db.findUser(params.username_or_email);
+        const email         = await __private.db.findUserByEmail(params.username_or_email);
+        let alreadyExists   = (user || email);
+        
+        if(!alreadyExists){
+            throwError("USERNAME_OR_EMAIL_NOT_EXISTS");
+        }
+        let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000) )).getTime() );
+        let token = new Token({
+            user    : alreadyExists._id,
+            token   : bearerToken
+        });
+        let resultToken = await token.register();
+        if(!resultToken) {
+            throwError();
+        }
+        let app = await AppRepository.prototype.findAppById(alreadyExists.app_id);
+        if(!app){
+            throwError("APP_NOT_EXISTENT");
+        }
+        let send =  await MailSenderRepository.prototype.findApiKeyByAppId(app._id);
+        if(!send){
+            throwError();
+        }
+
+        let template    = send.templateIds.find((t)=>{ return t.functionName == "USER_RESET_PASSWORD" });
+        let apiKey      = await MailSenderRepository.prototype.unhashedApiKey(app._id);
+
+        let normalized = {
+            email       : alreadyExists.email,
+            name        : alreadyExists.name,
+            token       : bearerToken,
+            templates   : template,
+            user_id     : alreadyExists._id,
+            url         : app.web_url,
+            api_key     : apiKey
+        };
+        return normalized;
+    },
+    __setPassword: async (params) => {
+        const payload = MiddlewareSingleton.resultTokenDate(params.token);
+        if(!payload) {
+            throwError('TOKEN_INVALID');
+        }
+        // console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
+        if( Number((new Date()).getTime()) > Number(payload.time) ) {
+            throwError('TOKEN_EXPIRED');
+        }
+        const findToken = await TokenRepository.prototype.findByToken(params.token);
+        console.log(findToken);
+        if(!findToken || (String(findToken.user) !== String(params.user_id)) ) {
+            throwError('TOKEN_INVALID');
+        }
+
+        let hash_password = new Security(params.password).hash();
+
+        let updatePassword = await UsersRepository.prototype.updateUser({id: params.user_id, param: {hash_password} });
+
+        if(!updatePassword) {
+            throwError();
+        }
+
+        let normalized = {
+        }
+
         return normalized;
     },
     __login2FA : async (params) => {
@@ -307,6 +387,28 @@ const progressActions = {
             await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
         }
 
+        let user = await UsersRepository.prototype.findUserById(params.user_id);
+        console.log("393", user);
+        console.log(params.user_id);
+        let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app_id);
+        console.log(send);
+        if(send){
+            let templates    = send.templateIds.find((t)=>{ return t.functionName == "USER_LOGIN" });
+            let apiKey       = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
+            await SendInBlue.prototype.loadingApiKey(apiKey);
+            let attributes = {
+                YOURNAME : user.name
+            };
+            let templateId  = templates.template_id;
+            let listIds     = templates.contactlist_Id;
+            try {
+                await SendInBlue.prototype.createContact(user.email, attributes, [listIds]);
+            }catch(e){
+                await SendInBlue.prototype.updateContact(user.email, attributes);
+            }
+            await SendInBlue.prototype.sendTemplate(templateId, [user.email]);
+        }
+
         return {...params, app : {...params.app, bearerToken}};
     },
     __login2FA : async (params) => {    
@@ -330,6 +432,30 @@ const progressActions = {
         //Add new Secret
         await SecurityRepository.prototype.addSecret2FA(security_id, newSecret);
         return params;
+    },
+    __setPassword: async (params) => {
+        return params;
+    },
+    __resetPassword: async ({email, name, token, templates, user_id, url, api_key}) => {
+
+        await SendInBlue.prototype.loadingApiKey(api_key);
+
+        let attributes = {
+            YOURNAME    : name,
+            TOKEN       : token,
+            USER        : user_id,
+            URL         : url
+        };
+
+        let templateId  = templates.template_id;
+        let listIds     = templates.contactlist_Id;
+        try {
+            await SendInBlue.prototype.createContact(email, attributes, [listIds]);
+        }catch(e){
+            await SendInBlue.prototype.updateContact(email, attributes);
+        }
+        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        return {};
     },
 	__register : async (params) => {
         try{
@@ -361,10 +487,28 @@ const progressActions = {
             )
             await Promise.all(promisesId);
 
-            
             /* Add to App */
             await AppRepository.prototype.addUser(params.app_id, user);
+
             user = await UsersRepository.prototype.findUserById(user._id);
+
+            let send =  await MailSenderRepository.prototype.findApiKeyByAppId(params.app_id);
+            if(send){
+                let templates    = send.templateIds.find((t)=>{ return t.functionName == "USER_REGISTER" });
+                let apiKey       = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
+                await SendInBlue.prototype.loadingApiKey(apiKey);
+                let attributes = {
+                    YOURNAME : user.name
+                };
+                let templateId  = templates.template_id;
+                let listIds     = templates.contactlist_Id;
+                try {
+                    await SendInBlue.prototype.createContact(user.email, attributes, [listIds]);
+                }catch(e){
+                    await SendInBlue.prototype.updateContact(user.email, attributes);
+                }
+                await SendInBlue.prototype.sendTemplate(templateId, [user.email]);
+            }
             return user;
         }catch(err){
             throw err;
@@ -540,6 +684,12 @@ class UserLogic extends LogicComponent {
                 case 'GetInfo' : {
 					return await library.process.__getInfo(params); break;
                 };
+                case 'ResetPassword' : {
+					return await library.process.__resetPassword(params); break;
+                };
+                case 'SetPassword' : {
+					return await library.process.__setPassword(params); break;
+                };
 			}
 		}catch(err){
 			throw err;
@@ -598,6 +748,12 @@ class UserLogic extends LogicComponent {
                 };
                 case 'GetInfo' : {
 					return await library.progress.__getInfo(params); break;
+                };
+                case 'ResetPassword' : {
+					return await library.progress.__resetPassword(params); break;
+                };
+                case 'SetPassword' : {
+					return await library.progress.__setPassword(params); break;
                 };
 			}
 		}catch(err){

@@ -5,17 +5,64 @@ var defaultClient = SibApiV3Sdk.ApiClient.instance;
 // Configure API key authorization: api-key
 var apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.SENDINBLUE_API_KEY
+// apiKey.apiKey = "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"
 
 // Configure API key authorization: partner-key
 var partnerKey = defaultClient.authentications['partner-key'];
 partnerKey.apiKey = process.env.SENDINBLUE_API_KEY
+// partnerKey.apiKey = "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"
 
 
 class SendInBlue {
 
-    constructor() {
+    constructor() { }
 
+    async loadingApiKey(unhashed_apiKey) {
+        apiKey.apiKey = unhashed_apiKey
+        partnerKey.apiKey = unhashed_apiKey
     }
+
+    async createFolder(name) {
+        const apiInstance = new SibApiV3Sdk.ContactsApi();
+        // let name = "Test Folder"
+        let createFolder = {name};
+        const data = await apiInstance.createFolder(createFolder);
+        return console.log(data);
+    }
+
+    async getFolders() {
+        const apiInstance = new SibApiV3Sdk.ContactsApi();
+        let limit = 10;
+        let offset = 0;
+        const data = await apiInstance.getFolders(limit, offset);
+        return console.log(data);
+    }
+
+    async createList() {
+        const apiInstance = new SibApiV3Sdk.ContactsApi();
+        let name = "Test List";
+        let folderId = 3;
+        let createList = { name, folderId };
+        const data = await apiInstance.createList(createList);
+        return console.log(data);
+    }
+
+    async getLists() {
+        const apiInstance = new SibApiV3Sdk.ContactsApi();
+        const data = await apiInstance.getLists();
+        return console.log(data);
+    }
+
+    async createAttribute(attributeName) {
+        const apiInstance = new SibApiV3Sdk.ContactsApi();
+        let attributeCategory = "normal";
+        // let attributeName = "TOKEN";
+        let type = "text";
+        let createAttribute = {type};
+        const data = await apiInstance.createAttribute(attributeCategory, attributeName, createAttribute);
+        return data;
+    }
+
     async createContact(email, attributes, listIds) {
         // email       => string with email to create
         // attributes  => object with the attributes what you desire to pass
@@ -47,7 +94,7 @@ class SendInBlue {
         return data;
     }
 
-    async getSmtpTemplates(){
+    async getSmtpTemplates() {
         const apiInstance = new SibApiV3Sdk.SMTPApi();
         const data = await apiInstance.getSmtpTemplates();
         return console.log(data);
@@ -55,7 +102,7 @@ class SendInBlue {
 
     async sendTemplate(templateId, emailTo) {
         const apiInstance = new SibApiV3Sdk.SMTPApi();
-        const sendEmail = {emailTo};
+        const sendEmail = { emailTo };
         const data = await apiInstance.sendTemplate(templateId, sendEmail);
         return data;
     }

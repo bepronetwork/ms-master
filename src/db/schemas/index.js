@@ -24,6 +24,8 @@ import { TypographySchema } from './typography';
 import { CurrencySchema } from './currency';
 import { AddressSchema } from './address';
 import { TopIconSchema } from './customization/topIcon'
+import { TokenSchema } from './token';
+import { MailSenderSchema } from './integrations/mailSender';
 import { LoadingGifSchema } from "./customization/loadingGif";
 
 export {
@@ -53,5 +55,7 @@ export {
     ResultSpaceSchema,
     TypographySchema,
     TopIconSchema,
+    TokenSchema,
+    MailSenderSchema,
     LoadingGifSchema
 }
