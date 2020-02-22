@@ -551,6 +551,16 @@ class ErrorManager {
         }
     }
 
+    loadingGif = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     log = function (object, type){
         try{
             switch(type){

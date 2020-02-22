@@ -391,6 +391,19 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
+    async editLoadingGif(){
+        try{
+            return await this.process('EditLoadingGif');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
     async editTypography(){
         try{
             return await this.process('EditTypography');

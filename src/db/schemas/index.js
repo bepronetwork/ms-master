@@ -24,6 +24,7 @@ import { TypographySchema } from './typography';
 import { CurrencySchema } from './currency';
 import { AddressSchema } from './address';
 import { TopIconSchema } from './customization/topIcon'
+import { LoadingGifSchema } from "./customization/loadingGif";
 
 export {
     CurrencySchema,
@@ -51,5 +52,6 @@ export {
     AdminSchema,
     ResultSpaceSchema,
     TypographySchema,
-    TopIconSchema
+    TopIconSchema,
+    LoadingGifSchema
 }

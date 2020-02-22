@@ -32,6 +32,7 @@ import TypographyRepository from './typography';
 import CurrencyRepository from './currency';
 import AddressRepository from './address';
 import TopIconRepository from './topIcon';
+import LoadingGifRepository from "./loadingGif";
 
 export{
     ChatRepository,
@@ -67,5 +68,6 @@ export{
     BetsRepository,
     AdminsRepository,
     TypographyRepository,
-    TopIconRepository
+    TopIconRepository,
+    LoadingGifRepository
 }  
