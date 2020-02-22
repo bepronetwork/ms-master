@@ -4,7 +4,6 @@ context('App', async () => {
     require('./integrations');
     require('./games');
     require('./customization');
-    require('./typography');
     require('./misc');
     require('./affiliates');
     require('./deposit');
