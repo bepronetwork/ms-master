@@ -43,8 +43,8 @@ context('Mail Sender', async () =>  {
             app : app.id,
             "apiKey" : "retertert",
             "templateIds" : [
-                { "template_id": 1, "functionName": "USER_REGISTER", "contactlist_Id"  : 2 },
-                { "template_id": 2, "functionName": "USER_LOGIN", "contactlist_Id"  : 2 },
+                { "template_id": 1, "futionName": "USER_LOGIN", "connctionName": "USER_REGISTER", "contactlist_Id"  : 2 },
+                { "template_id": 2, "functactlist_Id"  : 2 },
                 { "template_id": 1, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
             ]
         }

@@ -395,11 +395,11 @@ const progressActions = {
         return true;
     },
     __get : async (params) => {
-        if ((params._doc.integrations.mailSender.apiKey != null) && (params._doc.integrations.mailSender.apiKey != undefined)){
-            params._doc.integrations.mailSender.apiKey = await Security.prototype.decryptData(mailSenderApikey)
+        let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
+        if ((apiKeyEncrypted != null) && (apiKeyEncrypted != undefined)){
+            params._doc.integrations.mailSender.apiKey = await Security.prototype.decryptData(apiKeyEncrypted)
         }
-        let res = params;
-		return res;
+		return params;
     },
     __getGames : async (params) => {
         let res = params;
