@@ -11,9 +11,10 @@ class SendInBlue {
     }
 
     __getInstanceWithKeysToInstanceType(instanceType, key){
-        instanceType.apiClient.authentications['partner-key'].apiKey = key;
-        instanceType.apiClient.authentications['api-key'].apiKey = key;
-        return instanceType;
+        let instance = instanceType;
+        instance.apiClient.authentications['partner-key'].apiKey = key;
+        instance.apiClient.authentications['api-key'].apiKey = key;
+        return instance;
     }
 
     async createFolder(name) {
