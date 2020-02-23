@@ -23,6 +23,7 @@ import {
     shouldntLoginTheAdminAndNoticeTheUserDoesNotExist,
     shouldntLoginTheAdmin
 } from '../../output/AdminTestMethod'
+import { SendinBlueSingleton } from '../../../../src/logic/third-parties/sendInBlue';
 
 const expect = chai.expect;
 
@@ -61,7 +62,7 @@ context('Register', async () => {
                 NAME: admin.name
             };
             let listIds = mail.registerAdmin.listIds;
-            await SendInBlue.prototype.createContact(email, attributes, listIds);
+            await SendinBlueSingleton.createContact(email, attributes, listIds);
         } catch (err) {
             expect(err.status).to.equal(400);
         }

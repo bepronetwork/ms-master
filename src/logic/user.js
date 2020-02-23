@@ -29,9 +29,10 @@ import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
-import { BitGoSingleton, SendInBlue } from './third-parties';
+import { BitGoSingleton } from './third-parties';
 import { SENDINBLUE_EMAIL_TO } from '../config';
 import PusherSingleton from './third-parties/pusher';
+import { SendInBlue } from './third-parties/sendInBlue';
 
 let error = new ErrorManager();
 
@@ -393,18 +394,19 @@ const progressActions = {
         if ((send.apiKey != null) && (send.apiKey != undefined)) {
             let templates = send.templateIds.find((t) => { return t.functionName == "USER_LOGIN" });
             let apiKey = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
-            await SendInBlue.prototype.loadingApiKey(apiKey);
+            /* Create Sendinblue Client */
+            var sendinBlueClient = new SendInBlue({key : apiKey});
             let attributes = {
                 YOURNAME: user.name
             };
             let templateId = templates.template_id;
             let listIds = templates.contactlist_Id;
             try {
-                await SendInBlue.prototype.createContact(user.email, attributes, [listIds]);
+                await sendinBlueClient.createContact(user.email, attributes, [listIds]);
             } catch (e) {
-                await SendInBlue.prototype.updateContact(user.email, attributes);
+                await sendinBlueClient.updateContact(user.email, attributes);
             }
-            await SendInBlue.prototype.sendTemplate(templateId, [user.email]);
+            await sendinBlueClient.sendTemplate(templateId, [user.email]);
         }
 
         return { ...params, app: { ...params.app, bearerToken } };
@@ -438,7 +440,8 @@ const progressActions = {
 
         let send = await MailSenderRepository.prototype.findApiKeyByAppId(app_id);
         if (send.apiKey != null && send.apiKey != undefined) {
-            await SendInBlue.prototype.loadingApiKey(api_key);
+            /* Create SendinBlue Client */
+            var sendinBlueClient = new SendInBlue({key : api_key});
 
             let attributes = {
                 YOURNAME: name,
@@ -450,11 +453,11 @@ const progressActions = {
             let templateId = templates.template_id;
             let listIds = templates.contactlist_Id;
             try {
-                await SendInBlue.prototype.createContact(email, attributes, [listIds]);
+                await sendinBlueClient.createContact(email, attributes, [listIds]);
             } catch (e) {
-                await SendInBlue.prototype.updateContact(email, attributes);
+                await sendinBlueClient.updateContact(email, attributes);
             }
-            await SendInBlue.prototype.sendTemplate(templateId, [email]);
+            await sendinBlueClient.sendTemplate(templateId, [email]);
         }
         return {};
     },
@@ -497,18 +500,19 @@ const progressActions = {
             if (send.apiKey != null && send.apiKey != undefined) {
                 let templates = send.templateIds.find((t) => { return t.functionName == "USER_REGISTER" });
                 let apiKey = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
-                await SendInBlue.prototype.loadingApiKey(apiKey);
+                /* Create SendinBlue Client */
+                var sendinBlueClient = new SendInBlue({key : apiKey});
                 let attributes = {
                     YOURNAME: user.name
                 };
                 let templateId = templates.template_id;
                 let listIds = templates.contactlist_Id;
                 try {
-                    await SendInBlue.prototype.createContact(user.email, attributes, [listIds]);
+                    await sendinBlueClient.createContact(user.email, attributes, [listIds]);
                 } catch (e) {
-                    await SendInBlue.prototype.updateContact(user.email, attributes);
+                    await sendinBlueClient.updateContact(user.email, attributes);
                 }
-                await SendInBlue.prototype.sendTemplate(templateId, [user.email]);
+                await sendinBlueClient.sendTemplate(templateId, [user.email]);
             }
             return user;
         } catch (err) {

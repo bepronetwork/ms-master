@@ -9,8 +9,8 @@ import { AdminsRepository, SecurityRepository, AppRepository } from '../db/repos
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
-import { SendInBlue } from './third-parties';
 import { SENDINBLUE_EMAIL_TO } from '../config';
+import { SendinBlueSingleton } from './third-parties/sendInBlue';
 let error = new ErrorManager();
 
 
@@ -236,13 +236,13 @@ const progressActions = {
 
         if(params.registered === true) {
             admin = await self.save(params);
-            await SendInBlue.prototype.createContact(email, attributes, listIds);
+            await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
         }
-        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
     },
     __addAdmin : async (params) => {
@@ -262,15 +262,15 @@ const progressActions = {
             delete params['adminEmail'];
             resultAdmin = await self.save(params);
             securityId = String(resultAdmin.security);
-            await SendInBlue.prototype.createContact(email, attributes, listIds);
+            await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
             resultAdmin = params.adminEmail;
             securityId = String(resultAdmin.security._id);
-            await SendInBlue.prototype.updateContact(email, attributes);
+            await SendinBlueSingleton.updateContact(email, attributes);
         }
         await SecurityRepository.prototype.setBearerToken(securityId, params.bearerToken);
 		let admin = await __private.db.findAdminById(resultAdmin._id);
-        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
     }
 }

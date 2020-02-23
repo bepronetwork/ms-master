@@ -18,9 +18,10 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
-import { SendInBlue, SendInBlueAttributes } from './third-parties';
+import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
+import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 let error = new ErrorManager();
 
 
@@ -374,8 +375,8 @@ const progressActions = {
             APP: app._id
         };
         let templateId = mail.registerApp.templateId;
-        await SendInBlue.prototype.updateContact(email, attributes);
-        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        await SendinBlueSingleton.updateContact(email, attributes);
+        await SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
 	},
 	__summary : async (params) => {
@@ -603,11 +604,11 @@ const progressActions = {
             apiKey,
             templateIds
         });
+        let sendinBlueClient = new SendInBlue({key : unhashed});
 
         let unhashed = await MailSenderRepository.prototype.unhashedApiKey(params.app)
-        await SendInBlue.prototype.loadingApiKey(unhashed);
         for (let attribute of SendInBlueAttributes){
-            await SendInBlue.prototype.createAttribute(attribute).catch((e)=>{
+            await sendinBlueClient.createAttribute(attribute).catch((e)=>{
                 if(e.response.body.message !== "Attribute name must be unique") {
                     // throwError();
                 }
