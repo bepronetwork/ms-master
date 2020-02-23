@@ -2,16 +2,17 @@ import {
     getApp,
     editAppMailSenderIntegration,
     registerUser,
-    loginUser
+    loginUser,
+    registerAdmin
 } from '../../../methods';
 import chai from 'chai';
 import models from '../../../models';
-import { mochaAsync } from '../../../utils';
+import { mochaAsync, detectValidationErrors } from '../../../utils';
 import Random from '../../../tools/Random';
 import faker from 'faker';
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
 
-
+const BOILERPLATES = global.BOILERPLATES;
 const expect = chai.expect;
 
 context('Mail Sender', async () =>  {
@@ -48,6 +49,20 @@ context('Mail Sender', async () =>  {
             ]
         }
         let res = await editAppMailSenderIntegration(postData, app.bearerToken , {id : app.id});
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should login the User with SendInBlue API Key not null', mochaAsync(async () => {
+        var res = await loginUser(userPostData);
+        user.bearerToken = res.data.message.bearerToken;
+        expect(res.data.status).to.equal(200);
+    }));
+
+
+
+    it('should register the Admin with Platform SendInBlue API Key', mochaAsync(async () => {
+        var res = await registerAdmin(BOILERPLATES.admins.NORMAL_REGISTER_4);
+        detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
     }));
 });

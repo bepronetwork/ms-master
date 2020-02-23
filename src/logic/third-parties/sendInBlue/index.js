@@ -5,9 +5,13 @@ class SendInBlue {
 
     constructor({key}) { 
         this.key = key;
-        console.log("Key ", key);
-        this.contactsAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.ContactsApi(), key);
-        this.smtpAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.SMTPApi(), key);
+        this.setAPI();
+    }
+
+    setAPI = () => {
+        console.log("Key ", this.key);
+        this.contactsAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.ContactsApi(), this.key);
+        this.smtpAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.SMTPApi(), this.key);
     }
 
     __getInstanceWithKeysToInstanceType(instanceType, key){
@@ -18,88 +22,102 @@ class SendInBlue {
     }
 
     async createFolder(name) {
-        const apiInstance = this.contactsAPI;
+        this.setAPI();
+        console.log("this createFolder ", this.key)
         // let name = "Test Folder"
         let createFolder = { name };
-        const data = await apiInstance.createFolder(createFolder);
+        const data = await this.contactsAPI.createFolder(createFolder);
         return data;
     }
 
     async getFolders() {
-        const apiInstance = this.contactsAPI;
+        this.setAPI();
+        console.log("this getFolders ", this.key)
         let limit = 10;
         let offset = 0;
-        const data = await apiInstance.getFolders(limit, offset);
+        const data = await this.contactsAPI.getFolders(limit, offset);
         return data;
     }
 
     async createList() {
-        const apiInstance = this.contactsAPI;
+        this.setAPI();
+        console.log("this createList ", this.key)
         let name = "Test List";
         let folderId = 3;
         let createList = { name, folderId };
-        const data = await apiInstance.createList(createList);
+        const data = await this.contactsAPI.createList(createList);
         return data;
     }
 
     async getLists() {
-        const apiInstance = this.contactsAPI;
-        const data = await apiInstance.getLists();
+        this.setAPI();
+        console.log("this getLists ", this.key)
+        const data = await this.contactsAPI.getLists();
         return data;
     }
 
     async createAttribute(attributeName) {
-        const apiInstance = this.contactsAPI;
+        this.setAPI();
+        console.log("this createAttribute ", this.key)
+        console.log(this.contactsAPI.apiClient.authentications['api-key'])
         let attributeCategory = "normal";
         // let attributeName = "TOKEN";
         let type = "text";
         let createAttribute = { type };
-        const data = await apiInstance.createAttribute(attributeCategory, attributeName, createAttribute);
+        const data = await this.contactsAPI.createAttribute(attributeCategory, attributeName, createAttribute);
+        console.log("done")
         return data;
     }
 
     async createContact(email, attributes, listIds) {
+        this.setAPI();
+        console.log("this createContact ", this.key);
         // email       => string with email to create
         // attributes  => object with the attributes what you desire to pass
         // listIds     => array of listIds that this contact will belong
-        const apiInstance = this.contactsAPI;
+        console.log(this.contactsAPI.apiClient.authentications['api-key'])
         const createContact = { email, attributes, listIds };
-        const data = await apiInstance.createContact(createContact);
+        const data = await this.contactsAPI.createContact(createContact);
+        console.log("Done");
         return data;
     }
 
     async updateContact(email, attributes) {
+        this.setAPI();
+        console.log("this updateContact ", this.key)
         // email => email what you desire to update
         // attributes => parameters what you desire to update
-        const apiInstance = this.contactsAPI;
         const updateContact = { attributes }
-        const data = await apiInstance.updateContact(email, updateContact);
+        const data = await this.contactsAPI.updateContact(email, updateContact);
         return data;
     }
 
     async getAtributes() {
-        const apiInstance = this.contactsAPI;
-        const data = await apiInstance.getAttributes();
+        this.setAPI();
+        console.log("this getAtributes ", this.key)
+        const data = await this.contactsAPI.getAttributes();
         return data;
     }
 
     async getContacts() {
-        const apiInstance = this.contactsAPI;
-        const data = await apiInstance.getContacts();
+        this.setAPI();
+        console.log("this getContacts ", this.key)
+        const data = await this.contactsAPI.getContacts();
         return data;
     }
 
     async getSmtpTemplates() {
-        const apiInstance = this.smtpAPI;
-        const data = await apiInstance.getSmtpTemplates();
+        this.setAPI();
+        console.log("this getSmtpTemplates ", this.key)
+        const data = await this.smtpAPI.getSmtpTemplates();
         return data;
     }
 
     async sendTemplate(templateId, emailTo) {
-        const apiInstance = this.smtpAPI;
+        this.setAPI();
         const sendEmail = { emailTo };
         console.log("Templated Key ", this.key);
-        const data = await apiInstance.sendTemplate(templateId, sendEmail);
+        const data = await this.smtpAPI.sendTemplate(templateId, sendEmail);
         return data;
     }
 }

@@ -233,7 +233,7 @@ const progressActions = {
         let attributes  = {
             NOME: params.name
         };
-
+        console.log("Sendin Blue ", SendinBlueSingleton.key);
         if(params.registered === true) {
             admin = await self.save(params);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
