@@ -4,6 +4,8 @@ import SibApiV3Sdk from 'sib-api-v3-sdk';
 class SendInBlue {
 
     constructor({key}) { 
+        this.key = key;
+        console.log("Key ", key);
         this.contactsAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.ContactsApi(), key);
         this.smtpAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.SMTPApi(), key);
     }
@@ -95,6 +97,7 @@ class SendInBlue {
     async sendTemplate(templateId, emailTo) {
         const apiInstance = this.smtpAPI;
         const sendEmail = { emailTo };
+        console.log("Templated Key ", this.key);
         const data = await apiInstance.sendTemplate(templateId, sendEmail);
         return data;
     }
