@@ -395,6 +395,9 @@ const progressActions = {
         return true;
     },
     __get : async (params) => {
+        if (params._doc.integrations.mailSender.apiKey != null && params._doc.integrations.mailSender.apiKey != undefined){
+            params._doc.integrations.mailSender.apiKey = await Security.prototype.decryptData(mailSenderApikey)
+        }
         let res = params;
 		return res;
     },
