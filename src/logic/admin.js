@@ -336,7 +336,7 @@ class AdminLogic extends LogicComponent {
                     return await library.process.__set2FA(params);
                 };
                 case 'Register': {
-                    return library.process.__register(params); break;
+                    return await library.process.__register(params); break;
                 };
                 case 'AddAdmin' : {
                     return await library.process.__addAdmin(params); break;
