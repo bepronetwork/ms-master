@@ -55,6 +55,8 @@ export const PUSHER_APP_ID = process.env.PUSHER_APP_ID;
 
 export const PUSHER_APP_KEY = process.env.PUSHER_APP_KEY;
 
+export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
+
 export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
 
 /* Variables */

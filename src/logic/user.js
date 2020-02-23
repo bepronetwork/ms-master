@@ -131,12 +131,12 @@ const processActions = {
         if (!payload) {
             throwError('TOKEN_INVALID');
         }
-        // console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
+
         if (Number((new Date()).getTime()) > Number(payload.time)) {
             throwError('TOKEN_EXPIRED');
         }
         const findToken = await TokenRepository.prototype.findByToken(params.token);
-        console.log(findToken);
+
         if (!findToken || (String(findToken.user) !== String(params.user_id))) {
             throwError('TOKEN_INVALID');
         }

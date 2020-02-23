@@ -23,7 +23,7 @@ context('Mail Sender', async () =>  {
         app = global.test.app;
     });
 
-    it('should register the User with SendInBlue API Key Null', mochaAsync(async () => {
+    it('should register the User with SendInBlue API Key - Null', mochaAsync(async () => {
         userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456)
         }));
@@ -32,10 +32,24 @@ context('Mail Sender', async () =>  {
         expect(res.data.status).to.equal(200);
     }));
 
-    it('should login the User with SendInBlue API Key Null', mochaAsync(async () => {
+    it('should login the User with SendInBlue API Key - Null', mochaAsync(async () => {
         var res = await loginUser(userPostData);
         user.bearerToken = res.data.message.bearerToken;
         expect(res.data.status).to.equal(200);
+    }));
+
+    it('shouldn´t update the Mail Sender integration info from app - Wrong API Key', mochaAsync(async () => {
+        let postData = {
+            app : app.id,
+            "apiKey" : "retertert",
+            "templateIds" : [
+                { "template_id": 1, "functionName": "USER_REGISTER", "contactlist_Id"  : 2 },
+                { "template_id": 2, "functionName": "USER_LOGIN", "contactlist_Id"  : 2 },
+                { "template_id": 1, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
+            ]
+        }
+        let res = await editAppMailSenderIntegration(postData, app.bearerToken , {id : app.id});
+        expect(res.data.status).to.equal(404);
     }));
 
     it('should update the Mail Sender integration info from app', mochaAsync(async () => {

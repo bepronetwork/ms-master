@@ -158,10 +158,12 @@ async function getDepositAddress(req, res) {
 async function pusherNotificationsAuth(req, res) {
     try{        
         let params = req.body;
+
         let data = PusherSingleton.authenticate({
             socketId : params.socket_id,
             channel : params.channel_name
         });
+
         res.send(data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -172,12 +174,14 @@ async function pingPushNotifications(req, res) {
     try{  
         let params = req.body;
         let isPrivate = params.user ? true : false;
+
         let data = PusherSingleton.trigger({
             channel_name : isPrivate ? params.user : 'general', 
             isPrivate,
             message : "Ping", 
             eventType : "PING"
         });
+
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);

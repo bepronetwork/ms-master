@@ -28,7 +28,6 @@ context(`Get`, async () =>  {
 
     it('should get public channel ping', mochaAsync(async () => {
         let channel = pusher.subscribe('general');
-
         let outputs = [];
 
         channel.bind('ping', (data) => {

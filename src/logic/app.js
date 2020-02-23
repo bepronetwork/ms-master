@@ -595,18 +595,20 @@ const progressActions = {
     },
     __editMailSenderIntegration : async (params) => {
         let { apiKey, templateIds } = params;
-        apiKey = await Security.prototype.encryptData(apiKey);
+        let encryptedAPIKey = await Security.prototype.encryptData(apiKey);
         let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(params.app);
-        if(!mailSender){
-            throwError();
-        }
+        let sendinBlueClient = new SendInBlue({key : apiKey});
+
+        /* Test functioning of Client */
+        await sendinBlueClient.getContacts();
+
+        if(!mailSender){ throwError();}
+
         await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
-            apiKey,
+            apiKey : encryptedAPIKey,
             templateIds
         });
-        let sendinBlueClient = new SendInBlue({key : unhashed});
-
-        let unhashed = await MailSenderRepository.prototype.unhashedApiKey(params.app)
+        
         for (let attribute of SendInBlueAttributes){
             await sendinBlueClient.createAttribute(attribute).catch((e)=>{
                 if(e.response.body.message !== "Attribute name must be unique") {
