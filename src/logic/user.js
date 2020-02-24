@@ -447,7 +447,7 @@ const progressActions = {
                 YOURNAME: name,
                 TOKEN: token,
                 USER: user_id,
-                URL: url
+                URL: `${url}/password/reset?token=${token}&userId=${user_id}`
             };
 
             let templateId = templates.template_id;
