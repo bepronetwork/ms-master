@@ -49,7 +49,8 @@ let outputs = {
             "integrations"          : {
                 "chat" : {
                     "publicKey" :  object.integrations.chat ? object.integrations.chat.publicKey : ''
-                }
+                },
+                "pusher" : object.integrations.pusher
             },
             "countriesAvailable"    : object.countriesAvailable,
             "games"                 : object.games ? object.games.map( game => {
