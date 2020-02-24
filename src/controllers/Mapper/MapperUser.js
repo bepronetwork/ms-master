@@ -33,7 +33,6 @@ let outputs = {
                 ...object.affiliate
             },
             name: object.name,
-            address: object.address,
             wallet: object.wallet,
             register_timestamp: object.register_timestamp,
             nationality: object.nationality,
@@ -41,7 +40,6 @@ let outputs = {
             email: object.email,
             app_id: {
                 isValid: object.app_id.isValid,
-                ownerAddress: object.app_id.ownerAddress,
                 games: [
                     ...object.app_id.games
                 ],

@@ -101,7 +101,10 @@ class UsersRepository extends MongoComponent{
 
     findUser(username){
         return new Promise( (resolve, reject) => {
-            UsersRepository.prototype.schema.model.findOne({'username' : new String(username).toLowerCase().trim()})
+            UsersRepository.prototype.schema.model.findOne({$or: [
+                {"username": username},
+                {"email": username}
+            ]})
             .populate(populate_user)
             .lean()
             .exec( (err, user) => {
