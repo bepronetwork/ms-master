@@ -3,21 +3,22 @@ import SibApiV3Sdk from 'sib-api-v3-sdk';
 
 class SendInBlue {
 
-    constructor({key}) { 
+    constructor({key}) {
         this.key = key;
+
+        this.contactsAPI = new SibApiV3Sdk.ContactsApi();
+        this.smtpAPI = new SibApiV3Sdk.SMTPApi();
+
         this.setAPI();
     }
 
     setAPI = () => {
-        this.contactsAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.ContactsApi(), this.key);
-        this.smtpAPI = this.__getInstanceWithKeysToInstanceType(new SibApiV3Sdk.SMTPApi(), this.key);
+        this.__getInstanceWithKeysToInstanceType(this.key);
     }
 
-    __getInstanceWithKeysToInstanceType(instanceType, key){
-        let instance = instanceType;
-        instance.apiClient.authentications['partner-key'].apiKey = key;
-        instance.apiClient.authentications['api-key'].apiKey = key;
-        return instance;
+    __getInstanceWithKeysToInstanceType(key){
+        this.contactsAPI.apiClient.authentications['partner-key'].apiKey = key;
+        this.smtpAPI.apiClient.authentications['api-key'].apiKey = key;
     }
 
     async createFolder(name) {
