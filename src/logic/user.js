@@ -34,6 +34,7 @@ import { SENDINBLUE_EMAIL_TO } from '../config';
 import PusherSingleton from './third-parties/pusher';
 import { SendInBlue } from './third-parties/sendInBlue';
 import { Logger } from '../helpers/logger';
+import Mailer from './services/mailer';
 
 let error = new ErrorManager();
 
@@ -60,27 +61,34 @@ const processActions = {
     __login: async (params) => {
         var input_params = params;
         let normalized = {};
-        let user = await __private.db.findUser(params.username);
+        var username = new String(params.username).toLowerCase().trim();
+        let user = await __private.db.findUser(username);
         if (!user) { throwError('USER_NOT_EXISTENT') }
         if (!user.security) { throwError() };
+
         let has2FASet = user.security['2fa_set'];
         let bearerToken = MiddlewareSingleton.sign(user._id);
         var app = user.app_id;
+
+        app = await AppRepository.prototype.findAppById(user.app_id);
+        if (!app) { throwError("APP_NOT_EXISTENT");}
+
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
 
         if (user) {
             normalized = {
-                app_id: app,
+                app_id: user.app_id,
                 user_id: user._id,
                 has2FASet,
                 bearerToken,
                 user_in_app,
-                username: user.username,
+                username: username,
+                user : user,
                 password: input_params.password,
                 security_id: user.security._id,
                 verifiedAccount: new Security().unhashPassword(input_params.password, user.hash_password),
-                integrations: getIntegrationsInfo({ integrations, user_id: user.username }),
+                integrations: getIntegrationsInfo({ integrations, user_id: username }),
                 ...user
             }
         }
@@ -88,41 +96,18 @@ const processActions = {
     },
     __resetPassword: async (params) => {
         const user = await __private.db.findUser(params.username_or_email);
-        const email = await __private.db.findUserByEmail(params.username_or_email);
-        let alreadyExists = (user || email);
-
-        if (!alreadyExists) {
-            throwError("USERNAME_OR_EMAIL_NOT_EXISTS");
-        }
-        let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000))).getTime());
-        let token = new Token({
-            user: alreadyExists._id,
-            token: bearerToken
-        });
-        let resultToken = await token.register();
-        if (!resultToken) {
-            throwError();
-        }
-        let app = await AppRepository.prototype.findAppById(alreadyExists.app_id);
-        if (!app) {
-            throwError("APP_NOT_EXISTENT");
-        }
-        let send = await MailSenderRepository.prototype.findApiKeyByAppId(app._id);
-        if (!send) {
-            throwError();
-        }
-
-        let template = send.templateIds.find((t) => { return t.functionName == "USER_RESET_PASSWORD" });
-        let apiKey = await MailSenderRepository.prototype.unhashedApiKey(app._id);
+        if (!user) { throwError("USERNAME_OR_EMAIL_NOT_EXISTS"); }
+        
+        var app = await AppRepository.prototype.findAppById(user.app_id);
+        if (!app) { throwError("APP_NOT_EXISTENT"); }
+      
 
         let normalized = {
-            email: alreadyExists.email,
-            name: alreadyExists.name,
-            token: bearerToken,
-            templates: template,
-            user_id: alreadyExists._id,
+            name: user.name,
+            user : user,
+            app : app,
+            user_id: user._id,
             url: app.web_url,
-            api_key: apiKey,
             app_id: app._id
         };
         return normalized;
@@ -156,8 +141,10 @@ const processActions = {
         return normalized;
     },
     __login2FA: async (params) => {
+        var username = new String(params.username).toLowerCase().trim();
+
         // Get User by Username
-        let user = await __private.db.findUser(params.username);
+        let user = await __private.db.findUser(username);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
         if (!user.security) { throwError() };
@@ -183,6 +170,7 @@ const processActions = {
             secret2FA,
             bearerToken,
             user_in_app,
+            user,
             isVerifiedToken2FA,
             username: user.username,
             password: params.password,
@@ -223,13 +211,13 @@ const processActions = {
         }
         return normalized;
     },
-
     __register: async (params) => {
+        var username = new String(params.username).toLowerCase().trim();
 
         const { affiliateLink, affiliate } = params;
         var input_params = params;
         //Set up Password Structure
-        let user, hash_password, email;
+        let user, hash_password;
 
         let app = await AppRepository.prototype.findAppById(params.app);
         if (!app) { throwError('APP_NOT_EXISTENT') }
@@ -239,18 +227,17 @@ const processActions = {
             user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
         } else {
             // User is Intern 
-            user = await UsersRepository.prototype.findUser(input_params.username);
-            email = await UsersRepository.prototype.findUserByEmail(input_params.email);
+            user = await UsersRepository.prototype.findUser(username);
         }
 
-        let alreadyExists = (user || email) ? true : false;
+        let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if (params.password)
             hash_password = new Security(params.password).hash();
 
         let normalized = {
             alreadyExists: alreadyExists,
-            username: new String(params.username).toLowerCase().trim(),
+            username: username,
             full_name: params.full_name,
             affiliate: affiliate,
             name: params.name,
@@ -278,7 +265,6 @@ const processActions = {
     },
     __getDepositAddress: async (params) => {
         var { currency, id, app } = params;
-        console.log("Id ", id);
         /* Get User Id */
         let user = await UsersRepository.prototype.findUserById(id);
         app = await AppRepository.prototype.findAppById(app);
@@ -383,49 +369,15 @@ const processActions = {
 const progressActions = {
     __login: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
-        let bearerToken;
-        if (params.app) {
-            /* Create BearerToken for App */
-            bearerToken = MiddlewareSingleton.sign(params.app._id);
-            await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
-        }
-
-        let user = await UsersRepository.prototype.findUserById(params.user_id);
-        let send = await MailSenderRepository.prototype.findApiKeyByAppId(params.app_id);
-        try{
-            if ((send.apiKey != null) && (send.apiKey != undefined)) {
-                let templates = send.templateIds.find((t) => { return t.functionName == "USER_LOGIN" });
-                let apiKey = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
-                /* Create Sendinblue Client */
-                var sendinBlueClient = new SendInBlue({key : apiKey});
-                let attributes = {
-                    YOURNAME: user.name
-                };
-                let templateId = templates.template_id;
-                let listIds = templates.contactlist_Id;
-                try {
-                    await sendinBlueClient.createContact(user.email, attributes, [listIds]);
-                } catch (e) {
-                    await sendinBlueClient.updateContact(user.email, attributes);
-                }
-                await sendinBlueClient.sendTemplate(templateId, [user.email]);
-            }
-
-        }catch(err){
-            Logger.error(err);
-        }
-
-        return { ...params, app: { ...params.app, bearerToken } };
+        /* Send Login Email ASYNC - so that it is not dependent on user login */
+        new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
+        return params;
     },
     __login2FA: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
-        let bearerToken;
-        if (params.app) {
-            /* Create BearerToken for App */
-            bearerToken = MiddlewareSingleton.sign(params.app._id);
-            await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
-        }
-        return { ...params, app: { ...params.app, bearerToken } };
+        /* Send Login Email ASYNC - so that it is not dependent on user login */
+        new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
+        return params;
     },
     __auth: async (params) => {
         return params;
@@ -442,30 +394,22 @@ const progressActions = {
     __setPassword: async (params) => {
         return params;
     },
-    __resetPassword: async ({ email, name, token, templates, user_id, url, api_key, app_id }) => {
+    __resetPassword: async (params) => {
+        const { name, user_id, url, app_id, user } = params;
 
-        let send = await MailSenderRepository.prototype.findApiKeyByAppId(app_id);
-        if (send.apiKey != null && send.apiKey != undefined) {
-            /* Create SendinBlue Client */
-            var sendinBlueClient = new SendInBlue({key : api_key});
+        let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000))).getTime());
 
-            let attributes = {
-                YOURNAME: name,
-                TOKEN: token,
-                USER: user_id,
-                URL: `${url}password/reset?token=${token}&userId=${user_id}`
-            };
+        await (new Token({ user: user._id,token: bearerToken })).register();
 
-            let templateId = templates.template_id;
-            let listIds = templates.contactlist_Id;
-            try {
-                await sendinBlueClient.createContact(email, attributes, [listIds]);
-            } catch (e) {
-                await sendinBlueClient.updateContact(email, attributes);
-            }
-            await sendinBlueClient.sendTemplate(templateId, [email]);
-        }
-        return {};
+        let attributes = {
+            YOURNAME: name,
+            TOKEN: bearerToken,
+            USER: user_id,
+            URL: `${url}password/reset?token=${bearerToken}&userId=${user_id}`
+        };
+
+        new Mailer().sendEmail({app_id : app_id, user, action : 'USER_RESET_PASSWORD', attributes});
+        return true;
     },
     __register: async (params) => {
         try {
@@ -500,30 +444,9 @@ const progressActions = {
             /* Add to App */
             await AppRepository.prototype.addUser(params.app_id, user);
 
-            user = await UsersRepository.prototype.findUserById(user._id);
-
-            let send = await MailSenderRepository.prototype.findApiKeyByAppId(params.app_id);
-            try{
-                if (send.apiKey != null && send.apiKey != undefined) {
-                    let templates = send.templateIds.find((t) => { return t.functionName == "USER_REGISTER" });
-                    let apiKey = await MailSenderRepository.prototype.unhashedApiKey(params.app_id);
-                    /* Create SendinBlue Client */
-                    var sendinBlueClient = new SendInBlue({key : apiKey});
-                    let attributes = {
-                        YOURNAME: user.name
-                    };
-                    let templateId = templates.template_id;
-                    let listIds = templates.contactlist_Id;
-                    try {
-                        await sendinBlueClient.createContact(user.email, attributes, [listIds]);
-                    } catch (e) {
-                        await sendinBlueClient.updateContact(user.email, attributes);
-                    }
-                    await sendinBlueClient.sendTemplate(templateId, [user.email]);
-                }
-            }catch(err){
-                Logger.error(err);
-            }
+            /* Send Email */
+            new Mailer().sendEmail({app_id : params.app.id, user, action : 'USER_REGISTER'});
+            user = await __private.db.findUserById(user._id);
             return user;
         } catch (err) {
             throw err;
@@ -600,7 +523,6 @@ const progressActions = {
                 message: `Deposited ${params.amount} ${params.wallet.currency.ticker} in your account`,
                 eventType: 'DEPOSIT'
             })
-            console.log("done")
             return params;
         } catch (err) {
             throw err;
@@ -679,7 +601,7 @@ class UserLogic extends LogicComponent {
                     return await library.process.__set2FA(params);
                 };
                 case 'Register': {
-                    return library.process.__register(params); break;
+                    return await library.process.__register(params); break;
                 };
                 case 'Summary': {
                     return await library.process.__summary(params); break;

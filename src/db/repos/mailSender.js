@@ -49,13 +49,6 @@ class MailSenderRepository extends MongoComponent{
         });
     }
 
-    unhashedApiKey(app_id){ 
-        return new Promise( async (resolve, reject) => {
-            let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(app_id)
-            resolve(await Security.prototype.decryptData(mailSender.apiKey));
-        });
-    }
-
     findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
             MailSenderRepository.prototype.schema.model.findByIdAndUpdate(
