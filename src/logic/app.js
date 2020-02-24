@@ -22,6 +22,7 @@ import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
+import { PUSHER_APP_KEY } from '../config';
 let error = new ErrorManager();
 
 
@@ -396,9 +397,17 @@ const progressActions = {
     },
     __get : async (params) => {
         let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
+        /* Add Decrypted API Key */
         if ((apiKeyEncrypted != null) && (apiKeyEncrypted != undefined)){
             params._doc.integrations.mailSender.apiKey = await Security.prototype.decryptData(apiKeyEncrypted)
+        };
+        /* Add Pusher API Key */
+        if(PUSHER_APP_KEY){
+            params._doc.integrations.pusher = {
+                key : PUSHER_APP_KEY
+            }
         }
+        
 		return params;
     },
     __getGames : async (params) => {
