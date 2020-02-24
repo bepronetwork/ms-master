@@ -725,6 +725,9 @@ const progressActions = {
         await TopIconRepository.prototype.findByIdAndUpdate(app.customization.topIcon._id, {
             id : topIconURL
         })
+
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        
         // Save info on Customization Part
         return params;
     },
