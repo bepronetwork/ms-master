@@ -61,7 +61,7 @@ class HerokuClient{
             await this.addENVToApp({
                 app,
                 env : {
-                    "NODE_ENV" : ENV,
+                    "NODE_ENV" : 'development',
                     "NODE_OPTIONS" : '--max-old-space-size=4596',
                     "NODE_PATH" : 'src/',
                     "REACT_APP_API_MASTER" : MS_MASTER_URL,
