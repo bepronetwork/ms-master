@@ -306,6 +306,20 @@ class App extends ModelComponent{
         }
     }
 
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async editMailSenderIntegration(){
+        try{
+            return await this.process('EditMailSenderIntegration');
+        }catch(err){
+            throw err;
+        }
+    }
+
     /**
      * @param {String} 
      * @return {bool || Exception}  
@@ -368,6 +382,32 @@ class App extends ModelComponent{
     async editFooter(){
         try{
             return await this.process('EditFooter');
+        }catch(err){
+            throw err;
+        }
+    }
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTopIcon(){
+        try{
+            return await this.process('EditTopIcon');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editLoadingGif(){
+        try{
+            return await this.process('EditLoadingGif');
         }catch(err){
             throw err;
         }

@@ -97,7 +97,6 @@ class ErrorManager {
                 };
                 case 'UpdateWallet': {
                     // Verify deposit not overflow
-                    console.log(`${parseFloat(object.maxDeposit)} > ${parseFloat(object.amount)}`);
                     if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
                     }
@@ -488,6 +487,16 @@ class ErrorManager {
             throw err
         }
     }
+
+    mailSender = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
     
     affiliate = function (object, type){
         try{
@@ -533,6 +542,37 @@ class ErrorManager {
     }
 
     logo = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    topIcon = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    token = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    loadingGif = function (object, type){
         try{
             switch(type){
                

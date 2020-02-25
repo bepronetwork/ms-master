@@ -12,6 +12,8 @@ CustomizationSchema.prototype.schema =  {
     logo        : { type : mongoose.Schema.Types.ObjectId, ref: 'Logo', required : true },
     colors      : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Color', required : true }],
     footer      : { type : mongoose.Schema.Types.ObjectId, ref: 'Footer', required : true },
+    topIcon     : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },
+    loadingGif  : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
 }
 
 

@@ -66,7 +66,7 @@ var BOILERPLATES = {
         NORMAL_REGISTER                                 : user_register,
         GENERATE_DEPOSIT_ADDRESS_BTC_EXISTING_USER      : genData(faker, mergeData(models.deposits.normal_btc_generateAddress, user_register)),
         GENERATE_DEPOSIT_ADDRESS_BTC_NEW_USER           : genData(faker, models.deposits.normal_btc_generateAddress),
-        NORMAL_LOGIN_USER                               : Object.assign({},{ username : user_register.username, password : user_register.password, app: user_register.app, bearerToken: {}}),
+        NORMAL_LOGIN_USER                               : Object.assign({},{ email : user_register.email, username : user_register.username, password : user_register.password, app: user_register.app, bearerToken: {}}),
         WRONG_PASS_LOGIN_USER                           : Object.assign({},{ username : user_register.username, password : 'null', app: user_register.app}),
         UNKNOWN_USER_LOGIN                              : genData(faker, models.users.user_unknown_login)
     },
@@ -76,7 +76,7 @@ var BOILERPLATES = {
         NORMAL_REGISTER_3                               : admin_register_3,
         NORMAL_REGISTER_4                               : admin_register_4,
         NORMAL_REGISTER_5                               : admin_register_5,
-        NORMAL_LOGIN_USER                               : Object.assign({},{ username : admin_register.username, password : admin_register.password}),
+        NORMAL_LOGIN_USER                               : Object.assign({},{  email : admin_register.email, username : admin_register.username, password : admin_register.password}),
         NORMAL_LOGIN_USER_2                             : Object.assign({},{ username : admin_register_2.username, password : admin_register_2.password}),
         NORMAL_LOGIN_USER_3                             : Object.assign({},{ username : admin_register_3.username, password : admin_register_3.password}),
         NORMAL_LOGIN_USER_4                             : Object.assign({},{ username : admin_register_4.username, password : admin_register_4.password}),

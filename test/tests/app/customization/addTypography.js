@@ -1,7 +1,6 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
-import { editTypographyApp, getAppAuth } from '../../../methods';
-import { get_app } from '../../../models/apps';
+import { editTypographyApp } from '../../../methods';
 const expect = chai.expect;
 
 context('Edit Typography', async () => {

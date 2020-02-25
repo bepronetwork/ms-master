@@ -24,6 +24,7 @@ import {
 } from '../../output/AppTestMethod';
 import { mochaAsync, genData, detectValidationErrors } from '../../../utils';
 import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
+import { SendinBlueSingleton } from '../../../../src/logic/third-parties/sendInBlue';
 
 const expect = chai.expect;
 
@@ -48,7 +49,7 @@ context('Normal', async () =>  {
             const attributes = {
                 NAME: faker.name.firstName()
             };
-            await SendInBlue.prototype.updateContact(email, attributes);
+            await SendinBlueSingleton.updateContact(email, attributes);
         } catch (err) {
             console.log(err)
         }
@@ -60,7 +61,7 @@ context('Normal', async () =>  {
             const attributes = {
                 NAME: faker.name.firstName()
             };
-            await SendInBlue.prototype.updateContact(email, attributes);
+            await SendinBlueSingleton.updateContact(email, attributes);
         } catch (err) {
             expect(err.status).to.equal(404);
         }

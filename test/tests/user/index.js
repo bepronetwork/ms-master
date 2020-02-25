@@ -1,5 +1,7 @@
 context('User', async () => {
     require('./login');
+    require('./resetPassword');
+    require('./pushNotifications');
     require('./ping');
     require('./deposit');
     require('./affiliates');

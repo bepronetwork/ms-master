@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
@@ -18,9 +18,11 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
-import { SendInBlue } from './third-parties';
+import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
+import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
+import { PUSHER_APP_KEY } from '../config';
 let error = new ErrorManager();
 
 
@@ -269,6 +271,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editMailSenderIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return params;
+    },
     __editTopBar : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
@@ -314,6 +322,24 @@ const processActions = {
             app
         };
     },
+    __editTopIcon : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editLoadingGif : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
@@ -350,8 +376,8 @@ const progressActions = {
             APP: app._id
         };
         let templateId = mail.registerApp.templateId;
-        await SendInBlue.prototype.updateContact(email, attributes);
-        await SendInBlue.prototype.sendTemplate(templateId, [email]);
+        await SendinBlueSingleton.updateContact(email, attributes);
+        await SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
 	},
 	__summary : async (params) => {
@@ -370,8 +396,19 @@ const progressActions = {
         return true;
     },
     __get : async (params) => {
-        let res = params;
-		return res;
+        let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
+        /* Add Decrypted API Key */
+        if ((apiKeyEncrypted != null) && (apiKeyEncrypted != undefined)){
+            params._doc.integrations.mailSender.apiKey = await Security.prototype.decryptData(apiKeyEncrypted)
+        };
+        /* Add Pusher API Key */
+        if(PUSHER_APP_KEY){
+            params._doc.integrations.pusher = {
+                key : PUSHER_APP_KEY
+            }
+        }
+        
+		return params;
     },
     __getGames : async (params) => {
         let res = params;
@@ -568,6 +605,31 @@ const progressActions = {
         }
         return params;
     },
+    __editMailSenderIntegration : async (params) => {
+        let { apiKey, templateIds } = params;
+        let encryptedAPIKey = await Security.prototype.encryptData(apiKey);
+        let mailSender = await MailSenderRepository.prototype.findApiKeyByAppId(params.app);
+        let sendinBlueClient = new SendInBlue({key : apiKey});
+
+        /* Test functioning of Client */
+        await sendinBlueClient.getContacts();
+
+        if(!mailSender){ throwError();}
+
+        await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
+            apiKey : encryptedAPIKey,
+            templateIds
+        });
+        
+        for (let attribute of SendInBlueAttributes){
+            await sendinBlueClient.createAttribute(attribute).catch((e)=>{
+                if(e.response.body.message !== "Attribute name must be unique") {
+                    // throwError();
+                }
+            });
+        }
+        return params;
+    },
     __editTopBar  : async (params) => {
         let { app, backgroundColor, textColor, text, isActive } = params;
         const { topBar } = app.customization;
@@ -646,6 +708,43 @@ const progressActions = {
             supportLinks : supportLinkIDs,
         })
 
+        // Save info on Customization Part
+        return params;
+    },
+    __editTopIcon : async (params) => {
+        let { app, topIcon } = params;
+        let topIconURL;
+        if(topIcon.includes("https")){
+            /* If it is a link already */
+            topIconURL = topIcon;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            topIconURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topIcon});
+        }
+
+        await TopIconRepository.prototype.findByIdAndUpdate(app.customization.topIcon._id, {
+            id : topIconURL
+        })
+
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        
+        // Save info on Customization Part
+        return params;
+    },
+    __editLoadingGif : async (params) => {
+        let { app, loadingGif } = params;
+        let loadingGifURL;
+        if(loadingGif.includes("https")){
+            /* If it is a link already */
+            loadingGifURL = loadingGif;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            loadingGifURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : loadingGif});
+        }
+
+        await LoadingGifRepository.prototype.findByIdAndUpdate(app.customization.loadingGif._id, {
+            id : loadingGifURL
+        })
         // Save info on Customization Part
         return params;
     },
@@ -769,6 +868,9 @@ class AppLogic extends LogicComponent{
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
+                case 'EditMailSenderIntegration' : {
+                    return await library.process.__editMailSenderIntegration(params); break;
+                };
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
                 };
@@ -786,6 +888,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditColors' : {
                     return await library.process.__editColors(params); break;
+                };
+                case 'EditTopIcon' : {
+                    return await library.process.__editTopIcon(params); break;
+                };
+                case 'EditLoadingGif' : {
+                    return await library.process.__editLoadingGif(params); break;
                 };
                 case 'EditTypography': {
                     return await library.process.__editTypography(params); break;
@@ -876,6 +984,9 @@ class AppLogic extends LogicComponent{
                 case 'EditIntegration' : {
                     return await library.progress.__editIntegration(params); break;
                 };
+                case 'EditMailSenderIntegration' : {
+                    return await library.progress.__editMailSenderIntegration(params); break;
+                };
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;
                 };
@@ -890,6 +1001,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditFooter' : {
                     return await library.progress.__editFooter(params); break;
+                };
+                case 'EditTopIcon' : {
+                    return await library.progress.__editTopIcon(params); break;
+                };
+                case 'EditLoadingGif' : {
+                    return await library.progress.__editLoadingGif(params); break;
                 };
                 case 'EditTypography': {
                     return await library.progress.__editTypography(params); break;

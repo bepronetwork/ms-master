@@ -1,64 +1,115 @@
-var SibApiV3Sdk = require('sib-api-v3-sdk');
-
-var defaultClient = SibApiV3Sdk.ApiClient.instance;
-
-// Configure API key authorization: api-key
-var apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = process.env.SENDINBLUE_API_KEY
-
-// Configure API key authorization: partner-key
-var partnerKey = defaultClient.authentications['partner-key'];
-partnerKey.apiKey = process.env.SENDINBLUE_API_KEY
-
+import { SENDINBLUE_API_KEY } from '../../../config';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 
 class SendInBlue {
 
-    constructor() {
+    constructor({key}) {
+        this.key = key;
 
+        this.contactsAPI = new SibApiV3Sdk.ContactsApi();
+        this.smtpAPI = new SibApiV3Sdk.SMTPApi();
+
+        this.setAPI();
     }
+
+    setAPI = () => {
+        this.__getInstanceWithKeysToInstanceType(this.key);
+    }
+
+    __getInstanceWithKeysToInstanceType(key){
+        this.contactsAPI.apiClient.authentications['partner-key'].apiKey = key;
+        this.smtpAPI.apiClient.authentications['api-key'].apiKey = key;
+    }
+
+    async createFolder(name) {
+        this.setAPI();
+        // let name = "Test Folder"
+        let createFolder = { name };
+        const data = await this.contactsAPI.createFolder(createFolder);
+        return data;
+    }
+
+    async getFolders() {
+        this.setAPI();
+        let limit = 10;
+        let offset = 0;
+        const data = await this.contactsAPI.getFolders(limit, offset);
+        return data;
+    }
+
+    async createList() {
+        this.setAPI();
+        let name = "Test List";
+        let folderId = 3;
+        let createList = { name, folderId };
+        const data = await this.contactsAPI.createList(createList);
+        return data;
+    }
+
+    async getLists() {
+        this.setAPI();
+        const data = await this.contactsAPI.getLists();
+        return data;
+    }
+
+    async createAttribute(attributeName) {
+        this.setAPI();
+        let attributeCategory = "normal";
+        // let attributeName = "TOKEN";
+        let type = "text";
+        let createAttribute = { type };
+        const data = await this.contactsAPI.createAttribute(attributeCategory, attributeName, createAttribute);
+        return data;
+    }
+
     async createContact(email, attributes, listIds) {
+        this.setAPI();
         // email       => string with email to create
         // attributes  => object with the attributes what you desire to pass
         // listIds     => array of listIds that this contact will belong
-        const apiInstance = new SibApiV3Sdk.ContactsApi();
         const createContact = { email, attributes, listIds };
-        const data = await apiInstance.createContact(createContact);
+        const data = await this.contactsAPI.createContact(createContact);
         return data;
     }
 
     async updateContact(email, attributes) {
+        this.setAPI();
         // email => email what you desire to update
         // attributes => parameters what you desire to update
-        const apiInstance = new SibApiV3Sdk.ContactsApi();
         const updateContact = { attributes }
-        const data = await apiInstance.updateContact(email, updateContact);
+        const data = await this.contactsAPI.updateContact(email, updateContact);
         return data;
     }
 
     async getAtributes() {
-        const apiInstance = new SibApiV3Sdk.ContactsApi();
-        const data = await apiInstance.getAttributes();
+        this.setAPI();
+        const data = await this.contactsAPI.getAttributes();
         return data;
     }
 
     async getContacts() {
-        const apiInstance = new SibApiV3Sdk.ContactsApi();
-        const data = await apiInstance.getContacts();
+        this.setAPI();
+        const data = await this.contactsAPI.getContacts();
         return data;
     }
 
-    async getSmtpTemplates(){
-        const apiInstance = new SibApiV3Sdk.SMTPApi();
-        const data = await apiInstance.getSmtpTemplates();
-        return console.log(data);
+    async getSmtpTemplates() {
+        this.setAPI();
+        const data = await this.smtpAPI.getSmtpTemplates();
+        return data;
     }
 
     async sendTemplate(templateId, emailTo) {
-        const apiInstance = new SibApiV3Sdk.SMTPApi();
-        const sendEmail = {emailTo};
-        const data = await apiInstance.sendTemplate(templateId, sendEmail);
+        this.setAPI();
+        const sendEmail = { emailTo };
+        const data = await this.smtpAPI.sendTemplate(templateId, sendEmail);
         return data;
     }
 }
 
-export default SendInBlue;
+let SendinBlueSingleton = new SendInBlue({key : SENDINBLUE_API_KEY});
+
+export {
+    SendinBlueSingleton, // Default for the APp Itself
+    SendInBlue
+}

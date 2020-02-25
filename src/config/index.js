@@ -43,13 +43,21 @@ export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
 
 export const GITHUB_LAYOUT_REPO = process.env.GITHUB_LAYOUT_REPO;
 
-export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
-
 export const BITGO_ACCESS_TOKEN = process.env.BITGO_KEY;
 
 export const BITGO_ENTERPRISE_ID = process.env.BITGO_ENTERPRISE_ID;
 
 export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
+
+export const SENDINBLUE_EMAIL_TO = process.env.SENDINBLUE_EMAIL_TO;
+
+export const PUSHER_APP_ID = process.env.PUSHER_APP_ID;
+
+export const PUSHER_APP_KEY = process.env.PUSHER_APP_KEY;
+
+export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
+
+export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
 
 /* Variables */
 

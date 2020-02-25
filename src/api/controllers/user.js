@@ -3,6 +3,7 @@ import {
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
+import PusherSingleton from '../../logic/third-parties/pusher';
 
 /**
  * Description of the function.
@@ -36,6 +37,30 @@ async function loginUser (req, res) {
         user = new User(data);
         let bearerToken  = await user.createAPIToken();
         MiddlewareSingleton.respond(res, {...data, bearerToken});
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function setPassword(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "global", req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.setPassword();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function resetPassword(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "global", req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.resetPassword();
+        MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -120,10 +145,43 @@ async function getBets (req, res) {
 
 async function getDepositAddress(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function pusherNotificationsAuth(req, res) {
+    try{        
+        let params = req.body;
+
+        let data = PusherSingleton.authenticate({
+            socketId : params.socket_id,
+            channel : params.channel_name
+        });
+
+        res.send(data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function pingPushNotifications(req, res) {
+    try{  
+        let params = req.body;
+        let isPrivate = params.user ? true : false;
+
+        let data = PusherSingleton.trigger({
+            channel_name : isPrivate ? params.user : 'general', 
+            isPrivate,
+            message : "Ping", 
+            eventType : "PING"
+        });
+
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -136,9 +194,13 @@ export {
     loginUser,
     getUserInfo,
     userSummary,
+    pusherNotificationsAuth,
+    pingPushNotifications,
     getBets,
     setUser2FA,
     loginUser2FA,
     getDepositAddress,
-    authUser
+    authUser,
+    resetPassword,
+    setPassword
 }

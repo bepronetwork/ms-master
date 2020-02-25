@@ -102,6 +102,38 @@ class CustomizationRepository extends MongoComponent{
         });
     }
 
+    setTopIconId(_id, topIcon_id){
+        return new Promise( (resolve,reject) => {
+            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $set: { 
+                    "topIcon" : topIcon_id,
+                } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    setLoadingGifId(_id, loadingGif_id){
+        return new Promise( (resolve,reject) => {
+            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $set: { 
+                    "loadingGif" : loadingGif_id,
+                } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 }
 
 CustomizationRepository.prototype.schema = new CustomizationSchema();

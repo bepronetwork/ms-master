@@ -39,8 +39,22 @@ class UsersRepository extends MongoComponent{
     setModel = (user) => {
         return UsersRepository.prototype.schema.model(user)
     }
-    
-    async findUserById(_id){ 
+
+    updateUser({id, param}) {
+        return new Promise( async (resolve,reject) => {
+            UserSchema.prototype.model.findByIdAndUpdate(
+                id,
+                { $set : param },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    async findUserById(_id){
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findById(_id)
@@ -87,7 +101,10 @@ class UsersRepository extends MongoComponent{
 
     findUser(username){
         return new Promise( (resolve, reject) => {
-            UsersRepository.prototype.schema.model.findOne({'username' : new String(username).toLowerCase().trim()})
+            UsersRepository.prototype.schema.model.findOne({$or: [
+                {"username": username},
+                {"email": username}
+            ]})
             .populate(populate_user)
             .lean()
             .exec( (err, user) => {

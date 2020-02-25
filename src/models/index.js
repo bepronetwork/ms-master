@@ -27,6 +27,10 @@ import Link from './link';
 import Typography from './typography';
 import Currency from './currency';
 import Address from './address';
+import TopIcon from './topIcon';
+import Token from './token';
+import MailSender from './mailSender';
+import LoadingGif from "./loadingGif";
 
 export {
     User,
@@ -57,5 +61,9 @@ export {
     Ecosystem,
     Withdraw,
     Admin,
-    Typography
+    Typography,
+    TopIcon,
+    Token,
+    MailSender,
+    LoadingGif
 }
