@@ -399,7 +399,7 @@ const progressActions = {
 
         let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000))).getTime());
 
-        await (new Token({ user: user._id,token: bearerToken })).register();
+        await (new Token({ user: user._id, token: bearerToken })).register();
 
         let attributes = {
             YOURNAME: name,
@@ -407,7 +407,7 @@ const progressActions = {
             USER: user_id,
             URL: `${url}password/reset?token=${bearerToken}&userId=${user_id}`
         };
-
+        console.log("attributes", attributes);
         new Mailer().sendEmail({app_id : app_id, user, action : 'USER_RESET_PASSWORD', attributes});
         return true;
     },
