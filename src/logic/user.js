@@ -407,7 +407,6 @@ const progressActions = {
             USER: user_id,
             URL: `${url}password/reset?token=${bearerToken}&userId=${user_id}`
         };
-        console.log("attributes", attributes);
         new Mailer().sendEmail({app_id : app_id, user, action : 'USER_RESET_PASSWORD', attributes});
         return true;
     },

@@ -30,7 +30,7 @@ let __private = {};
 const processActions = {
 	__register : (params) => {
 		let normalized = {
-            playBalance : 0.00001, // Test Balance
+            playBalance : 0, // Test Balance
             currency : params.currency,
             bitgo_id : params.bitgo_id,
             bank_address : params.bank_address,
