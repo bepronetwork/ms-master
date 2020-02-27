@@ -1113,6 +1113,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/games/editImage:
+    x-swagger-router-controller: game
+    post:
+      tags:
+      - app
+      summary: Edit Game Image
+      operationId: editGameEdge
+      description: Change Game Image
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGameEditImage'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/integrations/edit:
     x-swagger-router-controller: app
     post:
@@ -2069,6 +2100,29 @@ definitions:
         example: 3245
         description: |
           New Edge
+  AppGameEditImage : 
+    type: object
+    required:
+      - app
+      - game
+      - image
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      game:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Game id
+      image:
+        type : string
+        example: 876348bct3t2rc2t34
+        description : image blob or link
   AppAddCurrencyWallet : 
     type: object
     required:

@@ -31,9 +31,22 @@ async function editGameEdge(req, res) {
 	}
 }
 
+async function editGameImage(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'app', req});
+        await MiddlewareSingleton.log({type: "app", req});
+        let params = req.body;
+		let app = new App(params);
+        let data = await app.editGameImage();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
 
 
 export {
     editGameTableLimit,
-    editGameEdge
+    editGameEdge,
+    editGameImage
 };
