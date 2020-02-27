@@ -324,7 +324,7 @@ const processActions = {
                 amount: amount,
                 isValid
             }
-            console.log("res:: ",res)
+
             return res;
         } catch (err) {
             throw err;
@@ -503,7 +503,7 @@ const progressActions = {
                 currency: params.wallet.currency._id,
                 amount: params.amount,
             })
-            console.log("deposit:: ",deposit)
+
             /* Save Deposit Data */
             let depositSaveObject = await deposit.createDeposit();
 
@@ -511,8 +511,7 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
 
             /* Add Deposit to user */
-            let addDeposit = await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-            console.log("addDeposit:: ",addDeposit)
+            await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
@@ -520,7 +519,11 @@ const progressActions = {
                 message: `Deposited ${params.amount} ${params.wallet.currency.ticker} in your account`,
                 eventType: 'DEPOSIT'
             })
-            console.log("Deposit Params",params)
+            /* Send Email */
+            let attributes = {
+                TEXT: `There is a deposit of ${params.amount} ${params.wallet.currency.ticker} in your account`
+            };
+            new Mailer().sendEmail({app_id : params.app.id, user, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
         } catch (err) {
             throw err;
