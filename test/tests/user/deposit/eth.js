@@ -28,7 +28,7 @@ context(`${ticker}`, async () => {
 
     it('should update wallet with deposit (webhook)', mochaAsync(async () => {
         // Wait for Wallet Init
-        let body = bitgoDepositExample();
+        let body = bitgoDepositExampleMaxDeposit();
         await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
         // Waiting 100 seconds for the address to be get intializaed
         let res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});

@@ -493,9 +493,9 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         console.log(params);
-        console.log(1)
+        console.log("fora")
         try {
-            console.log(2)
+            console.log("dentro do try")
             /* Create Deposit Object */
             let deposit = new Deposit({
                 user: params.user_id,
