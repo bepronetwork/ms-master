@@ -283,6 +283,7 @@ const processActions = {
     __updateWallet: async (params) => {
         try {
             var { currency, id, wBT } = params;
+            console.log("PARAMSSSS::: ",params)
 
             var app = await AppRepository.prototype.findAppById(id);
             if (!app) { throwError('APP_NOT_EXISTENT') }
@@ -305,6 +306,7 @@ const processActions = {
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+            console.log("DEPOSIT::: ",deposit)
 
             let wasAlreadyAdded = deposit ? true : false;
 
@@ -326,7 +328,7 @@ const processActions = {
                 amount: amount,
                 isValid
             }
-
+            console.log("RESS::: ",res)
             return res;
         } catch (err) {
             throw err;
