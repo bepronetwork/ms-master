@@ -492,10 +492,7 @@ const progressActions = {
 
     },
     __updateWallet: async (params) => {
-        console.log(params);
-        console.log("fora")
         try {
-            console.log("dentro do try")
             /* Create Deposit Object */
             let deposit = new Deposit({
                 user: params.user_id,
@@ -529,7 +526,6 @@ const progressActions = {
             new Mailer().sendEmail({app_id : params.app.id, user : params.user_id, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
         } catch (err) {
-            console.log(err);
             throw err;
         }
     },
