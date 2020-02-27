@@ -324,6 +324,7 @@ const processActions = {
                 amount: amount,
                 isValid
             }
+            console.log("res:: ",res)
             return res;
         } catch (err) {
             throw err;
@@ -502,7 +503,7 @@ const progressActions = {
                 currency: params.wallet.currency._id,
                 amount: params.amount,
             })
-
+            console.log("deposit:: ",deposit)
             /* Save Deposit Data */
             let depositSaveObject = await deposit.createDeposit();
 
