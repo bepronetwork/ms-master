@@ -300,23 +300,11 @@ const processActions = {
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-            console.log()
-            console.log("Wallet:: ", wallet)
-            console.log()
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
-
-            console.log()
-            console.log("WalletCCC:: ", wallet.currency)
-            console.log()
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
-
             let wasAlreadyAdded = deposit ? true : false;
-
-            console.log()
-            console.log("DEPOSIT::: ",deposit)
-            console.log()
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
@@ -337,7 +325,7 @@ const processActions = {
                 isValid
             }
             console.log()
-            console.log("RESS::: ",res)
+            console.log("RESS::: ",res.user.deposit)
             console.log()
             return res;
         } catch (err) {
