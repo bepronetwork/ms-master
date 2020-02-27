@@ -282,8 +282,6 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
-            console.log("PARAMSSSS::: ",params)
-            console.log()
             var { currency, id, wBT } = params;
 
             var app = await AppRepository.prototype.findAppById(id);
@@ -293,9 +291,7 @@ const processActions = {
 
             /* Verify if the transactionHash was created */
             const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
-            console.log()
-            console.log("wBT:: ",wBT)
-            console.log()
+
             const from = entries[0].address;
             const to = entries[1].address;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
@@ -303,22 +299,24 @@ const processActions = {
             /* Get User Id */
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
-            console.log()
-            console.log("User::", user)
-            console.log()
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             console.log()
             console.log("Wallet:: ", wallet)
             console.log()
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
 
+            console.log()
+            console.log("WalletCCC:: ", wallet.currency)
+            console.log()
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+
+            let wasAlreadyAdded = deposit ? true : false;
+
             console.log()
             console.log("DEPOSIT::: ",deposit)
             console.log()
-            let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
