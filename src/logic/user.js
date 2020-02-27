@@ -282,8 +282,9 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
-            var { currency, id, wBT } = params;
             console.log("PARAMSSSS::: ",params)
+            console.log()
+            var { currency, id, wBT } = params;
 
             var app = await AppRepository.prototype.findAppById(id);
             if (!app) { throwError('APP_NOT_EXISTENT') }
@@ -292,7 +293,9 @@ const processActions = {
 
             /* Verify if the transactionHash was created */
             const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
-
+            console.log()
+            console.log("wBT:: ",wBT)
+            console.log()
             const from = entries[0].address;
             const to = entries[1].address;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
@@ -300,14 +303,21 @@ const processActions = {
             /* Get User Id */
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
+            console.log()
+            console.log("User::", user)
+            console.log()
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            console.log()
+            console.log("Wallet:: ", wallet)
+            console.log()
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
 
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+            console.log()
             console.log("DEPOSIT::: ",deposit)
-
+            console.log()
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
@@ -328,7 +338,9 @@ const processActions = {
                 amount: amount,
                 isValid
             }
+            console.log()
             console.log("RESS::: ",res)
+            console.log()
             return res;
         } catch (err) {
             throw err;
