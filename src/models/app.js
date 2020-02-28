@@ -283,6 +283,20 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
+     
+    async editGameImage(){
+        try {
+            return await this.process('EditGameImage');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
 
     async editAffiliateStructure(){
         try{

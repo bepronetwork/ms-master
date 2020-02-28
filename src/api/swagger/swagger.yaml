@@ -1119,7 +1119,7 @@ paths:
       tags:
       - app
       summary: Edit Game Image
-      operationId: editGameEdge
+      operationId: editGameImage
       description: Change Game Image
       consumes:
         - application/json
@@ -2105,7 +2105,7 @@ definitions:
     required:
       - app
       - game
-      - image
+      - image_url
     properties:
       app:
         type : string
@@ -2119,7 +2119,7 @@ definitions:
         example: "wertwertwertwert"
         description: |
           Game id
-      image:
+      image_url:
         type : string
         example: 876348bct3t2rc2t34
         description : image blob or link
