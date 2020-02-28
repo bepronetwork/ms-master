@@ -84,11 +84,6 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
         detectValidationErrors(res);
         const { status } = res.data;
         expect(status).to.be.equal(200);
-        let get_app_model = models.apps.get_app(app.id);
-        console.log("get_app_model:: ",get_app_model)
-        let games_res = await getGames(get_app_model, app.bearerToken, {id : app.id});
-        console.log("games_res:: ",games_res.data.message)
-        // let new_image = games_res.data.message[0].image_url;
     }));
 
 }); 

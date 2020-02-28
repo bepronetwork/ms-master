@@ -605,13 +605,15 @@ const progressActions = {
         }else{
             /* Does not have a Link and is a blob encoded64 */
             gameImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
+            image_url = gameImageURL
         }
-
-        await GamesRepository.prototype.editImage(game, {
-            image_url : gameImageURL
+        
+        let res = await GamesRepository.prototype.editImage({
+            id: game._id,
+            image_url
         })
         // Save info on Game
-        return params;
+        return res;
     },
     __editAffiliateStructure : async (params) => {
 

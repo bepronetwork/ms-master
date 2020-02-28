@@ -133,11 +133,11 @@ class GamesRepository extends MongoComponent{
         });
     }
 
-    editImage({id, image}){
+    editImage({id, image_url}){
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.findByIdAndUpdate(
                 id, 
-                { $set: { "image_url" : image } },
+                { $set: { "image_url" : image_url } },
                 { 'new': true })
                 .exec( (err, item) => {
                     if(err){reject(err)}
