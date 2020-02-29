@@ -22,7 +22,8 @@
     },
     "husky": {
         "hooks": {
-            "pre-push": "./scripts/pre-push-check.sh"
+            "pre-push": "./scripts/pre-push-check.sh",
+            "pre-merge-commit": "./scripts/pre-push-check.sh"
         }
     },
     "dependencies": {
