@@ -6,7 +6,7 @@ then
     # sudo npm install -g npx
     # sudo npm i docsify-cli -g
     # sudo npm run heroku-doc
-    # date > time.tm
+    date > time.tm
     git add .
     git commit -am 'update document'
 fi
