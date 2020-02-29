@@ -18,14 +18,13 @@
         "swagger": "swagger project edit",
         "generate-result-space": "node scripts/createResultSpace",
         "scripts": "babel-node scripts --nopresets es2015,stage-2",
-        "heroku-doc": "cd ./docs && git commit -am 'update document' && git push origin master"
+        "heroku-doc": "cd ./docs && date > time.tm && git commit -am 'update document' && git push origin master",
+        "run-doc": "md-docs && generate-docs && heroku-doc"
     },
     "pre-push": {
         "silent": true,
         "run": [
-            "md-docs",
-            "generate-docs",
-            "heroku-doc"
+            "run-doc"
         ]
     },
     "dependencies": {
