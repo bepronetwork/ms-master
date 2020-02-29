@@ -18,7 +18,7 @@
         "swagger": "swagger project edit",
         "generate-result-space": "node scripts/createResultSpace",
         "scripts": "babel-node scripts --nopresets es2015,stage-2",
-        "heroku-doc": "./docs git add ."
+        "heroku-doc": "sudo ./docs git add ."
     },
     "pre-push": [
         "md-docs",
