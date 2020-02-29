@@ -1,7 +1,12 @@
 set -e
 
 branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
-if [ "$branch" == "master" ]
+if [ "$branch" == "issue-81" ]
 then
+    npm install -g npx
+    npm i docsify-cli -g
     npm run heroku-doc
+    date > time.tm
+    git add .
+    git commit -am 'update document'
 fi
