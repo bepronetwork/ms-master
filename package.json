@@ -18,14 +18,13 @@
         "swagger": "swagger project edit",
         "generate-result-space": "node scripts/createResultSpace",
         "scripts": "babel-node scripts --nopresets es2015,stage-2",
-        "heroku-doc": "cd ./docs && date > time.tm && git commit -am 'update document' && git push origin master",
-        "run-doc": "npm run md-docs && npm run generate-docs && npm run heroku-doc"
+        "heroku-doc": "cd ./docs && date > time.tm && git add . && git commit -am 'update document' && git push origin master",
+        "run-doc": "npm run md-docs && npm run generate-docs"
     },
-    "pre-push": {
-        "silent": true,
-        "run": [
-            "run-doc"
-        ]
+    "husky": {
+        "hooks": {
+            "pre-push": "./scripts/pre-push-check.sh"
+        }
     },
     "dependencies": {
         "@google-cloud/storage": "^4.1.0",
@@ -140,7 +139,7 @@
         "babel-plugin-transform-runtime": "^6.23.0",
         "babel-preset-env": "^1.6.1",
         "babel-register": "^6.26.0",
-        "pre-push": "^0.1.1",
+        "husky": "^4.2.3",
         "should": "^7.1.0",
         "supertest": "^4.0.2",
         "webpack": "^4.29.0"
