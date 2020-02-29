@@ -20,11 +20,14 @@
         "scripts": "babel-node scripts --nopresets es2015,stage-2",
         "heroku-doc": "cd ./docs && git add . && git commit -am 'update document' && git push origin master"
     },
-    "pre-push": [
-        "md-docs",
-        "generate-docs",
-        "heroku-doc"
-    ],
+    "pre-push": {
+        "silent": true,
+        "run": [
+            "md-docs",
+            "generate-docs",
+            "heroku-doc"
+        ]
+    },
     "dependencies": {
         "@google-cloud/storage": "^4.1.0",
         "abi-decoder": "^1.2.0",
