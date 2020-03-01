@@ -4,9 +4,10 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { WalletsRepository, UsersRepository, AppRepository } from '../db/repos';
+import { WalletsRepository, UsersRepository, AppRepository, CurrencyRepository } from '../db/repos';
 import DepositsRepository from '../db/repos/deposit';
 import { throwError } from '../controllers/Errors/ErrorManager';
+import { setLinkUrl } from '../helpers/linkUrl';
 let error = new ErrorManager();
 
 
@@ -28,14 +29,26 @@ let __private = {};
 
   
 const processActions = {
-	__register : (params) => {
+	__register : async (params) => {
+		try {
+			let currency = await CurrencyRepository.prototype.findById(params.currency);
+			let ticker = currency.ticker
+			let address = params.bank_address
+			if((ticker == (null && undefined)) || (address == (null && undefined))){
+				throwError();
+			}
+			var link_url = setLinkUrl({ticker, address});
+		} catch (err) {
+			
+		}
 		let normalized = {
             playBalance : 0, // Test Balance
             currency : params.currency,
             bitgo_id : params.bitgo_id,
             bank_address : params.bank_address,
-            hashed_passphrase : params.hashed_passphrase
-        }
+			hashed_passphrase : params.hashed_passphrase,
+			link_url : link_url
+		}
 		return normalized;
 	},
 	__confirmDeposit : async (params) => {
