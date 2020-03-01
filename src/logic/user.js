@@ -520,8 +520,9 @@ const progressActions = {
                 eventType: 'DEPOSIT'
             })
             /* Send Email */
+            let templateDeposit = template.find(a => {return a.functionName === "USER_TEXT_DEPOSIT_AND_WITHDRAW"})
             let attributes = {
-                TEXT: `There is a deposit of ${params.amount} ${params.wallet.currency.ticker} in your account`
+                TEXT: templateDeposit.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker})
             };
             new Mailer().sendEmail({app_id : params.app.id, user : params.user_id, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
