@@ -35,6 +35,7 @@ import PusherSingleton from './third-parties/pusher';
 import { SendInBlue } from './third-parties/sendInBlue';
 import { Logger } from '../helpers/logger';
 import Mailer from './services/mailer';
+import { template } from "./third-parties/sendInBlue/functions";
 
 let error = new ErrorManager();
 
