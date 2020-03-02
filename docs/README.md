@@ -1,6 +1,58 @@
 # BetProtocol API
 ## Version: 0.3.6
 
+### /ecosystem/all
+
+#### GET
+##### Summary:
+
+Register User Data
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /ecosystem/games/casino
+
+#### GET
+##### Summary:
+
+Register User Data
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/admins/add
+
+#### POST
+##### Summary:
+
+Register User Data
+
+##### Description:
+
+Search for matching accounts in the system.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| admin | body | Admin object to submit to the network | Yes | [AddAdminRequest](#addadminrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
 ### /admins/register
 
 #### POST
@@ -17,6 +69,30 @@ Search for matching accounts in the system.
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | admin | body | Admin object to submit to the network | Yes | [AdminRegisterRequest](#adminregisterrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /admins/auth
+
+#### POST
+##### Summary:
+
+Login User
+
+##### Description:
+
+Login Admin Data
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| admin | body | Admin object to submit to the network | Yes | [AuthAdminRequest](#authadminrequest) |
 
 ##### Responses
 
@@ -49,6 +125,126 @@ Login Admin Data
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
+### /admins/login/2fa
+
+#### POST
+##### Summary:
+
+Login User
+
+##### Description:
+
+Login Admin Data
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| admin | body | Admin object to submit to the network | Yes | [Admin2FALoginRequest](#admin2faloginrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /admins/2fa/set
+
+#### POST
+##### Summary:
+
+Setup 2fa
+
+##### Description:
+
+Search for matching accounts in the system.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| admin | body | Admin object to submit to the network | Yes | [AdminSet2FARequest](#adminset2farequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /deposit/max/set
+
+#### POST
+##### Summary:
+
+Set max deposit
+
+##### Description:
+
+Set max deposit Data
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| deposit | body | Set max deposit | Yes | [SetMaxDeposit](#setmaxdeposit) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /users/password/reset/ask
+
+#### POST
+##### Summary:
+
+Reset Password
+
+##### Description:
+
+reset password
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body | User object to submit to the network | Yes | [ResetPasswordRequest](#resetpasswordrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /users/password/reset/set
+
+#### POST
+##### Summary:
+
+Reset Password Set
+
+##### Description:
+
+reset password set
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body | User object to submit to the network | Yes | [setPasswordRequest](#setpasswordrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
 ### /users/register
 
 #### POST
@@ -65,6 +261,30 @@ Search for matching accounts in the system.
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | user | body | User object to submit to the network | Yes | [UserRegisterRequest](#userregisterrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /users/auth
+
+#### POST
+##### Summary:
+
+Login User
+
+##### Description:
+
+Login User Data
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body | User object to submit to the network | Yes | [AuthUserRequest](#authuserrequest) |
 
 ##### Responses
 
@@ -97,6 +317,78 @@ Login User Data
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
+### /users/login/2fa
+
+#### POST
+##### Summary:
+
+Login User
+
+##### Description:
+
+Login User Data
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body | User object to submit to the network | Yes | [User2FALoginRequest](#user2faloginrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /users/2fa/set
+
+#### POST
+##### Summary:
+
+Setup 2fa
+
+##### Description:
+
+Search for matching accounts in the system.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body | User object to submit to the network | Yes | [UserSet2FARequest](#userset2farequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /users/bets
+
+#### POST
+##### Summary:
+
+Get all Bets for the User
+
+##### Description:
+
+Get all Bets for the User
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body | User Information | Yes | [UserBetsRequest](#userbetsrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
 ### /users/summary
 
 #### POST
@@ -121,22 +413,18 @@ Get Summary Data for User
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /users/updateWallet
+### /users/pusher/auth
 
 #### POST
 ##### Summary:
 
-Update Wallet Amount for the User
-
-##### Description:
-
-Update Wallet Amount for the User
+Get Push Notifications Channel For user
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| user | body | User Information | Yes | [UpdateUserWalletRequest](#updateuserwalletrequest) |
+| user | body | User Information | Yes | [UserPusherNotificationsAuth](#userpushernotificationsauth) |
 
 ##### Responses
 
@@ -145,46 +433,18 @@ Update Wallet Amount for the User
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /users/finalizeWithdraw
+### /users/pusher/ping
 
 #### POST
 ##### Summary:
 
-Request for User Finalize Withdraw
-
-##### Description:
-
-Request Finalize Withdraw
+Get Push Notifications Channel For user
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| user | body | User Information | Yes | [UserFinalizeWithdrawRequest](#userfinalizewithdrawrequest) |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Success | [GeneralResponse](#generalresponse) |
-| default | Error | [ErrorResponse](#errorresponse) |
-
-### /users/requestWithdraw
-
-#### POST
-##### Summary:
-
-Request for User Withdraw
-
-##### Description:
-
-Update Wallet Amount for the User
-
-##### Parameters
-
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| user | body | User Information | Yes | [UserWithdrawRequest](#userwithdrawrequest) |
+| user | body | User Information | Yes | [UserPusherNotificationsAuth](#userpushernotificationsauth) |
 
 ##### Responses
 
@@ -241,6 +501,462 @@ Get Summary Data for App
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
+### /app/wallet/currency/add
+
+#### POST
+##### Summary:
+
+Add Currency Wallet
+
+##### Description:
+
+Add Currency Wallet
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppAddCurrencyWallet](#appaddcurrencywallet) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/games/editTableLimit
+
+#### POST
+##### Summary:
+
+Edit Table Limit
+
+##### Description:
+
+Change Table Limit
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppGameEditTableLimit](#appgameedittablelimit) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/affiliate/edit
+
+#### POST
+##### Summary:
+
+Edit Table Limit
+
+##### Description:
+
+Change Table Limit
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppEditAffiliateStructure](#appeditaffiliatestructure) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/affiliate/custom/add
+
+#### POST
+##### Summary:
+
+Creater Custom Affiliate 1st level
+
+##### Description:
+
+Change Table Limit
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppAffiliateCustomStructure](#appaffiliatecustomstructure) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/topBar
+
+#### POST
+##### Summary:
+
+Edit Top Bar Customization
+
+##### Description:
+
+Change Table Limit
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationTopBar](#appcustomizationtopbar) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/banners
+
+#### POST
+##### Summary:
+
+Edit Banner Information
+
+##### Description:
+
+Change Banners
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationBanners](#appcustomizationbanners) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/logo
+
+#### POST
+##### Summary:
+
+Edit Banner Information
+
+##### Description:
+
+Change Logo
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationLogo](#appcustomizationlogo) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/colors
+
+#### POST
+##### Summary:
+
+Edit Colors Information
+
+##### Description:
+
+Change Colors
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationColors](#appcustomizationcolors) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/footer
+
+#### POST
+##### Summary:
+
+Edit Colors Information
+
+##### Description:
+
+Change Footer
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationFooter](#appcustomizationfooter) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/topIcon
+
+#### POST
+##### Summary:
+
+Add Top Icon
+
+##### Description:
+
+Add Some Icons
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationTopIcon](#appcustomizationtopicon) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/customization/loadingGif
+
+#### POST
+##### Summary:
+
+Add Loading GIF
+
+##### Description:
+
+Add Some GIFs for loading page
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppCustomizationLoadingGif](#appcustomizationloadinggif) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/typography
+
+#### POST
+##### Summary:
+
+Edit Typography Information
+
+##### Description:
+
+Change Typography
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppTypographyRequest](#apptypographyrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/address/get
+
+#### POST
+##### Summary:
+
+Get Address Deposit for User
+
+##### Description:
+
+Change Footer
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppUserDepositAddressRequest](#appuserdepositaddressrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/deploy
+
+#### POST
+##### Summary:
+
+Deploy App
+
+##### Description:
+
+Deploy Application
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppDeploy](#appdeploy) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/games/editEdge
+
+#### POST
+##### Summary:
+
+Edit Table Limit
+
+##### Description:
+
+Change Table Limit
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppGameEditEdge](#appgameeditedge) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/games/editImage
+
+#### POST
+##### Summary:
+
+Edit Game Image
+
+##### Description:
+
+Change Game Image
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppGameEditImage](#appgameeditimage) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/integrations/edit
+
+#### POST
+##### Summary:
+
+Edit Integration
+
+##### Description:
+
+Change Integration Info
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppEditIntegration](#appeditintegration) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/integrations/mailSender/edit
+
+#### POST
+##### Summary:
+
+Edit Mail Sender Integration
+
+##### Description:
+
+Change Mail Sender API Key and templates
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppEditMailSenderIntegration](#appeditmailsenderintegration) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/get/auth
+
+#### POST
+##### Summary:
+
+Get Data for App
+
+##### Description:
+
+Get Summary Data for App
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppGetRequest](#appgetrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
 ### /app/get
 
 #### POST
@@ -257,6 +973,30 @@ Get Summary Data for App
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | app | body | App Information | Yes | [AppGetRequest](#appgetrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /admin/app/get
+
+#### POST
+##### Summary:
+
+Get Data for Admin
+
+##### Description:
+
+Get Summary Data for Admin
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| admin | body | App Information | Yes | [AdminGetRequest](#admingetrequest) |
 
 ##### Responses
 
@@ -289,22 +1029,18 @@ Get Summary Data for App
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /app/finalizeWithdraw
+### /app/user/get
 
 #### POST
 ##### Summary:
 
-Request for App Finalize Withdraw
-
-##### Description:
-
-Request Finalize Withdraw
+Get all User Info
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| app | body | App Information | Yes | [AppFinalizeWithdrawRequest](#appfinalizewithdrawrequest) |
+| bet | body | Game Information | Yes | [UserInfoGetRequest](#userinfogetrequest) |
 
 ##### Responses
 
@@ -313,22 +1049,22 @@ Request Finalize Withdraw
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /app/requestWithdraw
+### /app/users
 
 #### POST
 ##### Summary:
 
-Request for User Withdraw
+Get App Users
 
 ##### Description:
 
-Update Wallet Amount for the User
+Get All App Users
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| app | body | App Information | Yes | [AppRequestWithdrawRequest](#apprequestwithdrawrequest) |
+| user | body | User object to submit to the network | Yes | [AppUsersRequest](#appusersrequest) |
 
 ##### Responses
 
@@ -361,31 +1097,7 @@ Add Services to Company
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /app/paybearsecretkey/add
-
-#### POST
-##### Summary:
-
-Add Services to Company
-
-##### Description:
-
-Add Services to Company
-
-##### Parameters
-
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| app | body | App Information | Yes | [AppPaybearAPIKeyRequest](#apppaybearapikeyrequest) |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Success | [GeneralResponse](#generalresponse) |
-| default | Error | [ErrorResponse](#errorresponse) |
-
-### /app/updateWallet
+### /app/webhookBitgoDeposit
 
 #### POST
 ##### Summary:
@@ -400,7 +1112,7 @@ Update Wallet Amount for the App
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| app | body | App Information | Yes | [UpdateAppWalletRequest](#updateappwalletrequest) |
+| id | query |  | No | string |
 
 ##### Responses
 
@@ -409,22 +1121,22 @@ Update Wallet Amount for the App
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /app/api/createToken
+### /app/lastBets
 
 #### POST
 ##### Summary:
 
-Get Summary Data for App
+Get Lasts Bets for App
 
 ##### Description:
 
-Get Summary Data for App
+Get Lasts Bets for App
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| app | body | App Information | Yes | [AppTokenAPIRequest](#apptokenapirequest) |
+| app | body | App Information | Yes | [AppLastBetsRequest](#applastbetsrequest) |
 
 ##### Responses
 
@@ -433,22 +1145,70 @@ Get Summary Data for App
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /app/addBlockchainInformation
+### /app/biggestBetWinners
 
 #### POST
 ##### Summary:
 
-Add Blockchain Information into the Setup
+Get Lasts Bets for App
 
 ##### Description:
 
-Add Blockchain Information into the Setup
+Get Lasts Bets for App
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| app | body | App Information | Yes | [AppBlockchainInformationRequest](#appblockchaininformationrequest) |
+| app | body | App Information | Yes | [AppBiggestWinnersRequest](#appbiggestwinnersrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/biggestUserWinners
+
+#### POST
+##### Summary:
+
+Get Lasts Bets for App
+
+##### Description:
+
+Get Lasts Bets for App
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppBiggestWinnersRequest](#appbiggestwinnersrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
+### /app/popularNumbers
+
+#### POST
+##### Summary:
+
+Get Lasts Bets for App
+
+##### Description:
+
+Get Lasts Bets for App
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| app | body | App Information | Yes | [AppPopularNumbersRequest](#apppopularnumbersrequest) |
 
 ##### Responses
 
@@ -462,17 +1222,17 @@ Add Blockchain Information into the Setup
 #### POST
 ##### Summary:
 
-Create a Game in App Name
+Edit Table Limit
 
 ##### Description:
 
-Create a Game for the App defined
+Change Table Limit
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| game | body | Game Information | Yes | [GameCreationRequest](#gamecreationrequest) |
+| app | body | App Information | Yes | [AppAddGameRequest](#appaddgamerequest) |
 
 ##### Responses
 
@@ -529,6 +1289,30 @@ Place a Bet for User Selected
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
+### /app/games/bet/max
+
+#### POST
+##### Summary:
+
+Set Max of a Bet
+
+##### Description:
+
+Set a Max Value for a Bet
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| bet | body | Bet Information | Yes | [MaxBetRequest](#maxbetrequest) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | [GeneralResponse](#generalresponse) |
+| default | Error | [ErrorResponse](#errorresponse) |
+
 ### /app/games/get
 
 #### POST
@@ -553,95 +1337,22 @@ Get a Game Data
 | 200 | Success | [GeneralResponse](#generalresponse) |
 | default | Error | [ErrorResponse](#errorresponse) |
 
-### /app/deposit/generateReference
+### /ping/post
 
 #### POST
 ##### Summary:
 
-Create a Deposit Reference
+Test Ping
 
 ##### Description:
 
-Create a Deposit Reference for given CryptoCurrency
+Test Ping for post.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| deposit | body | Deposit Reference Information | Yes | [GenerateReferenceRequestApp](#generatereferencerequestapp) |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Success | [GeneralResponse](#generalresponse) |
-| default | Error | [ErrorResponse](#errorresponse) |
-
-### /users/deposit/generateReference
-
-#### POST
-##### Summary:
-
-Create a Deposit Reference
-
-##### Description:
-
-Create a Deposit Reference for given CryptoCurrency
-
-##### Parameters
-
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| deposit | body | Deposit Reference Information | Yes | [GenerateReferenceRequestUsers](#generatereferencerequestusers) |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Success | [GeneralResponse](#generalresponse) |
-| default | Error | [ErrorResponse](#errorresponse) |
-
-### /deposit/{id}/confirm
-
-#### POST
-##### Summary:
-
-Confirm Deposit Creatione
-
-##### Description:
-
-Confirm Deposit Creation for given Crypto / PayBear
-
-##### Parameters
-
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| id | path | Deposit Id Paybear Callback | Yes | string |
-| deposit | body | Deposit Reference Information | Yes | object |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Success | [GeneralResponse](#generalresponse) |
-| default | Error | [ErrorResponse](#errorresponse) |
-
-### /deposit/{id}/info
-
-#### POST
-##### Summary:
-
-Get info Deposit
-
-##### Description:
-
-Info Deposit Creation for given Crypto / PayBear
-
-##### Parameters
-
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| id | path | Deposit Id Paybear Callback | Yes | string |
+| ping | body | Ping Object for test | Yes | [PingPost](#pingpost) |
 
 ##### Responses
 
@@ -655,250 +1366,414 @@ Info Deposit Creation for given Crypto / PayBear
 ### Models
 
 
+#### SetMaxDeposit
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | ID app  | Yes |
+| wallet_id | string (name) | Unique identifier of the wallet  | Yes |
+| amount | number (number) | Max value for deposit  | Yes |
+
 #### AdminRegisterRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| username | string (username) | Unique identifier of the user, besides the ID
- | Yes |
-| name | string | User Real Name
- | Yes |
-| email | string | User Email
- | Yes |
-| password | string | Password Hashed
- | Yes |
+| username | string (username) | Unique identifier of the user, besides the ID  | Yes |
+| name | string | User Real Name  | Yes |
+| email | string | User Email  | Yes |
+| password | string | Password Hashed  | Yes |
+
+#### setPasswordRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| token | string (string) | token  | Yes |
+| password | string (string) | password  | Yes |
+| user_id | string (string) | user id  | Yes |
+
+#### ResetPasswordRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| username_or_email | string (string) | username or email  | Yes |
 
 #### UserRegisterRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| username | string (username) | Unique identifier of the user, besides the ID
- | Yes |
-| name | string (name) | User Real Name
- | Yes |
-| email | string (email) | User Email
- | Yes |
-| app | string | App Id
- | Yes |
-| address | string | User Address
- | Yes |
+| username | string (username) | Unique identifier of the user, besides the ID  | Yes |
+| name | string (name) | User Real Name  | Yes |
+| email | string (email) | User Email  | Yes |
+| affiliateLink | string |  | No |
+| app | string | App Id  | Yes |
+
+#### UserInfoGetRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| user | string | Unique identifier of the user, ID  | Yes |
+| app | string | Unique identifier of the user, ID  | Yes |
 
 #### AdminLoginRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| username | string (username) | Unique identifier of the user, besides the ID
- | Yes |
-| password | password | User Password Encrypted
- | Yes |
+| username | string (username) | Unique identifier of the user, besides the ID  | Yes |
+| password | password | User Password Encrypted  | Yes |
+
+#### AdminSet2FARequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| admin | string | Admin Id  | Yes |
+| 2fa_token | string | Token Prior to the set of 2FA  | Yes |
+| 2fa_secret | string | Secret Token 2FA  | Yes |
+
+#### Admin2FALoginRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| 2fa_token | string (username) | Token to Unlock Login Data  | Yes |
 
 #### UserLoginRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| username | string (username) | Unique identifier of the user, besides the ID
- | Yes |
-| password | password | User Password Encrypted
- | Yes |
+| username | string (username) | Unique identifier of the user, besides the ID  | Yes |
+| password | password | User Password Encrypted  | Yes |
+| app | string | Unique identifier of the App Id  | Yes |
+
+#### UserSet2FARequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| user | string | User Id  | Yes |
+| 2fa_token | string | Token Prior to the set of 2FA  | Yes |
+| 2fa_secret | string | Secret Token 2FA  | Yes |
+
+#### User2FALoginRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| 2fa_token | string (username) | Token to Unlock Login Data  | Yes |
 
 #### UserSummaryRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| type | string (name) | Type of Summary Data
- | Yes |
-| user | string (name) | User ID
- | Yes |
+| type | string (name) | Type of Summary Data  | Yes |
+| user | string (name) | User ID  | Yes |
+| periodicity | string (name) | Periodicity of Data  | No |
+| currency | string (name) | Currency ID  | Yes |
+
+#### UserPusherNotificationsAuth
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| socket_id | string (name) |  | No |
+| channel_name | string (name) |  | No |
+| user | string (name) |  | No |
+
+#### AppGameEditEdge
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| game | string (name) | Game id  | Yes |
+| edge | number | New Edge  | Yes |
+
+#### AppGameEditImage
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| game | string (name) | Game id  | Yes |
+| image_url | string | image blob or link | Yes |
+
+#### AppAddCurrencyWallet
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| currency_id | string (name) | Currency id  | Yes |
+| passphrase | string | Passphrase to protect the wallet  | Yes |
+
+#### AppGameEditTableLimit
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| game | string (name) | Game id  | Yes |
+| tableLimit | number | New Table Limit  | Yes |
+
+#### AppCustomizationBanners
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| banners | [ string ] |  | Yes |
+| autoDisplay | boolean |  | Yes |
+
+#### AppCustomizationColors
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| colors | [ object ] |  | Yes |
+
+#### AppCustomizationLogo
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| logo | string | image blob or link | Yes |
+
+#### AppCustomizationFooter
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| supportLinks | [ object ] |  | Yes |
+| communityLinks | [ object ] |  | Yes |
+
+#### AppCustomizationTopBar
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| backgroundColor | string (name) |  | Yes |
+| textColor | string (name) |  | Yes |
+| text | string (name) |  | Yes |
+| isActive | boolean |  | Yes |
+
+#### AppCustomizationTopIcon
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| topIcon | string | image blob or link | Yes |
+
+#### AppCustomizationLoadingGif
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| loadingGif | string | image blob or link | Yes |
+
+#### AppTypographyRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| typography | [ object ] |  | Yes |
+
+#### AppDeploy
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+
+#### AppEditIntegration
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| publicKey | string (name) |  | Yes |
+| privateKey | string (name) |  | Yes |
+| integration_type | string (name) |  | Yes |
+| integration_id | string (name) |  | Yes |
+| isActive | boolean |  | Yes |
+
+#### AppEditMailSenderIntegration
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| apiKey | string (name) |  | Yes |
+| templateIds | [ object ] |  | Yes |
+
+#### AppEditAffiliateStructure
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| structures | [ object ] |  | Yes |
+| affiliateTotalCut | number | Total Affiliate Cut (0-1)  | Yes |
+
+#### AppAffiliateCustomStructure
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string | App id  | Yes |
+| user | string | User id  | Yes |
+| affiliatePercentage | number | Total Affiliate Cut (0-1)  | Yes |
 
 #### AppGetRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| app | string (name) | App id| Yes |
+| app | string (name) | App id  | Yes |
+
+#### AdminGetRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (name) | App id  | Yes |
+| admin | string (name) | Admin id  | Yes |
 
 #### AppCreationRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| name | string (name) | App Name| Yes |
-| address | string | App Address Management | Yes |
-| description | string (description) | App Description| Yes |
-| marketType | integer | Market Mapping Number| Yes |
-| metadataJSON | string | Metadata JSON Object| Yes |
-| admin_id | string | Admin Id | Yes |
+| name | string (name) | App Name  | Yes |
+| description | string (description) | App Description  | Yes |
+| marketType | integer | Market Mapping Number  | Yes |
+| metadataJSON | string | Metadata JSON Object  | Yes |
+| admin_id | string | Admin Id  | Yes |
 
 #### GameGetRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| id | string (name) | Game Id| Yes |
+| id | string (name) | Game Id  | Yes |
 
 #### AppTransactionsRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| app | string (name) | App ID| Yes |
+| app | string (name) | App ID  | Yes |
 | filters | [ object ] |  | Yes |
 
-#### AppRequestWithdrawRequest
+#### AppPopularNumbersRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| newBalance | number | New User Balance for User | Yes |
-| tokenAmount | number | Amount of Tokens to be Withdraw | Yes |
-| nonce | number | Use Nonce| Yes |
-| app | string (name) | App ID | Yes |
-| address | string (name) | User Address | Yes |
-| signature | object | User Signature | Yes |
+| app | string (name) | App ID  | Yes |
+| size | number | size  | No |
 
-#### AppFinalizeWithdrawRequest
+#### AppLastBetsRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| tokenAmount | number | New User Balance for User| Yes |
-| app | string (name) | App ID| Yes |
-| address | string (name) | User Address| Yes |
-| signature | object | User Signature  Yes |
-| transactionHash | string (name) | Transaction Hash| Yes |
+| app | string (name) | App ID  | Yes |
+| size | number | size  | Yes |
 
-#### UpdateAppWalletRequest
+#### AppUserDepositAddressRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| amount | number | Amount added or taken from Wallet | Yes |
-| app | string (name) | App ID| Yes |
-| transactionHash | string (name) | Transaction Hash| Yes |
+| app | string (name) | App ID  | Yes |
+| currency | string (name) | Currency ID  | Yes |
+| id | string (name) | User ID  | Yes |
 
-#### UserWithdrawRequest
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| newBalance | number | New User Balance for User | Yes |
-| tokenAmount | number | Amount of Tokens to be Withdraw | Yes |
-| nonce | number | Use Nonce | Yes |
-| app | string (name) | App ID | Yes |
-| user | string (name) | User ID | Yes |
-| address | string (name) | User Address | Yes |
-| signature | object | User Signature  | Yes |
-
-#### UserFinalizeWithdrawRequest
+#### AppBiggestWinnersRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| tokenAmount | number | New User Balance for User | Yes |
-| app | string (name) | App ID | Yes |
-| user | string (name) | User ID | Yes |
-| address | string (name) | User Address | Yes |
-| signature | object | User Signature  | Yes |
-| transactionHash | string (name) | Transaction Hash | Yes |
+| app | string (name) | App ID  | Yes |
+| size | number | size  | Yes |
 
-#### UpdateUserWalletRequest
+#### AppUsersRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| amount | number | Amount added or taken from Wallet | Yes |
-| user | string (name) | User ID | Yes |
-| app | string (name) | App ID | Yes |
-| transactionHash | string (name) | Transaction Hash | Yes |
+| app | string (name) | App ID  | Yes |
+| size | number |  | No |
+| user | string (name) | User Id  | No |
+| offset | number |  | No |
+
+#### UserBetsRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| size | number | Amount of Bets Wanted  | Yes |
+| user | string (name) | User ID  | Yes |
+| periodicity | string (name) | Periodicity of Data  | No |
+| currency | string (name) | Currency ID  | Yes |
 
 #### AppSummaryRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| type | string (name) | App Name | Yes |
-| app | string (name) | App ID | Yes |
+| type | string (name) | App Name  | Yes |
+| app | string (name) | App ID  | Yes |
+| periodicity | string (name) | Periodicity of Data  | No |
+| currency | string (name) | Currency ID  | Yes |
 
-#### AppPaybearAPIKeyRequest
+#### AppAddGameRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| app | string (name) | App ID
- | Yes |
-| paybearApiSecretKey | string (name) | App ID
- | Yes |
+| app | string (name) | App ID  | Yes |
+| game | string (name) | Game ID  | Yes |
 
 #### AppServicesRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| app | string (name) | App ID | Yes |
-| services | [ integer ] | Services ID | Yes |
+| app | string (name) | App ID  | Yes |
+| services | [ integer ] | Services ID  | Yes |
 
-#### AppBlockchainInformationRequest
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| app | string (name) | App ID | Yes |
-| currencyTicker | string | Currency Ticker for the Address | No |
-| platformAddress | string | Blockchain Address for the Platform  | No |
-| platformTokenAddress | string | Token Address for the Platform | No |
-| platformBlockchain | string | Blockchain reduce name| No |
-| decimals | number | Blockchain Contract Decimal Reading | No |
-
-#### AppTokenAPIRequest
+#### AuthAdminRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| app | string (name) | App ID| Yes |
+| admin | string | Admin Id  | Yes |
 
-#### GameCreationRequest
+#### AuthUserRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| name | string | Game Name | Yes |
-| app | string | App Id | Yes |
-| edge | integer |  | Yes |
-| description | string (name) | App I | Yes |
-| betSystem | number (name) | App ID | Yes |
-| resultSpace | object | Result Space | Yes |
+| user | string | User Id  | Yes |
 
 #### GetGamesFromAppRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| app | string | App Id | Yes |
+| app | string | App Id  | Yes |
 
 #### PlaceBetRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| user | string (string) | User Id | Yes |
-| app | string (string) | App Id | Yes |
-| game | string (string) | Game Id | Yes |
-| nonce | number | Nonce | Yes |
+| user | string (string) | User Id  | Yes |
+| app | string (string) | App Id  | Yes |
+| game | string (string) | Game Id  | Yes |
+| currency | string (string) | Currency Id  | Yes |
+| nonce | number | Nonce  | Yes |
 | result | [ object ] |  | Yes |
-| address | string (string) | Bet Placer Address | Yes |
 
-#### GenerateReferenceRequestUsers
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| user_external_id | string (name) | User External _id | No |
-| currency | string (name) | Currency Small Identificator ["btc", "eth", etc..] | Yes |
-| username | string (name) | Username of Email of the User | Yes |
-| full_name | string (name) | Full Name of the User | No |
-| name | string (name) | First Name of the User | No |
-| nationality | string (name) | UNICODE for Nationality like PT for Portugal | No |
-| age | number (number) | User Age | No |
-| email | string (name) | User Email | Yes |
-| app_id | string (name) | Company id for API Use | Yes |
-
-#### GenerateReferenceRequestApp
+#### AddAdminRequest
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| currency | string (name) | Currency Small Identificator ["btc", "eth", etc..] | Yes |
-| entity | string (name) | Company id for API Use | Yes |
+| email | string (string) | Email for admin  | Yes |
+| app | string (string) | App Id  | Yes |
+| admin | string (string) | Admin Current Id  | Yes |
+
+#### MaxBetRequest
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app | string (string) | App Id  | Yes |
+| game | string (string) | Game Id  | Yes |
+| maxBet | number (number) | Bet Max Value  | Yes |
 
 #### GeneralResponse
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| data | object (data) | Unique identifier of the user, besides the ID | Yes |
-| meta | object (meta) | User Real Name | Yes |
+| data | object (data) | Unique identifier of the user, besides the ID  | Yes |
+| meta | object (meta) | User Real Name  | Yes |
 
 #### ErrorResponse
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
 | message | string |  | Yes |
+
+#### PingPost
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| type | string | Type Auth  | Yes |
