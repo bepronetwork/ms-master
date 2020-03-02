@@ -302,10 +302,8 @@ const processActions = {
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
 
-
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
-
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
@@ -514,7 +512,6 @@ const progressActions = {
 
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
@@ -522,6 +519,12 @@ const progressActions = {
                 message: `Deposited ${params.amount} ${params.wallet.currency.ticker} in your account`,
                 eventType: 'DEPOSIT'
             })
+            /* Send Email */
+            let templateDeposit = template.find(a => {return a.functionName === "USER_TEXT_DEPOSIT_AND_WITHDRAW"})
+            let attributes = {
+                TEXT: templateDeposit.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker})
+            };
+            new Mailer().sendEmail({app_id : params.app.id, user : params.user_id, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
         } catch (err) {
             throw err;

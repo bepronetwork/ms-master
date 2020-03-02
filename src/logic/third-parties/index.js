@@ -2,7 +2,7 @@ import GoogleStorageSingleton from './googleStorage';
 import HerokuClientSingleton from './heroku';
 import { SendInBlue , SendinBlueSingleton} from './sendInBlue';
 import BitGoSingleton from './bitgo';
-const SendInBlueFunctions = require('./sendInBlue/functions.json');
+const SendInBlueFunctions = require('./sendInBlue/functions.js');
 const SendInBlueAttributes = require('./sendInBlue/fields.json');
 
 export {
