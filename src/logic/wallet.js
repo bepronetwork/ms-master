@@ -37,7 +37,7 @@ const processActions = {
 			if((ticker == (null && undefined)) || (address == (null && undefined))){
 				throwError();
 			}
-			var link_url = setLinkUrl({ticker, address});
+			var link_url = setLinkUrl({ticker, address, isTransactionHash: false});
 		} catch (err) {
 			
 		}

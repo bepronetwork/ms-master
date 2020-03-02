@@ -7,9 +7,10 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import ConverterSingleton from './utils/converter';
 import { Deposit, User } from '../models';
-import { DepositRepository, AppRepository, UsersRepository, WalletsRepository } from '../db/repos';
+import { DepositRepository, AppRepository, UsersRepository, WalletsRepository, CurrencyRepository } from '../db/repos';
 import { globals } from '../Globals';
 import axios from 'axios';
+import { setLinkUrl } from '../helpers/linkUrl';
 
 let error = new ErrorManager();
 
@@ -39,7 +40,10 @@ let __private = {};
 const processActions = {
     __createDeposit : async (params) => {
         
-        let entityType = params.user ? 'user' : 'app';
+		let entityType = params.user ? 'user' : 'app';
+		/* Adding link_url to deposits */
+		let currency = await CurrencyRepository.prototype.findById(params.currency);
+		let link_url = setLinkUrl({ticker: currency.ticker, address: params.transactionHash, isTransactionHash: true})
 
         let normalized = {
 			[entityType]			: params[entityType],
@@ -51,7 +55,8 @@ const processActions = {
             transactionHash         : params.transactionHash,
             amount                  : params.amount,
             confirmations           : params.confirmations || 0,
-            maxConfirmations        : params.maxConfirmations || 0,
+			maxConfirmations        : params.maxConfirmations || 0,
+			link_url                : link_url
 		}
 		return normalized;
     },
@@ -91,7 +96,7 @@ const progressActions = {
 		return deposit;
     },
     __createDeposit : async (params) => {
-        let deposit = await self.save(params);
+		let deposit = await self.save(params);
 		return deposit;
     },
 }
