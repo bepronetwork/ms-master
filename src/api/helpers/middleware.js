@@ -26,6 +26,24 @@ class Middleware{
             throw err;
         }
     }
+    generateTokenEmail(email) {
+        try{
+            let token = jwt.sign({ email }, privateKEY, { algorithm: 'RS256' });
+            return token;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    resultTokenEmail(token) {
+        try{
+            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+            return response;
+        }catch (err){
+            return false;
+        }
+    }
+
     resultTokenDate(token) {
         try{
             let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });

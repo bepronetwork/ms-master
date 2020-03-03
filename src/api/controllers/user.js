@@ -54,6 +54,18 @@ async function setPassword(req, res) {
 	}
 }
 
+async function confirmEmail(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "global", req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.confirmEmail();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function resetPassword(req, res) {
     try{
         await MiddlewareSingleton.log({type: "global", req});
@@ -202,5 +214,6 @@ export {
     getDepositAddress,
     authUser,
     resetPassword,
-    setPassword
+    setPassword,
+    confirmEmail
 }

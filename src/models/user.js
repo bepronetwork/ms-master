@@ -106,6 +106,14 @@ class User extends ModelComponent{
         }
     }
 
+    async confirmEmail(){
+        try{
+            return await this.process('ConfirmEmail');
+        }catch(err){
+            throw err;
+        }
+    }
+
     async getDepositAddress(){
         try{
             return await this.process('GetDepositAddress');
