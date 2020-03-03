@@ -7,6 +7,8 @@ import { shouldntUpdateWalletWithAlreadyPresentTransaction } from '../../output/
 import Numbers from '../../../logic/services/numbers';
 import { bitgoDepositExample } from './examples/bitgoDepositExample';
 import { DepositRepository } from '../../../../src/db/repos';
+import { provideFunds } from '../../../utils/env';
+import delay from 'delay';
 
 const expect = chai.expect;
 const ticker = 'ETH';
@@ -35,8 +37,12 @@ context(`${ticker}`, async () => {
                 });
             }catch(err){reject(err)}
         });
+        /* Wait for wallet to be created */
              
+        await delay(100* 1000);
         let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        /** provide funds for furthger testing */
+        await provideFunds({wallet : currencyWallet._id, amount : 1});
         const { status } = res.data;
         detectValidationErrors(res);
         expect(status).to.equal(200);
