@@ -523,7 +523,7 @@ const progressActions = {
             /* Send Email */
             let templateDeposit = template.find(a => {return a.functionName === "USER_TEXT_DEPOSIT_AND_WITHDRAW"})
             let attributes = {
-                TEXT: templateDeposit.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker})
+                TEXT: templateDeposit.attributes.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker})
             };
             new Mailer().sendEmail({app_id : params.app.id, user : params.user_id, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
