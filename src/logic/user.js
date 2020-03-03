@@ -525,7 +525,7 @@ const progressActions = {
             let attributes = {
                 TEXT: templateDeposit.attributes.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker})
             };
-            new Mailer().sendEmail({app_id : params.app.id, user : params.user_id, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
+            new Mailer().sendEmail({app_id : params.app.id, user : params.user, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
         } catch (err) {
             throw err;
