@@ -31,14 +31,12 @@ class Mailer{
                 } catch (e) {
                     await sendinBlueClient.updateContact(user.email, attributes);
                 }
-                console.log("templateId", templateId, user.email)
                 await sendinBlueClient.sendTemplate(templateId, [user.email]);
-                console.log("done")
             }
 
         }catch(err){
-            console.log("err ", err)
             Logger.error(err);
+            console.log("Full Stack Error ", err)
         }
     }
 
