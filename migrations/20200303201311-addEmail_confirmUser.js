@@ -1,6 +1,6 @@
 module.exports = {
   async up(db, client) {
-    let users = await db.collection('users').find().limit(5).toArray();
+    let users = await db.collection('users').find().toArray();
     for (let user of users) {
       if(user.email_confirmed == undefined){
         console.log(user._id);
