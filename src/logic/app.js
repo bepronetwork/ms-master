@@ -273,6 +273,27 @@ const processActions = {
             isValid
 		}
 		return normalized;
+    },
+    
+    __editGameBackgroundImage: async (params) => {
+        let { game, app, background_url } = params;
+        
+        game = await GamesRepository.prototype.findGameById(game);
+        app = await AppRepository.prototype.findAppByIdNotPopulated(app);
+        if(!game){throwError('GAME_NOT_EXISTENT')}
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+         // Verify if Game is part of this App
+         let isValid = app.games.find( id => id.toString() == game._id.toString())
+        
+         /* Normalize data of Game */
+		let normalized = {
+            game, 
+            app,
+            background_url,
+            isValid
+		}
+		return normalized;
 	},
     __editAffiliateStructure : async (params) => {
         let { app, structures, affiliateTotalCut } = params;
@@ -615,6 +636,27 @@ const progressActions = {
         // Save info on Game
         return res;
     },
+
+    __editGameBackgroundImage : async (params) => {
+        let { game, background_url } = params;
+        let gameBackgroundImageURL;
+        if(background_url.includes("https")){
+            /* If it is a link already */
+            gameBackgroundImageURL = background_url;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            gameBackgroundImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : background_url});
+            background_url = gameBackgroundImageURL
+        }
+        
+        let res = await GamesRepository.prototype.editBackgroundImage({
+            id: game._id,
+            background_url
+        })
+        // Save info on Game
+        return res;
+    },
+
     __editAffiliateStructure : async (params) => {
 
         var { affiliateSetup, structures, app_id } = params;
@@ -915,6 +957,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameImage': {
 					return await library.process.__editGameImage(params); break;
+                };
+                case 'EditGameBackgroundImage': {
+					return await library.process.__editGameBackgroundImage(params); break;
 				};
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
@@ -1022,6 +1067,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameImage': {
 					return await library.progress.__editGameImage(params); break;
+                };
+                case 'EditGameBackgroundImage': {
+					return await library.progress.__editGameBackgroundImage(params); break;
 				};
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;

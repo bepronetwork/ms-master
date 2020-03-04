@@ -146,6 +146,20 @@ class GamesRepository extends MongoComponent{
             )
         });
     }
+
+    editBackgroundImage({id, background_url}){
+        return new Promise( (resolve,reject) => {
+            GamesRepository.prototype.schema.model.findByIdAndUpdate(
+                id, 
+                { $set: { "background_url" : background_url } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
 }
 
 GamesRepository.prototype.schema = new GameSchema();

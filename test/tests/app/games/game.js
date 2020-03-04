@@ -5,7 +5,8 @@ import {
     getGames,
     editTableLimit,
     editGameEdge,
-    editGameImage
+    editGameImage,
+    editGameBackgroundImage
 } from '../../../methods';
 
 import {
@@ -81,6 +82,22 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
             image_url : image_data
         }
         let res = await editGameImage(postData, app.bearerToken, {id : app.id});
+        detectValidationErrors(res);
+        const { status } = res.data;
+        expect(status).to.be.equal(200);
+    }));
+
+    it(`${ga.metaName} should Edit game Background Image`, mochaAsync(async () => {
+
+        var game = GAMES.find( g => g.metaName == ga.metaName);
+
+        let postData = {
+            app : app.id,
+            game : game._id,
+            background_url : image_data
+        }
+        let res = await editGameBackgroundImage(postData, app.bearerToken, {id : app.id});
+        console.log(res);
         detectValidationErrors(res);
         const { status } = res.data;
         expect(status).to.be.equal(200);
