@@ -256,7 +256,7 @@ const processActions = {
             hash_password = new Security(params.password).hash();
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
-        let url = GenerateLink.confirmEmail(app.web_url, tokenConfirmEmail);
+        let url = GenerateLink.confirmEmail([app.web_url, tokenConfirmEmail]);
 
         let normalized = {
             alreadyExists: alreadyExists,
@@ -439,7 +439,7 @@ const progressActions = {
             YOURNAME: name,
             TOKEN: bearerToken,
             USER: user_id,
-            URL: GenerateLink.resetPassword(url, bearerToken, user_id)
+            URL: GenerateLink.resetPassword([url, bearerToken, user_id])
         };
         new Mailer().sendEmail({app_id : app_id, user, action : 'USER_RESET_PASSWORD', attributes});
         return true;
