@@ -65,6 +65,9 @@ const processActions = {
         if (!payload) {
             throwError('TOKEN_INVALID');
         }
+        if (payload.email == undefined ) {
+            throwError('TOKEN_INVALID');
+        }
         const email = payload.email;
         const user = await UsersRepository.prototype.findUserByEmail(email);
         if (!user) { throwError('USER_NOT_EXISTENT') }
