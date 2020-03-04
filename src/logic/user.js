@@ -36,6 +36,7 @@ import { SendInBlue } from './third-parties/sendInBlue';
 import { Logger } from '../helpers/logger';
 import Mailer from './services/mailer';
 import { template } from "./third-parties/sendInBlue/functions";
+import { GenerateLink } from '../helpers/generateLink';
 
 let error = new ErrorManager();
 
@@ -255,7 +256,7 @@ const processActions = {
             hash_password = new Security(params.password).hash();
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
-        let url = `${app.web_url}confirm?token=${tokenConfirmEmail}`;
+        let url = GenerateLink.confirmEmail(app.web_url, tokenConfirmEmail);
 
         let normalized = {
             alreadyExists: alreadyExists,
@@ -438,7 +439,7 @@ const progressActions = {
             YOURNAME: name,
             TOKEN: bearerToken,
             USER: user_id,
-            URL: `${url}password/reset?token=${bearerToken}&userId=${user_id}`
+            URL: GenerateLink.resetPassword(url, bearerToken, user_id)
         };
         new Mailer().sendEmail({app_id : app_id, user, action : 'USER_RESET_PASSWORD', attributes});
         return true;
