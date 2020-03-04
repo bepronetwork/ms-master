@@ -12,6 +12,12 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async confirmEmail(params) {
+        return request(global.server)
+        .post('/api/users/email/confirm')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async registerAdmin(params) {
         return request(global.server)
         .post('/api/admins/register')
