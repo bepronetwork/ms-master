@@ -35,7 +35,6 @@ import PusherSingleton from './third-parties/pusher';
 import { SendInBlue } from './third-parties/sendInBlue';
 import { Logger } from '../helpers/logger';
 import Mailer from './services/mailer';
-import { template } from "./third-parties/sendInBlue/functions";
 
 let error = new ErrorManager();
 
@@ -521,11 +520,11 @@ const progressActions = {
                 eventType: 'DEPOSIT'
             })
             /* Send Email */
-            let templateDeposit = template.find(a => {return a.functionName === "USER_TEXT_DEPOSIT_AND_WITHDRAW"})
+            let mail = new Mailer();
             let attributes = {
-                TEXT: templateDeposit.attributes.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker}).deposit
+                TEXT: mail.setTextDeposit({amount : params.amount, ticker : params.wallet.currency.ticker, isDeposit : true})
             };
-            new Mailer().sendEmail({app_id : params.app.id, user : params.user, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
+            mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
             return params;
         } catch (err) {
             throw err;

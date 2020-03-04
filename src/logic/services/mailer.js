@@ -2,10 +2,20 @@ import { MailSenderRepository } from "../../db/repos";
 import { Security } from "../../controllers/Security";
 import { Logger } from "../../helpers/logger";
 import { SendInBlue } from "../third-parties/sendInBlue";
+import { throwError } from "../../controllers/Errors/ErrorManager";
 
 class Mailer{
     constructor(){}
-
+    
+    setTextDeposit ({amount, ticker, isDeposit}){
+        if(isDeposit){
+            let textDeposit = `There is a deposit of ${amount} ${ticker} in your account`
+            return textDeposit;
+        } else {
+            let textWithdraw = `There is a withdraw of ${amount} ${ticker} in your account`
+            return textWithdraw;
+        }
+    };
 
     async sendEmail({app_id, user, action, attributes={}}){
         let send = await MailSenderRepository.prototype.findApiKeyByAppId(app_id);
@@ -29,7 +39,8 @@ class Mailer{
                 try {
                     await sendinBlueClient.createContact(user.email, attributes, [listIds]);
                 } catch (e) {
-                    await sendinBlueClient.updateContact(user.email, attributes);
+                   let text = await sendinBlueClient.updateContact(user.email, attributes);
+                   console.log(text);
                 }
                 await sendinBlueClient.sendTemplate(templateId, [user.email]);
             }
