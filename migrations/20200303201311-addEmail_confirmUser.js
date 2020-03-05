@@ -6,7 +6,7 @@ module.exports = {
         console.log(user._id);
         await db.collection('users').updateOne(
           { _id: user._id },
-          { $set: { "email_confirmed": true } }
+          { $set: { "email_confirmed": false } }
         );
       }
     }
