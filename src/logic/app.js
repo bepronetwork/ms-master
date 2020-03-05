@@ -682,13 +682,16 @@ const progressActions = {
     },
     __editBanners : async (params) => {
         let { app, autoDisplay, banners } = params;
-        let ids = await Promise.all(banners.map( b => {
-            if(b.includes("https")){
+        let ids = await Promise.all(banners.map( async b => {
+            if(b.image_url.includes("https")){
                 /* If it is a link already */
                 return b;
             }else{
                 /* Does not have a Link and is a blob encoded64 */
-                return GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b});
+                return {
+                    image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
+                    link_url  : b.link_url
+                };
             }
         }))
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {

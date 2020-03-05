@@ -2187,9 +2187,12 @@ definitions:
       banners:
         type : array
         items : 
-          type : string
-          example : 876348bct3t2rc2t34
-          description : image blob
+          type: object
+          properties:
+            image_url :
+              type: string
+            link_url  :
+              type: string
       autoDisplay:
         type : boolean
         example: true
