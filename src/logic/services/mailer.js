@@ -39,8 +39,7 @@ class Mailer{
                 try {
                     await sendinBlueClient.createContact(user.email, attributes, [listIds]);
                 } catch (e) {
-                   let text = await sendinBlueClient.updateContact(user.email, attributes);
-                   console.log(text);
+                   await sendinBlueClient.updateContact(user.email, attributes);
                 }
                 await sendinBlueClient.sendTemplate(templateId, [user.email]);
             }
