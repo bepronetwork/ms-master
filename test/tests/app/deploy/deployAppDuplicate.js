@@ -5,10 +5,11 @@ import { get_app } from '../../../models/apps';
 const expect = chai.expect;
 
 context('Deploy App Duplicate', async () => {
-    var app;
+    var app, admin;
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
 
@@ -16,13 +17,14 @@ context('Deploy App Duplicate', async () => {
 
         const postData = {
             app : app.id,
+            admin: admin.id
         };
 
-        let res = await deployApp(postData, app.bearerToken , {id : app.id});
+        let res = await deployApp(postData, admin.security.bearerToken , {id : admin.id});
 
         expect(detectValidationErrors(res)).to.be.equal(false);
 
-        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
+        let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
 
         const { status } = res.data;
         expect(status).to.be.equal(44);

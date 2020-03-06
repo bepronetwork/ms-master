@@ -51,26 +51,29 @@ export async function createUserDeposit({user, tokenAmount, app, currency,  depo
     }, bearerToken, {id : user_id});
 }
 
-export async function editAppStructure({app, structures}){
+export async function editAppStructure({app, admin, structures}){
     return await editAffiliateStructure({
+        admin: admin.id,
         app : app.id,
-        structures, 
+        structures,
         affiliateTotalCut : structures.reduce( (acc, s) => acc+s.percentageOnLoss, 0)
-    }, app.bearerToken, {id : app.id})
+    }, admin.security.bearerToken, {id : admin.id})
 }
 
-export async function addCustomAffiliateStructureToUser({app, affiliatePercentage, user}){
+export async function addCustomAffiliateStructureToUser({app, admin, affiliatePercentage, user}){
     return await setCustomAffiliateStructureToUser({
         app : app.id,
+        admin: admin.id,
         user, 
         affiliatePercentage
-    }, app.bearerToken, {id : app.id})
+    }, admin.security.bearerToken, {id : admin.id})
 }
 
-export async function getApp({app}){
+export async function getApp({app, admin}){
     return (await getAppAuth({
+        admin: admin.id,
         app : app.id,
-    }, app.bearerToken, {id : app.id}))
+    }, admin.security.bearerToken, {id : admin.id}))
 }
 
 export async function getUserInfo({user, app}){
