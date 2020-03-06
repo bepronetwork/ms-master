@@ -208,13 +208,6 @@ const processActions = {
 
         return res.games;
     },
-    __createApiToken : async (params) => {
-		let normalized = {
-            ...params,
-            bearerToken : MiddlewareSingleton.sign(params.app)
-        }
-		return normalized;
-    },
     __editGameTableLimit : async (params) => {
 
         let { game, app, tableLimit} = params;
@@ -389,8 +382,6 @@ const progressActions = {
 	__register : async (params) => {
         let app = await self.save(params);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
-        let bearerToken = MiddlewareSingleton.sign(app._id);
-        await AppRepository.prototype.createAPIToken(app._id, bearerToken);
         let email = admin.email;
         let attributes = {
             APP: app._id
@@ -571,10 +562,6 @@ const progressActions = {
         await AppRepository.prototype.addDeposit(params.app._id, depositSaveObject._id)
 
         return params;
-    },
-    __createApiToken : async (params) => {
-        let res = await AppRepository.prototype.createAPIToken(params.app, params.bearerToken)
-		return res;
     },
     __editGameTableLimit : async (params) => {
         let { game, tableLimit} = params;
@@ -898,9 +885,6 @@ class AppLogic extends LogicComponent{
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
-                case 'CreateAPIToken' : {
-					return await library.process.__createApiToken(params); break;
-                };
                 case 'EditGameTableLimit' : {
                     return await library.process.__editGameTableLimit(params); break;
                 };
@@ -1013,9 +997,6 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetTransactions' : {
 					return await library.progress.__getTransactions(params); break;
-                };
-                case 'CreateAPIToken' : {
-					return await library.progress.__createApiToken(params); break;
                 };
                 case 'EditGameTableLimit' : {
                     return await library.progress.__editGameTableLimit(params); break;

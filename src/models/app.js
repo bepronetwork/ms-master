@@ -124,20 +124,6 @@ class App extends ModelComponent{
             throw err;
         }
     }
-    
-    /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
-
-    async createAPIToken(){
-        try{
-            let app = await this.process('CreateAPIToken');
-            return app;
-        }catch(err){
-            throw err;
-        }
-    }
 
      /**
      * @param {String} 
