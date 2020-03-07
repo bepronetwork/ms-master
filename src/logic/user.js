@@ -522,9 +522,9 @@ const progressActions = {
             /* Send Email */
             let mail = new Mailer();
             let attributes = {
-                TEXT: mail.setTextDeposit({amount : params.amount, ticker : params.wallet.currency.ticker, isDeposit : true})
+                TEXT: mail.setTextNotification('DEPOSIT', params.amount, params.wallet.currency.ticker)
             };
-            mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
+            mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
             return params;
         } catch (err) {
             throw err;
