@@ -571,6 +571,16 @@ class ErrorManager {
         }
     }
 
+    gameBackgroundImage = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     token = function (object, type){
         try{
             switch(type){

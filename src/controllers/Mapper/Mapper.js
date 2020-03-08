@@ -61,6 +61,7 @@ let outputs = {
                     rules : game.rules,
                     metaName : game.metaName,
                     image_url : game.image_url,
+                    background_url : game.background_url,
                     description : game.description,
                     resultSpace : game.resultSpace,
                     tableLimit : game.tableLimit,
