@@ -5,10 +5,11 @@ import { get_app } from '../../../models/apps';
 const expect = chai.expect;
 
 context('Edit Footer', async () => {
-    var app;
+    var app, admin;
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
 
@@ -38,7 +39,7 @@ context('Edit Footer', async () => {
             app : app.id
         };
 
-        let res = await editFooterCustomizationApp(postData, app.bearerToken , {id : app.id});
+        let res = await editFooterCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
 
         expect(detectValidationErrors(res)).to.be.equal(false);
 

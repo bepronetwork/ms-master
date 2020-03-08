@@ -24,7 +24,6 @@ AppSchema.prototype.schema =  {
     customization       : { type: mongoose.Schema.Types.ObjectId, ref: 'Customization'},
     typography          : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Typography'}],
     countriesAvailable  : [{ type: Number}],
-    bearerToken         : { type: String },
     licensesId          : [{ type: String}],
     metadataJSON        : {  type: JSON},
     isWithdrawing       : { type : Boolean, default : false, required : true },

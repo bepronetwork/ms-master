@@ -6,10 +6,11 @@ import models from '../../../models';
 const expect = chai.expect;
 
 context('Add Currency Wallet', async () => {
-    var app, ercTokenTicker = '';
+    var app, admin, ercTokenTicker = '';
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
 
@@ -28,13 +29,13 @@ context('Add Currency Wallet', async () => {
 
         /* Guarantee Currency Added with Success to Wallet */
 
-        let res = await addCurrencyWalletToApp(postData, app.bearerToken , {id : app.id});
+        let res = await addCurrencyWalletToApp({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
         
         /* Verify if new wallet has that info */
-        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
+        let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         const { wallet } = res_app.data.message;
         expect(wallet.length).to.be.equal(3);
 
@@ -47,7 +48,7 @@ context('Add Currency Wallet', async () => {
   
     
         /* Check if affilçiate wallets of the users have the currency wallet */
-        res = await getAppUsers({app : app.id}, app.bearerToken, {id : app.id});
+        res = await getAppUsers({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         const users = res.data.message;
 
         users.map( u => {

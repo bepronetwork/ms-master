@@ -191,24 +191,11 @@ const processActions = {
 const progressActions = {
     __login: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
-        let bearerToken;
-        if (params.app) {
-            /* Create BearerToken for App */
-            bearerToken = MiddlewareSingleton.sign(params.app._id);
-            await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
-        }
-
-        return { ...params, app: { ...params.app, bearerToken } };
+        return { ...params, app: { ...params.app, bearerToken: params.bearerToken } };
     },
     __login2FA: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
-        let bearerToken;
-        if (params.app) {
-            /* Create BearerToken for App */
-            bearerToken = MiddlewareSingleton.sign(params.app._id);
-            await AppRepository.prototype.createAPIToken(params.app._id, bearerToken);
-        }
-        return { ...params, app: { ...params.app, bearerToken } };
+        return { ...params, app: { ...params.app, bearerToken: params.bearerToken } };
     },
     __getAdminAll: async (params) => {
         return params;

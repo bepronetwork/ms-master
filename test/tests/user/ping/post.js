@@ -17,7 +17,7 @@ context(`Log post Ping`, async () =>  {
 
     before( async () =>  {
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
-        app = (await getAppAuth({app : admin.app.id}, admin.app.bearerToken, {id : admin.app.id})).data.message;
+        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         game = app.games.find( game => game.metaName == metaName);
         // currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(currencyTicker).toLowerCase())).currency;
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
@@ -33,10 +33,10 @@ context(`Log post Ping`, async () =>  {
         expect(res.data.status).to.equals(200);
     }));
 
-    it('should Post Log - app', mochaAsync(async () => {
-        var res = await pingPost({type: "app"}, app.bearerToken, {id : app.id})
-        expect(res.data.status).to.equals(200);
-    }));
+    // it('should Post Log - app', mochaAsync(async () => {
+    //     var res = await pingPost({type: "app"}, app.bearerToken, {id : app.id})
+    //     expect(res.data.status).to.equals(200);
+    // }));
 
     it('should Post Log - global', mochaAsync(async () => {
         var res = await pingPost({type: "global"}, {}, {});

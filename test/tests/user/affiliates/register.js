@@ -12,12 +12,13 @@ const inputs = {
 }
 
 context('Register', async () => {
-    var app, res_1, res_2, res_3, res_4, res_5;
+    var app, admin, res_1, res_2, res_3, res_4, res_5;
 
 
     before( async () =>  {
         app = global.test.app;
-        await editAppStructure({app, structures : inputs.structures});
+        admin = global.test.admin;
+        await editAppStructure({app, admin, structures : inputs.structures});
     });
 
 
@@ -114,12 +115,12 @@ context('Register', async () => {
             app : app
         };
 
-        let res = await addCustomAffiliateStructureToUser(postData);
+        let res = await addCustomAffiliateStructureToUser({...postData, admin: admin});
         detectValidationErrors(res);
         const { status } = res.data;
         expect(status).to.equal(200);
 
-        let app_data_after = await getApp({app});
+        let app_data_after = await getApp({app, admin});
         const { message : data_after } = app_data_after.data;
 
         /* Test if they are 1 */
@@ -134,7 +135,7 @@ context('Register', async () => {
         detectValidationErrors(res_5);
         const { status, message } = res_5;
 
-        let app_data = await getApp({app});
+        let app_data = await getApp({app, admin});
         const { message : app_data_after } = app_data.data;
 
         expect(status).to.equal(200);

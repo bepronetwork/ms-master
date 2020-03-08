@@ -14,10 +14,11 @@ const expect = chai.expect;
 const ticker = 'ETH';
 
 context(`${ticker}`, async () => {
-    var app, currencyWallet, depositAmount, tx;
+    var app, admin, currencyWallet, depositAmount, tx;
 
     before( async () =>  {
-        app = (await getAppAuth(get_app(global.test.app.id), global.test.app.bearerToken, {id : global.test.app.id})).data.message;
+        admin = global.test.admin;
+        app = (await getAppAuth({...get_app(global.test.app.id), admin: admin.id}, global.test.admin.security.bearerToken, {id : global.test.admin.id})).data.message;
         currencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         depositAmount = 0.2;
     });
@@ -38,7 +39,7 @@ context(`${ticker}`, async () => {
             }catch(err){reject(err)}
         });
         /* Wait for wallet to be created */
-             
+
         await delay(100* 1000);
         let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
         /** provide funds for furthger testing */
@@ -55,46 +56,4 @@ context(`${ticker}`, async () => {
         detectValidationErrors(res);
         shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
     }));
-
-    // it('should amount > max deposit APP', mochaAsync(async () => {
-
-    //     let dataMaxDeposit = await setAppMaxDeposit({
-    //         app: app.id,
-    //         wallet_id: currencyWallet._id,
-    //         amount: 0.1,
-    //     }, app.bearerToken, {id : app.id});
-
-    //     let body = bitgoDepositExample();
-    //     // Remove Test Wallet Transaction Example
-    //     await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
-
-    //     // User master address of app to work as the Bank Address
-    //     let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
-    //     /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
-    //     tx = await new Promise( async  (resolve, reject) => {
-    //         try{
-    //             await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 23593}, async (tx) => {
-    //                 resolve(tx);
-    //             });
-    //         }catch(err){reject(err)}
-    //     });
-
-    //     let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
-    //     const { status } = res.data;
-    //     await setAppMaxDeposit({
-    //         app: app.id,
-    //         wallet_id: currencyWallet._id,
-    //         amount: 0.4,
-    //     }, app.bearerToken, {id : app.id});
-    //     expect(status).to.not.be.null;
-    //     expect(status).to.equal(200);
-
-    //     expect(res.data.status).to.not.be.null;
-    //     expect(res.data.data.message.code).to.equal(200);
-
-    //     expect(dataMaxDeposit.data.status).to.be.equal(200);
-    //     expect(dataMaxDeposit.data.status).to.not.be.null;
-    //     detectValidationErrors(res);
-    // }));
-
 });

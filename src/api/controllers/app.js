@@ -32,8 +32,8 @@ async function createApp (req, res) {
 
 async function getAppAuth (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.getAuth();
@@ -71,8 +71,8 @@ async function getGames (req, res) {
 // JSON WebToken Security Functions
 async function deployApp (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.deployApp();
@@ -85,8 +85,8 @@ async function deployApp (req, res) {
 // JSON WebToken Security Functions
 async function createGame (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let game = new Game(params);
 		let data = await game.register();
@@ -99,8 +99,8 @@ async function createGame (req, res) {
 // JSON WebToken Security Functions
 async function addGame (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.addGame();
@@ -113,8 +113,8 @@ async function addGame (req, res) {
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.addCurrencyWallet();
@@ -127,8 +127,8 @@ async function addCurrencyWallet(req, res) {
 // JSON WebToken Security Functions
 async function getGame (req, res) {
 	try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
 	    let params = req.body;
 		let game = new Game(params);
 		let data = await game.get();
@@ -153,7 +153,7 @@ async function createBet (req, res) {
 
 async function setMaxBet (req, res) {
     try {
-        SecuritySingleton.verify({type : 'app', req});
+        SecuritySingleton.verify({type : 'admin', req});
         let params = req.body;
         let game = new Game(params);
         let data = await game.setMaxBet();
@@ -168,8 +168,8 @@ async function setMaxBet (req, res) {
 async function resolveBet (req, res) {
     try{
         // User Security Setup
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let bet = new Bet(params);
 		let data = await bet.resolve();
@@ -196,8 +196,8 @@ async function resolveGame (req, res) {
 // JSON WebToken Security Functions
 async function summary (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.summary();
@@ -210,8 +210,8 @@ async function summary (req, res) {
 // JSON WebToken Security Functions
 async function getTransactions (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getTransactions();
@@ -225,8 +225,8 @@ async function getTransactions (req, res) {
 // JSON WebToken Security Functions
 async function addServices (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.addServices();
@@ -286,8 +286,8 @@ async function getPopularNumbers (req, res) {
 
 async function editAffiliateStructure (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editAffiliateStructure();
@@ -299,8 +299,8 @@ async function editAffiliateStructure (req, res) {
 
 async function editIntegration (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editIntegration();
@@ -312,8 +312,8 @@ async function editIntegration (req, res) {
 
 async function editMailSenderIntegration (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editMailSenderIntegration();
@@ -325,8 +325,8 @@ async function editMailSenderIntegration (req, res) {
 
 async function editTopBar (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editTopBar();
@@ -338,8 +338,8 @@ async function editTopBar (req, res) {
 
 async function editBanners(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editBanners();
@@ -351,8 +351,8 @@ async function editBanners(req, res) {
 
 async function editLogo(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editLogo();
@@ -364,8 +364,8 @@ async function editLogo(req, res) {
 
 async function editColors(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editColors();
@@ -377,8 +377,8 @@ async function editColors(req, res) {
 
 async function editFooter(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editFooter();
@@ -390,8 +390,8 @@ async function editFooter(req, res) {
 
 async function editTopIcon(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editTopIcon();
@@ -403,8 +403,8 @@ async function editTopIcon(req, res) {
 
 async function editLoadingGif(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editLoadingGif();
@@ -416,8 +416,8 @@ async function editLoadingGif(req, res) {
 
 async function editTypography(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.editTypography();
@@ -429,8 +429,8 @@ async function editTypography(req, res) {
 
 async function getUsers(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
 		let data = await app.getUsers();
@@ -491,8 +491,8 @@ async function webhookBitgoDeposit (req, res) {
 
 async function createAffiliateCustom(req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let affiliateLink = new AffiliateLink(params);
         let data = await affiliateLink.setCustomAffiliatePercentage();
