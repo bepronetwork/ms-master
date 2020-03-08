@@ -96,9 +96,9 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
             app : app.id,
             game : game._id,
             background_url : image_data,
-            admin: admin.security
+            admin: admin.id
         }
-        let res = await editGameBackgroundImage(postData, admin.bearerToken, {id : admin.id});
+        let res = await editGameBackgroundImage(postData, admin.security.bearerToken, {id : admin.id});
         console.log(res);
         detectValidationErrors(res);
         const { status } = res.data;
