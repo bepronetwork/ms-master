@@ -54,6 +54,18 @@ async function setPassword(req, res) {
 	}
 }
 
+async function confirmEmail(req, res) {
+    try{
+        await MiddlewareSingleton.log({type: "global", req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.confirmEmail();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function resetPassword(req, res) {
     try{
         await MiddlewareSingleton.log({type: "global", req});
@@ -106,8 +118,8 @@ async function authUser (req, res) {
 
 async function getUserInfo (req, res) {
     try{
-        SecuritySingleton.verify({type : 'app', req});
-        await MiddlewareSingleton.log({type: "app", req});
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getInfo();
@@ -202,5 +214,6 @@ export {
     getDepositAddress,
     authUser,
     resetPassword,
-    setPassword
+    setPassword,
+    confirmEmail
 }

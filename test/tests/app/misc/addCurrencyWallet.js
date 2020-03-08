@@ -5,10 +5,11 @@ import { get_app } from '../../../models/apps';
 const expect = chai.expect;
 
 context('Add Currency Wallet', async () => {
-    var app, TokenTicker = 'eth';
+    var app, admin, TokenTicker = 'eth';
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
     it('should be able to add currency bank ETH to app', mochaAsync(async () => {
@@ -26,13 +27,13 @@ context('Add Currency Wallet', async () => {
 
         /* Guarantee Currency Added with Success to Wallet */
 
-        let res = await addCurrencyWalletToApp(postData, app.bearerToken , {id : app.id});
+        let res = await addCurrencyWalletToApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
         
         /* Verify if new wallet has that info */
-        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
+        let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         global.test.app = res_app.data.message;
 
         const { wallet } = res_app.data.message;
@@ -55,7 +56,7 @@ context('Add Currency Wallet', async () => {
 
         /* Guarantee Currency Added with Success to Wallet */
 
-        let res = await addCurrencyWalletToApp(postData, app.bearerToken , {id : app.id});
+        let res = await addCurrencyWalletToApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(404);
@@ -76,7 +77,7 @@ context('Add Currency Wallet', async () => {
 
         /* Guarantee Currency Added with Success to Wallet */
 
-        let res = await addCurrencyWalletToApp(postData, app.bearerToken , {id : app.id});
+        let res = await addCurrencyWalletToApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(46);

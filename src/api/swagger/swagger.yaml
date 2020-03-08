@@ -298,6 +298,42 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+
+  /users/email/confirm:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Confirm Email
+      operationId: confirmEmail
+      description: Confirm Email
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/ConfirmEmailRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
+
+
   /users/password/reset/set:
     x-swagger-router-controller: user
     post:
@@ -1113,6 +1149,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/games/editImage:
+    x-swagger-router-controller: game
+    post:
+      tags:
+      - app
+      summary: Edit Game Image
+      operationId: editGameImage
+      description: Change Game Image
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGameEditImage'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/integrations/edit:
     x-swagger-router-controller: app
     post:
@@ -1781,6 +1848,18 @@ definitions:
         minLength: 1
         description: |
          Password Hashed
+  ConfirmEmailRequest:
+    type: object
+    required:
+      - token
+    properties:
+      token:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          token
   setPasswordRequest:
     type: object
     required:
@@ -2069,6 +2148,29 @@ definitions:
         example: 3245
         description: |
           New Edge
+  AppGameEditImage : 
+    type: object
+    required:
+      - app
+      - game
+      - image_url
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      game:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Game id
+      image_url:
+        type : string
+        example: 876348bct3t2rc2t34
+        description : image blob or link
   AppAddCurrencyWallet : 
     type: object
     required:
@@ -2133,9 +2235,12 @@ definitions:
       banners:
         type : array
         items : 
-          type : string
-          example : 876348bct3t2rc2t34
-          description : image blob
+          type: object
+          properties:
+            image_url :
+              type: string
+            link_url  :
+              type: string
       autoDisplay:
         type : boolean
         example: true

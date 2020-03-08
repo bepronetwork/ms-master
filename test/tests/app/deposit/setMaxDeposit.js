@@ -11,10 +11,11 @@ function updateCurrencyWallet(localTicker,app) {
 }
 
 context(`Set Max Deposit`, async () => {
-    var app;
+    var app, admin;
 
     before( async () =>  {
-        app = (await getAppAuth(get_app(global.test.app.id), global.test.app.bearerToken, {id : global.test.app.id})).data.message;
+        admin = global.test.admin;
+        app = (await getAppAuth({...get_app(global.test.app.id), admin: admin.id}, global.test.admin.security.bearerToken, {id : global.test.admin.id})).data.message;
         updateCurrencyWallet('ETH',app);
     });
 
@@ -23,7 +24,8 @@ context(`Set Max Deposit`, async () => {
             app: app.id,
             wallet_id: currencyWallet._id,
             amount: 0.4,
-        }, app.bearerToken, {id : app.id});
+            admin: admin.id
+        }, admin.security.bearerToken, {id : admin.id});
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
     }));

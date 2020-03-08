@@ -13,10 +13,11 @@ const ticker = 'ETH';
 const depositAmount = 0.03;
 
 context(`${ticker}`, async () => {
-    var app, user, currencyWallet, tx, eth_account, bankContract;
+    var app, user, currencyWallet, tx, eth_account, bankContract, admin;
 
     before( async () =>  {
-        app = (await getAppAuth(get_app(global.test.app.id), global.test.app.bearerToken, {id : global.test.app.id})).data.message;
+        admin = global.test.admin;
+        app = (await getAppAuth({...get_app(global.test.app.id), admin: admin.id}, global.test.admin.security.bearerToken, {id : global.test.admin.id})).data.message;
         user = global.test.user;
         currencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         eth_account = await generateEthAccountWithTokensAndEthereum({decimals : currencyWallet.currency.decimals, ETHAmount : 0.15});
@@ -33,7 +34,6 @@ context(`${ticker}`, async () => {
         // Waiting 100 seconds for the address to be get intializaed
         let res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
         expect(res.data.status).to.equal(200);
-
         console.log("Waiting for 3 minutes seconds for wallet init...");
         await delay(180*1000);
         // Get User Deposit Address - already initialized
@@ -65,7 +65,8 @@ context(`${ticker}`, async () => {
             app: app.id,
             wallet_id: currencyWallet._id,
             amount: 0.01,
-        }, app.bearerToken, {id : app.id});
+            admin: admin.id
+        }, admin.security.bearerToken, {id : admin.id});
         
         let body = bitgoDepositExampleMaxDeposit();
         await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash);
@@ -77,10 +78,11 @@ context(`${ticker}`, async () => {
         res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
 
         await setAppMaxDeposit({
+            admin: admin.id,
             app: app.id,
             wallet_id: currencyWallet._id,
             amount: 0.4,
-        }, app.bearerToken, {id : app.id});
+        }, admin.security.bearerToken, {id : admin.id});
 
         expect(res.data.status).to.not.be.null;
         expect(res.data.message[0].code).to.equal(51);

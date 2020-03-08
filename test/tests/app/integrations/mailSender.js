@@ -16,11 +16,12 @@ const BOILERPLATES = global.BOILERPLATES;
 const expect = chai.expect;
 
 context('Mail Sender', async () =>  {
-    var app, user, userPostData, secret;
+    var app, admin, user, userPostData, secret;
 
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
     it('should register the User with SendInBlue API Key - Null', mochaAsync(async () => {
@@ -48,7 +49,7 @@ context('Mail Sender', async () =>  {
                 { "template_id": 1, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
             ]
         }
-        let res = await editAppMailSenderIntegration(postData, app.bearerToken , {id : app.id});
+        let res = await editAppMailSenderIntegration({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(res.data.status).to.equal(404);
     }));
 
@@ -62,7 +63,7 @@ context('Mail Sender', async () =>  {
                 { "template_id": 1, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
             ]
         }
-        let res = await editAppMailSenderIntegration(postData, app.bearerToken , {id : app.id});
+        let res = await editAppMailSenderIntegration({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(res.data.status).to.equal(200);
     }));
 

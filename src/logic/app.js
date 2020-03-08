@@ -208,13 +208,6 @@ const processActions = {
 
         return res.games;
     },
-    __createApiToken : async (params) => {
-		let normalized = {
-            ...params,
-            bearerToken : MiddlewareSingleton.sign(params.app)
-        }
-		return normalized;
-    },
     __editGameTableLimit : async (params) => {
 
         let { game, app, tableLimit} = params;
@@ -254,6 +247,26 @@ const processActions = {
 
 		return normalized;
     },
+	__editGameImage: async (params) => {
+        let { game, app, image_url } = params;
+        
+        game = await GamesRepository.prototype.findGameById(game);
+        app = await AppRepository.prototype.findAppByIdNotPopulated(app);
+        if(!game){throwError('GAME_NOT_EXISTENT')}
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+         // Verify if Game is part of this App
+         let isValid = app.games.find( id => id.toString() == game._id.toString())
+        
+         /* Normalize data of Game */
+		let normalized = {
+            game, 
+            app,
+            image_url,
+            isValid
+		}
+		return normalized;
+	},
     __editAffiliateStructure : async (params) => {
         let { app, structures, affiliateTotalCut } = params;
         app = await AppRepository.prototype.findAppById(app, 'affiliates');
@@ -369,8 +382,6 @@ const progressActions = {
 	__register : async (params) => {
         let app = await self.save(params);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
-        let bearerToken = MiddlewareSingleton.sign(app._id);
-        await AppRepository.prototype.createAPIToken(app._id, bearerToken);
         let email = admin.email;
         let attributes = {
             APP: app._id
@@ -552,10 +563,6 @@ const progressActions = {
 
         return params;
     },
-    __createApiToken : async (params) => {
-        let res = await AppRepository.prototype.createAPIToken(params.app, params.bearerToken)
-		return res;
-    },
     __editGameTableLimit : async (params) => {
         let { game, tableLimit} = params;
 
@@ -575,6 +582,25 @@ const progressActions = {
         });
 
 		return res;
+    },
+	__editGameImage : async (params) => {
+        let { game, image_url } = params;
+        let gameImageURL;
+        if(image_url.includes("https")){
+            /* If it is a link already */
+            gameImageURL = image_url;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            gameImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
+            image_url = gameImageURL
+        }
+        
+        let res = await GamesRepository.prototype.editImage({
+            id: game._id,
+            image_url
+        })
+        // Save info on Game
+        return res;
     },
     __editAffiliateStructure : async (params) => {
 
@@ -643,13 +669,16 @@ const progressActions = {
     },
     __editBanners : async (params) => {
         let { app, autoDisplay, banners } = params;
-        let ids = await Promise.all(banners.map( b => {
-            if(b.includes("https")){
+        let ids = await Promise.all(banners.map( async b => {
+            if(b.image_url.includes("https")){
                 /* If it is a link already */
                 return b;
             }else{
                 /* Does not have a Link and is a blob encoded64 */
-                return GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b});
+                return {
+                    image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
+                    link_url  : b.link_url
+                };
             }
         }))
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
@@ -856,9 +885,6 @@ class AppLogic extends LogicComponent{
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
-                case 'CreateAPIToken' : {
-					return await library.process.__createApiToken(params); break;
-                };
                 case 'EditGameTableLimit' : {
                     return await library.process.__editGameTableLimit(params); break;
                 };
@@ -874,6 +900,9 @@ class AppLogic extends LogicComponent{
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
                 };
+                case 'EditGameImage': {
+					return await library.process.__editGameImage(params); break;
+				};
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
@@ -969,15 +998,15 @@ class AppLogic extends LogicComponent{
                 case 'GetTransactions' : {
 					return await library.progress.__getTransactions(params); break;
                 };
-                case 'CreateAPIToken' : {
-					return await library.progress.__createApiToken(params); break;
-                };
                 case 'EditGameTableLimit' : {
                     return await library.progress.__editGameTableLimit(params); break;
                 };
                 case 'EditGameEdge' : {
                     return await library.progress.__editGameEdge(params); break;
                 };
+                case 'EditGameImage': {
+					return await library.progress.__editGameImage(params); break;
+				};
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;
                 };

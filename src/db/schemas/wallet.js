@@ -14,7 +14,8 @@ WalletSchema.prototype.schema = {
     bank_address                : { type: String},
     bitgo_id                    : { type: String} ,
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
-    hashed_passphrase            : { type: String}  
+    hashed_passphrase           : { type: String},
+    link_url                    : { type: String, default : null}
 }
 
 WalletSchema.prototype.model = db.model(WalletSchema.prototype.name, new db.Schema(WalletSchema.prototype.schema));

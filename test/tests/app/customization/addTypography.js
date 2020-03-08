@@ -4,10 +4,11 @@ import { editTypographyApp } from '../../../methods';
 const expect = chai.expect;
 
 context('Edit Typography', async () => {
-    var app;
+    var app, admin;
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
 
@@ -187,7 +188,7 @@ context('Edit Typography', async () => {
             app : app.id
         };
 
-        let res = await editTypographyApp(postData, app.bearerToken , {id : app.id});
+        let res = await editTypographyApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
 
         expect(detectValidationErrors(res)).to.be.equal(false);
 

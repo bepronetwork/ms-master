@@ -18,7 +18,7 @@ context('Chat', async () =>  {
 
     before( async () =>  {
         app = global.test.app;
-        admin = global.test.app;
+        admin = global.test.admin;
     });
 
     it('should update the integration info from app', mochaAsync(async () => {

@@ -124,20 +124,6 @@ class App extends ModelComponent{
             throw err;
         }
     }
-    
-    /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
-
-    async createAPIToken(){
-        try{
-            let app = await this.process('CreateAPIToken');
-            return app;
-        }catch(err){
-            throw err;
-        }
-    }
 
      /**
      * @param {String} 
@@ -274,6 +260,20 @@ class App extends ModelComponent{
         try{
             return await this.process('EditGameEdge');
         }catch(err){
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+     
+    async editGameImage(){
+        try {
+            return await this.process('EditGameImage');
+        } catch (err) {
             throw err;
         }
     }
