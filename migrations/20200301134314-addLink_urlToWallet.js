@@ -26,10 +26,35 @@ const setLinkUrl = ({ ticker, address }) => {
   }
 }
 
+class Progress {
+
+  constructor(value) {
+      this.progress = value;
+      this.objProgress = setInterval(()=>{
+        console.clear();
+        console.log(this.name);
+        console.log(`${this.progress} process left`);
+      }, 2000);
+  }
+
+  setProcess(value) {
+      this.progress = value;
+  }
+
+  destroyProgress() {
+      clearInterval(this.objProgress);
+  }
+
+}
+
 module.exports = {
   async up(db, client) {
     let wallets = await db.collection('wallets').find().toArray();
+    let processIndex  = wallets.length;
+    let processObj    = new Progress(processIndex, "ADD_LINK_URL_TO_WALLET");
     for (let wallet of wallets) {
+      processObj.setProcess(processIndex);
+      processIndex --;
       var address = '0X';
       var ticker = 'ETH';
       let currency = await db.collection('currencies').findOne({ _id: wallet.currency })
@@ -48,6 +73,7 @@ module.exports = {
           { $set: { "link_url": link_url } });
       }
     }
+    processObj.destroyProgress();
   },
 
   async down(db, client) {

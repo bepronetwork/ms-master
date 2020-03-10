@@ -1,7 +1,32 @@
+class Progress {
+
+  constructor(value) {
+      this.progress = value;
+      this.objProgress = setInterval(()=>{
+        console.clear();
+        console.log(this.name);
+        console.log(`${this.progress} process left`);
+      }, 2000);
+  }
+
+  setProcess(value) {
+      this.progress = value;
+  }
+
+  destroyProgress() {
+      clearInterval(this.objProgress);
+  }
+
+}
+
 module.exports = {
   async up(db, client) {
     let customizations = await db.collection('customizations').find().toArray();
+    let processIndex  = customizations.length;
+    let processObj    = new Progress(processIndex, "ADD_TOP_ICON");
     for (let customization of customizations) {
+      processObj.setProcess(processIndex);
+      processIndex --;
       let topIcon = await db.collection('topicons').findOne({ _id: customization.topIcon });
       if (topIcon === null) {
         let newTopIcon = await db.collection('topicons').insertOne({
@@ -13,6 +38,7 @@ module.exports = {
         )
       }
     }
+    processObj.destroyProgress();
   },
 
   async down(db, client) {

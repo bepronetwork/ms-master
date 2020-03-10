@@ -1,3 +1,24 @@
+class Progress {
+
+  constructor(value) {
+      this.progress = value;
+      this.objProgress = setInterval(()=>{
+        console.clear(); console.log(this.name);
+        console.log(`${this.progress} process left`);
+      }, 2000);
+  }
+
+  setProcess(value) {
+      this.progress = value;
+  }
+
+  destroyProgress() {
+      clearInterval(this.objProgress);
+  }
+
+}
+
+
 module.exports = {
   async up(db, client) {
     // TODO write your migration here.
@@ -22,7 +43,11 @@ module.exports = {
     ];
 
     let apps = await db.collection('apps').find().toArray();
+    let processIndex  = apps.length;
+    let processObj    = new Progress(processIndex, "ADD_TYPOGRAPHY_TO_APP");
     for(let app of apps) {
+      processObj.setProcess(processIndex);
+      processIndex --;
       let newList = [];
       for (let typography of listTypography) {
         let result = await db.collection('typographies').insertOne({
@@ -36,6 +61,7 @@ module.exports = {
       await db.collection('apps').remove({_id: app._id});
       await db.collection('apps').insertOne(app);
     }
+    processObj.destroyProgress();
   },
 
   async down(db, client) {

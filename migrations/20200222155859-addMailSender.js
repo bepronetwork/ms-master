@@ -1,7 +1,32 @@
+class Progress {
+
+  constructor(value) {
+      this.progress = value;
+      this.objProgress = setInterval(()=>{
+        console.clear();
+        console.log(this.name);
+        console.log(`${this.progress} process left`);
+      }, 2000);
+  }
+
+  setProcess(value) {
+      this.progress = value;
+  }
+
+  destroyProgress() {
+      clearInterval(this.objProgress);
+  }
+
+}
+
 module.exports = {
   async up(db, client) {
     let integrations = await db.collection('integrations').find().toArray();
+    let processIndex  = integrations.length;
+    let processObj    = new Progress(processIndex, "ADD_MAIL_SENDER");
     for (let integration of integrations) {
+      processObj.setProcess(processIndex);
+      processIndex --;
       let mailSender = await db.collection('mailsenders').findOne({ _id: integration.mailSender });
       if (mailSender === null) {
         let newmailSender = await db.collection('mailsenders').insertOne({
@@ -19,6 +44,7 @@ module.exports = {
         )
       }
     }
+    processObj.destroyProgress();
   },
 
   async down(db, client) {
