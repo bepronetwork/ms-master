@@ -4,8 +4,9 @@ require('dotenv').config();
 
 class Progress {
 
-  constructor(value) {
+  constructor(value, names) {
       this.progress = value;
+      this.name     = name;
       this.objProgress = setInterval(()=>{
         console.clear();
         console.log(this.name);
@@ -50,7 +51,7 @@ const setLinkUrl = ({ ticker, address }) => {
 
 module.exports = {
   async up(db, client) {
-    let deposits = await db.collection('deposits').find().sort({currency: -1}).limit(10).toArray();
+    let deposits = await db.collection('deposits').find().toArray();
     let processIndex  = deposits.length;
     let processObj    = new Progress(processIndex, "ADD_LINK_URL_TO_DEPOSIT");
     for (let deposit of deposits) {
