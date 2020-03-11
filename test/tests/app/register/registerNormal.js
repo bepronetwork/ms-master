@@ -88,7 +88,8 @@ context('Normal', async () =>  {
 
     it('should Get App Data Auth', mochaAsync(async () => {
         let get_app_model = models.apps.get_app(app.id);
-        let res = await getAppAuth(get_app_model, app.bearerToken, { id: app.id });
+
+        let res = await getAppAuth({...get_app_model, admin: admin.id}, admin.security.bearerToken, { id: admin.id });
         /* Set app Global Variable for Further Test */
         global.test.app = res.data.message;
         detectValidationErrors(res);
@@ -163,7 +164,7 @@ context('Normal', async () =>  {
 
     it('should Integrate Services into App', mochaAsync(async () => {
         let service_call_add_model = models.apps.add_services(app.id, [101, 201]);
-        let res = await addAppServices(service_call_add_model, app.bearerToken, { id: app.id });
+        let res = await addAppServices({...service_call_add_model, admin: admin.id}, admin.security.bearerToken, { id: admin.id });
         detectValidationErrors(res);
         shouldIntegrateServicesIntoApp(res.data, expect);
     }));

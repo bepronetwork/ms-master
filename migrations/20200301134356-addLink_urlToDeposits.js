@@ -1,6 +1,29 @@
 'use strict'
 require('dotenv').config();
 
+
+class Progress {
+
+  constructor(value, names) {
+      this.progress = value;
+      this.name     = name;
+      this.objProgress = setInterval(()=>{
+        console.clear();
+        console.log(this.name);
+        console.log(`${this.progress} process left`);
+      }, 2000);
+  }
+
+  setProcess(value) {
+      this.progress = value;
+  }
+
+  destroyProgress() {
+      clearInterval(this.objProgress);
+  }
+
+}
+
 const setLinkUrl = ({ ticker, address }) => {
   var link_url;
   if (process.env.ENV === "development") {
@@ -28,8 +51,12 @@ const setLinkUrl = ({ ticker, address }) => {
 
 module.exports = {
   async up(db, client) {
-    let deposits = await db.collection('deposits').find().sort({currency: -1}).limit(10).toArray();
+    let deposits = await db.collection('deposits').find().toArray();
+    let processIndex  = deposits.length;
+    let processObj    = new Progress(processIndex, "ADD_LINK_URL_TO_DEPOSIT");
     for (let deposit of deposits) {
+      processObj.setProcess(processIndex);
+      processIndex --;
       var address = '0X';
       var ticker = 'ETH';
       let currency = await db.collection('currencies').findOne({ _id: deposit.currency })
@@ -48,6 +75,7 @@ module.exports = {
           { $set: { "link_url": link_url } });
       }
     }
+    processObj.destroyProgress();
   },
 
   async down(db, client) {

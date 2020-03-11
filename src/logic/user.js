@@ -36,6 +36,7 @@ import { SendInBlue } from './third-parties/sendInBlue';
 import { Logger } from '../helpers/logger';
 import Mailer from './services/mailer';
 import { template } from "./third-parties/sendInBlue/functions";
+import { GenerateLink } from '../helpers/generateLink';
 
 let error = new ErrorManager();
 
@@ -59,6 +60,24 @@ let __private = {};
 
 
 const processActions = {
+    __confirmEmail: async (params) => {
+
+        const payload = MiddlewareSingleton.resultTokenEmail(params.token);
+        if (!payload) {
+            throwError('TOKEN_INVALID');
+        }
+        if (payload.email == undefined ) {
+            throwError('TOKEN_INVALID');
+        }
+        const email = payload.email;
+        const user = await UsersRepository.prototype.findUserByEmail(email);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+
+        const normalized = {
+            user_id: user._id
+        }
+        return normalized;
+    },
     __login: async (params) => {
         var input_params = params;
         let normalized = {};
@@ -236,6 +255,9 @@ const processActions = {
         if (params.password)
             hash_password = new Security(params.password).hash();
 
+        let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
+        let url = GenerateLink.confirmEmail([app.web_url, tokenConfirmEmail]);
+
         let normalized = {
             alreadyExists: alreadyExists,
             username: username,
@@ -253,7 +275,8 @@ const processActions = {
             app: app,
             app_id: app.id,
             external_user: params.user_external_id ? true : false,
-            external_id: params.user_external_id
+            external_id: params.user_external_id,
+            url
         }
         return normalized;
     },
@@ -366,6 +389,18 @@ const processActions = {
 
 
 const progressActions = {
+
+    __confirmEmail: async (params) => {
+
+        await UsersRepository.prototype.updateUser({
+            id      : params.user_id,
+            param   : {
+                email_confirmed : true
+            }
+        });
+
+        return {};
+    },
     __login: async (params) => {
         await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
         /* Send Login Email ASYNC - so that it is not dependent on user login */
@@ -404,7 +439,7 @@ const progressActions = {
             YOURNAME: name,
             TOKEN: bearerToken,
             USER: user_id,
-            URL: `${url}password/reset?token=${bearerToken}&userId=${user_id}`
+            URL: GenerateLink.resetPassword([url, bearerToken, user_id])
         };
         new Mailer().sendEmail({app_id : app_id, user, action : 'USER_RESET_PASSWORD', attributes});
         return true;
@@ -442,8 +477,13 @@ const progressActions = {
             /* Add to App */
             await AppRepository.prototype.addUser(params.app_id, user);
 
+            /* attributes  */
+            let attributes = {
+                URL: params.url
+            };
+
             /* Send Email */
-            new Mailer().sendEmail({app_id : params.app.id, user, action : 'USER_REGISTER'});
+            new Mailer().sendEmail({app_id : params.app.id, user, action : 'USER_REGISTER', attributes});
             user = await __private.db.findUserById(user._id);
             return user;
         } catch (err) {
@@ -521,11 +561,11 @@ const progressActions = {
                 eventType: 'DEPOSIT'
             })
             /* Send Email */
-            let templateDeposit = template.find(a => {return a.functionName === "USER_TEXT_DEPOSIT_AND_WITHDRAW"})
+            let mail = new Mailer();
             let attributes = {
-                TEXT: templateDeposit.attributes.TEXT({amount: params.amount, ticker: params.wallet.currency.ticker}).deposit
+                TEXT: mail.setTextNotification('DEPOSIT', params.amount, params.wallet.currency.ticker)
             };
-            new Mailer().sendEmail({app_id : params.app.id, user : params.user, action : 'USER_TEXT_DEPOSIT_AND_WITHDRAW', attributes});
+            mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
             return params;
         } catch (err) {
             throw err;
@@ -630,6 +670,9 @@ class UserLogic extends LogicComponent {
                 case 'SetPassword': {
                     return await library.process.__setPassword(params); break;
                 };
+                case 'ConfirmEmail': {
+                    return await library.process.__confirmEmail(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -694,6 +737,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'SetPassword': {
                     return await library.progress.__setPassword(params); break;
+                };
+                case 'ConfirmEmail': {
+                    return await library.progress.__confirmEmail(params); break;
                 };
             }
         } catch (err) {

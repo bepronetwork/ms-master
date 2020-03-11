@@ -175,7 +175,9 @@ const afterTests = async () => {
     try{
         console.log('Running After Tests Scripts..');
         const app = global.test.app;
-        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
+        const admin = global.test.admin;
+
+        let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         const { hosting_id } = res_app.data.message;
         /* Remove App from Heroku because it compounds $$ */
         let res = await HerokuClientSingleton.deleteApp({app : hosting_id})

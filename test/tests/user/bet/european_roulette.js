@@ -30,7 +30,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
     before( async () =>  {
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
-        app = (await getAppAuth({app : admin.app.id}, admin.app.bearerToken, {id : admin.app.id})).data.message;
+        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         game = app.games.find( game => game.metaName == metaName);
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
     });
@@ -41,7 +41,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             game : game._id,
             maxBet : 0.2
         }
-        let res = await setMaxBet(postData, admin.app.bearerToken, {id : admin.app.id});
+        let res = await setMaxBet({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equal(200);
     }));
   
@@ -102,7 +102,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             game : game._id,
             tableLimit : limitTableBetAmount[key]
         }
-        let res = await editTableLimit(postData, app.bearerToken, {id : app.id});
+        let res = await editTableLimit({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equal(200);
 
         /* 2 - Test Bet with table limit change */

@@ -9,15 +9,16 @@ const expect = chai.expect;
 context('Edit Structures', async () => {
 
     var app;
-
+    var admin;
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
     it('it should throw error on empty structure', mochaAsync(async () => {
         const structures = []
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         detectValidationErrors(res);
         const { status } = res.data;
         expect(status).to.equal(42);
@@ -25,28 +26,28 @@ context('Edit Structures', async () => {
 
     it('it should throw error on structure without percentageOnLoss', mochaAsync(async () => {
         const structures = [{level : 1}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { message } = res;
         expect(message).to.equal('Validation errors');
     }));
 
     it('it should throw error on structure without level', mochaAsync(async () => {
         const structures = [{percentageOnLoss : 0.04}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(42);
     }));
 
     it('it should throw error on structure with same level', mochaAsync(async () => {
         const structures = [{level : 1, percentageOnLoss : 0.04}, {level : 2, percentageOnLoss : 0.03}, {level : 3, percentageOnLoss : 0.02}, {level : 3, percentageOnLoss : 0.01}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(42);
     }));
 
     it('it should throw error on structure with level negative', mochaAsync(async () => {
         const structures = [{level : -1, percentageOnLoss : 0.04}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(42);
     }));
@@ -54,35 +55,35 @@ context('Edit Structures', async () => {
 
     it('it should throw error on structure with percentageOnLoss Negative', mochaAsync(async () => {
         const structures = [{level : 1, percentageOnLoss : -0.04}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(42);
     }));
 
     it('it should throw error on structure with level 0', mochaAsync(async () => {
         const structures = [{level : 0, percentageOnLoss : 0.04}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(42);
     }));
 
     it('it should throw error on structure with percentageOnLoss 0', mochaAsync(async () => {
         const structures = [{level : 1, percentageOnLoss : 0}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(42);
     }));
 
     it('it should allow app to add structures and keep the old ones ids', mochaAsync(async () => {
-        let app_data_before = await getApp({app});
+        let app_data_before = await getApp({app, admin});
         const { message : data_before } = app_data_before.data;
 
         const structures = [{level : 1, percentageOnLoss : 0.03}, {level : 2, percentageOnLoss : 0.02}, {level : 3, percentageOnLoss : 0.01}, {level : 4, percentageOnLoss : 0.01}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(200);
 
-        let app_data_after = await getApp({app});
+        let app_data_after = await getApp({app, admin});
         const { message : data_after } = app_data_after.data;
         /* Test if they are 4 */
         expect(data_after.affiliateSetup.affiliateStructures.length).to.equal(structures.length);
@@ -113,15 +114,15 @@ context('Edit Structures', async () => {
     }));
 
     it('it should allow app to change structures keeping the old users info ids', mochaAsync(async () => {
-        let app_data_before = await getApp({app});
+        let app_data_before = await getApp({app, admin});
         const { message : data_before } = app_data_before.data;
 
         const structures = [{level : 1, percentageOnLoss : 0.06}, {level : 2, percentageOnLoss : 0.04}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(200);
 
-        let app_data_after = await getApp({app});
+        let app_data_after = await getApp({app, admin});
         const { message : data_after } = app_data_after.data;
         /* Test if they are 4 */
         expect(data_after.affiliateSetup.affiliateStructures.length).to.equal(data_before.affiliateSetup.affiliateStructures.length);
@@ -163,15 +164,15 @@ context('Edit Structures', async () => {
 
     it('it should allow app to keep structures with same variables', mochaAsync(async () => {
         /* Get Before Data */
-        let app_data_before = await getApp({app});
+        let app_data_before = await getApp({app, admin});
         const { message : data_before } = app_data_before.data;
 
         const structures = [{level : 1, percentageOnLoss : 0.06}, {level : 2, percentageOnLoss : 0.04}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(200);
 
-        let app_data_after = await getApp({app});
+        let app_data_after = await getApp({app, admin});
         const { message : data_after } = app_data_after.data;
         /* Test if they are 4 */
         expect(data_after.affiliateSetup.affiliateStructures.length).to.equal(data_before.affiliateSetup.affiliateStructures.length);
@@ -211,15 +212,15 @@ context('Edit Structures', async () => {
 
     it('it should allow app to keep structures with different variables', mochaAsync(async () => {
         /* Get Before Data */
-        let app_data_before = await getApp({app});
+        let app_data_before = await getApp({app, admin});
         const { message : data_before } = app_data_before.data;
 
         const structures = [{level : 1, percentageOnLoss : 0.03}, {level : 2, percentageOnLoss : 0.02}]
-        let res = await editAppStructure({app, structures});
+        let res = await editAppStructure({app, admin, structures});
         const { status } = res.data;
         expect(status).to.equal(200);
 
-        let app_data_after = await getApp({app});
+        let app_data_after = await getApp({app, admin});
         const { message : data_after } = app_data_after.data;
         /* Test if they are 4 */
         expect(data_after.affiliateSetup.affiliateStructures.length).to.equal(data_before.affiliateSetup.affiliateStructures.length);

@@ -12,6 +12,12 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async confirmEmail(params) {
+        return request(global.server)
+        .post('/api/users/email/confirm')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async registerAdmin(params) {
         return request(global.server)
         .post('/api/admins/register')
@@ -331,6 +337,14 @@ module.exports = {
     async editGameImage(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editImage')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editGameBackgroundImage(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/games/editBackgroundImage')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

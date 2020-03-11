@@ -24,6 +24,7 @@ import {
     shouldntLoginTheAdmin
 } from '../../output/AdminTestMethod'
 import { SendinBlueSingleton } from '../../../../src/logic/third-parties/sendInBlue';
+import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
 
 const expect = chai.expect;
 

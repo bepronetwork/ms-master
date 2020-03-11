@@ -12,6 +12,8 @@ import models from "../models";
 import Random from "../tools/Random";
 import { generateEthAccount, userDepositToContract } from "../utils/eth";
 import { getNonce } from '../lib';
+import { WalletsRepository } from '../../src/db/repos';
+import { provideFunds } from '../utils/env';
 
 
 export async function createUser({app_id, affiliateLink}){
@@ -28,11 +30,12 @@ export async function createUser({app_id, affiliateLink}){
     
     /* Login User */
     var data = (await loginUser(userPostData)).data;
+    await provideFunds({wallet : data.message.wallet[0]._id, amount : 0.1});
+
     data.message.password = userPostData.password;
     /* Return User */
     return {...data, eth_account : user_eth_account};
 }
-
 
 export async function createUserDeposit({user, tokenAmount, app, currency,  depositAddress}){
     const { id : app_id} = app;
@@ -48,26 +51,29 @@ export async function createUserDeposit({user, tokenAmount, app, currency,  depo
     }, bearerToken, {id : user_id});
 }
 
-export async function editAppStructure({app, structures}){
+export async function editAppStructure({app, admin, structures}){
     return await editAffiliateStructure({
+        admin: admin.id,
         app : app.id,
-        structures, 
+        structures,
         affiliateTotalCut : structures.reduce( (acc, s) => acc+s.percentageOnLoss, 0)
-    }, app.bearerToken, {id : app.id})
+    }, admin.security.bearerToken, {id : admin.id})
 }
 
-export async function addCustomAffiliateStructureToUser({app, affiliatePercentage, user}){
+export async function addCustomAffiliateStructureToUser({app, admin, affiliatePercentage, user}){
     return await setCustomAffiliateStructureToUser({
         app : app.id,
+        admin: admin.id,
         user, 
         affiliatePercentage
-    }, app.bearerToken, {id : app.id})
+    }, admin.security.bearerToken, {id : admin.id})
 }
 
-export async function getApp({app}){
+export async function getApp({app, admin}){
     return (await getAppAuth({
+        admin: admin.id,
         app : app.id,
-    }, app.bearerToken, {id : app.id}))
+    }, admin.security.bearerToken, {id : admin.id}))
 }
 
 export async function getUserInfo({user, app}){

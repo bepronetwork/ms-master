@@ -5,10 +5,11 @@ import { get_app } from '../../../models/apps';
 const expect = chai.expect;
 
 context('Add TopBar Info', async () => {
-    var app;
+    var app, admin;
 
     before( async () =>  {
         app = global.test.app;
+        admin = global.test.admin;
     });
 
 
@@ -22,11 +23,11 @@ context('Add TopBar Info', async () => {
             isActive : true
         };
 
-        let res = await editTopBarCustomizationApp(postData, app.bearerToken , {id : app.id});
+        let res = await editTopBarCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
 
         expect(detectValidationErrors(res)).to.be.equal(false);
 
-        let res_app = await getAppAuth(get_app(app.id), app.bearerToken, {id : app.id});
+        let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
 
         const { status } = res.data;
         expect(status).to.be.equal(200);

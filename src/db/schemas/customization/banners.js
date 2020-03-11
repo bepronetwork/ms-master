@@ -6,7 +6,10 @@ class BannersSchema{};
 BannersSchema.prototype.name = 'Banners';
 
 BannersSchema.prototype.schema =  {
-    ids                     : [{ type : String}],
+    ids                     : [{
+        image_url : {type : String}, 
+        link_url  : {type: String}
+    }],
     autoDisplay             : { type : Boolean, default : false}
 }
 

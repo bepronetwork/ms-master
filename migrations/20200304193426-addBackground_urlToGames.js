@@ -22,22 +22,18 @@ class Progress {
 
 module.exports = {
   async up(db, client) {
-    let customizations = await db.collection('customizations').find().toArray();
-    let processIndex  = customizations.length;
-    let processObj    = new Progress(processIndex, "ADD_TOP_ICON");
-    for (let customization of customizations) {
+
+    
+    let games = await db.collection('games').find().toArray();
+    let processIndex  = games.length;
+    let processObj    = new Progress(processIndex, "ADD_BACKGROUND_URL_TO_GAMES");
+    for (let game of games) {
       processObj.setProcess(processIndex);
       processIndex --;
-      let topIcon = await db.collection('topicons').findOne({ _id: customization.topIcon });
-      if (topIcon === null) {
-        let newTopIcon = await db.collection('topicons').insertOne({
-          __v: 0
-        });
-        await db.collection('customizations').updateOne(
-          { _id: customization._id },
-          { $set: { "topIcon": newTopIcon.ops[0]._id } }
-        )
-      }
+      await db.collection('games').updateOne(
+        { _id: game._id },
+        { $set: { "background_url": null } }
+      )
     }
     processObj.destroyProgress();
   },
