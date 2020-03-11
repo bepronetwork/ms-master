@@ -4,7 +4,7 @@ require('dotenv').config();
 
 class Progress {
 
-  constructor(value, names) {
+  constructor(value, name) {
       this.progress = value;
       this.name     = name;
       this.objProgress = setInterval(()=>{
