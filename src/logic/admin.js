@@ -248,7 +248,7 @@ const progressActions = {
         if(!params.adminEmail) {
             delete params['adminEmail'];
             resultAdmin = await self.save(params);
-            securityId = String(resultAdmin.security);
+            securityId = String(resultAdmin.security._id);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
             resultAdmin = params.adminEmail;
