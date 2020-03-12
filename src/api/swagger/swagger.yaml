@@ -2255,6 +2255,7 @@ definitions:
       - app
       - game
       - tableLimit
+      - wallet
     properties:
       app:
         type : string
@@ -2273,7 +2274,12 @@ definitions:
         example: 3245
         description: |
           New Table Limit
-  AppCustomizationBanners : 
+      wallet:
+        type : string
+        example: eth
+        description: |
+          Ticket wallet. Ex.: eth
+  AppCustomizationBanners :
     type: object
     required:
       - app

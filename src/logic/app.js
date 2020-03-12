@@ -585,11 +585,12 @@ const progressActions = {
         return params;
     },
     __editGameTableLimit : async (params) => {
-        let { game, tableLimit} = params;
+        let { game, tableLimit, wallet} = params;
 
         let res = await GamesRepository.prototype.editTableLimit({
             id : game._id,
-            tableLimit
+            tableLimit,
+            wallet
         });
 
 		return res;
