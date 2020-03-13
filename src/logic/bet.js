@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository, CurrencyRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
 import CasinoLogicSingleton from './utils/casino';
@@ -166,9 +166,10 @@ const processActions = {
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
 
-            console.log(currency);
+            const currencyToFind = await CurrencyRepository.prototype.findById(new String(currency).toString());
+            console.log(currencyToFind);
 
-            const tableLimit = (game.wallets.find( w => w.wallet.toUpperCase() == currency.ticker.toUpperCase() )).tableLimit;
+            const tableLimit = (game.wallets.find( w => w.wallet.toUpperCase() == currencyToFind.ticker.toUpperCase() )).tableLimit;
 
             let normalized = {
                 user_in_app,
