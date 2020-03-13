@@ -56,18 +56,19 @@ class GamesRepository extends MongoComponent{
     editTableLimit({id, tableLimit, wallet}){
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.updateOne(
-                {_id: id, "wallets.$.wallet": wallet},
+                {_id: id, "wallets.wallet": wallet},
                 {
                     $set: {
                         "wallets.$.tableLimit" : parseFloat(tableLimit).toFixed(6)
                     }
                 }
             )
-            .exec( (err, item) => {
-                    if(err){reject(err)}
-                    resolve(item);
-                }
-            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                const result= await GamesRepository.prototype.schema.model.findById(id);
+                console.log(result);
+                resolve(result);
+            })
         });
     }
 

@@ -51,7 +51,8 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
         let postData = {
             app : app.id,
             game : game._id,
-            tableLimit : 30
+            tableLimit : 30,
+            wallet: 'ETH'
         }
         let res = await editTableLimit({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         shouldChangeGameTableLimitEuropeanRoulette(res.data, expect);

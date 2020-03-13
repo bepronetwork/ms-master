@@ -23,6 +23,7 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
+const patternWallet = require("../mocks/wallets/pattern.json");
 let error = new ErrorManager();
 
 
@@ -129,8 +130,17 @@ const processActions = {
 
         if(!app){throwError('APP_NOT_EXISTENT')}
 
+
+        let wallets = await Promise.all(patternWallet.map( async b => {
+            return {
+                wallet      : b.wallet,
+                tableLimit  : b.tableLimit
+            }
+        }));
+
         //TO DO : verify if Metaname is already in the games of app
         let res = {
+            wallets,
             gameEcosystem,
             app
         }
@@ -210,7 +220,7 @@ const processActions = {
     },
     __editGameTableLimit : async (params) => {
 
-        let { game, app, tableLimit} = params;
+        let { game, app, tableLimit, wallet } = params;
         
         game = await GamesRepository.prototype.findGameById(game);
         app = await AppRepository.prototype.findAppByIdNotPopulated(app);
@@ -224,7 +234,8 @@ const processActions = {
             game, 
             app,
             tableLimit,
-            isValid
+            isValid,
+            wallet
         }
 		return normalized;
     },
@@ -527,7 +538,7 @@ const progressActions = {
 		return res;
     },
     __addGame : async (params) => {
-        const { app, gameEcosystem } = params;
+        const { app, gameEcosystem, wallets } = params;
         let game = new Game({
             app             : app,
             edge            : 0,
@@ -537,10 +548,13 @@ const progressActions = {
             image_url       : gameEcosystem.image_url,
             metaName        : gameEcosystem.metaName,
             betSystem       : 0, // Auto
-            description     : gameEcosystem.description
+            description     : gameEcosystem.description,
+            wallets         : wallets
         })
 
-        await game.register();
+        const gam = await game.register();
+
+        console.log(gam);
 
 		return params;
     },

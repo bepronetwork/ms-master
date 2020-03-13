@@ -100,7 +100,8 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         let postData = {
             app : app.id,
             game : game._id,
-            tableLimit : limitTableBetAmount[key]
+            tableLimit : limitTableBetAmount[key],
+            wallet : key.toUpperCase()
         }
         let res = await editTableLimit({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equal(200);

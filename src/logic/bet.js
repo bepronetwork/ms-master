@@ -167,6 +167,8 @@ const processActions = {
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);            
 
+            const tableLimit = (game.wallets.find( w => currency.ticket.toUpperCase() == w.wallet.toUpperCase())).tableLimit;
+
             let normalized = {
                 user_in_app,
                 isUserWithdrawingAPI,
@@ -178,7 +180,7 @@ const processActions = {
                 totalAffiliateReturn,
                 appWallet,
                 currency,
-                tableLimit                      :   game.tableLimit,
+                tableLimit,
                 wallet				            :   userWallet,
                 user                            :   user._id, 				    
                 app                             :   app._id,
