@@ -2,7 +2,7 @@ import {UserLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {UsersRepository} from '../db/repos';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
-import { MapperUserSingleton } from '../controllers/Mapper/MapperUser';
+import { MapperRegisterUserSingleton } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
 
@@ -84,7 +84,7 @@ class User extends ModelComponent{
     async register(){
         try{
             let res = await this.process('Register');
-            return MapperUserSingleton.output('UserRegister', res);
+            return MapperRegisterUserSingleton.output('UserRegister', res);
         }catch(err){
             throw err;
         }
