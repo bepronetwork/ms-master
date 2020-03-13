@@ -160,14 +160,15 @@ const processActions = {
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
-               
                 /* Set App Cut without Affiliate Return */
                 app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
             }
 
-            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);            
+            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
 
-            const tableLimit = (game.wallets.find( w => currency.ticker.toUpperCase() == w.wallet.toUpperCase())).tableLimit;
+            console.log(currency);
+
+            const tableLimit = (game.wallets.find( w => w.wallet.toUpperCase() == currency.ticker.toUpperCase() )).tableLimit;
 
             let normalized = {
                 user_in_app,
