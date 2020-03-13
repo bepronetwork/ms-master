@@ -554,7 +554,7 @@ const progressActions = {
 
         const gam = await game.register();
 
-        console.log(gam);
+        // console.log(gam);
 
 		return params;
     },

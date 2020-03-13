@@ -66,7 +66,7 @@ class GamesRepository extends MongoComponent{
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 const result= await GamesRepository.prototype.schema.model.findById(id);
-                console.log(result);
+                // console.log(result);
                 resolve(result);
             })
         });
