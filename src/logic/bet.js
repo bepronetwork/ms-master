@@ -167,7 +167,7 @@ const processActions = {
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);            
 
-            const tableLimit = (game.wallets.find( w => currency.ticket.toUpperCase() == w.wallet.toUpperCase())).tableLimit;
+            const tableLimit = (game.wallets.find( w => currency.ticker.toUpperCase() == w.wallet.toUpperCase())).tableLimit;
 
             let normalized = {
                 user_in_app,
