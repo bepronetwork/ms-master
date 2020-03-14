@@ -5,7 +5,8 @@ import MapperWalletSingleton from './App/MapperWalletTransaction';
 import {
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
-    MapperAuthUserSingleton
+    MapperAuthUserSingleton,
+    Mapperlogin2faUserSingleton
 } from "./user";
 
 export {
@@ -15,5 +16,6 @@ export {
     MapperWalletSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
-    MapperAuthUserSingleton
+    MapperAuthUserSingleton,
+    Mapperlogin2faUserSingleton
 }
