@@ -168,7 +168,7 @@ const processActions = {
 
             console.log(game.wallets);
             console.log(appWallet);
-            const tableLimit = (game.wallets.find( w => w.wallet == appWallet._id )).tableLimit;
+            const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
                 user_in_app,
