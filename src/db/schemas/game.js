@@ -19,8 +19,8 @@ GameSchema.prototype.schema = {
     betSystem           : { type: Number, required : true},  // 0 or 1 (auto or oracle)
     timestamp           : { type: Date, required : true},
     wallets             : [{
-        wallet:     {type: String},
-        tableLimit: {type: Number}
+        wallet      : { type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' },
+        tableLimit  : { type: Number}
     }],
     metadataJSON        : { type: JSON},
     result              : [{ type: Number}],

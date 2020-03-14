@@ -166,10 +166,9 @@ const processActions = {
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
 
-            const currencyToFind = await CurrencyRepository.prototype.findById(new String(currency).toString());
-            console.log(currencyToFind);
-
-            const tableLimit = (game.wallets.find( w => w.wallet.toUpperCase() == currencyToFind.ticker.toUpperCase() )).tableLimit;
+            console.log(game.wallets);
+            console.log(appWallet);
+            const tableLimit = (game.wallets.find( w => w.wallet == appWallet._id )).tableLimit;
 
             let normalized = {
                 user_in_app,

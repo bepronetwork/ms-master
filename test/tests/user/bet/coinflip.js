@@ -28,13 +28,14 @@ const limitTableBetAmount = {
 const metaName = 'coinflip_simple';
 
 Object.keys(currenciesBetAmount).forEach( async key => {
-    var app, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency;
+    var app, walletApp, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency;
 
     before( async () =>  {
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
         app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         game = app.games.find( game => game.metaName == metaName);
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
+        walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
     });
 
     it('it should Set Maximum Bet - Coin Flip', mochaAsync(async () => {
@@ -109,7 +110,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             app : app.id,
             game : game._id,
             tableLimit : limitTableBetAmount[key],
-            wallet : key.toUpperCase()
+            wallet : walletApp._id
         }
         let res = await editTableLimit({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equal(200);

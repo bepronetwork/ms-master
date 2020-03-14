@@ -23,7 +23,7 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
-const patternWallet = require("../mocks/wallets/pattern.json");
+// const patternWallet = require("../mocks/wallets/pattern.json");
 let error = new ErrorManager();
 
 
@@ -130,11 +130,11 @@ const processActions = {
 
         if(!app){throwError('APP_NOT_EXISTENT')}
 
-
-        let wallets = await Promise.all(patternWallet.map( async b => {
+        console.log("=>>>>>>>>>>>>>>>>>>>>>", app.wallet);
+        let wallets = await Promise.all(app.wallet.map( async w => {
             return {
-                wallet      : b.wallet,
-                tableLimit  : b.tableLimit
+                wallet      : w,
+                tableLimit  : 0
             }
         }));
 
@@ -229,13 +229,14 @@ const processActions = {
 
         // Verify if Game is part of this App
         let isValid = app.games.find( id => id.toString() == game._id.toString())
+        let walletFind = app.wallet.find( w => w.toString() == wallet );
 
 		let normalized = {
-            game, 
+            game,
             app,
             tableLimit,
             isValid,
-            wallet
+            wallet: walletFind
         }
 		return normalized;
     },
