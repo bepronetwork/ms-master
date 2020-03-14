@@ -15,7 +15,7 @@ let outputs = {
         return {
             "username": object.username,
             "email": object.email,
-            "id": object.id,
+            "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
             "wallet": object.wallet.map(wallet => {
@@ -38,7 +38,7 @@ let outputs = {
                     },
                 })
             }),
-            "affiliateWallet": object.affiliateWallet.map(affiliateWallet => {
+            "affiliateWallet": object.affiliateWallet == (undefined || null) ? [] : object.affiliateWallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,
                     "playBalance": affiliateWallet.playBalance,
@@ -73,7 +73,7 @@ let outputs = {
                 }
             },
             "affiliateId": object.affiliateId,
-            "affilateLinkInfo": {
+            "affilateLinkInfo": object.affilateLinkInfo == (undefined || null) ? { } : {
                 "_id": object.affilateLinkInfo._id,
                 "parentAffiliatedLinks": [
                     ...object.affilateLinkInfo.parentAffiliatedLinks
@@ -88,7 +88,7 @@ let outputs = {
                 },
                 "affiliate": object.affilateLinkInfo.affiliate,
             },
-            "affiliateInfo": {
+            "affiliateInfo": object.affiliateInfo == (undefined || null) ? { } : {
                 "_id": object.affiliateInfo._id,
                 "wallet": object.affiliateInfo.map(wallet => {
                     return ({
