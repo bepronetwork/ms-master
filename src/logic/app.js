@@ -129,8 +129,6 @@ const processActions = {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
         if(!app){throwError('APP_NOT_EXISTENT')}
-
-        console.log("=>>>>>>>>>>>>>>>>>>>>>", app.wallet);
         let wallets = await Promise.all(app.wallet.map( async w => {
             return {
                 wallet      : w,

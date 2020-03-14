@@ -30,7 +30,6 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
         admin = global.test.admin;
         ECOSYSTEM_GAMES = global.test.ECOSYSTEM_GAMES;
         walletApp = app.wallet[0];
-        console.log("fffffffffffffffffffff", walletApp);
     });
 
 
@@ -40,7 +39,6 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
             game : game._id,
             app : app.id
         }
-        console.log(app.wallet);
         let res = await addGame({...get_app_model, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         detectValidationErrors(res);
         shouldAddEcosystemGameEuropeanRoulette(res.data, expect);
