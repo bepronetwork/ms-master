@@ -1,10 +1,10 @@
 import {UserLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {UsersRepository} from '../db/repos';
-import { MapperSingleton } from '../controllers/Mapper/Mapper';
-import { MapperRegisterUserSingleton } from "../controllers/Mapper";
+import { MapperRegisterUserSingleton, MapperLoginUserSingleton, MapperAuthUserSingleton, Mapperlogin2faUserSingleton, MapperSet2faUserSingleton } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
+const saveOutputTest = require('../../test/outputTest/configOutput')
 
 class User extends ModelComponent{
 
@@ -30,7 +30,8 @@ class User extends ModelComponent{
     async auth(){
         try{
             let res = await this.process('Auth');
-            return MapperSingleton.output('User', res);
+            saveOutputTest.saveOutputTest(`UserTest`,`Auth`,res);
+            return MapperAuthUserSingleton.output('AuthUser', res);
         }catch(err){
             throw err;
         }
@@ -39,7 +40,8 @@ class User extends ModelComponent{
     async login(){
         try{
             let res = await this.process('Login');
-            return MapperSingleton.output('User', res);
+            saveOutputTest.saveOutputTest(`UserTest`,`Login`,res);
+            return MapperLoginUserSingleton.output('LoginRegister', res);
         }catch(err){
             throw err;
         }
@@ -48,7 +50,8 @@ class User extends ModelComponent{
     async login2FA(){
         try{
             let res = await this.process('Login2FA');
-            return MapperSingleton.output('User', res);
+            saveOutputTest.saveOutputTest(`UserTest`,`Login2FA`,res);
+            return Mapperlogin2faUserSingleton.output('Login2faUser', res);
         }catch(err){
             throw err;
         }
@@ -57,6 +60,7 @@ class User extends ModelComponent{
     async resetPassword() {
         try{
             let res = await this.process('ResetPassword');
+            saveOutputTest.saveOutputTest(`UserTest`,`resetPassword`,res);
             return res;
         }catch(err){
             throw err;
@@ -66,6 +70,7 @@ class User extends ModelComponent{
     async setPassword() {
         try{
             let res = await this.process('SetPassword');
+            saveOutputTest.saveOutputTest(`UserTest`,`setPassword`,res);
             return res;
         }catch(err){
             throw err;
@@ -75,11 +80,13 @@ class User extends ModelComponent{
     async set2FA(){
         try{
             let res = await this.process('Set2FA');
-            return res;
+            saveOutputTest.saveOutputTest(`UserTest`,`Set2FA`,res);
+            return MapperSet2faUserSingleton.output('Set2faUser', res);
         }catch(err){
             throw err;
         }
     }
+
 
     async register(){
         try{
@@ -92,7 +99,9 @@ class User extends ModelComponent{
 
     async summary(){
         try{
-            return await this.process('Summary');
+            let res = await this.process('Summary');
+            saveOutputTest.saveOutputTest(`UserTest`,`summary`,res);
+            return res;
         }catch(err){
             throw err;
         }
@@ -100,7 +109,9 @@ class User extends ModelComponent{
 
     async getInfo(){
         try{
-            return await this.process('GetInfo');
+            let res = await this.process('GetInfo');
+            saveOutputTest.saveOutputTest(`UserTest`,`getInfo`,res);
+            return res;
         }catch(err){
             throw err;
         }
@@ -108,7 +119,9 @@ class User extends ModelComponent{
 
     async confirmEmail(){
         try{
-            return await this.process('ConfirmEmail');
+            let res = await this.process('ConfirmEmail');
+            saveOutputTest.saveOutputTest(`UserTest`,`confirmEmail`,res);
+            return res;    
         }catch(err){
             throw err;
         }
@@ -116,7 +129,9 @@ class User extends ModelComponent{
 
     async getDepositAddress(){
         try{
-            return await this.process('GetDepositAddress');
+           let res = await this.process('GetDepositAddress');
+           saveOutputTest.saveOutputTest(`UserTest`,`getDepositAddress`,res);
+           return res;
         }catch(err){
             throw err;
         }
@@ -126,6 +141,7 @@ class User extends ModelComponent{
         const { user } = this.self.params;
         try{
             let res = await this.process('UpdateWallet');
+            saveOutputTest.saveOutputTest(`UserTest`,`updateWallet`,res);
             return res;
         }catch(err){
             throw err;
@@ -141,6 +157,7 @@ class User extends ModelComponent{
     async createAPIToken(){
         try{
             let res =  await this.process('CreateAPIToken');
+            saveOutputTest.saveOutputTest(`UserTest`,`CreateAPIToken`,res);
             return res.bearerToken;
         }catch(err){
             throw err;
@@ -149,7 +166,9 @@ class User extends ModelComponent{
 
     async getBets(){
         try{
-            return await this.process('GetBets');
+            let res = await this.process('GetBets');
+            saveOutputTest.saveOutputTest(`UserTest`,`getBets`,res);
+            return res;
         }catch(err){
             throw err;
         }
