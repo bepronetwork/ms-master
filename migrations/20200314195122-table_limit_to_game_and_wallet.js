@@ -23,7 +23,7 @@ class Progress {
 
 module.exports = {
   async up(db, client) {
-    let games = await db.collection('games').find().limit(2).sort({_id : -1}).toArray();
+    let games = await db.collection('games').find().toArray();
     let processIndex  = games.length;
     let processObj    = new Progress(processIndex, "TABLE_LIMIT_TO_GAME_AND_WALLET");
     for (let game of games) {
