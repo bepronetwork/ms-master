@@ -83,7 +83,7 @@ let outputs = {
             },
             "affiliateInfo": object.affiliateInfo == (undefined || null) ? { } : {
                 "_id": object.affiliateInfo._id,
-                "wallet": object.affiliateInfo.map(wallet => {
+                "wallet": object.affiliateInfo.wallet.map(wallet => {
                     return ({
                         "_id": wallet._id,
                         "playBalance": wallet.playBalance,
