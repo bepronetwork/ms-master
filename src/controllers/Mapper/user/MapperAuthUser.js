@@ -38,7 +38,7 @@ let outputs = {
                     },
                 })
             }),
-            "affiliateWallet": object.affiliateWallet == (undefined || null) ? [] : object.affiliateWallet.map(affiliateWallet => {
+            "affiliateWallet": object.affiliate.wallet == (undefined || null) ? [] : object.affiliate.wallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,
                     "playBalance": affiliateWallet.playBalance,
@@ -65,25 +65,25 @@ let outputs = {
             "deposits": [
                 ...object.deposits
             ],
-            "affiliateId": object.affiliateId,
-            "affilateLinkInfo": object.affilateLinkInfo == (undefined || null) ? { } : {
-                "_id": object.affilateLinkInfo._id,
+            "affiliateId": object.affiliateLink._id,
+            "affilateLinkInfo": object.affiliateLink == (undefined || null) ? { } : {
+                "_id": object.affiliateLink._id,
                 "parentAffiliatedLinks": [
-                    ...object.affilateLinkInfo.parentAffiliatedLinks
+                    ...object.affiliateLink.parentAffiliatedLinks
                 ],
-                "isCustom": object.affilateLinkInfo.isCustom,
-                "userAffiliated": object.affilateLinkInfo.userAffiliated,
+                "isCustom": object.affiliateLink.isCustom,
+                "userAffiliated": object.affiliateLink.userAffiliated,
                 "affiliateStructure": {
-                    "_id": object.affilateLinkInfo.affiliateStructure._id,
-                    "isActive": object.affilateLinkInfo.affiliateStructure.isActive,
-                    "level": object.affilateLinkInfo.affiliateStructure.level,
-                    "percentageOnLoss": object.affilateLinkInfo.affiliateStructure.percentageOnLoss,
+                    "_id": object.affiliateLink.affiliateStructure._id,
+                    "isActive": object.affiliateLink.affiliateStructure.isActive,
+                    "level": object.affiliateLink.affiliateStructure.level,
+                    "percentageOnLoss": object.affiliateLink.affiliateStructure.percentageOnLoss,
                 },
-                "affiliate": object.affilateLinkInfo.affiliate,
+                "affiliate": object.affiliateLink.affiliate,
             },
-            "affiliateInfo": object.affiliateInfo == (undefined || null) ? { } : {
-                "_id": object.affiliateInfo._id,
-                "wallet": object.affiliateInfo.wallet.map(wallet => {
+            "affiliateInfo": object.affiliate == (undefined || null) ? { } : {
+                "_id": object.affiliate._id,
+                "wallet": object.affiliate.wallet.map(wallet => {
                     return ({
                         "_id": wallet._id,
                         "playBalance": wallet.playBalance,
@@ -104,7 +104,7 @@ let outputs = {
                     })
                 }),
                 "affiliatedLinks": [
-                    ...object.affiliateInfo.affiliatedLinks
+                    ...object.affiliate.affiliatedLinks
                 ],
             },
             "security": {
