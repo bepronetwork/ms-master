@@ -15,7 +15,7 @@ let outputs = {
         return {
             "username": object.username,
             "email": object.email,
-            "id": object.id,
+            "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
             "wallet": object.wallet.map(wallet => {
@@ -115,7 +115,7 @@ let outputs = {
                 ],
             },
             "security": {
-                "id": object.security.id,
+                "id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
                 "email_verified": object.security.email_verified,
                 "bearerToken": object.security.bearerToken,
