@@ -6,7 +6,8 @@ import {
     authUser,
     resetPassword,
     setPassword,
-    confirmEmail
+    confirmEmail,
+    resendEmail
 } from '../../../methods';
 
 import Security from '../../../../src/controllers/Security/Security';
@@ -42,6 +43,12 @@ context('Confirm Email', async () => {
         }));
         var res = await registerUser(userPostData);
         user = res.data.message;
+        expect(res.data.status).to.not.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should resend email to confirm', mochaAsync(async () => {
+        const res = resendEmail({user: userPostData.data.message.id}, userPostData.data.message.bearerToken, {id : userPostData.data.message.id});
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
