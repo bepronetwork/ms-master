@@ -332,6 +332,38 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 
 
+  /users/email/resend:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Resend Confirm Email
+      operationId: resendEmail
+      description: Resend Confirm Email
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/ResendEmailRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
 
 
   /users/password/reset/set:
@@ -1891,6 +1923,20 @@ definitions:
         minLength: 1
         description: |
           token
+
+  ResendEmailRequest:
+    type: object
+    required:
+      - user
+    properties:
+      user:
+        type : string
+        format: string
+        example: "507f191e810c19729de860ea"
+        minLength: 1
+        description: |
+          user id
+
   setPasswordRequest:
     type: object
     required:

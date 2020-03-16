@@ -60,6 +60,25 @@ let __private = {};
 
 
 const processActions = {
+
+    __resendEmail: async (params) => {
+
+        const user = await UsersRepository.prototype.findUserById(params.user);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+
+        const app = await AppRepository.prototype.findAppById(user.app_id);
+        if (!app) { throwError("APP_NOT_EXISTENT");}
+
+        let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(user.email);
+        let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
+
+        const normalized = {
+            app,
+            url,
+            user
+        }
+        return normalized;
+    },
     __confirmEmail: async (params) => {
 
         const payload = MiddlewareSingleton.resultTokenEmail(params.token);
@@ -256,7 +275,7 @@ const processActions = {
             hash_password = new Security(params.password).hash();
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
-        let url = GenerateLink.confirmEmail([app.web_url, tokenConfirmEmail]);
+        let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
 
         let normalized = {
             alreadyExists: alreadyExists,
@@ -390,6 +409,18 @@ const processActions = {
 
 const progressActions = {
 
+    __resendEmail: async (params) => {
+
+        /* attributes  */
+        let attributes = {
+            URL: params.url
+        };
+
+        /* Send Email */
+        new Mailer().sendEmail({app_id : params.app.id, user: params.user, action : 'USER_REGISTER', attributes});
+
+        return {};
+    },
     __confirmEmail: async (params) => {
 
         await UsersRepository.prototype.updateUser({
@@ -673,6 +704,9 @@ class UserLogic extends LogicComponent {
                 case 'ConfirmEmail': {
                     return await library.process.__confirmEmail(params); break;
                 }
+                case 'ResendEmail': {
+                    return await library.process.__resendEmail(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -740,6 +774,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ConfirmEmail': {
                     return await library.progress.__confirmEmail(params); break;
+                };
+                case 'ResendEmail': {
+                    return await library.progress.__resendEmail(params); break;
                 };
             }
         } catch (err) {

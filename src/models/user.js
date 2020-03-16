@@ -45,6 +45,15 @@ class User extends ModelComponent{
         }
     }
 
+    async resendEmail() {
+        try {
+            let res = await this.process('ResendEmail');
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    }
+
     async login2FA(){
         try{
             let res = await this.process('Login2FA');

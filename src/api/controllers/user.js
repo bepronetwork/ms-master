@@ -28,6 +28,19 @@ async function registUser (req, res) {
 	}
 }
 
+async function resendEmail (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.resendEmail();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function loginUser (req, res) {
     try{
         await MiddlewareSingleton.log({type: "global", req});
@@ -215,5 +228,6 @@ export {
     authUser,
     resetPassword,
     setPassword,
-    confirmEmail
+    confirmEmail,
+    resendEmail
 }
