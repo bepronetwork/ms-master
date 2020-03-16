@@ -1,53 +1,53 @@
-import {UserLogic} from '../logic';
+import { UserLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import {UsersRepository} from '../db/repos';
-import { 
-    MapperRegisterUserSingleton, 
-    MapperLoginUserSingleton, 
-    MapperAuthUserSingleton, 
-    Mapperlogin2faUserSingleton, 
+import { UsersRepository } from '../db/repos';
+import {
+    MapperRegisterUserSingleton,
+    MapperLoginUserSingleton,
+    MapperAuthUserSingleton,
+    Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
-    MapperGetDepositAddressUserSingleton 
+    MapperGetDepositAddressUserSingleton
 } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
 
-class User extends ModelComponent{
+class User extends ModelComponent {
 
-    constructor(params){
+    constructor(params) {
 
         let db = new UsersRepository();
 
         super(
             {
-                name : 'User', 
-                logic : new UserLogic({db : db}), 
-                db : db,
-                self : null, 
-                params : params,
-                children : [
+                name: 'User',
+                logic: new UserLogic({ db: db }),
+                db: db,
+                self: null,
+                params: params,
+                children: [
                     new Affiliate(params),
                     new Security(params)
                 ]
             }
-            );
+        );
     }
 
-    async auth(){
-        try{
+    async auth() {
+        try {
             let res = await this.process('Auth');
             return MapperAuthUserSingleton.output('AuthUser', res);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-    async login(){
-        try{
+    async login() {
+        try {
             let res = await this.process('Login');
             return MapperLoginUserSingleton.output('LoginRegister', res);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
@@ -56,124 +56,124 @@ class User extends ModelComponent{
         try {
             let res = await this.process('ResendEmail');
             return res;
-        } catch(err) {
+        } catch (err) {
             throw err;
         }
     }
 
-    async login2FA(){
-        try{
+    async login2FA() {
+        try {
             let res = await this.process('Login2FA');
             return Mapperlogin2faUserSingleton.output('Login2faUser', res);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
     async resetPassword() {
-        try{
+        try {
             let res = await this.process('ResetPassword');
             return res;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
     async setPassword() {
-        try{
+        try {
             let res = await this.process('SetPassword');
             return res;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-    async set2FA(){
-        try{
+    async set2FA() {
+        try {
             let res = await this.process('Set2FA');
             return MapperSet2faUserSingleton.output('Set2faUser', res);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
 
-    async register(){
-        try{
+    async register() {
+        try {
             let res = await this.process('Register');
             return MapperRegisterUserSingleton.output('UserRegister', res);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-    async summary(){
-        try{
+    async summary() {
+        try {
             let res = await this.process('Summary');
             return res;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-    async getInfo(){
-        try{
+    async getInfo() {
+        try {
             let res = await this.process('GetInfo');
             return res;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-    async confirmEmail(){
-        try{
+    async confirmEmail() {
+        try {
             let res = await this.process('ConfirmEmail');
-            return res;    
-        }catch(err){
+            return res;
+        } catch (err) {
             throw err;
         }
     }
 
-    async getDepositAddress(){
-        try{
-           let res = await this.process('GetDepositAddress');
-           return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
-        }catch(err){
+    async getDepositAddress() {
+        try {
+            let res = await this.process('GetDepositAddress');
+            return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
+        } catch (err) {
             throw err;
         }
     }
 
-    async updateWallet(){
+    async updateWallet() {
         const { user } = this.self.params;
-        try{
+        try {
             let res = await this.process('UpdateWallet');
             return res;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
-    
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
 
-    async createAPIToken(){
-        try{
-            let res =  await this.process('CreateAPIToken');
-            let mapper =  MapperCreateApiTokenUserSingleton.output('CreateApiTokenUser', res);
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async createAPIToken() {
+        try {
+            let res = await this.process('CreateAPIToken');
+            let mapper = MapperCreateApiTokenUserSingleton.output('CreateApiTokenUser', res);
             return mapper.bearerToken;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-    async getBets(){
-        try{
+    async getBets() {
+        try {
             let res = await this.process('GetBets');
             return res;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
