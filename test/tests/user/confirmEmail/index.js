@@ -48,7 +48,7 @@ context('Confirm Email', async () => {
     }));
 
     it('should resend email to confirm', mochaAsync(async () => {
-        const res = resendEmail({user: user.data.message.id}, user.data.message.bearerToken, {id : user.data.message.id});
+        const res = resendEmail({user: user.id}, user.bearerToken, {id : user.id});
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
