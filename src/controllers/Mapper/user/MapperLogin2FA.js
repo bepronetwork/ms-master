@@ -18,7 +18,7 @@ let outputs = {
             "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
-            "wallet": object.wallet.map(wallet => {
+            "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
                     "playBalance": wallet.playBalance,
@@ -37,8 +37,8 @@ let outputs = {
                         "address": wallet.currency.address
                     },
                 })
-            }),
-            "affiliateWallet": object.affiliate.wallet == (undefined || null) ? [] : object.affiliate.wallet.map(affiliateWallet => {
+            }) : object.wallet,
+            "affiliateWallet": object.affiliate.wallet ? object.affiliate.wallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,
                     "playBalance": affiliateWallet.playBalance,
@@ -57,7 +57,7 @@ let outputs = {
                         "address": affiliateWallet.currency.address
                     },
                 })
-            }),
+            }) : object.affiliate.wallet,
             "withdraws": [
                 ...object.withdraws
             ],
@@ -73,7 +73,7 @@ let outputs = {
                 }
             },
             "affiliateId": object.affiliateLink._id,
-            "affilateLinkInfo": object.affiliateLink == (undefined || null) ? { } : {
+            "affilateLinkInfo": object.affiliateLink ? {
                 "_id": object.affiliateLink._id,
                 "parentAffiliatedLinks": [
                     ...object.affiliateLink.parentAffiliatedLinks
@@ -87,10 +87,10 @@ let outputs = {
                     "percentageOnLoss": object.affiliateLink.affiliateStructure.percentageOnLoss,
                 },
                 "affiliate": object.affiliateLink.affiliate,
-            },
-            "affiliateInfo": object.affiliate == (undefined || null) ? { } : {
+            } : object.affiliateLink,
+            "affiliateInfo": object.affiliate ? {
                 "_id": object.affiliate._id,
-                "wallet": object.affiliate.wallet.map(wallet => {
+                "wallet": object.affiliate.wallet ? object.affiliate.wallet.map(wallet => {
                     return ({
                         "_id": wallet._id,
                         "playBalance": wallet.playBalance,
@@ -109,11 +109,11 @@ let outputs = {
                             "address": wallet.currency.address
                         },
                     })
-                }),
+                }) : object.affiliate.wallet,
                 "affiliatedLinks": [
                     ...object.affiliate.affiliatedLinks
                 ],
-            },
+            } : object.affiliate,
             "security": {
                 "id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
