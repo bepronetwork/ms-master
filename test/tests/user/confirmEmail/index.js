@@ -49,7 +49,10 @@ context('Confirm Email', async () => {
 
     it('should resend email to confirm', mochaAsync(async () => {
         const userLocal = await loginUser(userPostData);
-        const res = await resendEmail({user: userLocal.id}, userLocal.bearerToken, {id : userLocal.id});
+        const res = await resendEmail({user: userLocal.data.message.id}, userLocal.data.message.bearerToken, {id : userLocal.data.message.id});
+
+        expect(userLocal.data.status).to.not.null;
+        expect(userLocal.data.status).to.equal(200);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
