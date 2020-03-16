@@ -8,7 +8,8 @@ import {
     MapperAuthUserSingleton,
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
-    MapperCreateApiTokenUserSingleton
+    MapperCreateApiTokenUserSingleton,
+    MapperGetDepositAddressUserSingleton
 } from "./user";
 
 export {
@@ -21,5 +22,6 @@ export {
     MapperAuthUserSingleton,
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
-    MapperCreateApiTokenUserSingleton
+    MapperCreateApiTokenUserSingleton,
+    MapperGetDepositAddressUserSingleton
 }

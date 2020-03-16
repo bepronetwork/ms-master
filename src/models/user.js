@@ -7,11 +7,11 @@ import {
     MapperAuthUserSingleton, 
     Mapperlogin2faUserSingleton, 
     MapperSet2faUserSingleton,
-    MapperCreateApiTokenUserSingleton 
+    MapperCreateApiTokenUserSingleton,
+    MapperGetDepositAddressUserSingleton 
 } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
-// const saveOutputTest = require('../../test/outputTest/configOutput')
 
 class User extends ModelComponent{
 
@@ -128,8 +128,7 @@ class User extends ModelComponent{
     async getDepositAddress(){
         try{
            let res = await this.process('GetDepositAddress');
-        //    saveOutputTest.saveOutputTest(`UserTest`,`getDepositAddress`,res);
-           return res;
+           return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
         }catch(err){
             throw err;
         }
