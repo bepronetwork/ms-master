@@ -1,9 +1,17 @@
 import {UserLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {UsersRepository} from '../db/repos';
-import { MapperRegisterUserSingleton, MapperLoginUserSingleton, MapperAuthUserSingleton, Mapperlogin2faUserSingleton, MapperSet2faUserSingleton } from "../controllers/Mapper";
+import { 
+    MapperRegisterUserSingleton, 
+    MapperLoginUserSingleton, 
+    MapperAuthUserSingleton, 
+    Mapperlogin2faUserSingleton, 
+    MapperSet2faUserSingleton,
+    MapperCreateApiTokenUserSingleton 
+} from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
+// const saveOutputTest = require('../../test/outputTest/configOutput')
 
 class User extends ModelComponent{
 
@@ -120,6 +128,7 @@ class User extends ModelComponent{
     async getDepositAddress(){
         try{
            let res = await this.process('GetDepositAddress');
+        //    saveOutputTest.saveOutputTest(`UserTest`,`getDepositAddress`,res);
            return res;
         }catch(err){
             throw err;
@@ -145,7 +154,8 @@ class User extends ModelComponent{
     async createAPIToken(){
         try{
             let res =  await this.process('CreateAPIToken');
-            return res.bearerToken;
+            let mapper =  MapperCreateApiTokenUserSingleton.output('CreateApiTokenUser', res);
+            return mapper.bearerToken;
         }catch(err){
             throw err;
         }
