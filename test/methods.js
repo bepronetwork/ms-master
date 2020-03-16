@@ -12,6 +12,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async resendEmail(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/email/resend')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
+    },
     async confirmEmail(params) {
         return request(global.server)
         .post('/api/users/email/confirm')
