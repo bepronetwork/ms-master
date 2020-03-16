@@ -31,7 +31,7 @@ const BOILERPLATES = global.BOILERPLATES;
 const CONST = global.CONST;
 
 context('Confirm Email', async () => {
-    var app, user, userPostData, secret, userToResend;
+    var app, user, userPostData, secret;
 
     before( async () =>  {
         app = global.test.app;
@@ -41,14 +41,14 @@ context('Confirm Email', async () => {
         userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456)
         }));
-        userToResend = await registerUser(userPostData);
+        var res = await registerUser(userPostData);
         user = res.data.message;
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
 
     it('should resend email to confirm', mochaAsync(async () => {
-        const res = resendEmail({user: userToResend.data.message.id}, userToResend.data.message.bearerToken, {id : userToResend.data.message.id});
+        const res = resendEmail({user: user.data.message.id}, user.data.message.bearerToken, {id : user.data.message.id});
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
