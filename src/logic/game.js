@@ -45,7 +45,8 @@ const processActions = {
 			metaName: params.metaName,
 			rules: params.rules,
 			description: params.description,
-			metadataJSON: params.metadataJSON
+			metadataJSON: params.metadataJSON,
+			wallets: params.wallets
 		}
 
 		return normalized;
