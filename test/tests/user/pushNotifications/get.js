@@ -16,6 +16,7 @@ context(`Get`, async () =>  {
     var user, pusher;
 
     before( async () =>  {
+        console.log((await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})))
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
 
         pusher = new Pusher(process.env.PUSHER_APP_KEY, 
@@ -31,7 +32,6 @@ context(`Get`, async () =>  {
         let outputs = [];
 
         channel.bind('ping', (data) => {
-            console.log("pinged public ", data)
             outputs.push(data);
         });    
         let res = await pingPusher({});

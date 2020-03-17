@@ -38,7 +38,42 @@ context('Add Currency Wallet', async () => {
 
         const { wallet } = res_app.data.message;
         expect(wallet.length).to.be.equal(1);
-        const walletCurrencyApp = wallet.find( c => new String(c.currency.ticker).toLowerCase() == TokenTicker);
+        const walletCurrencyApp = wallet.find( c => new String(c.currency.ticker).toLowerCase() == 'eth');
+        expect(walletCurrencyApp).to.not.be.null;
+        expect(walletCurrencyApp.currency._id).to.be.equal(postData.currency_id);
+        expect(walletCurrencyApp.bank_address).to.not.be.null;
+        expect(walletCurrencyApp.playBalance).to.be.equal(0);
+
+    }));
+
+
+    it('should be able to add currency bank BTC to app', mochaAsync(async () => {
+
+        /* Get Available Currencies */
+        const eco_data = (await getEcosystemData()).data.message;
+        const eco_currencies = eco_data.currencies;
+        const currency = eco_currencies.find( c => new String(c.ticker).toLowerCase() == 'btc')
+
+        const postData = {
+            app : app.id,
+            passphrase : 'test',
+            currency_id : currency._id
+        };
+
+        /* Guarantee Currency Added with Success to Wallet */
+
+        let res = await addCurrencyWalletToApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
+        expect(detectValidationErrors(res)).to.be.equal(false);
+        const { status } = res.data;
+        expect(status).to.be.equal(200);
+        
+        /* Verify if new wallet has that info */
+        let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+        global.test.app = res_app.data.message;
+
+        const { wallet } = res_app.data.message;
+        expect(wallet.length).to.be.equal(2);
+        const walletCurrencyApp = wallet.find( c => new String(c.currency.ticker).toLowerCase() == 'btc');
         expect(walletCurrencyApp).to.not.be.null;
         expect(walletCurrencyApp.currency._id).to.be.equal(postData.currency_id);
         expect(walletCurrencyApp.bank_address).to.not.be.null;

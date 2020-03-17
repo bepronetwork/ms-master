@@ -462,7 +462,6 @@ const progressActions = {
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
-
         /* Create Wallet on Bitgo */
         var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
             label : `${app._id}-${currency.ticker}`,
