@@ -82,6 +82,7 @@ const processActions = {
     __confirmEmail: async (params) => {
 
         const payload = MiddlewareSingleton.resultTokenEmail(params.token);
+        console.log(payload);
         if (!payload) {
             throwError('TOKEN_INVALID');
         }
@@ -89,9 +90,11 @@ const processActions = {
             throwError('TOKEN_INVALID');
         }
         const email = payload.email;
+        console.log(email);
         const user = await UsersRepository.prototype.findUserByEmail(email);
         if (!user) { throwError('USER_NOT_EXISTENT') }
-
+        console.log(user);
+        console.log(user._id);
         const normalized = {
             user_id: user._id
         }
