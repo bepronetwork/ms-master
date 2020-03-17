@@ -24,9 +24,7 @@ let outputs = {
                     "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": [
-                        ...wallet.depositAddresses
-                    ],
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "currency": {
                         "_id": wallet.currency._id,
@@ -44,9 +42,7 @@ let outputs = {
                     "playBalance": affiliateWallet.playBalance,
                     "max_deposit": affiliateWallet.max_deposit,
                     "max_withdraw": affiliateWallet.max_withdraw,
-                    "depositAddresses": [
-                        ...affiliateWallet.depositAddresses
-                    ],
+                    "depositAddresses": affiliateWallet.depositAddresses ? affiliateWallet.depositAddresses.map(depositAddress_id => depositAddress_id) : affiliateWallet.depositAddresses,
                     "link_url": affiliateWallet.link_url,
                     "currency": {
                         "_id": affiliateWallet.currency._id,
@@ -58,13 +54,9 @@ let outputs = {
                     },
                 })
             }) : object.affiliate.wallet,
-            "withdraws": [
-                ...object.withdraws
-            ],
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
             "bearerToken": object.bearerToken,
-            "deposits": [
-                ...object.deposits
-            ],
+            "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
                 "chat": {
@@ -75,9 +67,7 @@ let outputs = {
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {
                 "_id": object.affiliateLink._id,
-                "parentAffiliatedLinks": [
-                    ...object.affiliateLink.parentAffiliatedLinks
-                ],
+                "parentAffiliatedLinks": object.affiliateLink.parentAffiliatedLinks ? object.affiliateLink.parentAffiliatedLinks.map(parentAffiliatedLink_id => parentAffiliatedLink_id) : object.affiliateLink.parentAffiliatedLinks,
                 "isCustom": object.affiliateLink.isCustom,
                 "userAffiliated": object.affiliateLink.userAffiliated,
                 "affiliateStructure": {
@@ -96,9 +86,7 @@ let outputs = {
                         "playBalance": wallet.playBalance,
                         "max_deposit": wallet.max_deposit,
                         "max_withdraw": wallet.max_withdraw,
-                        "depositAddresses": [
-                            ...wallet.depositAddresses
-                        ],
+                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
                         "link_url": wallet.link_url,
                         "currency": {
                             "_id": wallet.currency._id,
@@ -110,9 +98,7 @@ let outputs = {
                         },
                     })
                 }) : object.affiliate.wallet,
-                "affiliatedLinks": [
-                    ...object.affiliate.affiliatedLinks
-                ],
+                "affiliatedLinks": object.affiliate.affiliatedLinks ? object.affiliate.affiliatedLinks.map(affiliatedLink_id => affiliatedLink_id) : object.affiliate.affiliatedLinks,
             } : object.affiliate,
             "security": {
                 "id": object.security._id,

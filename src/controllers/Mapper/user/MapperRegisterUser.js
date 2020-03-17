@@ -13,23 +13,15 @@ let self;
 let outputs = {
     userRegister: (object) => {
         return {
-            "bets": [
-                ...object.bets
-            ],
-            "deposits": [
-                ...object.deposits
-            ],
-            "withdraws": [
-                ...object.withdraws
-            ],
+            "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
+            "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
             "isWithdrawing": object.isWithdrawing,
             "_id": object._id,
             "username": object.username,
             "full_name": object.full_name,
             "affiliate": {
-                "affiliatedLinks": [
-                    ...object.affiliate.affiliatedLinks
-                ],
+                "affiliatedLinks": object.affiliate.affiliatedLinks ? object.affiliate.affiliatedLinks.map(affiliatedLink_id => affiliatedLink_id) : object.affiliate.affiliatedLinks,
                 "isNew": object.affiliate.isNew,
                 "_doc": {
                     "wallet": object.affiliate._doc.wallet.map(wallet => {
@@ -37,9 +29,7 @@ let outputs = {
                             "playBalance": wallet.playBalance,
                             "max_deposit": wallet.max_deposit,
                             "max_withdraw": wallet.max_withdraw,
-                            "depositAddresses": [
-                                ...wallet.depositAddresses
-                            ],
+                            "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
                             "link_url": wallet.link_url,
                             "_id": wallet._id,
                             "currency": {
@@ -52,9 +42,7 @@ let outputs = {
                             },
                         })
                     }),
-                    "affiliatedLinks": [
-                        ...object.affiliate._doc.affiliatedLinks
-                    ],
+                    "affiliatedLinks": object.affiliate._doc.affiliatedLinks ? object.affiliate._doc.affiliatedLinks.map(affiliatedLink_id => affiliatedLink_id) : object.affiliate._doc.affiliatedLinks,
                     "_id": object.affiliate._doc._id
                 },
             },
@@ -64,9 +52,7 @@ let outputs = {
                     "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": [
-                        ...wallet.depositAddresses
-                    ],
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "_id": wallet._id,
                     "currency": {
@@ -85,30 +71,18 @@ let outputs = {
             "email": object.email,
             "app_id": {
                 "isValid": object.app_id.isValid,
-                "games": [
-                    ...object.app_id.games
-                ],
-                "listAdmins": [
-                    ...object.app_id.listAdmins
-                ],
-                "services": [
-                    ...object.app_id.services
-                ],
-                "countriesAvailable": [
-                    ...object.app_id.countriesAvailable
-                ],
-                "licensesId": [
-                    ...object.app_id.licensesId
-                ],
+                "games": object.app_id.games ? object.app_id.games.map(game_id => game_id) : object.app_id.games,
+                "listAdmins": object.app_id.listAdmins ? object.app_id.listAdmins.map(listAdmin_id => listAdmin_id) : object.app_id.listAdmins,
+                "services": object.app_id.services ? object.app_id.services.map(service_id => service_id) : object.app_id.services,
+                "countriesAvailable": object.app_id.countriesAvailable ? object.app_id.countriesAvailable.map(countrieAvailable_id => countrieAvailable_id) : object.app_id.countriesAvailable,
+                "licensesId": object.app_id.licensesId ? object.app_id.licensesId.map(license_id => license_id) : object.app_id.licensesId,
                 "_id": object.app_id._id,
                 "wallet": object.app_id.wallet.map(wallet => {
                     return ({
                         "playBalance": wallet.playBalance,
                         "max_deposit": wallet.max_deposit,
                         "max_withdraw": wallet.max_withdraw,
-                        "depositAddresses": [
-                            ...wallet.depositAddresses
-                        ],
+                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
                         "link_url": wallet.link_url,
                         "_id": wallet._id,
                         "currency": {
@@ -144,9 +118,7 @@ let outputs = {
             "external_user": object.external_user,
             "external_id": object.external_id,
             "affiliateLink": {
-                "parentAffiliatedLinks": [
-                    ...object.affiliateLink.parentAffiliatedLinks
-                ],
+                "parentAffiliatedLinks": object.affiliateLink.parentAffiliatedLinks ? object.affiliateLink.parentAffiliatedLinks.map(parentAffiliatedLink_id => parentAffiliatedLink_id) : object.affiliateLink.parentAffiliatedLinks,
                 "_id": object.affiliateLink._id,
                 "userAffiliated": object.affiliateLink.userAffiliated,
                 "affiliateStructure": {
