@@ -18,9 +18,11 @@ class BitGoClass {
 
         // Wait for wallet tx init - force delay
         wallet = await this.getWallet({ticker : currency, id : wallet.id()});
+        let receiveAddress = (wallet._wallet.receiveAddress && wallet._wallet.receiveAddress.address) ? wallet._wallet.receiveAddress.address : wallet._wallet.coinSpecific.baseAddress;
+
         return { 
             wallet, 
-            receiveAddress : wallet._wallet.coinSpecific.baseAddress,
+            receiveAddress,
             keys : { 
                 user : userKeychain, 
                 backup : backupKeychain, 
