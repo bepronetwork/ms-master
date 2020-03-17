@@ -30,7 +30,6 @@ module.exports = {
       processObj.setProcess(processIndex);
       processIndex --;
       if(user.email_confirmed == undefined){
-        console.log(user._id);
         await db.collection('users').updateOne(
           { _id: user._id },
           { $set: { "email_confirmed": false } }

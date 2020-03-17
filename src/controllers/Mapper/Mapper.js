@@ -64,7 +64,7 @@ let outputs = {
                     background_url : game.background_url,
                     description : game.description,
                     resultSpace : game.resultSpace,
-                    tableLimit : game.tableLimit,
+                    wallets : game.wallets,
                     isClosed : game.isClosed
                 }
             }) : [],
