@@ -47,8 +47,6 @@ class UsersRepository extends MongoComponent{
                 { $set : param },
                 { 'new': true })
                 .exec( (err, item) => {
-                    console.log(err);
-                    console.log(item);
                     if(err){reject(err)}
                     resolve(item);
                 }
