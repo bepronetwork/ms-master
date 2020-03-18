@@ -63,6 +63,19 @@ async function setAdmin2FA(req, res) {
 	}
 }
 
+async function editAdminTypeRequest(req, res) {
+    try{
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+		let admin = new Admin(params);
+        let data = await admin.editAdminTypeRequest();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 
 async function loginAdmin2FA(req, res) {
     try{
@@ -111,5 +124,6 @@ export {
     loginAdmin2FA,
     authAdmin,
     setAdmin2FA,
-    getAdminAll
+    getAdminAll,
+    editAdminTypeRequest
 }
