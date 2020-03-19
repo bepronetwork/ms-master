@@ -509,6 +509,16 @@ const progressActions = {
         await AppRepository.prototype.addCurrency(app._id, currency._id);
         await AppRepository.prototype.addCurrencyWallet(app._id, wallet);
 
+        /* Add LimitTable to all Games */
+        if(app.games!=undefined) {
+            for(let game of app.games) {
+                await GamesRepository.prototype.addTableLimitWallet({
+                    game    : game._id,
+                    wallet  : wallet._id
+                });
+            }
+        }
+
 
         /* Add Wallet to all Users */
     
