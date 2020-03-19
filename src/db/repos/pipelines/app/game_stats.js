@@ -62,8 +62,7 @@ const pipeline_game_stats = (_id, { dates, currency}) =>
             }
         }
     }, 
-        ...pipeline_bets_by_currency({currency}) 
-        ,
+        // ...pipeline_bets_by_currency({currency}),
         ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to}) 
     ,{
         '$group': {
