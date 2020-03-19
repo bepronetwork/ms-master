@@ -17,14 +17,21 @@ context('Add Banner', async () => {
 
     it('should be able to add banner', mochaAsync(async () => {
         const postData = {
-            banners : [ {
-                image_url : image_data,
-                link_url  : "okteste.com.br"
-            },
-            {
-                image_url : image_data,
-                link_url  : "okteste2.com.br"
-            } 
+            banners : [
+                {
+                    image_url   : image_data,
+                    link_url    : "okteste.com.br",
+                    button_text : "Click",
+                    title       : "Title",
+                    subtitle    : "Subtitle"
+                },
+                {
+                    image_url : image_data,
+                    link_url  : "okteste2.com.br",
+                    button_text : "Click 2",
+                    title       : "Title 2",
+                    subtitle    : "Subtitle 2"
+                }
             ],
             app : app.id,
             autoDisplay : true

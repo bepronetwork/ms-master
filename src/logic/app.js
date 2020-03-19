@@ -731,8 +731,11 @@ const progressActions = {
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return {
-                    image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
-                    link_url  : b.link_url
+                    image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
+                    link_url    : b.link_url,
+                    button_text : b.button_text,
+                    title       : b.title,
+                    subtitle    : b.subtitle
                 };
             }
         }))

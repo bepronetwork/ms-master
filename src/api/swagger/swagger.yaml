@@ -2345,7 +2345,13 @@ definitions:
           properties:
             image_url :
               type: string
-            link_url  :
+            link_url :
+              type: string
+            button_text :
+              type: string
+            title :
+              type: string
+            subtitle :
               type: string
       autoDisplay:
         type : boolean
