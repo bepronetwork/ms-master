@@ -100,7 +100,6 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
             admin: admin.id
         }
         let res = await editGameBackgroundImage(postData, admin.security.bearerToken, {id : admin.id});
-        console.log(res);
         detectValidationErrors(res);
         const { status } = res.data;
         expect(status).to.be.equal(200);
