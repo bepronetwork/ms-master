@@ -3,6 +3,7 @@ import ModelComponent from './modelComponent';
 import {AdminsRepository} from '../db/repos';
 import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import Security from './security';
+import Permission from "./permission";
 
 class Admin extends ModelComponent{
 
@@ -18,7 +19,8 @@ class Admin extends ModelComponent{
                 self : null, 
                 params : params,
                 children : [
-                    new Security(params)
+                    new Security(params),
+                    new Permission(params)
                 ]
             }
             );
@@ -80,12 +82,20 @@ class Admin extends ModelComponent{
     }
     async register(){
         try{
-            return await this.process('Register');
+            let res =  await this.process('Register');
+            return res;
         }catch(err){
             throw err;
         }
     }
 
+    async editAdminTypeRequest(){
+        try {
+            return await this.process('EditAdminTypeRequest');
+        } catch (err) {
+            throw err;
+        }
+    }
     
 }
 
