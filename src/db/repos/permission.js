@@ -37,6 +37,21 @@ class PermissionRepository extends MongoComponent{
             });
         });
     }
+
+    findByIdAndUpdate(_id, newStructure){ 
+        return new Promise( (resolve, reject) => {
+            PermissionRepository.prototype.schema.model.findByIdAndUpdate(
+                _id,
+                { $set: {
+                    "super_admin"  : newStructure.super_admin,
+                }} 
+                )
+            .exec( (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
 }
 
 PermissionRepository.prototype.schema = new PermissionSchema();
