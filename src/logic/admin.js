@@ -5,7 +5,7 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AdminsRepository, SecurityRepository, AppRepository } from '../db/repos';
+import { AdminsRepository, SecurityRepository, AppRepository, PermissionRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
@@ -151,7 +151,8 @@ const processActions = {
             hash_password   : password,
             security 	    : params.security,
             email			: params.email,
-            registered      : registered
+            registered      : registered,
+            permission      : params.permission
 		}
 		return normalized;
     },
@@ -174,7 +175,22 @@ const processActions = {
             email			: params.email,
             app             : admin.app,
             bearerToken     : bearerToken,
-            registered      : false
+            registered      : false,
+            permission      : params.permission
+        }
+		return normalized;
+    },
+
+    __editAdminTypeRequest : async (params) => {
+        let admin = await __private.db.findAdminById(params.admin);
+        if(!admin){throwError('USER_NOT_EXISTENT')};
+        let app = await AppRepository.prototype.findAppById(admin.app._id);
+        if(!app){throwError('USER_NOT_EXISTENT')};
+        const adminFind = app.listAdmins.find(a => new String(a).toString() == new String(params.adminToModify).toString())
+        if(!adminFind){throwError('')};
+		let normalized = {
+            permission : params.permission,
+            admin      : params.adminToModify
 		}
 		return normalized;
     }
