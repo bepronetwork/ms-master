@@ -23,7 +23,7 @@ class Security{
         try{
             let id = req.body[type];
             if(type=="admin") {
-                checkPermission(permissions, id);
+                this.checkPermission(permissions, id);
             }
             var bearerHeader = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
             var payload = JSON.parse(req.headers['payload']); // Payload with Id
