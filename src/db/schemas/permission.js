@@ -11,7 +11,7 @@ PermissionSchema.prototype.schema = {
     super_admin   : { type: Boolean, default: true },
     customization : { type: Boolean, default: true },
     withdraw      : { type: Boolean, default: true },
-    userWithdraw  : { type: Boolean, default: true },
+    user_withdraw  : { type: Boolean, default: true },
     financials    : { type: Boolean, default: true },
 };
 

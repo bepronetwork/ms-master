@@ -44,6 +44,10 @@ class PermissionRepository extends MongoComponent{
                 _id,
                 { $set: {
                     "super_admin"  : newStructure.super_admin,
+                    "customization"  : newStructure.customization,
+                    "withdraw"  : newStructure.withdraw,
+                    "userWithdraw"  : newStructure.userWithdraw,
+                    "financials"  : newStructure.financials,
                 }} 
                 )
             .exec( (err, item) => {

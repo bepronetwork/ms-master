@@ -2091,7 +2091,7 @@ definitions:
           - super_admin
           - customization
           - withdraw
-          - userWithdraw
+          - user_withdraw
           - financials
         properties:
           super_admin:
@@ -2103,7 +2103,7 @@ definitions:
           withdraw:
             type : boolean
             example: true
-          userWithdraw:
+          user_withdraw:
             type : boolean
             example: true
           financials:
