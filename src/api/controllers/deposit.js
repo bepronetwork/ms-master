@@ -16,7 +16,7 @@ import MiddlewareSingleton from '../helpers/middleware';
 async function setMaxDeposit(req, res) {
     try{
         let params = req.body;
-        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
 		let wallet = new Wallet(params);
         let data = await wallet.setMaxDeposit();

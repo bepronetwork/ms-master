@@ -52,7 +52,7 @@ async function loginAdmin(req, res) {
 
 async function setAdmin2FA(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);

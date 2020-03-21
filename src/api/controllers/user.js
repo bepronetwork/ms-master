@@ -131,7 +131,7 @@ async function authUser (req, res) {
 
 async function getUserInfo (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let user = new User(params);
