@@ -5,7 +5,7 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AdminsRepository, SecurityRepository, AppRepository } from '../db/repos';
+import { AdminsRepository, SecurityRepository, AppRepository, PermissionRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
@@ -151,7 +151,8 @@ const processActions = {
             hash_password   : password,
             security 	    : params.security,
             email			: params.email,
-            registered      : registered
+            registered      : registered,
+            permission      : params.permission
 		}
 		return normalized;
     },
@@ -174,7 +175,27 @@ const processActions = {
             email			: params.email,
             app             : admin.app,
             bearerToken     : bearerToken,
-            registered      : false
+            registered      : false,
+            permission      : params.permission
+        }
+		return normalized;
+    },
+
+    __editAdminType : async (params) => {
+        let admin = await __private.db.findAdminById(params.admin);
+        if(!admin){throwError('USER_NOT_EXISTENT')};
+        let app = await AppRepository.prototype.findAppById(admin.app._id);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        const adminFind = app.listAdmins.find(a => new String(a).toString() == new String(params.adminToModify).toString())
+        let adminToChangeType = await __private.db.findAdminById(adminFind);
+        if(!adminFind){throwError('USER_NOT_EXISTENT')};
+        let permissionObject = {
+            ...params.permission,
+            _id: adminToChangeType.permission._id
+        } 
+		let normalized = {
+            admin              : adminFind,
+            permission         : permissionObject
 		}
 		return normalized;
     }
@@ -248,7 +269,7 @@ const progressActions = {
         if(!params.adminEmail) {
             delete params['adminEmail'];
             resultAdmin = await self.save(params);
-            securityId = String(resultAdmin.security._id);
+            securityId = String(resultAdmin.security);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
             resultAdmin = params.adminEmail;
@@ -259,6 +280,10 @@ const progressActions = {
 		let admin = await __private.db.findAdminById(resultAdmin._id);
         await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
+    },
+    __editAdminType : async (params) => {
+        await PermissionRepository.prototype.findByIdAndUpdate(params.permission._id, params.permission);
+        return params;
     }
 }
 
@@ -327,7 +352,10 @@ class AdminLogic extends LogicComponent {
                 };
                 case 'AddAdmin' : {
                     return await library.process.__addAdmin(params); break;
-                }
+                };
+                case 'EditAdminType' : {
+                    return await library.process.__editAdminType(params); break;
+                };
                 case 'GetAdminAll' : {
                     return await library.process.__getAdminAll(params); break;
                 }
@@ -374,6 +402,9 @@ class AdminLogic extends LogicComponent {
                 };
                 case 'AddAdmin' : {
 					return await library.progress.__addAdmin(params);
+                };
+                case 'EditAdminType' : {
+                    return await library.progress.__editAdminType(params); break;
                 };
                 case 'GetAdminAll' : {
 					return await library.progress.__getAdminAll(params);

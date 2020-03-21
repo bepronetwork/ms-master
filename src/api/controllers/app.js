@@ -32,7 +32,7 @@ async function createApp (req, res) {
 
 async function getAppAuth (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -71,7 +71,7 @@ async function getGames (req, res) {
 // JSON WebToken Security Functions
 async function deployApp (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -85,7 +85,7 @@ async function deployApp (req, res) {
 // JSON WebToken Security Functions
 async function createGame (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let game = new Game(params);
@@ -99,7 +99,7 @@ async function createGame (req, res) {
 // JSON WebToken Security Functions
 async function addGame (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -113,7 +113,7 @@ async function addGame (req, res) {
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -127,7 +127,7 @@ async function addCurrencyWallet(req, res) {
 // JSON WebToken Security Functions
 async function getGame (req, res) {
 	try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
 	    let params = req.body;
 		let game = new Game(params);
@@ -153,7 +153,7 @@ async function createBet (req, res) {
 
 async function setMaxBet (req, res) {
     try {
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         let params = req.body;
         let game = new Game(params);
         let data = await game.setMaxBet();
@@ -168,7 +168,7 @@ async function setMaxBet (req, res) {
 async function resolveBet (req, res) {
     try{
         // User Security Setup
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let bet = new Bet(params);
@@ -196,7 +196,7 @@ async function resolveGame (req, res) {
 // JSON WebToken Security Functions
 async function summary (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -210,7 +210,7 @@ async function summary (req, res) {
 // JSON WebToken Security Functions
 async function getTransactions (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -225,7 +225,7 @@ async function getTransactions (req, res) {
 // JSON WebToken Security Functions
 async function addServices (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -286,7 +286,7 @@ async function getPopularNumbers (req, res) {
 
 async function editAffiliateStructure (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -299,7 +299,7 @@ async function editAffiliateStructure (req, res) {
 
 async function editIntegration (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -312,7 +312,7 @@ async function editIntegration (req, res) {
 
 async function editMailSenderIntegration (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -325,7 +325,7 @@ async function editMailSenderIntegration (req, res) {
 
 async function editTopBar (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -338,7 +338,7 @@ async function editTopBar (req, res) {
 
 async function editBanners(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -351,7 +351,7 @@ async function editBanners(req, res) {
 
 async function editLogo(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -364,7 +364,7 @@ async function editLogo(req, res) {
 
 async function editColors(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -377,7 +377,7 @@ async function editColors(req, res) {
 
 async function editFooter(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -390,7 +390,7 @@ async function editFooter(req, res) {
 
 async function editTopIcon(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -403,7 +403,7 @@ async function editTopIcon(req, res) {
 
 async function editLoadingGif(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -416,7 +416,7 @@ async function editLoadingGif(req, res) {
 
 async function editTypography(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -429,7 +429,7 @@ async function editTypography(req, res) {
 
 async function getUsers(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -491,7 +491,7 @@ async function webhookBitgoDeposit (req, res) {
 
 async function createAffiliateCustom(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let affiliateLink = new AffiliateLink(params);
