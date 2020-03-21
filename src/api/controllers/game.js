@@ -7,7 +7,7 @@ import MiddlewareSingleton from '../helpers/middleware';
 
 async function editGameTableLimit (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -20,7 +20,7 @@ async function editGameTableLimit (req, res) {
 
 async function editGameEdge(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -33,7 +33,7 @@ async function editGameEdge(req, res) {
 
 async function editGameImage(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
@@ -46,7 +46,7 @@ async function editGameImage(req, res) {
 
 async function editGameBackgroundImage(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
