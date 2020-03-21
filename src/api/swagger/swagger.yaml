@@ -2089,11 +2089,27 @@ definitions:
         type : object
         required:
           - super_admin
+          - customization
+          - withdraw
+          - userWithdraw
+          - financials
         properties:
           super_admin:
             type : boolean
             example: true
-            
+          customization:
+            type : boolean
+            example: true
+          withdraw:
+            type : boolean
+            example: true
+          userWithdraw:
+            type : boolean
+            example: true
+          financials:
+            type : boolean
+            example: true
+
   AdminLoginRequest : 
     type: object
     required:
