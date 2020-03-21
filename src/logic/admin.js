@@ -181,16 +181,21 @@ const processActions = {
 		return normalized;
     },
 
-    __editAdminTypeRequest : async (params) => {
+    __editAdminType : async (params) => {
         let admin = await __private.db.findAdminById(params.admin);
         if(!admin){throwError('USER_NOT_EXISTENT')};
         let app = await AppRepository.prototype.findAppById(admin.app._id);
-        if(!app){throwError('USER_NOT_EXISTENT')};
+        if(!app){throwError('APP_NOT_EXISTENT')};
         const adminFind = app.listAdmins.find(a => new String(a).toString() == new String(params.adminToModify).toString())
-        if(!adminFind){throwError('')};
+        let adminToChangeType = await __private.db.findAdminById(adminFind);
+        if(!adminFind){throwError('USER_NOT_EXISTENT')};
+        let permissionObject = {
+            ...params.permission,
+            _id: adminToChangeType.permission._id
+        } 
 		let normalized = {
-            permission : params.permission,
-            admin      : params.adminToModify
+            admin              : adminFind,
+            permission         : permissionObject
 		}
 		return normalized;
     }
@@ -275,6 +280,10 @@ const progressActions = {
 		let admin = await __private.db.findAdminById(resultAdmin._id);
         await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
+    },
+    __editAdminType : async (params) => {
+        await PermissionRepository.prototype.findByIdAndUpdate(params.permission._id, params.permission);
+        return params;
     }
 }
 
@@ -343,7 +352,10 @@ class AdminLogic extends LogicComponent {
                 };
                 case 'AddAdmin' : {
                     return await library.process.__addAdmin(params); break;
-                }
+                };
+                case 'EditAdminType' : {
+                    return await library.process.__editAdminType(params); break;
+                };
                 case 'GetAdminAll' : {
                     return await library.process.__getAdminAll(params); break;
                 }
@@ -390,6 +402,9 @@ class AdminLogic extends LogicComponent {
                 };
                 case 'AddAdmin' : {
 					return await library.progress.__addAdmin(params);
+                };
+                case 'EditAdminType' : {
+                    return await library.progress.__editAdminType(params); break;
                 };
                 case 'GetAdminAll' : {
 					return await library.progress.__getAdminAll(params);

@@ -89,9 +89,9 @@ class Admin extends ModelComponent{
         }
     }
 
-    async editAdminTypeRequest(){
+    async editAdminType(){
         try {
-            return await this.process('EditAdminTypeRequest');
+            return await this.process('EditAdminType');
         } catch (err) {
             throw err;
         }
