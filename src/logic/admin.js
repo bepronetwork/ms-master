@@ -245,11 +245,11 @@ const progressActions = {
         let attributes  = {
             NOME: params.name
         };
-        delete params["security"];
         if(params.registered === true) {
             admin = await self.save(params);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
+            delete params["security"];
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
