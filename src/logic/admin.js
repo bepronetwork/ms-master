@@ -128,6 +128,7 @@ const processActions = {
         let admin = await __private.db.findAdminEmail(params.email);
         let adminUsername = await __private.db.findAdminUsername(params.username);
         let registered = false;
+        let newBearerToken;
         if(!admin && !adminUsername) {registered = true} 
         if(admin && admin.registered === true) {throwError('ALREADY_EXISTING_EMAIL')}
         if(adminUsername && adminUsername.registered === true) {throwError('USERNAME_ALREADY_EXISTS')}
@@ -143,9 +144,12 @@ const processActions = {
             if(String(admin.security.bearerToken) !== String(params.bearerToken)) {
                 throwError('TOKEN_INVALID');
             }
+            newBearerToken = MiddlewareSingleton.sign(admin._id);
         }
         let password = new Security(params.password).hash();
+
 		let normalized = {
+            newBearerToken,
 			username 		: params.username,
 			name 			: params.name,
             hash_password   : password,
@@ -241,14 +245,15 @@ const progressActions = {
         let attributes  = {
             NOME: params.name
         };
-
         if(params.registered === true) {
             admin = await self.save(params);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
+            delete params["security"];
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
+            await SecurityRepository.prototype.setBearerToken(admin.security._id, params.newBearerToken);
         }
         await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
