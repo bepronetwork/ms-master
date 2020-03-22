@@ -128,6 +128,7 @@ const processActions = {
         let admin = await __private.db.findAdminEmail(params.email);
         let adminUsername = await __private.db.findAdminUsername(params.username);
         let registered = false;
+        let newBearerToken;
         if(!admin && !adminUsername) {registered = true} 
         if(admin && admin.registered === true) {throwError('ALREADY_EXISTING_EMAIL')}
         if(adminUsername && adminUsername.registered === true) {throwError('USERNAME_ALREADY_EXISTS')}
@@ -143,9 +144,9 @@ const processActions = {
             if(String(admin.security.bearerToken) !== String(params.bearerToken)) {
                 throwError('TOKEN_INVALID');
             }
+            newBearerToken = MiddlewareSingleton.sign(admin._id);
         }
         let password = new Security(params.password).hash();
-        let newBearerToken = MiddlewareSingleton.sign(admin._id);
 
 		let normalized = {
             newBearerToken,
