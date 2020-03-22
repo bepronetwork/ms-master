@@ -6,24 +6,30 @@ class Security{
     constructor() {}
 
     checkPermission = async (permissions = [], admin) => {
-        if(permissions.includes("all")) {
-            return true;
-        }
-        let adminObject         = await AdminsRepository.prototype.findAdminById(admin);
-        let permissionsObject   = await PermissionRepository.prototype.findById(adminObject.permission);
-        for(let permission of permissions) {
-            if(permissionsObject[permission]) {
+        try {
+            if(permissions.includes("all")) {
                 return true;
             }
+            let adminObject         = await AdminsRepository.prototype.findAdminById(admin);
+            let permissionsObject   = await PermissionRepository.prototype.findById(adminObject.permission);
+            for(let permission of permissions) {
+                if(permissionsObject[permission]) {
+                    return true;
+                }
+            }
+        } catch(err) {
+            return false;
         }
-        throw new Error();
+        return false;
     };
 
-    verify = ({type, req, permissions=[]}) => {
+    verify = async ({type, req, permissions=[]}) => {
         try{
             let id = req.body[type];
             if(type=="admin") {
-                this.checkPermission(permissions, id);
+                if(!(await this.checkPermission(permissions, id))){
+                    throw new Error();
+                }
             }
             var bearerHeader = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
             var payload = JSON.parse(req.headers['payload']); // Payload with Id
