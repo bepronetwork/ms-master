@@ -145,7 +145,10 @@ const processActions = {
             }
         }
         let password = new Security(params.password).hash();
+        let newBearerToken = MiddlewareSingleton.sign(admin._id);
+
 		let normalized = {
+            newBearerToken,
 			username 		: params.username,
 			name 			: params.name,
             hash_password   : password,
@@ -241,7 +244,7 @@ const progressActions = {
         let attributes  = {
             NOME: params.name
         };
-
+        delete params["security"];
         if(params.registered === true) {
             admin = await self.save(params);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
@@ -249,6 +252,7 @@ const progressActions = {
             params.registered = true;
             admin = await __private.db.updateAdmin(params);
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
+            await SecurityRepository.prototype.setBearerToken(admin.security._id, params.newBearerToken);
         }
         await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
