@@ -23,6 +23,7 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
+// const patternWallet = require("../mocks/wallets/pattern.json");
 let error = new ErrorManager();
 
 
@@ -128,9 +129,16 @@ const processActions = {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
         if(!app){throwError('APP_NOT_EXISTENT')}
+        let wallets = await Promise.all(app.wallet.map( async w => {
+            return {
+                wallet      : w,
+                tableLimit  : 0
+            }
+        }));
 
         //TO DO : verify if Metaname is already in the games of app
         let res = {
+            wallets,
             gameEcosystem,
             app
         }
@@ -210,7 +218,7 @@ const processActions = {
     },
     __editGameTableLimit : async (params) => {
 
-        let { game, app, tableLimit} = params;
+        let { game, app, tableLimit, wallet } = params;
         
         game = await GamesRepository.prototype.findGameById(game);
         app = await AppRepository.prototype.findAppByIdNotPopulated(app);
@@ -219,12 +227,14 @@ const processActions = {
 
         // Verify if Game is part of this App
         let isValid = app.games.find( id => id.toString() == game._id.toString())
+        let walletFind = app.wallet.find( w => w.toString() == wallet );
 
 		let normalized = {
-            game, 
+            game,
             app,
             tableLimit,
-            isValid
+            isValid,
+            wallet: walletFind
         }
 		return normalized;
     },
@@ -452,7 +462,6 @@ const progressActions = {
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
-
         /* Create Wallet on Bitgo */
         var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
             label : `${app._id}-${currency.ticker}`,
@@ -500,6 +509,16 @@ const progressActions = {
         await AppRepository.prototype.addCurrency(app._id, currency._id);
         await AppRepository.prototype.addCurrencyWallet(app._id, wallet);
 
+        /* Add LimitTable to all Games */
+        if(app.games!=undefined) {
+            for(let game of app.games) {
+                await GamesRepository.prototype.addTableLimitWallet({
+                    game    : game._id,
+                    wallet  : wallet._id
+                });
+            }
+        }
+
 
         /* Add Wallet to all Users */
     
@@ -527,7 +546,7 @@ const progressActions = {
 		return res;
     },
     __addGame : async (params) => {
-        const { app, gameEcosystem } = params;
+        const { app, gameEcosystem, wallets } = params;
         let game = new Game({
             app             : app,
             edge            : 0,
@@ -537,10 +556,13 @@ const progressActions = {
             image_url       : gameEcosystem.image_url,
             metaName        : gameEcosystem.metaName,
             betSystem       : 0, // Auto
-            description     : gameEcosystem.description
+            description     : gameEcosystem.description,
+            wallets         : wallets
         })
 
-        await game.register();
+        const gam = await game.register();
+
+        // console.log(gam);
 
 		return params;
     },
@@ -585,11 +607,12 @@ const progressActions = {
         return params;
     },
     __editGameTableLimit : async (params) => {
-        let { game, tableLimit} = params;
+        let { game, tableLimit, wallet} = params;
 
         let res = await GamesRepository.prototype.editTableLimit({
             id : game._id,
-            tableLimit
+            tableLimit,
+            wallet
         });
 
 		return res;
@@ -718,8 +741,11 @@ const progressActions = {
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return {
-                    image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
-                    link_url  : b.link_url
+                    image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
+                    link_url    : b.link_url,
+                    button_text : b.button_text,
+                    title       : b.title,
+                    subtitle    : b.subtitle
                 };
             }
         }))

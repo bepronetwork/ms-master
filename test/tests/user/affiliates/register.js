@@ -33,7 +33,7 @@ context('Register', async () => {
         expect(message.affiliateInfo.userAffiliate).to.equal(undefined);
         const affiliateWalletCurrency = message.affiliateInfo.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
-        expect(message.affiliateInfo.wallet.length).to.equal(1);
+        expect(message.affiliateInfo.wallet.length).to.equal(2);
         expect(affiliateWalletCurrency.playBalance).to.equal(0);
         expect(message.affiliateInfo.parentAffiliatedLinks).to.equal(undefined);
         
@@ -53,8 +53,6 @@ context('Register', async () => {
 
         const affiliateWalletCurrency = message.affiliateInfo.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         //expect(message.affilateLinkInfo.userAffiliate).to.equal(id);
-        expect(message.affiliateInfo.wallet.length).to.equal(1);
-        expect(affiliateWalletCurrency.playBalance).to.equal(0);
         expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(1);
 
         expect(message.affilateLinkInfo.affiliateStructure.level).to.equal(inputs.structures[0].level);
@@ -78,7 +76,6 @@ context('Register', async () => {
 
         const affiliateWalletCurrency = message.affiliateInfo.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         //expect(message.affilateLinkInfo.userAffiliate).to.equal(id);
-        expect(message.affiliateInfo.wallet.length).to.equal(1);
         expect(affiliateWalletCurrency.playBalance).to.equal(0);
         expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(2);
 
@@ -102,7 +99,6 @@ context('Register', async () => {
         
         const affiliateWalletCurrency = message.affiliateInfo.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         //expect(message.affilateLinkInfo.userAffiliate).to.equal(id);
-        expect(message.affiliateInfo.wallet.length).to.equal(1);
         expect(affiliateWalletCurrency.playBalance).to.equal(0);
         expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(0);
     }));
@@ -144,7 +140,6 @@ context('Register', async () => {
         
         const affiliateWalletCurrency = message.affiliateInfo.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         //expect(message.affilateLinkInfo.userAffiliate).to.equal(id);
-        expect(message.affiliateInfo.wallet.length).to.equal(1);
         expect(affiliateWalletCurrency.playBalance).to.equal(0);
         expect(message.affilateLinkInfo.parentAffiliatedLinks.length).to.equal(1);
 

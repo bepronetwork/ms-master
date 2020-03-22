@@ -22,7 +22,6 @@ let outputs = {
                 "id"          : object.app._id,
                 "name"        : object.app.name,
                 "description" : object.app.description,
-                "bearerToken" : object.app.bearerToken,
                 "withdraws"   : object.app.withdraws,
                 "isValid"     : object.app.isValid,
                 "services"    : object.app.services,
@@ -30,11 +29,11 @@ let outputs = {
                 "wallet"        : object.app.wallet
             },
             "security" : {
-                "id"                    : object.security._id,    
+                "id"                    : object.security._id,
                 "2fa_set"               : object.security['2fa_set'],
                 "email_verified"        : object.security['email_verified'],
                 "bearerToken"           : object.security['bearerToken'],
-            } 
+            }
         }
     },
     app : (object) => {
@@ -64,7 +63,7 @@ let outputs = {
                     background_url : game.background_url,
                     description : game.description,
                     resultSpace : game.resultSpace,
-                    tableLimit : game.tableLimit,
+                    wallets : game.wallets,
                     isClosed : game.isClosed
                 }
             }) : [],

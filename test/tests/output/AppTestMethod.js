@@ -363,8 +363,8 @@ module.exports = {
         expect(data.message).to.be.an('object');
         expect(data.message.resultSpace).to.not.be.null;
         expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
-        expect(data.message.tableLimit).to.not.be.null;
-        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.wallets[0].tableLimit).to.not.be.null;
+        expect(data.message.wallets[0].tableLimit).to.be.an('number');
         expect(data.message.result).to.not.be.null;
         expect(data.message.result).to.be.an('array').that.is.empty;
         expect(data.message.bets).to.not.be.null;
@@ -397,8 +397,8 @@ module.exports = {
         expect(data.message).to.be.an('object');
         expect(data.message.resultSpace).to.not.be.null;
         expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
-        expect(data.message.tableLimit).to.not.be.null;
-        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.wallets[0].tableLimit).to.not.be.null;
+        expect(data.message.wallets[0].tableLimit).to.be.an('number');
         expect(data.message.result).to.not.be.null;
         expect(data.message.result).to.be.an('array').that.is.empty;
         expect(data.message.bets).to.not.be.null;
@@ -503,8 +503,8 @@ module.exports = {
         expect(data.message).to.be.an('object');
         expect(data.message.resultSpace).to.not.be.null;
         expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
-        expect(data.message.tableLimit).to.not.be.null;
-        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.wallets[0].tableLimit).to.not.be.null;
+        expect(data.message.wallets[0].tableLimit).to.be.an('number');
         expect(data.message.result).to.not.be.null;
         expect(data.message.result).to.be.an('array').that.is.empty;
         expect(data.message.bets).to.not.be.null;
@@ -537,8 +537,8 @@ module.exports = {
         expect(data.message).to.be.an('object');
         expect(data.message.resultSpace).to.not.be.null;
         expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
-        expect(data.message.tableLimit).to.not.be.null;
-        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.wallets[0].tableLimit).to.not.be.null;
+        expect(data.message.wallets[0].tableLimit).to.be.an('number');
         expect(data.message.result).to.not.be.null;
         expect(data.message.result).to.be.an('array').that.is.empty;
         expect(data.message.bets).to.not.be.null;
@@ -643,8 +643,8 @@ module.exports = {
         expect(data.message).to.be.an('object');
         expect(data.message.resultSpace).to.not.be.null;
         expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
-        expect(data.message.tableLimit).to.not.be.null;
-        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.wallets[0].tableLimit).to.not.be.null;
+        expect(data.message.wallets[0].tableLimit).to.be.an('number');
         expect(data.message.result).to.not.be.null;
         expect(data.message.result).to.be.an('array').that.is.empty;
         expect(data.message.bets).to.not.be.null;
@@ -677,8 +677,8 @@ module.exports = {
         expect(data.message).to.be.an('object');
         expect(data.message.resultSpace).to.not.be.null;
         expect(data.message.resultSpace).to.be.an('array').that.not.is.empty;
-        expect(data.message.tableLimit).to.not.be.null;
-        expect(data.message.tableLimit).to.be.an('number');
+        expect(data.message.wallets[0].tableLimit).to.not.be.null;
+        expect(data.message.wallets[0].tableLimit).to.be.an('number');
         expect(data.message.result).to.not.be.null;
         expect(data.message.result).to.be.an('array').that.is.empty;
         expect(data.message.bets).to.not.be.null;

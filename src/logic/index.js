@@ -33,6 +33,7 @@ import TokenLogic from "./token";
 import TopIconLogic from './topIcon';
 import MailSenderLogic from './mailSender';
 import LoadingGifLogic from "./loadingGif";
+import PermissionLogic from "./permission";
 
 
 export {
@@ -70,6 +71,7 @@ export {
     TypographyLogic,
     TopIconLogic,
     MailSenderLogic,
-    LoadingGifLogic
+    LoadingGifLogic,
+    PermissionLogic
 }
 

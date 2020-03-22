@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository, CurrencyRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
 import CasinoLogicSingleton from './utils/casino';
@@ -160,12 +160,13 @@ const processActions = {
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
-               
                 /* Set App Cut without Affiliate Return */
                 app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
             }
 
-            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);            
+            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
+
+            const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
                 user_in_app,
@@ -178,7 +179,7 @@ const processActions = {
                 totalAffiliateReturn,
                 appWallet,
                 currency,
-                tableLimit                      :   game.tableLimit,
+                tableLimit,
                 wallet				            :   userWallet,
                 user                            :   user._id, 				    
                 app                             :   app._id,

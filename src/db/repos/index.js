@@ -35,6 +35,7 @@ import TopIconRepository from './topIcon';
 import TokenRepository from './token';
 import MailSenderRepository from './mailSender';
 import LoadingGifRepository from "./loadingGif";
+import PermissionRepository from "./permission";
 
 export{
     TokenRepository,
@@ -73,5 +74,6 @@ export{
     TypographyRepository,
     TopIconRepository,
     MailSenderRepository,
-    LoadingGifRepository
+    LoadingGifRepository,
+    PermissionRepository
 }

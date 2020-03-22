@@ -6,7 +6,8 @@ import {
     getAppAuth,
     addAdmin,
     registerAdmin,
-    getAdminByApp
+    getAdminByApp,
+    editAdminType
 } from '../../../methods';
 
 import faker from 'faker';
@@ -29,7 +30,7 @@ import { SendinBlueSingleton } from '../../../../src/logic/third-parties/sendInB
 const expect = chai.expect;
 
 context('Normal', async () =>  {
-    var admin, app, dataAdminAdd;
+    var admin, app, dataAdminAdd, adminToModify;
 
     before(async () => {
         admin = global.test.admin;
@@ -115,6 +116,7 @@ context('Normal', async () =>  {
             admin           : admin.id
         }, admin.security.bearerToken, { id : admin.id});
         dataAdminAdd.bearerToken = res.data.message.security.bearerToken;
+        adminToModify = res.data.message._id;
         expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(200);
     }));
@@ -151,6 +153,22 @@ context('Normal', async () =>  {
             username    : `user${(new Date()).getTime()}`,
             password    : `password${(new Date()).getTime()}`
         });
+        expect(res.data.status).to.not.be.null;
+        expect(res.data.status).to.equal(200);
+    }));
+    
+    it('should Edit Type of Admin', mochaAsync(async () => {
+        let res = await editAdminType({
+            admin			: admin.id,
+            adminToModify,
+            permission      : {
+                super_admin    : false,
+                customization  : false,
+                withdraw       : false,
+                user_withdraw  : false,
+                financials     : false,
+            }
+        }, admin.security.bearerToken, { id : admin.id});
         expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(200);
     }));

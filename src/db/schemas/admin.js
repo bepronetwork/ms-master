@@ -16,6 +16,7 @@ AdminSchema.prototype.schema = {
     security            : { type: mongoose.Schema.Types.ObjectId, ref: 'Security'},
     metadata            : { type: JSON},
     registered          : { type: Boolean, required: true},
+    permission          : { type: mongoose.Schema.Types.ObjectId, ref: 'Permission'}
 };
 
 AdminSchema.prototype.modelSet = false;
