@@ -12,6 +12,11 @@ import {
     MapperGetDepositAddressUserSingleton
 } from "./user";
 
+import {
+    MapperGetCasinoGamesSingleton,
+    MapperGetEcosystemDataSingleton
+} from "./Ecosystem";
+
 export {
     Mapper,
     MapperBetSingleton,
@@ -23,5 +28,7 @@ export {
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
-    MapperGetDepositAddressUserSingleton
+    MapperGetDepositAddressUserSingleton,
+    MapperGetCasinoGamesSingleton,
+    MapperGetEcosystemDataSingleton
 }
