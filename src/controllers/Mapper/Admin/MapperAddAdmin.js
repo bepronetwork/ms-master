@@ -13,12 +13,12 @@ let self;
 let outputs = {
     addAdmin: (object) => {
         return {
-            "id": object._id,
+            "_id": object._id,
             "username": object.username,
             "name": object.name,
             "hash_password": object.hash_password,
             "security": {
-                "id": object.security._id,
+                "_id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
                 "email_verified": object.security.email_verified,
                 "bearerToken": object.security['bearerToken'],
