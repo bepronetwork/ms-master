@@ -17,6 +17,17 @@ import {
     MapperGetEcosystemDataSingleton
 } from "./Ecosystem";
 
+import {
+    MapperAddAdminSingleton,
+    MapperAuthAdminSingleton,
+    MapperEditAdminTypeSingleton,
+    MapperGetAdminAllSingleton,
+    MapperLoginAdminSingleton,
+    MapperLogin2faAdminSingleton,
+    MapperRegisterAdminSingleton,
+    MapperSet2FASingleton
+} from "./Admin";
+
 export {
     Mapper,
     MapperBetSingleton,
@@ -30,5 +41,13 @@ export {
     MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetCasinoGamesSingleton,
-    MapperGetEcosystemDataSingleton
+    MapperGetEcosystemDataSingleton,
+    MapperAddAdminSingleton,
+    MapperAuthAdminSingleton,
+    MapperEditAdminTypeSingleton,
+    MapperGetAdminAllSingleton,
+    MapperLoginAdminSingleton,
+    MapperLogin2faAdminSingleton,
+    MapperRegisterAdminSingleton,
+    MapperSet2FASingleton
 }
