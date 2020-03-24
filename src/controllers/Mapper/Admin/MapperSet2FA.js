@@ -18,7 +18,7 @@ let outputs = {
             "isVerifiedToken2FA": object.isVerifiedToken2FA,
             "admin_id": object.admin_id,
             "security_id": object.security._id,
-            "id": object._id,
+            "_id": object._id,
             "name": object.name,
             "hash_password": object.hash_password,
             "security": {
