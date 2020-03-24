@@ -30,6 +30,7 @@ context('Add Currency Wallet', async () => {
         console.log("eco_data:::", eco_data)
         console.log("admin.id:::", admin.id)
         console.log("admin.security.bearerToken:::", admin.security.bearerToken)
+        console.log("HAHAHAHAHAHAHHAHA:::")
 
         /* Guarantee Currency Added with Success to Wallet */
 
