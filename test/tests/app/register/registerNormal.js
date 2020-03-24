@@ -158,8 +158,6 @@ context('Normal', async () =>  {
     }));
     
     it('should Edit Type of Admin', mochaAsync(async () => {
-        console.log("admin:::",admin.id)
-        console.log("adminToModify:::",adminToModify)
         let res = await editAdminType({
             admin			: admin.id,
             adminToModify,
@@ -171,7 +169,6 @@ context('Normal', async () =>  {
                 financials     : false,
             }
         }, admin.security.bearerToken, { id : admin.id});
-        console.log("REssss:::",res)
         expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(200);
     }));

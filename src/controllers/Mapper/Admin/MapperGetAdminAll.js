@@ -12,18 +12,20 @@ let self;
 
 let outputs = {
     getAdminAll: (object) => {
-        return {
-            "id": object._id,
-            "username": object.username,
-            "name": object.name,
-            "hash_password": object.hash_password,
-            "security": object.security,
-            "email": object.email,
-            "app": object.app,
-            "registered": object.registered,
-            "permission": object.permission,
-            "__v": object.__v
-        }
+        return object.map(object => {
+            return ({
+                "id": object._id,
+                "username": object.username,
+                "name": object.name,
+                "hash_password": object.hash_password,
+                "security": object.security,
+                "email": object.email,
+                "app": object.app,
+                "registered": object.registered,
+                "permission": object.permission,
+                "__v": object.__v
+            })
+        })
     },
 }
 
