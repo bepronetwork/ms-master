@@ -25,7 +25,7 @@ let outputs = {
             },
             "email": object.email,
             "app": !object.app ? {} : {
-                "_id": object.app._id,
+                "id": object.app._id,
                 "isValid": object.app.isValid,
                 "games": object.app.games ? object.app.games.map(game_id => game_id) : object.app.games,
                 "listAdmins": object.app.listAdmins ? object.app.listAdmins.map(list_admin_id => list_admin_id) : object.app.listAdmins,
