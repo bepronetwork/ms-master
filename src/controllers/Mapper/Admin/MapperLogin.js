@@ -23,11 +23,10 @@ let outputs = {
             "name": object.name,
             "hash_password": object.hash_password,
             "security": {
-                "_id": object.security._id,
-                "2fa_set": object.security['2fa_set'],
-                "email_verified": object.security.email_verified,
-                // "bearerToken": object.security['bearerToken'],
-                ...object.security
+                "id"                    : object.security._id,
+                "2fa_set"               : object.security['2fa_set'],
+                "email_verified"        : object.security['email_verified'],
+                "bearerToken"           : object.security['bearerToken'],
             },
             "email": object.email,
             "app": {
