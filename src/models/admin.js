@@ -52,7 +52,8 @@ class Admin extends ModelComponent {
         try {
             let res = await this.process('GetAdminAll');
             test = MapperGetAdminAllSingleton.output('GetAdminAll', res);
-            console.log("GetAdminAll:: ", test)
+            console.log("GetAdminAll:: ", res)
+            console.log("GetAdminAllTEST:: ", test)
             // saveOutputTest.saveOutputTest(`AdminTest`, `GetAdminAll`, test);
             return MapperGetAdminAllSingleton.output('GetAdminAll', res);
         } catch (err) {
