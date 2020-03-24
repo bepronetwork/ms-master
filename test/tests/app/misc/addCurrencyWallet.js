@@ -24,18 +24,10 @@ context('Add Currency Wallet', async () => {
             passphrase : 'test',
             currency_id : currency._id
         };
-        console.log("app.id:::", app.id)
-        console.log("currency_id:::", currency._id)
-        console.log("currency:::", currency)
-        console.log("eco_data:::", eco_data)
-        console.log("admin.id:::", admin.id)
-        console.log("admin.security.bearerToken:::", admin.security.bearerToken)
-        console.log("HAHAHAHAHAHAHHAHA:::")
 
         /* Guarantee Currency Added with Success to Wallet */
 
         let res = await addCurrencyWalletToApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
-        console.log("res:::", res)
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
