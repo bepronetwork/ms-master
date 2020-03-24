@@ -19,7 +19,7 @@ let outputs = {
             "password": object.password,
             "security_id": object.security._id,
             "verifiedAccount": object.verifiedAccount,
-            "_id": object._id,
+            "id": object._id,
             "name": object.name,
             "hash_password": object.hash_password,
             "security": {
