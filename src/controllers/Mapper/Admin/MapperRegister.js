@@ -13,7 +13,7 @@ let self;
 let outputs = {
     register: (object) => {
         return {
-            "_id": object._id,
+            "id": object._id,
             "username": object.username,
             "name": object.name,
             "hash_password": object.hash_password,

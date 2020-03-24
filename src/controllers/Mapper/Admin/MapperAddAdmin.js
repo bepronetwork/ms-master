@@ -13,18 +13,18 @@ let self;
 let outputs = {
     addAdmin: (object) => {
         return {
-            "_id": object._id,
+            "id": object._id,
             "username": object.username,
             "name": object.name,
             "hash_password": object.hash_password,
             "security": {
-                "_id": object.security._id,
+                "id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
                 "email_verified": object.security.email_verified,
                 "bearerToken": object.security['bearerToken'],
             },
             "email": object.email,
-            "app": {
+            "app": !object.app ? {} : {
                 "id": object.app._id,
                 "isValid": object.app.isValid,
                 "games": object.app.games ? object.app.games.map(game_id => game_id) : object.app.games,
@@ -33,7 +33,27 @@ let outputs = {
                 "currencies": object.app.currencies ? object.app.currencies.map(currency_id => currency_id) : object.app.currencies,
                 "users": object.app.users ? object.app.users.map(user_id => user_id) : object.app.users,
                 "external_users": object.app.external_users ? object.app.external_users.map(external_user_id => external_user_id) : object.app.external_users,
-                "wallet": object.app.wallet ? object.app.wallet.map(wallet_id => wallet_id) : object.app.wallet,
+                "wallet": object.app.wallet ? object.app.wallet.map(wallet => {
+                    return ({
+                        "_id": wallet._id,
+                        "playBalance": wallet.playBalance,
+                        "max_deposit": wallet.max_deposit,
+                        "max_withdraw": wallet.max_withdraw,
+                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                        "link_url": wallet.link_url,
+                        "currency": {
+                            "_id": wallet.currency._id,
+                            "image": wallet.currency.image,
+                            "ticker": wallet.currency.ticker,
+                            "decimals": wallet.currency.decimals,
+                            "name": wallet.currency.name,
+                            "address": wallet.currency.address
+                        },
+                        "bitgo_id": wallet.bitgo_id,
+                        "bank_address": wallet.bank_address,
+                        "hashed_passphrase": wallet.hashed_passphrase,
+                    })
+                }) : object.app.wallet,
                 "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => deposit_id) : object.app.deposits,
                 "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw_id => withdraw_id) : object.app.withdraws,
                 "typography": object.app.typography ? object.app.typography.map(typography_id => typography_id) : object.app.typography,
