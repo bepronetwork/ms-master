@@ -7,6 +7,7 @@ import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTra
 import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
 import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
 import { AffiliateSetup, Integrations, Customization, Typography } from '.';
+// const saveOutputTest = require('../../test/outputTest/configOutput')
 
 class App extends ModelComponent{
 
@@ -48,6 +49,8 @@ class App extends ModelComponent{
     async register(){
         try{
             let app =  await this.process('Register');
+            console.log("register::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`register`,app);
             return MapperSingleton.output('App', app);
         }catch(err){
             throw err;
@@ -63,6 +66,8 @@ class App extends ModelComponent{
     async get(){
         try{
             let app =  await this.process('Get');
+            console.log("Get::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`Get`,app);
             return MapperSingleton.output('App', app._doc);
         }catch(err){
             throw err;
@@ -79,6 +84,8 @@ class App extends ModelComponent{
     async getAuth(){
         try{
             let app =  await this.process('Get');
+            console.log("GetAuth::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetAuth`,app);
             return MapperSingleton.output('AppAuth', app._doc);
         }catch(err){
             throw err;
@@ -92,7 +99,10 @@ class App extends ModelComponent{
 
     async summary(){
         try{
-            return await this.process('Summary');
+            let app = await this.process('Summary');
+            console.log("Summary::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`Summary`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -105,7 +115,10 @@ class App extends ModelComponent{
 
     async deployApp(){
         try{
-            return await this.process('DeployApp');
+            let app = await this.process('DeployApp');
+            console.log("DeployApp::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`DeployApp`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -119,6 +132,8 @@ class App extends ModelComponent{
     async getGames(){
         try{
             let app = await this.process('GetGames');
+            console.log("GetGames::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetGames`,app);
             return app;
         }catch(err){
             throw err;
@@ -133,6 +148,8 @@ class App extends ModelComponent{
     async addServices(){
         try{
             let app = await this.process('AddServices');
+            console.log("AddServices::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`AddServices`,app);
             return app;
         }catch(err){
             throw err;
@@ -148,6 +165,8 @@ class App extends ModelComponent{
     async addGame(){
         try{
             let app = await this.process('AddGame');
+            console.log("AddGame::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`AddGame`,app);
             return MapperAddGamesSingleton.output('AddGames', app);
         }catch(err){
             throw err;
@@ -161,7 +180,10 @@ class App extends ModelComponent{
 
     async addCurrencyWallet(){
         try{
-            return await this.process('AddCurrencyWallet');
+            let app = await this.process('AddCurrencyWallet');
+            console.log("AddCurrencyWallet::: ", app)
+            // saveOutputTest.saveOutputTest(`AppTest`,`AddCurrencyWallet`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -176,6 +198,7 @@ class App extends ModelComponent{
     async getTransactions(){
         try{
             let app = await this.process('GetTransactions');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetTransactions`,app);
             return app;
         }catch(err){
             throw err;
@@ -189,7 +212,9 @@ class App extends ModelComponent{
 
     async getLastBets(){
         try{
-            return await this.process('GetLastBets');
+            let app = await this.process('GetLastBets');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetLastBets`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -203,7 +228,9 @@ class App extends ModelComponent{
 
     async getBiggestBetWinners(){
         try{
-            return await this.process('GetBiggestBetWinners');
+            let app = await this.process('GetBiggestBetWinners');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetBiggestBetWinners`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -216,7 +243,9 @@ class App extends ModelComponent{
 
     async getBiggestUserWinners(){
         try{
-            return await this.process('GetBiggestUserWinners');
+            let app = await this.process('GetBiggestUserWinners');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetBiggestUserWinners`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -229,7 +258,9 @@ class App extends ModelComponent{
 
     async getPopularNumbers(){
         try{
-            return await this.process('GetPopularNumbers');
+            let app = await this.process('GetPopularNumbers');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetPopularNumbers`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -244,7 +275,9 @@ class App extends ModelComponent{
 
     async editGameTableLimit(){
         try{
-            return await this.process('EditGameTableLimit');
+            let app = await this.process('EditGameTableLimit');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameTableLimit`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -258,7 +291,9 @@ class App extends ModelComponent{
 
     async editGameEdge(){
         try{
-            return await this.process('EditGameEdge');
+            let app = await this.process('EditGameEdge');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameEdge`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -272,7 +307,9 @@ class App extends ModelComponent{
      
     async editGameImage(){
         try {
-            return await this.process('EditGameImage');
+            let app = await this.process('EditGameImage');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameImage`,app);
+            return app;
         } catch (err) {
             throw err;
         }
@@ -286,7 +323,9 @@ class App extends ModelComponent{
      
     async editGameBackgroundImage(){
         try {
-            return await this.process('EditGameBackgroundImage');
+            let app = await this.process('EditGameBackgroundImage');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameBackgroundImage`,app);
+            return app;
         } catch (err) {
             throw err;
         }
@@ -300,7 +339,9 @@ class App extends ModelComponent{
 
     async editAffiliateStructure(){
         try{
-            return await this.process('EditAffiliateStructure');
+            let app = await this.process('EditAffiliateStructure');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditAffiliateStructure`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -314,7 +355,9 @@ class App extends ModelComponent{
 
     async editIntegration(){
         try{
-            return await this.process('EditIntegration');
+            let app = await this.process('EditIntegration');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditIntegration`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -328,7 +371,9 @@ class App extends ModelComponent{
 
     async editMailSenderIntegration(){
         try{
-            return await this.process('EditMailSenderIntegration');
+            let app = await this.process('EditMailSenderIntegration');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditMailSenderIntegration`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -341,7 +386,9 @@ class App extends ModelComponent{
 
     async editTopBar(){
         try{
-            return await this.process('EditTopBar');
+            let app = await this.process('EditTopBar');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditTopBar`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -354,7 +401,9 @@ class App extends ModelComponent{
 
     async editBanners(){
         try{
-            return await this.process('EditBanners');
+            let app = await this.process('EditBanners');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditBanners`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -368,7 +417,9 @@ class App extends ModelComponent{
 
     async editLogo(){
         try{
-            return await this.process('EditLogo');
+            let app = await this.process('EditLogo');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditLogo`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -382,7 +433,9 @@ class App extends ModelComponent{
 
     async editColors(){
         try{
-            return await this.process('EditColors');
+            let app = await this.process('EditColors');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditColors`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -395,7 +448,9 @@ class App extends ModelComponent{
 
     async editFooter(){
         try{
-            return await this.process('EditFooter');
+            let app = await this.process('EditFooter');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditFooter`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -408,7 +463,9 @@ class App extends ModelComponent{
 
     async editTopIcon(){
         try{
-            return await this.process('EditTopIcon');
+            let app = await this.process('EditTopIcon');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditTopIcon`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -421,7 +478,9 @@ class App extends ModelComponent{
 
     async editLoadingGif(){
         try{
-            return await this.process('EditLoadingGif');
+            let app = await this.process('EditLoadingGif');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditLoadingGif`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -434,7 +493,9 @@ class App extends ModelComponent{
 
     async editTypography(){
         try{
-            return await this.process('EditTypography');
+            let app = await this.process('EditTypography');
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditTypography`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -447,7 +508,9 @@ class App extends ModelComponent{
 
     async getUsers(){
         try{
-            return await this.process('GetUsers');
+            let app = await this.process('GetUsers');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetUsers`,app);
+            return app;
         }catch(err){
             throw err;
         }
@@ -463,6 +526,7 @@ class App extends ModelComponent{
         const { app } = this.self.params;
         try{
             let res = await this.process('UpdateWallet');
+            // saveOutputTest.saveOutputTest(`AppTest`,`UpdateWallet`,res);
             return MapperWalletSingleton.output('WalletTransaction', res);
         }catch(err){
             throw err;
