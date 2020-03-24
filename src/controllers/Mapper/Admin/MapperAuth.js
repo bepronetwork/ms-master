@@ -24,7 +24,7 @@ let outputs = {
                 "bearerToken": object.security['bearerToken'],
             },
             "email": object.email,
-            "app": {
+            "app": !object.app ? {} : {
                 "_id": object.app._id,
                 "isValid": object.app.isValid,
                 "games": object.app.games ? object.app.games.map(game_id => game_id) : object.app.games,
