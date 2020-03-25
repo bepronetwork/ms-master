@@ -94,8 +94,7 @@ let outputs = {
                             "address": wallet.currency.address
                         },
                         "bitgo_id": wallet.bitgo_id,
-                        "bank_address": wallet.bank_address,
-                        "hashed_passphrase": wallet.hashed_passphrase,
+                        "bank_address": wallet.bank_address
                     })
                 }),
                 "name": object.app_id.name,

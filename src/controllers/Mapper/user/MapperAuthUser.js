@@ -55,7 +55,6 @@ let outputs = {
                 })
             }) : object.affiliate.wallet,
             "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
-            "bearerToken": object.bearerToken,
             "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {

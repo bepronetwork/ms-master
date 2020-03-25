@@ -15,7 +15,6 @@ let outputs = {
         return {
             "username"      : object.username,
             "email"         : object.email,
-            "bearerToken"   : object.bearerToken,
             "name"          : object.name,
             "id"            : object._id,
             "app"           : !object.app ? {} : {
@@ -74,7 +73,6 @@ let outputs = {
             "id"                    : object._id,
             "name"                  : object.name,
             "description"           : object.description,
-            "bearerToken"           : object.bearerToken,
             "ownerAddress"          : object.ownerAddress,
             "authorizedAddresses"   : object.authorizedAddresses,
             "croupierAddress"       : object.croupierAddress,
@@ -114,7 +112,6 @@ let outputs = {
             "wallet"            : object.wallet,
             "affiliateWallet"   : object.affiliate.wallet,
             "withdraws"         : object.withdraws,
-            "bearerToken"       : object.bearerToken,
             "deposits"          : object.deposits,
             "verifiedAccounts"  : object.verifiedAccount,
             "integrations"      : object.integrations,
