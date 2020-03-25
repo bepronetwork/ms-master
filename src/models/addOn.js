@@ -15,9 +15,7 @@ class AddOn extends ModelComponent{
                 db : db,
                 self : null, 
                 params : params,
-                children : [
-                    new Jackpot(params)
-                ]
+                children : []
             }
             );
     }

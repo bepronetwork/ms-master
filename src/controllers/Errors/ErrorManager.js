@@ -662,6 +662,28 @@ class ErrorManager {
         }
     }
 
+
+    jackpot = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    addOn = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     typography = function (object, type){
         try{
             switch(type){

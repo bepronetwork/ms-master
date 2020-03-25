@@ -114,7 +114,7 @@ class JackpotLogic extends LogicComponent {
 
 	testParams(params, action){
 		try{
-			error.addOn(params, action);
+			error.jackpot(params, action);
 		}catch(err){
 			throw err;
 		}
