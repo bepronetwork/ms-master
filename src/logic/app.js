@@ -23,6 +23,7 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
+import addOnRepository from '../db/repos/addOn';
 // const patternWallet = require("../mocks/wallets/pattern.json");
 let error = new ErrorManager();
 
@@ -145,7 +146,6 @@ const processActions = {
 		return res;
     },
     __addJackpot : async (params) => {
-        let gameEcosystem = await GamesEcoRepository.prototype.findGameById(params.game);
 
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
@@ -159,7 +159,6 @@ const processActions = {
 
         let res = {
             wallets,
-            gameEcosystem,
             app
         }
 		return res;
@@ -567,25 +566,7 @@ const progressActions = {
     },
     __addGame : async (params) => {
         const { app, gameEcosystem, wallets } = params;
-        let game = new Jackpot({
-            app             : app,
-            edge            : 0,
-            name            : gameEcosystem.name,
-            resultSpace     : gameEcosystem.resultSpace,
-            metaName        : gameEcosystem.metaName,
-            betSystem       : 0,
-            wallets         : wallets
-        })
-
-        const gam = await game.register();
-
-        // console.log(gam);
-
-		return params;
-    },
-    __addJackpot : async (params) => {
-        const { app, gameEcosystem, wallets } = params;
-        let jackpot = new Game({
+        let game = new Game({
             app             : app,
             edge            : 0,
             name            : gameEcosystem.name,
@@ -597,8 +578,22 @@ const progressActions = {
             description     : gameEcosystem.description,
             wallets         : wallets
         })
-        await jackpot.register();
+
+        const gam = await game.register();
+
 		return params;
+    },
+    __addJackpot : async (params) => {
+        const { app, wallets } = params;
+        let jackpot = new Jackpot({
+            app             : app,
+            wallets         : wallets
+        })
+        const jackpotResult = await jackpot.register();
+
+        await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
+
+		return jackpotResult;
     },
     __getLastBets : async (params) => {
         let res = params;

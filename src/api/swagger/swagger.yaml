@@ -1695,6 +1695,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/jackpot/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit
+      operationId: addJackpot
+      description: add Jackpot
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -2907,6 +2939,24 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
+  AppAddJackpotRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
   AppServicesRequest : 
     type: object
     required:

@@ -110,6 +110,21 @@ async function addGame (req, res) {
 	}
 }
 
+
+// JSON WebToken Security Functions
+async function addJackpot (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.addJackpot();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try{
@@ -537,5 +552,6 @@ export {
     webhookBitgoDeposit,
     editTopIcon,
     editMailSenderIntegration,
-    editLoadingGif
+    editLoadingGif,
+    addJackpot
 };

@@ -39,11 +39,8 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{
-			let Jackpot = await self.save(params);
-			return {
-				...Jackpot,
-				type : 'addOn'
-			};
+			let jackpot = await self.save(params);
+			return jackpot;
 		}catch(err){
 			throw err;
 		}

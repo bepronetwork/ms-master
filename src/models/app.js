@@ -159,6 +159,21 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
+    async addJackpot(){
+        try{
+            let app = await this.process('AddJackpot');
+            return app;
+            // return MapperAddGamesSingleton.output('AddJackpot', app);
+        }catch(err){
+            throw err;
+        }
+    }
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
     async addCurrencyWallet(){
         try{
             return await this.process('AddCurrencyWallet');
