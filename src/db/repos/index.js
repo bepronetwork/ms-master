@@ -35,8 +35,10 @@ import TopIconRepository from './topIcon';
 import TokenRepository from './token';
 import MailSenderRepository from './mailSender';
 import LoadingGifRepository from "./loadingGif";
+import AddOnRepository from "./addOn";
 
 export{
+    AddOnRepository,
     TokenRepository,
     ChatRepository,
     FooterRepository,

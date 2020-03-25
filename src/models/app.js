@@ -6,7 +6,7 @@ import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
 import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
 import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
-import { AffiliateSetup, Integrations, Customization, Typography } from '.';
+import { AffiliateSetup, Integrations, Customization, Typography, AddOn } from '.';
 
 class App extends ModelComponent{
 
@@ -16,13 +16,13 @@ class App extends ModelComponent{
 
         super(
             {
-                name : 'App', 
-                logic : new AppLogic({db : db}), 
+                name : 'App',
+                logic : new AppLogic({db : db}),
                 db : db,
-                self : null, 
+                self : null,
                 params : params,
                 children : [
-                    new AffiliateSetup({...params, 
+                    new AffiliateSetup({...params,
                         structures : [
                             {
                                 level : 1,
@@ -32,13 +32,13 @@ class App extends ModelComponent{
                     }),
                     new Integrations(params),
                     new Customization(params),
-                    new Typography(params)
+                    new Typography(params),
+                    new AddOn(params)
                 ]
             }
             );
     }
-    
-   
+
     /**
      * @param {String} 
      * @return {bool || Exception}  

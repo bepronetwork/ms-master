@@ -8,7 +8,7 @@ import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, 
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
-import { Game, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
+import { Game, Jackpot, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import { globals } from '../Globals';
 import Numbers from './services/numbers';
@@ -137,6 +137,26 @@ const processActions = {
         }));
 
         //TO DO : verify if Metaname is already in the games of app
+        let res = {
+            wallets,
+            gameEcosystem,
+            app
+        }
+		return res;
+    },
+    __addJackpot : async (params) => {
+        let gameEcosystem = await GamesEcoRepository.prototype.findGameById(params.game);
+
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        let wallets = await Promise.all(app.wallet.map( async w => {
+            return {
+                wallet      : w,
+                tableLimit  : 0
+            }
+        }));
+
         let res = {
             wallets,
             gameEcosystem,
@@ -547,7 +567,25 @@ const progressActions = {
     },
     __addGame : async (params) => {
         const { app, gameEcosystem, wallets } = params;
-        let game = new Game({
+        let game = new Jackpot({
+            app             : app,
+            edge            : 0,
+            name            : gameEcosystem.name,
+            resultSpace     : gameEcosystem.resultSpace,
+            metaName        : gameEcosystem.metaName,
+            betSystem       : 0,
+            wallets         : wallets
+        })
+
+        const gam = await game.register();
+
+        // console.log(gam);
+
+		return params;
+    },
+    __addJackpot : async (params) => {
+        const { app, gameEcosystem, wallets } = params;
+        let jackpot = new Game({
             app             : app,
             edge            : 0,
             name            : gameEcosystem.name,
@@ -559,11 +597,7 @@ const progressActions = {
             description     : gameEcosystem.description,
             wallets         : wallets
         })
-
-        const gam = await game.register();
-
-        // console.log(gam);
-
+        await jackpot.register();
 		return params;
     },
     __getLastBets : async (params) => {
@@ -950,6 +984,9 @@ class AppLogic extends LogicComponent{
                 case 'AddGame' : {
 					return await library.process.__addGame(params); break;
                 };
+                case 'AddJackpot' : {
+                    return await library.process.__addJackpot(params); break;
+                };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
@@ -1037,7 +1074,7 @@ class AppLogic extends LogicComponent{
     }
 
 	async progress(params, progressAction){
-		try{			
+		try{
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params); break;
@@ -1050,6 +1087,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddGame' : {
 					return await library.progress.__addGame(params); break;
+                };
+                case 'AddJackpot' : {
+					return await library.progress.__addJackpot(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;
