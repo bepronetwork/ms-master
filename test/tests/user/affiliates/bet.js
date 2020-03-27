@@ -41,6 +41,8 @@ context('Bet', async () => {
         
         await editAppStructure({app, admin, structures : inputs.structures});
 
+        console.log("1 ", app);
+
         user_1 = global.test.user_1;
         user_2 = global.test.user_2;
         user_3 = global.test.user_3;
