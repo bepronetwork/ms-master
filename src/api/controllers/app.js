@@ -162,7 +162,7 @@ async function createBet (req, res) {
 		let bet = new Bet(await jackpot.normalizeSpaceResult());
         let data = await bet.register();
         let dataJackpot = await jackpot.bet();
-        MiddlewareSingleton.respond(res, {...data, bet: { ...dataJackpot}});
+        MiddlewareSingleton.respond(res, {...data, jackpot: { ...dataJackpot}});
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

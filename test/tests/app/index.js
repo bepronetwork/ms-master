@@ -1,5 +1,6 @@
 context('App', async () => {
     require('./register');
+    require('./addOn');
     require('./misc');
     require('./deploy');
     require('./integrations');
