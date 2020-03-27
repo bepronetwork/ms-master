@@ -39,9 +39,9 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{
-			let AddOn = await self.save(params);
+			let addOn = await self.save(params);
 			return {
-				...AddOn,
+				...addOn,
 				type : 'addOn'
 			};
 		}catch(err){

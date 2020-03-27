@@ -49,7 +49,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization } = params;
+        const { affiliateSetup, integrations, customization, addOn } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -63,6 +63,7 @@ const processActions = {
             affiliateSetup,       
             customization,
             integrations,
+            addOn,
 			description         : params.description,
 			marketType          : params.marketType,
 			metadataJSON        : JSON.parse(params.metadataJSON),

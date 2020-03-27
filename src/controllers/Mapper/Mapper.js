@@ -46,6 +46,7 @@ let outputs = {
             "currencies"            : object.wallet.map( w => { return {bank_address : w.bank_address, ...w.currency._doc}}),
             "licensesId"            : object.licensesId,
             "customization"         : object.customization,
+            "addOn"                 : object.addOn,
             "integrations"          : {
                 "chat" : {
                     "publicKey" :  object.integrations.chat ? object.integrations.chat.publicKey : ''
@@ -86,8 +87,9 @@ let outputs = {
             "hosting_id"            : object.hosting_id,
             "web_url"               : object.web_url,
             "services"              : object.services,
+            "addOn"                 : object.addOn,
             "users"                 : object.users.map( u => { return {
-                "wallet" : u.wallet, 
+                "wallet" : u.wallet,
                 ...u
             }}),
             "customization"         : object.customization,
