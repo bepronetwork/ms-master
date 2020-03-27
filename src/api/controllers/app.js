@@ -1,6 +1,6 @@
 
 import {
-	Game, App, Bet, Event, AffiliateLink, User
+	Game, App, Bet, Event, AffiliateLink, User, Jackpot
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -158,9 +158,11 @@ async function createBet (req, res) {
         SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
-		let bet = new Bet(params);
-		let data = await bet.register();
-        MiddlewareSingleton.respond(res, data);
+        let jackpot = new Jackpot(params);
+		let bet = new Bet(await jackpot.normalizeSpaceResult());
+        let data = await bet.register();
+        let dataJackpot = await jackpot.bet();
+        MiddlewareSingleton.respond(res, {...data, bet: { ...dataJackpot}});
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

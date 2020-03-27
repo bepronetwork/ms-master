@@ -231,7 +231,7 @@ class CasinoLogic{
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
                         winAmount = parseFloat(maxWin - houseEdgeBalance);
-                    }  
+                    }
                     break;
                 };
                 default : { 

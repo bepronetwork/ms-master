@@ -13,7 +13,7 @@ import { AddOnSchema } from '../schemas';
  */
 
 
-class addOnRepository extends MongoComponent{
+class AddOnRepository extends MongoComponent{
 
     constructor(){
         super(AddOnSchema)
@@ -25,13 +25,13 @@ class addOnRepository extends MongoComponent{
      */
 
     setModel = (AddOn) => {
-        return addOnRepository.prototype.schema.model(AddOn)
+        return AddOnRepository.prototype.schema.model(AddOn)
     }
 
     addJackpot(addOn, jackpot){ 
         try{
             return new Promise( (resolve, reject) => {
-                AppRepository.prototype.schema.model.findByIdAndUpdate(
+                AddOnRepository.prototype.schema.model.findByIdAndUpdate(
                     addOn,
                     {
                         $set: {jackpot}
@@ -49,6 +49,6 @@ class addOnRepository extends MongoComponent{
 
 }
 
-addOnRepository.prototype.schema = new AddOnSchema();
+AddOnRepository.prototype.schema = new AddOnSchema();
 
-export default addOnRepository;
+export default AddOnRepository;

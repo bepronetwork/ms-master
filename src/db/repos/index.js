@@ -36,8 +36,10 @@ import TokenRepository from './token';
 import MailSenderRepository from './mailSender';
 import LoadingGifRepository from "./loadingGif";
 import AddOnRepository from "./addOn";
+import JackpotRepository from "./jackpot";
 
 export{
+    JackpotRepository,
     AddOnRepository,
     TokenRepository,
     ChatRepository,

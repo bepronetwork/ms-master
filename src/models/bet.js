@@ -24,13 +24,6 @@ class Bet extends ModelComponent{
     async register(){
         try{
             let res = await this.process('Auto');
-            if(isCasino(res.betSystem)){
-                /* if(res.hasJackpot){
-                    // Auto Jackpot
-                    let res_playJackpot = await this.process('PlayAutoJackpot');
-                    res.jackpot = res_playJackpot;
-                }*/
-            }
             return MapperBetSingleton.output('Bet', res);
         }catch(err){
             throw err;

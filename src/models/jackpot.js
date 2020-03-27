@@ -28,6 +28,23 @@ class Jackpot extends ModelComponent{
             throw err;
         }
     }
+
+    async normalizeSpaceResult(){
+        try{
+            return await this.process('NormalizeSpaceResult');
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async bet(){
+        try{
+            return await this.process('Bet');
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 export default Jackpot;

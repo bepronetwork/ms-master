@@ -9,13 +9,14 @@ JackpotSchema.prototype.name = 'Jackpot';
 JackpotSchema.prototype.schema =  {
     edge                : { type : Number, required : true, default : 0},
     app                 : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true },
-    wallets             : [{
-        wallet              : { type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' },
-        tableLimit          : { type: Number}
+    limits              : [{
+        currency            : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+        tableLimit          : { type: Number, required : true, default : 0},
+        maxBet              : { type: Number, required : true, default : 0},
+        pot                 : { type: Number, required : true, default : 1}
     }],
     result              : [{ type: Object}],
-    maxBet              : { type: Number, default : 0},
-    // bets                : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bet'}] //TODO Relation with bet
+    resultSpace         : {type : JSON, required : true}
 }
 
 

@@ -24,7 +24,7 @@ import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
 import addOnRepository from '../db/repos/addOn';
-// const patternWallet = require("../mocks/wallets/pattern.json");
+const jsonResult = require("./../config/games.config.json");
 let error = new ErrorManager();
 
 
@@ -150,15 +150,19 @@ const processActions = {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
         if(!app){throwError('APP_NOT_EXISTENT')}
-        let wallets = await Promise.all(app.wallet.map( async w => {
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let limits = await Promise.all(arrayCurrency.map( async c => {
             return {
-                wallet      : w,
-                tableLimit  : 0
+                currency      : c._id,
+                tableLimit    : 0,
+                maxBet        : 0
             }
         }));
 
         let res = {
-            wallets,
+            limits,
             app
         }
 		return res;
@@ -584,15 +588,10 @@ const progressActions = {
 		return params;
     },
     __addJackpot : async (params) => {
-        const { app, wallets } = params;
-        let jackpot = new Jackpot({
-            app             : app,
-            wallets         : wallets
-        })
+        const { app, limits } = params;
+        let jackpot = new Jackpot({app, limits, resultSpace: jsonResult["4"].resultSpace});
         const jackpotResult = await jackpot.register();
-
         await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
-
 		return jackpotResult;
     },
     __getLastBets : async (params) => {
