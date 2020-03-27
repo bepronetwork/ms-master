@@ -1,33 +1,53 @@
-import {AppLogic} from '../logic';
+import { AppLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import {AppRepository} from '../db/repos';
+import { AppRepository } from '../db/repos';
 import Wallet from './wallet';
-import { MapperSingleton } from '../controllers/Mapper/Mapper';
-import { MapperWalletSingleton } from '../controllers/Mapper/App/MapperWalletTransaction';
-import { MapperAddGamesSingleton } from '../controllers/Mapper/App/MapperAddGames';
-import { MapperAddBlockchainSingleton } from '../controllers/Mapper/App/MapperAddBlockchain'
+import {
+    MapperAddCurrencyWalletSingleton,
+    MapperAddGameSingleton,
+    MapperEditBannersSingleton,
+    MapperEditColorsSingleton,
+    MapperEditFooterSingleton,
+    MapperEditGameBackgroundImageSingleton,
+    MapperEditGameEdgeSingleton,
+    MapperEditGameImageSingleton,
+    MapperEditGameTableLimitSingleton,
+    MapperEditLoadingGifSingleton,
+    MapperEditLogoSingleton,
+    MapperEditMailSenderIntegrationSingleton,
+    MapperEditTopBarSingleton,
+    MapperEditTopIconSingleton,
+    MapperEditTypographySingleton,
+    MapperGetSingleton,
+    MapperGetAuthSingleton,
+    MapperGetGamesSingleton,
+    MapperGetUsersSingleton,
+    MapperRegisterSingleton,
+    MapperSummarySingleton,
+    MapperUpdateWalletSingleton
+} from '../controllers/Mapper'
 import { AffiliateSetup, Integrations, Customization, Typography } from '.';
-// const saveOutputTest = require('../../test/outputTest/configOutput')
 
-class App extends ModelComponent{
+class App extends ModelComponent {
 
-    constructor(params){
+    constructor(params) {
 
         let db = new AppRepository();
 
         super(
             {
-                name : 'App', 
-                logic : new AppLogic({db : db}), 
-                db : db,
-                self : null, 
-                params : params,
-                children : [
-                    new AffiliateSetup({...params, 
-                        structures : [
+                name: 'App',
+                logic: new AppLogic({ db: db }),
+                db: db,
+                self: null,
+                params: params,
+                children: [
+                    new AffiliateSetup({
+                        ...params,
+                        structures: [
                             {
-                                level : 1,
-                                percentageOnLoss : 0.02
+                                level: 1,
+                                percentageOnLoss: 0.02
                             }
                         ]
                     }),
@@ -36,74 +56,66 @@ class App extends ModelComponent{
                     new Typography(params)
                 ]
             }
-            );
+        );
     }
-    
-   
+
+
     /**
      * @param {String} 
      * @return {bool || Exception}  
      */
 
-    
-    async register(){
-        try{
-            let app =  await this.process('Register');
-            console.log("register::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`register`,app);
-            return MapperSingleton.output('App', app);
-        }catch(err){
+
+    async register() {
+        try {
+            let app = await this.process('Register');
+            return MapperRegisterSingleton.output('Register', app);
+        } catch (err) {
             throw err;
         }
     }
 
-      /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
-    
-    async get(){
-        try{
-            let app =  await this.process('Get');
-            console.log("Get::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`Get`,app);
-            return MapperSingleton.output('App', app._doc);
-        }catch(err){
+
+    async get() {
+        try {
+            let app = await this.process('Get');
+            return MapperGetSingleton.output('Get', app._doc);
+        } catch (err) {
             throw err;
         }
     }
 
 
-      /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
-    
-    async getAuth(){
-        try{
-            let app =  await this.process('Get');
-            console.log("GetAuth::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetAuth`,app);
-            return MapperSingleton.output('AppAuth', app._doc);
-        }catch(err){
+
+    async getAuth() {
+        try {
+            let app = await this.process('Get');
+            return MapperGetAuthSingleton.output('GetAuth', app._doc);
+        } catch (err) {
             throw err;
         }
     }
 
-   /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+      * @param {String} 
+      * @return {bool || Exception}  
+      */
 
-    async summary(){
-        try{
+    async summary() {
+        try {
             let app = await this.process('Summary');
-            console.log("Summary::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`Summary`,app);
-            return app;
-        }catch(err){
+            return MapperSummarySingleton.output('Summary', app);
+        } catch (err) {
             throw err;
         }
     }
@@ -113,195 +125,178 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-    async deployApp(){
-        try{
+    async deployApp() {
+        // Output = Boolean
+        try {
             let app = await this.process('DeployApp');
-            console.log("DeployApp::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`DeployApp`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async getGames(){
-        try{
+    async getGames() {
+        try {
             let app = await this.process('GetGames');
-            console.log("GetGames::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetGames`,app);
-            return app;
-        }catch(err){
+            return MapperGetGamesSingleton.output('GetGames', app);
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async addServices(){
-        try{
+    async addServices() {
+        // Output = Undefined
+        try {
             let app = await this.process('AddServices');
-            console.log("AddServices::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`AddServices`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async addGame(){
-        try{
+    async addGame() {
+        try {
             let app = await this.process('AddGame');
-            console.log("AddGame::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`AddGame`,app);
-            return MapperAddGamesSingleton.output('AddGames', app);
-        }catch(err){
+            return MapperAddGameSingleton.output('AddGame', app);
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async addCurrencyWallet(){
-        try{
+    async addCurrencyWallet() {
+        try {
             let app = await this.process('AddCurrencyWallet');
-            console.log("AddCurrencyWallet::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`AddCurrencyWallet`,app);
-            return app;
-        }catch(err){
+            return MapperAddCurrencyWalletSingleton.output('AddCurrencyWallet', app);
+        } catch (err) {
             throw err;
         }
     }
 
-    
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
 
-    async getTransactions(){
-        try{
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async getTransactions() {
+        // No Output
+        try {
             let app = await this.process('GetTransactions');
-            console.log("GetTransactions::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetTransactions`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-      /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
-    async getLastBets(){
-        try{
+    async getLastBets() {
+        // Output = []
+        try {
             let app = await this.process('GetLastBets');
-            console.log("GetLastBets::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetLastBets`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
 
-      /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
-    async getBiggestBetWinners(){
-        try{
+    async getBiggestBetWinners() {
+        // Output = []
+        try {
             let app = await this.process('GetBiggestBetWinners');
-            console.log("GetBiggestBetWinners::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetBiggestBetWinners`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-       /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
 
-    async getBiggestUserWinners(){
-        try{
+    async getBiggestUserWinners() {
+        // Output = []
+        try {
             let app = await this.process('GetBiggestUserWinners');
-            console.log("GetBiggestUserWinners::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetBiggestUserWinners`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-       /**
-     * @param {String}  
-     * @return {bool || Exception}  
-     */
+    /**
+  * @param {String}  
+  * @return {bool || Exception}  
+  */
 
-    async getPopularNumbers(){
-        try{
+    async getPopularNumbers() {
+        // Output = []
+        try {
             let app = await this.process('GetPopularNumbers');
-            console.log("GetPopularNumbers::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetPopularNumbers`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-     
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
-    async editGameTableLimit(){
-        try{
+    async editGameTableLimit() {
+        try {
             let app = await this.process('EditGameTableLimit');
-            console.log("EditGameTableLimit::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameTableLimit`,app);
-            return app;
-        }catch(err){
+            return MapperEditGameTableLimitSingleton.output('EditGameTableLimit', app);
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
-    async editGameEdge(){
-        try{
+    async editGameEdge() {
+        try {
             let app = await this.process('EditGameEdge');
-            console.log("EditGameEdge::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameEdge`,app);
-            return app;
-        }catch(err){
+            return MapperEditGameEdgeSingleton.output('EditGameEdge', app);
+        } catch (err) {
             throw err;
         }
     }
@@ -311,13 +306,11 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-     
-    async editGameImage(){
+
+    async editGameImage() {
         try {
             let app = await this.process('EditGameImage');
-            console.log("EditGameImage::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameImage`,app);
-            return app;
+            return MapperEditGameImageSingleton.output('EditGameImage', app);
         } catch (err) {
             throw err;
         }
@@ -328,13 +321,11 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-     
-    async editGameBackgroundImage(){
+
+    async editGameBackgroundImage() {
         try {
             let app = await this.process('EditGameBackgroundImage');
-            console.log("EditGameBackgroundImage::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditGameBackgroundImage`,app);
-            return app;
+            return MapperEditGameBackgroundImageSingleton.output('EditGameBackgroundImage', app);
         } catch (err) {
             throw err;
         }
@@ -346,47 +337,43 @@ class App extends ModelComponent{
      */
 
 
-    async editAffiliateStructure(){
-        try{
+    async editAffiliateStructure() {
+        // Output = Undefined
+        try {
             let app = await this.process('EditAffiliateStructure');
-            console.log("EditAffiliateStructure::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditAffiliateStructure`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-      /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
 
-    async editIntegration(){
-        try{
+    async editIntegration() {
+        // No Output
+        try {
             let app = await this.process('EditIntegration');
-            console.log("EditIntegration::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditIntegration`,app);
             return app;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
-    async editMailSenderIntegration(){
-        try{
+    async editMailSenderIntegration() {
+        try {
             let app = await this.process('EditMailSenderIntegration');
-            console.log("EditMailSenderIntegration::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditMailSenderIntegration`,app);
-            return app;
-        }catch(err){
+            return MapperEditMailSenderIntegrationSingleton.output('EditMailSenderIntegration', app);
+        } catch (err) {
             throw err;
         }
     }
@@ -396,63 +383,55 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-    async editTopBar(){
-        try{
+    async editTopBar() {
+        try {
             let app = await this.process('EditTopBar');
-            console.log("EditTopBar::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditTopBar`,app);
-            return app;
-        }catch(err){
+            return MapperEditTopBarSingleton.output('EditTopBar', app);
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async editBanners(){
-        try{
+    async editBanners() {
+        try {
             let app = await this.process('EditBanners');
-            console.log("EditBanners::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditBanners`,app);
-            return app;
-        }catch(err){
+            return MapperEditBannersSingleton.output('EditBanners', app);
+        } catch (err) {
             throw err;
         }
     }
 
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async editLogo(){
-        try{
+    async editLogo() {
+        try {
             let app = await this.process('EditLogo');
-            console.log("EditLogo::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditLogo`,app);
-            return app;
-        }catch(err){
+            return MapperEditLogoSingleton.output('EditLogo', app);
+        } catch (err) {
             throw err;
         }
     }
 
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async editColors(){
-        try{
+    async editColors() {
+        try {
             let app = await this.process('EditColors');
-            console.log("EditColors::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditColors`,app);
-            return app;
-        }catch(err){
+            return MapperEditColorsSingleton.output('EditColor', app);
+        } catch (err) {
             throw err;
         }
     }
@@ -462,29 +441,25 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-    async editFooter(){
-        try{
+    async editFooter() {
+        try {
             let app = await this.process('EditFooter');
-            console.log("EditFooter::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditFooter`,app);
-            return app;
-        }catch(err){
+            return MapperEditFooterSingleton.output('EditFooter', app);
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async editTopIcon(){
-        try{
+    async editTopIcon() {
+        try {
             let app = await this.process('EditTopIcon');
-            console.log("EditTopIcon::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditTopIcon`,app);
-            return app;
-        }catch(err){
+            return MapperEditTopIconSingleton.output('EditTopIcon', app);
+        } catch (err) {
             throw err;
         }
     }
@@ -494,13 +469,11 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-    async editLoadingGif(){
-        try{
+    async editLoadingGif() {
+        try {
             let app = await this.process('EditLoadingGif');
-            console.log("EditLoadingGif::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditLoadingGif`,app);
-            return app;
-        }catch(err){
+            return MapperEditLoadingGifSingleton.output('EditLoadingGif', app);
+        } catch (err) {
             throw err;
         }
     }
@@ -510,47 +483,41 @@ class App extends ModelComponent{
      * @return {bool || Exception}  
      */
 
-    async editTypography(){
-        try{
+    async editTypography() {
+        try {
             let app = await this.process('EditTypography');
-            console.log("EditTypography::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`EditTypography`,app);
-            return app;
-        }catch(err){
+            return MapperEditTypographySingleton.output('EditTypography', app);
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async getUsers(){
-        try{
+    async getUsers() {
+        try {
             let app = await this.process('GetUsers');
-            console.log("GetUsers::: ", app)
-            // saveOutputTest.saveOutputTest(`AppTest`,`GetUsers`,app);
-            return app;
-        }catch(err){
+            return MapperGetUsersSingleton.output('GetUsers', app);
+        } catch (err) {
             throw err;
         }
     }
 
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
-    async updateWallet(){
+    async updateWallet() {
         const { app } = this.self.params;
-        try{
+        try {
             let res = await this.process('UpdateWallet');
-            console.log("UpdateWallet::: ", res)
-            // saveOutputTest.saveOutputTest(`AppTest`,`UpdateWallet`,res);
-            return MapperWalletSingleton.output('WalletTransaction', res);
-        }catch(err){
+            return MapperUpdateWalletSingleton.output('UpdateWallet', res);
+        } catch (err) {
             throw err;
         }
     }

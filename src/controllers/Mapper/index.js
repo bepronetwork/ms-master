@@ -1,7 +1,6 @@
 import Mapper from './Mapper';
 import MapperBetSingleton from './MapperBet';
 import MapperUserSingleton from './MapperUser';
-import MapperWalletSingleton from './App/MapperWalletTransaction';
 import {
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
@@ -28,11 +27,35 @@ import {
     MapperSet2FASingleton
 } from "./Admin";
 
+import {
+    MapperAddCurrencyWalletSingleton,
+    MapperAddGameSingleton,
+    MapperEditBannersSingleton,
+    MapperEditColorsSingleton,
+    MapperEditFooterSingleton,
+    MapperEditGameBackgroundImageSingleton,
+    MapperEditGameEdgeSingleton,
+    MapperEditGameImageSingleton,
+    MapperEditGameTableLimitSingleton,
+    MapperEditLoadingGifSingleton,
+    MapperEditLogoSingleton,
+    MapperEditMailSenderIntegrationSingleton,
+    MapperEditTopBarSingleton,
+    MapperEditTopIconSingleton,
+    MapperEditTypographySingleton,
+    MapperGetSingleton,
+    MapperGetAuthSingleton,
+    MapperGetGamesSingleton,
+    MapperGetUsersSingleton,
+    MapperRegisterSingleton,
+    MapperSummarySingleton,
+    MapperUpdateWalletSingleton
+} from "./App";
+
 export {
     Mapper,
     MapperBetSingleton,
     MapperUserSingleton,
-    MapperWalletSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
     MapperAuthUserSingleton,
@@ -49,5 +72,27 @@ export {
     MapperLoginAdminSingleton,
     MapperLogin2faAdminSingleton,
     MapperRegisterAdminSingleton,
-    MapperSet2FASingleton
+    MapperSet2FASingleton,
+    MapperAddCurrencyWalletSingleton,
+    MapperAddGameSingleton,
+    MapperEditBannersSingleton,
+    MapperEditColorsSingleton,
+    MapperEditFooterSingleton,
+    MapperEditGameBackgroundImageSingleton,
+    MapperEditGameEdgeSingleton,
+    MapperEditGameImageSingleton,
+    MapperEditGameTableLimitSingleton,
+    MapperEditLoadingGifSingleton,
+    MapperEditLogoSingleton,
+    MapperEditMailSenderIntegrationSingleton,
+    MapperEditTopBarSingleton,
+    MapperEditTopIconSingleton,
+    MapperEditTypographySingleton,
+    MapperGetSingleton,
+    MapperGetAuthSingleton,
+    MapperGetGamesSingleton,
+    MapperGetUsersSingleton,
+    MapperRegisterSingleton,
+    MapperSummarySingleton,
+    MapperUpdateWalletSingleton
 }
