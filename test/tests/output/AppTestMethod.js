@@ -15,9 +15,6 @@ module.exports = {
         expect(data.message.customization).to.be.an('string')
         expect(data.message.integrations).to.not.be.null;
         expect(data.message.integrations).to.not.be.empty;
-        expect(data.message.integrations.chat).to.not.be.null;
-        expect(data.message.integrations.chat).to.not.be.empty;
-        expect(data.message.integrations.chat.publicKey).to.not.be.null;
         expect(data.message.countriesAvailable).to.be.an('array').that.is.empty;
         expect(data.message.games).to.be.an('array').that.is.empty;
 
