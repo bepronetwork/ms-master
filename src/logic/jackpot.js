@@ -66,8 +66,10 @@ const processActions = {
 
 		let user 	= await UsersRepository.prototype.findUserById(params.user);
 		let app  	= await AppRepository.prototype.findAppById(user.app_id);
+		if(app.addOn.jackpot==undefined){
+			return {res: params};
+		}
 		let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
-
 		if(!jackpot) {
 			return {res: params};
 		}
