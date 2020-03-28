@@ -150,6 +150,8 @@ const processActions = {
             }else{
                 /* User Lost Bet */
                 user_delta = parseFloat(-Math.abs(totalBetAmount)) + parseFloat(Math.abs(percentage));
+                console.log(`parseFloat(-Math.abs(${totalBetAmount})) + parseFloat(Math.abs(${percentage}))`);
+                console.log(user_delta);
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
@@ -163,6 +165,8 @@ const processActions = {
                 }
                 /* Set App Cut without Affiliate Return */
                 app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn)) - parseFloat(Math.abs(percentage));
+                console.log(`parseFloat(Math.abs(${totalBetAmount} - ${totalAffiliateReturn})) - parseFloat(Math.abs(${percentage}))`);
+                console.log(app_delta);
             }
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
