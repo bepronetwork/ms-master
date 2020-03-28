@@ -62,6 +62,28 @@ const processActions = {
 	__register : async (params) => {
 		return params;
 	},
+	__percentage : async (params) => {
+		let user 	= await UsersRepository.prototype.findUserById(params.user);
+		let app  	= await AppRepository.prototype.findAppById(user.app_id);
+		if(app.addOn.jackpot==undefined){
+			return {res: params};
+		}
+		let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
+		if(!jackpot) {
+			return {res: params};
+		}
+
+		let result = params.result.map(r => {
+			return {
+				place: r.place,
+				value: (parseFloat(r.value) * parseFloat(jackpot.edge) * 0.01)
+			};
+		});
+
+		return {
+			result
+		};
+	},
 	__normalizeSpaceResult : async (params) => {
 
 		let user 	= await UsersRepository.prototype.findUserById(params.user);
@@ -181,6 +203,14 @@ const progressActions = {
 			throw err;
 		}
 	},
+	__percentage : async (params) => {
+		try{
+			let { result } = params;
+			return result;
+		}catch(err){
+			throw err;
+		}
+	},
 	__normalizeSpaceResult : async (params) => {
 		try{
 			let { res } = params;
@@ -266,6 +296,9 @@ class JackpotLogic extends LogicComponent {
 				case 'Bet' : {
 					return await library.process.__bet(params); break;
 				};
+				case 'Percentage' : {
+					return await library.process.__percentage(params); break;
+				};
 			}
 		}catch(error){
 			throw error;
@@ -299,6 +332,9 @@ class JackpotLogic extends LogicComponent {
 				};
 				case 'Bet' : {
 					return await library.progress.__bet(params); break;
+				};
+				case 'Percentage' : {
+					return await library.progress.__percentage(params); break;
 				};
 			}
 		}catch(error){

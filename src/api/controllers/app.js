@@ -159,7 +159,8 @@ async function createBet (req, res) {
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
         let jackpot = new Jackpot(params);
-		let bet = new Bet(await jackpot.normalizeSpaceResult());
+        let percentage = await jackpot.percentage();
+		let bet = new Bet({...params, percentage});
         let data = await bet.register();
         let dataJackpot = await jackpot.bet();
         MiddlewareSingleton.respond(res, {...data, jackpot: { ...dataJackpot}});

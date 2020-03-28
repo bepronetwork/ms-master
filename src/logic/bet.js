@@ -82,7 +82,7 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            const { currency } = params;
+            const { currency, percentage } = params;
 
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -143,7 +143,7 @@ const processActions = {
 
             if(isWon){
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
+                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount) - percentage;
                 user_delta = parseFloat(delta);
                 app_delta = parseFloat(-delta);
             }else{

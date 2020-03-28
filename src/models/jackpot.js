@@ -37,6 +37,14 @@ class Jackpot extends ModelComponent{
         }
     }
 
+    async percentage(){
+        try{
+            return await this.process('Percentage');
+        }catch(err){
+            throw err;
+        }
+    }
+
     async bet(){
         try{
             return await this.process('Bet');
