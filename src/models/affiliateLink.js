@@ -30,8 +30,10 @@ class AffiliateLink extends ModelComponent{
     }
 
     async setCustomAffiliatePercentage(){
+        // Output = boolean
         try{
-            return await this.process('SetCustomAffiliatePercentage');
+            let res = await this.process('SetCustomAffiliatePercentage');
+            return res;
         }catch(err){
             throw err;
         }

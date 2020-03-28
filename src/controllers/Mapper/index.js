@@ -1,6 +1,3 @@
-import Mapper from './Mapper';
-import MapperBetSingleton from './MapperBet';
-import MapperUserSingleton from './MapperUser';
 import {
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
@@ -52,10 +49,19 @@ import {
     MapperUpdateWalletSingleton
 } from "./App";
 
+import {
+    MapperBetSingleton
+} from "./Bet";
+
+import {
+    MapperSetMaxBetSingleton
+} from "./Game";
+
+import {
+    MapperUpdateMaxDepositSingleton
+} from "./Wallet";
+
 export {
-    Mapper,
-    MapperBetSingleton,
-    MapperUserSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
     MapperAuthUserSingleton,
@@ -94,5 +100,8 @@ export {
     MapperGetUsersSingleton,
     MapperRegisterSingleton,
     MapperSummarySingleton,
-    MapperUpdateWalletSingleton
+    MapperUpdateWalletSingleton,
+    MapperBetSingleton,
+    MapperSetMaxBetSingleton,
+    MapperUpdateMaxDepositSingleton
 }
