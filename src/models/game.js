@@ -1,6 +1,7 @@
 import {GameLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {GamesRepository} from '../db/repos';
+import { MapperSetMaxBetSingleton } from "../controllers/Mapper";
 
 class Game extends ModelComponent{
 
@@ -43,8 +44,10 @@ class Game extends ModelComponent{
 
     
     async get(){
+        // No Output
         try{
-            return await this.process('Get');
+            let res = await this.process('Get');
+            return res;
         }catch(err){
             throw err;
         }
@@ -52,7 +55,9 @@ class Game extends ModelComponent{
 
     async setMaxBet(){
         try {
-            return await this.process('SetMaxBet');
+            let res = await this.process('SetMaxBet');
+            return MapperSetMaxBetSingleton.output('SetMaxBet',res);
+            
         } catch (err) {
             throw err;
         }

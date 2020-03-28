@@ -2,7 +2,7 @@ import {BetLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {BetsRepository} from '../db/repos';
 import { isCasino } from '../logic/markets/betSystems';
-import { MapperBetSingleton } from '../controllers/Mapper/MapperBet';
+import { MapperBetSingleton } from "../controllers/Mapper";
 
 class Bet extends ModelComponent{
 

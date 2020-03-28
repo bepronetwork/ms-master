@@ -1,7 +1,6 @@
 import {DepositLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {DepositRepository} from '../db/repos';
-import { MapperSingleton } from '../controllers/Mapper/Mapper';
 import Wallet from './wallet';
 
 class Deposit extends ModelComponent{

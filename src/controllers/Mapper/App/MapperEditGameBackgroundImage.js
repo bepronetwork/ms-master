@@ -1,3 +1,4 @@
+var mongoose = require('mongoose'); 
 
 let self;
 
@@ -14,14 +15,7 @@ let outputs = {
     editGameBackgroundImage: (object) => {
         return {
             "_id": object._id,
-            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space => {
-                return ({
-                    "_id": result_space._id,
-                    "formType": result_space.formType,
-                    "probability": result_space.probability,
-                    "multiplier": !result_space.multiplier ? '' : result_space.multiplier
-                })
-            }),
+            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space_id => mongoose.Types.ObjectId(result_space_id)),
             "result": object.result ? object.result.map(result_id => result_id) : object.result,
             "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
             "isClosed": object.isClosed,

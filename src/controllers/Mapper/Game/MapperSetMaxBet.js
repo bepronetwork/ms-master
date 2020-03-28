@@ -12,7 +12,7 @@ let self;
 
 
 let outputs = {
-    editGameEdge: (object) => {
+    setMaxBet: (object) => {
         return {
             "_id": object._id,
             "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space_id => mongoose.Types.ObjectId(result_space_id)),
@@ -43,7 +43,7 @@ let outputs = {
 }
 
 
-class MapperEditGameEdge {
+class MapperSetMaxBet {
 
     constructor() {
         self = {
@@ -57,7 +57,7 @@ class MapperEditGameEdge {
          */
 
         this.KEYS = {
-            EditGameEdge: 'editGameEdge'
+            SetMaxBet: 'setMaxBet'
         }
     }
 
@@ -70,8 +70,8 @@ class MapperEditGameEdge {
     }
 }
 
-let MapperEditGameEdgeSingleton = new MapperEditGameEdge();
+let MapperSetMaxBetSingleton = new MapperSetMaxBet();
 
 export {
-    MapperEditGameEdgeSingleton
+    MapperSetMaxBetSingleton
 }
