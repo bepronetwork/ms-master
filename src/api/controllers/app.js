@@ -160,6 +160,7 @@ async function createBet (req, res) {
         let params = req.body;
         let jackpot = new Jackpot(params);
         let percentage = await jackpot.percentage();
+        console.log(percentage);
 		let bet = new Bet({...params, percentage});
         let data = await bet.register();
         let dataJackpot = await jackpot.bet();

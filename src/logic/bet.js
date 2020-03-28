@@ -104,6 +104,8 @@ const processActions = {
             const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
+            console.log("107: ", appWallet.playBalance);
+            console.log("108: ", userWallet.playBalance);
             let appPlayBalance = parseFloat(appWallet.playBalance);
             let userBalance = parseFloat(userWallet.playBalance);
 
