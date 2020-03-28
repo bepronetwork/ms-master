@@ -75,31 +75,29 @@ let outputs = {
             },
             "currency": object.currency,
             "tableLimit": object.tableLimit,
-            "wallet": !object.wallet ? [] : object.wallet.map(wallet => {
-                return ({
-                    "_id": wallet._id,
-                    "playBalance": wallet.playBalance,
-                    "max_deposit": wallet.max_deposit,
-                    "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address => {
-                        return({
-                            "_id": deposit_address._id,
-                            "currency": deposit_address.currency,
-                            "user": deposit_address.user,
-                            "bitgo_id": deposit_address.bitgo_id,
-                        })
-                    }) : wallet.depositAddresses,
-                    "link_url": wallet.link_url,
-                    "currency": {
-                        "_id": wallet.currency._id,
-                        "image": wallet.currency.image,
-                        "ticker": wallet.currency.ticker,
-                        "decimals": wallet.currency.decimals,
-                        "name": wallet.currency.name,
-                        "address": wallet.currency.address
-                    }
-                })
-            }),
+            "wallet": !object.wallet ? {} : {
+                "_id": object.wallet._id,
+                "playBalance": object.wallet.playBalance,
+                "max_deposit": object.wallet.max_deposit,
+                "max_withdraw": object.wallet.max_withdraw,
+                "depositAddresses": object.wallet.depositAddresses ? object.wallet.depositAddresses.map(deposit_address => {
+                    return ({
+                        "_id": deposit_address._id,
+                        "currency": deposit_address.currency,
+                        "user": deposit_address.user,
+                        "bitgo_id": deposit_address.bitgo_id,
+                    })
+                }) : object.wallet.depositAddresses,
+                "link_url": object.wallet.link_url,
+                "currency": {
+                    "_id": object.wallet.currency._id,
+                    "image": object.wallet.currency.image,
+                    "ticker": object.wallet.currency.ticker,
+                    "decimals": object.wallet.currency.decimals,
+                    "name": object.wallet.currency.name,
+                    "address": object.wallet.currency.address
+                }
+            },
             "user": object.user,
             "app": object.app,
             "outcomeResultSpace": {
