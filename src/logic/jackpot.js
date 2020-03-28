@@ -66,9 +66,6 @@ const processActions = {
 
 		let user 	= await UsersRepository.prototype.findUserById(params.user);
 		let app  	= await AppRepository.prototype.findAppById(user.app_id);
-		console.log("2 ", params.user);
-		console.log("3 ", user.app_id);
-		console.log("4 ", app);
 		if(app.addOn.jackpot==undefined){
 			return {res: params};
 		}
