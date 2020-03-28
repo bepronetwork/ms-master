@@ -30,6 +30,7 @@ let outputs = {
             },
             "email": object.email,
             "app": {
+                "id": object.app._id,
                 "bearerToken": object.app.bearerToken,
             },
             "registered": object.registered,
