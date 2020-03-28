@@ -162,7 +162,7 @@ const processActions = {
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
+                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn)) - parseFloat(Math.abs(percentage));
             }
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
