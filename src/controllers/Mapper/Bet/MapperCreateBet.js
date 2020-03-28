@@ -52,7 +52,7 @@ let outputs = {
             "user_delta": object.user_delta,
             "app_delta": object.app_delta,
             "isUserAffiliated": object.isUserAffiliated,
-            "affiliateReturns": !object.affiliateReturns ? [] : object.affiliateReturns.map(),
+            "affiliateReturns": !object.affiliateReturns ? [] : object.affiliateReturns.map(affiliate_return_id => affiliate_return_id),
             "totalAffiliateReturn": object.totalAffiliateReturn,
             "appWallet": !object.appWallet ? {} : {
                 "_id": object.appWallet._id,
