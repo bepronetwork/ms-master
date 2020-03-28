@@ -75,13 +75,16 @@ const processActions = {
 
 		let result = params.result.map(r => {
 			return {
-				place: r.place,
 				value: (parseFloat(r.value) * parseFloat(jackpot.edge) * 0.01)
 			};
 		});
 
+		let percentage = result.reduce( (acc, result) => {
+			return acc + parseFloat(result.value);
+		}, 0);
+
 		return {
-			result
+			percentage
 		};
 	},
 	__normalizeSpaceResult : async (params) => {
@@ -205,8 +208,8 @@ const progressActions = {
 	},
 	__percentage : async (params) => {
 		try{
-			let { result } = params;
-			return result;
+			let { percentage } = params;
+			return percentage;
 		}catch(err){
 			throw err;
 		}

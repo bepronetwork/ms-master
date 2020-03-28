@@ -145,7 +145,7 @@ const processActions = {
 
             if(isWon){
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount) - percentage;
+                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount) - Math.abs(percentage);
                 user_delta = parseFloat(delta);
                 app_delta = parseFloat(-delta);
             }else{
