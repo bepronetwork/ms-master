@@ -785,7 +785,6 @@ class ErrorManager {
                     }
                     /* Verify if when Bet is Lost the total Affiliate Return + App Cut equals User Lost */
                     if(!bet.isWon && ( parseFloat(bet.totalAffiliateReturn + bet.app_delta).toFixed(6) != parseFloat(Math.abs(bet.user_delta)).toFixed(6) )){
-                        console.log( `(${bet.totalAffiliateReturn} + ${bet.app_delta}) != ${Math.abs(bet.user_delta)} `);
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
                     }
                     break;

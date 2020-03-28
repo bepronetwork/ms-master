@@ -6,6 +6,7 @@ import CasinoLogicSingleton from './utils/casino';
 import { CryptographySingleton } from '../controllers/Helpers';
 import MathSingleton from './utils/math';
 import PusherSingleton from './third-parties/pusher';
+import Mailer from './services/mailer';
 
 let error = new ErrorManager();
 
@@ -189,7 +190,9 @@ const processActions = {
 				currency,
 				user_delta,
 				lossAmount,
-				userWallet
+				userWallet,
+				app,
+				user
             }
             return normalized;
         }catch(err){
@@ -238,12 +241,19 @@ const progressActions = {
 			await JackpotRepository.prototype.updatePot(jackpot._id, currency, parseFloat(pot) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(user_delta) );
 			if(isWon) {
+				/* Send Notification */
 				PusherSingleton.trigger({
 					channel_name: user_id,
 					isPrivate: true,
 					message: `You won the jackpot ${parseFloat(pot)}`,
 					eventType: 'JACKPOT'
 				})
+				/* Send Email */
+				let mail = new Mailer();
+				let attributes = {
+					TEXT: `You won the jackpot ${parseFloat(pot)}`
+				};
+				mail.sendEmail({app_id : params.app.id, user: params.user, action : 'JACKPOT_NOTIFICATION', attributes});
 			}
 			return params;
 		}catch(err){
