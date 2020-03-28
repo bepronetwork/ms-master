@@ -83,6 +83,16 @@ const processActions = {
 			return acc + parseFloat(result.value);
 		}, 0);
 
+		let toTestResult = params.result.map(r => {
+			return {
+				value: (parseFloat(r.value) * (100 - parseFloat(jackpot.edge)) * 0.01)
+			};
+		});
+		let amountTest = toTestResult.reduce( (acc, result) => {
+			return acc + parseFloat(result.value);
+		}, 0);
+		console.log("To bet Amount: ",  amountTest);
+
 		return {
 			percentage
 		};
