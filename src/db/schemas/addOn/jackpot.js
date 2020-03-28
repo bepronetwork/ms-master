@@ -7,13 +7,13 @@ class JackpotSchema{};
 JackpotSchema.prototype.name = 'Jackpot';
 
 JackpotSchema.prototype.schema =  {
-    edge                : { type : Number, required : true, default : 0},
+    edge                : { type : Number, required : true, default : 1},
     app                 : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true },
     limits              : [{
         currency            : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
         tableLimit          : { type: Number, required : true, default : 0},
         maxBet              : { type: Number, required : true, default : 0},
-        pot                 : { type: Number, required : true, default : 1}
+        pot                 : { type: Number, required : true, default : 0}
     }],
     result              : [{ type: Object}],
     resultSpace         : {type : JSON, required : true}
