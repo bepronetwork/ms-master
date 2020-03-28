@@ -142,13 +142,14 @@ const processActions = {
             });
 
             if(isWon){
+                console.log("win Amount: ", winAmount)
                 /* User Won Bet */
                 const delta = Math.abs(winAmount) - Math.abs(totalBetAmount) - Math.abs(percentage);
                 user_delta = parseFloat(delta);
                 app_delta = parseFloat(-delta);
             }else{
                 /* User Lost Bet */
-                user_delta = parseFloat(-Math.abs(totalBetAmount));
+                user_delta = parseFloat(-Math.abs(totalBetAmount)) + parseFloat(Math.abs(percentage));
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
