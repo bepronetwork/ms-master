@@ -159,7 +159,7 @@ const processActions = {
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
                         currency : currency,
-                        lostAmount : totalBetAmount
+                        lostAmount : totalBetAmount+parseFloat(percentage)
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
@@ -216,10 +216,7 @@ const processActions = {
 	},
 	__resolve : async (params) => {
 	
-    },
-    __playAutoJackpot : async (params) => {
-        return params;
-	}
+    }
 }
 
 
@@ -279,10 +276,7 @@ const progressActions = {
 	},
 	__resolve : async (params) => {
     
-    },
-    __playAutoJackpot : async (params) => {
-        return params;
-	}
+    }
 }
 /**
  * Main Bet logic.
@@ -340,9 +334,6 @@ class BetLogic extends LogicComponent{
 				case 'Resolve' : {
 					return await library.process.__resolve(params); break;
                 };
-                case 'PlayAutoJackpot' : {
-					return await library.process.__playAutoJackpot(params); break;
-				};
 			}
 		}catch(err){
 			throw err;
@@ -377,9 +368,6 @@ class BetLogic extends LogicComponent{
 				case 'Resolve' : {
 					return await library.progress.__resolve(params); break;
                 };
-                case 'PlayAutoJackpot' : {
-					return await library.progress.__playAutoJackpot(params); break;
-				};
 			}
 		}catch(report){
 			throw `Failed to validate user schema: User \n See Stack Trace : ${report}`;
