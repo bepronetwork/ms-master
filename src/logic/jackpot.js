@@ -253,7 +253,7 @@ const progressActions = {
 				let attributes = {
 					TEXT: `You won the jackpot ${parseFloat(pot)}`
 				};
-				mail.sendEmail({app_id : params.app.id, user: params.user, action : 'JACKPOT_NOTIFICATION', attributes});
+				mail.sendEmail({app_id : params.app.id, user: params.user, action : 'USER_NOTIFICATION', attributes});
 			}
 			return params;
 		}catch(err){
