@@ -158,11 +158,18 @@ async function createBet (req, res) {
         await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
+
+        // check how much is needed for the jackpot
         let jackpot = new Jackpot(params);
         let percentage = await jackpot.percentage();
+
         console.log("To jackpot: ", percentage);
-		let bet = new Bet({...params, percentage});
+
+        // place a bet on the game
+        let bet = new Bet({...params, percentage});
         let data = await bet.register();
+
+        // put it in the jackpot
         let dataJackpot = await jackpot.bet();
         MiddlewareSingleton.respond(res, {...data, jackpot: { ...dataJackpot}});
 	}catch(err){
