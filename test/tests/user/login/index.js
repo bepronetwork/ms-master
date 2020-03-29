@@ -101,6 +101,21 @@ context('Login & Register', async () => {
         expect(res.data.status).to.equal(200);
     }));
 
+    it('should´t auth for User - BearerToken Expired', mochaAsync(async () => {
+        let token = Security.prototype.generateToken2FA(secret);
+        let res = await loginUser2FA({...userPostData,
+            '2fa_token' : token
+        });
+        global.test.user = res.data.message;
+
+        res = await authUser({
+            user : user.id
+        }, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA", { id : user.id});
+
+        expect(res.data.status).to.equal(48);
+    }));
+
+
     it('shouldn´t login the User - WRONG TOKEN', mochaAsync(async () => {
         let res = await loginUser2FA({...userPostData,
             '2fa_token' : '345633',
