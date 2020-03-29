@@ -11,8 +11,6 @@ export async function digestBetResult({newBalance, res, previousBalance, percent
         expect(winAmount).to.be.greaterThan(0);
         // Confirm New User Balance is equal to previous plus delta
         expect(newBalance).to.be.equal(previousBalance+user_delta+jackpot.user_delta);
-        // Check if wagered value in jackpot is n% edge limited per jackpot
-        expect((betAmount) * percentageJackpot*0.01).to.be.equal(jackpot.lossAmount);
     }else{
         // Confirm delta is negative
         expect(user_delta).to.be.lessThan(0);
@@ -20,8 +18,6 @@ export async function digestBetResult({newBalance, res, previousBalance, percent
         expect(winAmount).to.be.equal(0);
         // Confirm New User Balance is equal to previous plus delta
         expect(newBalance).to.be.equal(previousBalance+user_delta+jackpot.user_delta);
-        // Check if wagered value in jackpot is n% edge limited per jackpot
-        expect( betAmount * (percentageJackpot*0.01) ).to.be.equal(jackpot.lossAmount);
     }
     return true;
 }
