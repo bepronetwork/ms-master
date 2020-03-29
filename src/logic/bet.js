@@ -82,7 +82,7 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            const { currency } = params;
+            const { currency, percentage } = params;
 
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -124,7 +124,11 @@ const processActions = {
                 resultSpace : game.resultSpace,
                 houseEdge : game.edge,
                 game : game.metaName
-            }); 
+            });
+
+            /* Sum of the amount to be bet, minus the amount that goes into the pot */
+            totalBetAmount = totalBetAmount - parseFloat(percentage);
+
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
@@ -142,6 +146,7 @@ const processActions = {
             });
 
             if(isWon){
+                console.log("win Amount: ", winAmount)
                 /* User Won Bet */
                 const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
                 user_delta = parseFloat(delta);
@@ -154,7 +159,7 @@ const processActions = {
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
                         currency : currency,
-                        lostAmount : totalBetAmount
+                        lostAmount : totalBetAmount+parseFloat(percentage)
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
@@ -211,10 +216,7 @@ const processActions = {
 	},
 	__resolve : async (params) => {
 	
-    },
-    __playAutoJackpot : async (params) => {
-        return params;
-	}
+    }
 }
 
 
@@ -274,10 +276,7 @@ const progressActions = {
 	},
 	__resolve : async (params) => {
     
-    },
-    __playAutoJackpot : async (params) => {
-        return params;
-	}
+    }
 }
 /**
  * Main Bet logic.
@@ -335,9 +334,6 @@ class BetLogic extends LogicComponent{
 				case 'Resolve' : {
 					return await library.process.__resolve(params); break;
                 };
-                case 'PlayAutoJackpot' : {
-					return await library.process.__playAutoJackpot(params); break;
-				};
 			}
 		}catch(err){
 			throw err;
@@ -372,9 +368,6 @@ class BetLogic extends LogicComponent{
 				case 'Resolve' : {
 					return await library.progress.__resolve(params); break;
                 };
-                case 'PlayAutoJackpot' : {
-					return await library.progress.__playAutoJackpot(params); break;
-				};
 			}
 		}catch(report){
 			throw `Failed to validate user schema: User \n See Stack Trace : ${report}`;

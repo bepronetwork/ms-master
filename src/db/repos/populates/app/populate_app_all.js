@@ -5,6 +5,11 @@ import populate_wallet_all from "../wallet/all";
 
 let populate_app_all = [
     {
+        path : 'addOn',
+        model : 'AddOn',
+        select : { '__v': 0}
+    },
+    {
         path : 'wallet',
         model : 'Wallet',
         select : { '__v': 0},

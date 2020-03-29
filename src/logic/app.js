@@ -8,7 +8,7 @@ import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, 
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
-import { Game, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
+import { Game, Jackpot, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import { globals } from '../Globals';
 import Numbers from './services/numbers';
@@ -23,7 +23,8 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
-// const patternWallet = require("../mocks/wallets/pattern.json");
+import addOnRepository from '../db/repos/addOn';
+const jsonResult = require("./../config/games.config.json");
 let error = new ErrorManager();
 
 
@@ -48,7 +49,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization } = params;
+        const { affiliateSetup, integrations, customization, addOn } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -62,6 +63,7 @@ const processActions = {
             affiliateSetup,       
             customization,
             integrations,
+            addOn,
 			description         : params.description,
 			marketType          : params.marketType,
 			metadataJSON        : JSON.parse(params.metadataJSON),
@@ -140,6 +142,28 @@ const processActions = {
         let res = {
             wallets,
             gameEcosystem,
+            app
+        }
+		return res;
+    },
+    __addJackpot : async (params) => {
+
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let limits = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency      : c._id,
+                tableLimit    : 0,
+                maxBet        : 0
+            }
+        }));
+
+        let res = {
+            limits,
             app
         }
 		return res;
@@ -562,9 +586,14 @@ const progressActions = {
 
         const gam = await game.register();
 
-        // console.log(gam);
-
 		return params;
+    },
+    __addJackpot : async (params) => {
+        const { app, limits } = params;
+        let jackpot = new Jackpot({app, limits, resultSpace: jsonResult["4"].resultSpace});
+        const jackpotResult = await jackpot.register();
+        await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
+		return jackpotResult;
     },
     __getLastBets : async (params) => {
         let res = params;
@@ -950,6 +979,9 @@ class AppLogic extends LogicComponent{
                 case 'AddGame' : {
 					return await library.process.__addGame(params); break;
                 };
+                case 'AddJackpot' : {
+                    return await library.process.__addJackpot(params); break;
+                };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
@@ -1037,7 +1069,7 @@ class AppLogic extends LogicComponent{
     }
 
 	async progress(params, progressAction){
-		try{			
+		try{
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params); break;
@@ -1050,6 +1082,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddGame' : {
 					return await library.progress.__addGame(params); break;
+                };
+                case 'AddJackpot' : {
+					return await library.progress.__addJackpot(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;

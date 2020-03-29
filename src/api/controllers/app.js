@@ -1,6 +1,6 @@
 
 import {
-	Game, App, Bet, Event, AffiliateLink, User
+	Game, App, Bet, Event, AffiliateLink, User, Jackpot
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -110,6 +110,21 @@ async function addGame (req, res) {
 	}
 }
 
+
+// JSON WebToken Security Functions
+async function addJackpot (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'admin', req});
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+		let app = new App(params);
+		let data = await app.addJackpot();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try{
@@ -143,9 +158,20 @@ async function createBet (req, res) {
         await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
-		let bet = new Bet(params);
-		let data = await bet.register();
-        MiddlewareSingleton.respond(res, data);
+
+        // check how much is needed for the jackpot
+        let jackpot = new Jackpot(params);
+        let percentage = await jackpot.percentage();
+
+        console.log("To jackpot: ", percentage);
+
+        // place a bet on the game
+        let bet = new Bet({...params, percentage});
+        let data = await bet.register();
+
+        // put it in the jackpot
+        let dataJackpot = await jackpot.bet();
+        MiddlewareSingleton.respond(res, {...data, jackpot: { ...dataJackpot}});
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -537,5 +563,6 @@ export {
     webhookBitgoDeposit,
     editTopIcon,
     editMailSenderIntegration,
-    editLoadingGif
+    editLoadingGif,
+    addJackpot
 };

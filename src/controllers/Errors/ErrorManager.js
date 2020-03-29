@@ -672,6 +672,28 @@ class ErrorManager {
         }
     }
 
+
+    jackpot = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+
+    addOn = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     typography = function (object, type){
         try{
             switch(type){
@@ -765,14 +787,14 @@ class ErrorManager {
                     }
                     // Table Limit Suprassed
                     if(parseFloat(bet.possibleWinAmount) > parseFloat(bet.tableLimit)){
-                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.TABLE_LIMIT_SUPRASSED));                
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.TABLE_LIMIT_SUPRASSED));
                     }
                     /* Verify if Affiliate Return is higher than total Bet Amount Lost Amount */
                     if(bet.totalAffiliateReturn > bet.betAmount){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
                     }
                     /* Verify if when Bet is Lost the total Affiliate Return + App Cut equals User Lost */
-                    if(!bet.isWon && ( (bet.totalAffiliateReturn + bet.app_delta) != Math.abs(bet.user_delta))){
+                    if(!bet.isWon && ( parseFloat(bet.totalAffiliateReturn + bet.app_delta).toFixed(6) != parseFloat(Math.abs(bet.user_delta)).toFixed(6) )){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
                     }
                     break;

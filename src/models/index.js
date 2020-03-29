@@ -31,8 +31,12 @@ import TopIcon from './topIcon';
 import Token from './token';
 import MailSender from './mailSender';
 import LoadingGif from "./loadingGif";
+import AddOn from "./addOn";
+import Jackpot from "./jackpot";
 
 export {
+    AddOn,
+    Jackpot,
     User,
     Link,
     Color,

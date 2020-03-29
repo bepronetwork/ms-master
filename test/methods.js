@@ -40,6 +40,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async addJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/jackpot/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAdminType(params, bearerToken, payload){
         return request(global.server)
         .post('/api/admins/editType')
@@ -47,7 +55,6 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async loginAdmin(params) {
         return request(global.server)

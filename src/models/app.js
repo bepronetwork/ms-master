@@ -2,6 +2,7 @@ import { AppLogic } from '../logic';
 import ModelComponent from './modelComponent';
 import { AppRepository } from '../db/repos';
 import Wallet from './wallet';
+import { AffiliateSetup, Integrations, Customization, Typography, AddOn } from '.';
 import {
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
@@ -25,8 +26,7 @@ import {
     MapperRegisterSingleton,
     MapperSummarySingleton,
     MapperUpdateWalletSingleton
-} from '../controllers/Mapper'
-import { AffiliateSetup, Integrations, Customization, Typography } from '.';
+} from '../controllers/Mapper';
 
 class App extends ModelComponent {
 
@@ -36,15 +36,14 @@ class App extends ModelComponent {
 
         super(
             {
-                name: 'App',
-                logic: new AppLogic({ db: db }),
-                db: db,
-                self: null,
-                params: params,
-                children: [
-                    new AffiliateSetup({
-                        ...params,
-                        structures: [
+                name : 'App',
+                logic : new AppLogic({db : db}),
+                db : db,
+                self : null,
+                params : params,
+                children : [
+                    new AffiliateSetup({...params,
+                        structures : [
                             {
                                 level: 1,
                                 percentageOnLoss: 0.02
@@ -53,12 +52,12 @@ class App extends ModelComponent {
                     }),
                     new Integrations(params),
                     new Customization(params),
-                    new Typography(params)
+                    new Typography(params),
+                    new AddOn(params)
                 ]
             }
         );
     }
-
 
     /**
      * @param {String} 
@@ -184,6 +183,20 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
+    async addJackpot(){
+        try{
+            let app = await this.process('AddJackpot');
+            return app;
+            // return MapperAddGamesSingleton.output('AddJackpot', app);
+        }catch(err){
+            throw err;
+        }
+    }
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
     async addCurrencyWallet() {
         try {
             let app = await this.process('AddCurrencyWallet');

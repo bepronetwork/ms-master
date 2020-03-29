@@ -1,1 +1,1 @@
-export const events = ['DEPOSIT','WITHDRAW', "PING"]
+export const events = ['DEPOSIT','WITHDRAW', "PING", "JACKPOT"]
