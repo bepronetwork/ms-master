@@ -29,22 +29,18 @@ class AddOnRepository extends MongoComponent{
     }
 
     addJackpot(addOn, jackpot){ 
-        try{
-            return new Promise( (resolve, reject) => {
-                AddOnRepository.prototype.schema.model.findByIdAndUpdate(
-                    addOn,
-                    {
-                        $set: {jackpot}
-                    }
-                )
-                .exec( (err, item) => {
-                    if(err){reject(err)}
-                    resolve(item);
-                });
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn,
+                {
+                    $set: {jackpot}
+                }
+            )
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
             });
-        }catch(err){
-            throw err;
-        }
+        });
     }
 
 }

@@ -44,8 +44,8 @@ module.exports = {
         return request(global.server)
         .post('/api/app/jackpot/add')
         .set("authorization", "Bearer " + bearerToken)
-        .send(params)
         .set("payload", getPayloadString(payload))
+        .send(params)
         .then(res => detectServerError(res))
     },
     async editAdminType(params, bearerToken, payload){
