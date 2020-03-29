@@ -124,7 +124,11 @@ const processActions = {
                 resultSpace : game.resultSpace,
                 houseEdge : game.edge,
                 game : game.metaName
-            }); 
+            });
+
+            /* Sum of the amount to be bet, minus the amount that goes into the pot */
+            totalBetAmount = totalBetAmount - parseFloat(percentage);
+
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
@@ -144,12 +148,12 @@ const processActions = {
             if(isWon){
                 console.log("win Amount: ", winAmount)
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount) - parseFloat(Math.abs(percentage));
+                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
                 user_delta = parseFloat(delta);
                 app_delta = parseFloat(-delta);
             }else{
                 /* User Lost Bet */
-                user_delta = parseFloat(-Math.abs(totalBetAmount)) + parseFloat(Math.abs(percentage));
+                user_delta = parseFloat(-Math.abs(totalBetAmount));
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
@@ -162,7 +166,7 @@ const processActions = {
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn)) - parseFloat(Math.abs(percentage));
+                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
             }
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
