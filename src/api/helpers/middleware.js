@@ -1,5 +1,6 @@
 import { PUBLIC_KEY, PRIVATE_KEY } from '../../config';
 import Log from '../../models/log';
+import { throwError } from '../../controllers/Errors/ErrorManager';
 
 const jwt   = require('jsonwebtoken');
 // use 'utf8' to get string instead of byte array  (512 bit key)
@@ -11,9 +12,21 @@ class Middleware{
 
     sign(payload){
         try{
-            let token = jwt.sign({ id : 'Auth/' + payload }, privateKEY, { algorithm: 'RS256' });
+            //expires in 30 days
+            let token = jwt.sign({ id : 'Auth/' + payload, time: (new Date(((new Date()).getTime() + 30 * 24 * 60 * 60 * 1000))).getTime() }, privateKEY, { algorithm: 'RS256' });
             return token;
         }catch(err){
+            throw err;
+        }
+    };
+
+    verify({token, payload, id, isUser=false}){
+        try{
+            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+            if(isUser && (new Date()).getTime() > response.time ) { throwError('TOKEN_EXPIRED'); };
+            if('Auth/' + payload.id != response.id || payload.id != id){ return false; };
+            return true;
+        }catch (err){
             throw err;
         }
     };
@@ -52,16 +65,6 @@ class Middleware{
             return false;
         }
     }
-
-    verify({token, payload, id}){
-        try{
-            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
-            if('Auth/' + payload.id != response.id || payload.id != id){ throw err;};
-            return true;
-        }catch (err){
-            return false;
-        }
-    };
 
     decode(token){
         return jwt.decode(token, {complete: true});
