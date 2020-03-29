@@ -461,7 +461,7 @@ const progressActions = {
     },
     __resetPassword: async (params) => {
         const { name, user_id, url, app_id, user } = params;
-
+        //expires in 1 days
         let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000))).getTime());
 
         await (new Token({ user: user._id, token: bearerToken })).register();
