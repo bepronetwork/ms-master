@@ -84,6 +84,8 @@ class App extends ModelComponent {
     async get() {
         try {
             let app = await this.process('Get');
+            let test = MapperGetSingleton.output('Get', app._doc);
+            console.log(test);
             return MapperGetSingleton.output('Get', app._doc);
         } catch (err) {
             throw err;

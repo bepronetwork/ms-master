@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'); 
+var mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID; 
 
 let self;
 
@@ -49,15 +50,15 @@ let outputs = {
                     }) : game.wallets,
                 })
             }) : object.games,
-            "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => mongoose.Types.ObjectId(list_admin_id)) : object.listAdmins,
+            "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => new ObjectID(list_admin_id.toString())) : object.listAdmins,
             "services": object.services ? object.services.map(service => service) : object.services,
-            "currencies": object.currencies ? object.currencies.map(currency_id => mongoose.Types.ObjectId(currency_id)) : object.currencies,
+            "currencies": object.currencies ? object.currencies.map(currency_id => new ObjectID(currency_id.toString())) : object.currencies,
             "users": object.users ? object.users.map(user => {
                 return ({
-                    "bets": user.bets ? user.bets.map(bet_id => mongoose.Types.ObjectId(bet_id)) : user.bets,
-                    "deposits": user.deposits ? user.deposits.map(deposit_id => mongoose.Types.ObjectId(deposit_id)) : user.deposits,
-                    "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => mongoose.Types.ObjectId(withdraw_id)) : user.withdraws,
-                    "wallet": user.wallet ? user.wallet.map(wallet_id => mongoose.Types.ObjectId(wallet_id)) : user.wallet,
+                    "bets": user.bets ? user.bets.map(bet_id => new ObjectID(bet_id.toString())) : user.bets,
+                    "deposits": user.deposits ? user.deposits.map(deposit_id => new ObjectID(deposit_id.toString())) : user.deposits,
+                    "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => new ObjectID(withdraw_id.toString())) : user.withdraws,
+                    "wallet": user.wallet ? user.wallet.map(wallet_id => new ObjectID(wallet_id.toString())) : user.wallet,
                     "isWithdrawing": user.isWithdrawing,
                     "email_confirmed": user.email_confirmed,
                     "_id": user._id,
@@ -85,7 +86,7 @@ let outputs = {
                     "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => mongoose.Types.ObjectId(deposit_address_id)) : wallet.depositAddresses,
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => new ObjectID(deposit_address_id.toString())) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "currency": !wallet.currency ? {} : {
                         "_id": wallet.currency._id,
@@ -116,7 +117,7 @@ let outputs = {
                     "amount": deposit.amount,
                 })
             }) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => mongoose.Types.ObjectId(withdraw_id)) : object.withdraws,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => new ObjectID(withdraw_id.toString())) : object.withdraws,
             "typography": object.typography ? object.typography.map(typography => {
                 return ({
                     "_id": typography._id,
