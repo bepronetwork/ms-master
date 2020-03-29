@@ -42,6 +42,17 @@ class GamesEcoRepository extends MongoComponent{
         });
     }
 
+    findGameByMetaName(metaName){ 
+        return new Promise( (resolve, reject) => {
+            this.schema.model.findOne({metaName})
+            .populate(foreignKeys)
+            .exec( (err, Game) => {
+                if(err) { resolve(null)}
+                resolve(Game);
+            });
+        });
+    }
+
     editRules({id, rules}){
         return new Promise( (resolve,reject) => {
             this.schema.model.findByIdAndUpdate(

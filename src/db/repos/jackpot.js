@@ -1,6 +1,8 @@
 import MongoComponent from './MongoComponent';
 import { JackpotSchema } from '../schemas';
 
+const foreignKeys = ['resultSpace'];
+
 /**
  * Accounts database interaction class.
  *
@@ -45,18 +47,28 @@ class JackpotRepository extends MongoComponent{
         });
     }
 
-    findJackpotById(_id){
-        try{
-            return new Promise( (resolve, reject) => {
-                JackpotRepository.prototype.schema.model.findById(_id)
-                .exec( (err, item) => {
-                    if(err) { reject(err)}
-                    resolve(item);
-                });
+    findJackpotById(_id){ 
+        return new Promise( (resolve, reject) => {
+            JackpotRepository.prototype.schema.model.findById(_id)
+            .populate(foreignKeys)
+            .exec( (err, jackpot) => {
+                if(err) { resolve(null)}
+                resolve(jackpot);
             });
-        }catch(err){
-            throw err;
-        }
+        });
+    }
+
+    addBet(jackpot_id, bet){
+        return new Promise( (resolve,reject) => {
+            JackpotRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: jackpot_id, bets : {$nin : [bet._id] } },
+                { $push: { "bets" : bet } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
     }
 
 }

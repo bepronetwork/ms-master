@@ -7,7 +7,20 @@ let populate_app_all = [
     {
         path : 'addOn',
         model : 'AddOn',
-        select : { '__v': 0}
+        select : { '__v': 0},
+        populate :
+        {
+            path : 'jackpot',
+            model : 'Jackpot',
+            select : { '__v': 0},
+            populate : [
+                {
+                    path : 'resultSpace',
+                    model : 'ResultSpace',
+                    select : { '__v': 0}
+                }
+            ]
+        }
     },
     {
         path : 'wallet',

@@ -148,6 +148,9 @@ const processActions = {
     },
     __addJackpot : async (params) => {
 
+        let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
+        console.log(gameEcosystem);
+
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
         if(!app){throwError('APP_NOT_EXISTENT')}
@@ -164,7 +167,8 @@ const processActions = {
 
         let res = {
             limits,
-            app
+            app,
+            gameEcosystem
         }
 		return res;
     },
@@ -589,8 +593,8 @@ const progressActions = {
 		return params;
     },
     __addJackpot : async (params) => {
-        const { app, limits } = params;
-        let jackpot = new Jackpot({app, limits, resultSpace: jsonResult["4"].resultSpace});
+        const { app, limits, gameEcosystem } = params;
+        let jackpot = new Jackpot({app, limits, resultSpace: gameEcosystem.resultSpace});
         const jackpotResult = await jackpot.register();
         await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
 		return jackpotResult;

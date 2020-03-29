@@ -7,6 +7,7 @@ import { CryptographySingleton } from '../controllers/Helpers';
 import MathSingleton from './utils/math';
 import PusherSingleton from './third-parties/pusher';
 import Mailer from './services/mailer';
+import { BetResultSpace } from '../models';
 
 let error = new ErrorManager();
 
@@ -127,6 +128,7 @@ const processActions = {
 		try{
             const { currency } = params;
 
+			let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
 			let app  = await AppRepository.prototype.findAppById(user.app_id);
 
@@ -143,10 +145,8 @@ const processActions = {
 
 			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
 
-			jackpot.resultSpace = Object.keys(jackpot.resultSpace).map(i => jackpot.resultSpace[Number(i)]);
-
             /* Get Bet Result */
-            let { isWon } = betJackpotActions.auto({
+            let { isWon, outcomeResultSpace } = betJackpotActions.auto({
                 serverSeed : serverSeed,
                 clientSeed : clientSeed,
                 nonce : params.nonce,
@@ -183,8 +183,19 @@ const processActions = {
 			}
 
             let normalized = {
-				user_id: user._id,
+				winAmount           : user_delta,
+				nonce               : params.nonce,
+				serverHashedSeed    : CryptographySingleton.hashSeed(serverSeed),
+				fee 				: 0,
+				timestamp   		: new Date(),
+				betAmount 			: lossAmount,
+				game    			: game._id,
+				result 				: resultBetted,
+				user_id 			: user._id,
+				outcomeResultSpace,
+				serverSeed,
 				pot,
+				clientSeed,
 				isWon,
 				jackpot,
 				currency,
@@ -237,9 +248,30 @@ const progressActions = {
 	},
 	__bet : async (params) => {
 		try{
-			let {jackpot, currency, user_delta, userWallet, pot, isWon, user_id} = params;
+			let {jackpot, currency, user_delta, userWallet, pot, isWon, user_id, result} = params;
+			 /* Save all ResultSpaces */
+			 let dependentObjects = Object.keys(result).map( async key =>
+				await (new BetResultSpace(result[key])).register()
+			);
+
+			let betResultSpacesIds = await Promise.all(dependentObjects);
+			// Generate new Params Setup
+			params = {
+				...params,
+				result : betResultSpacesIds,
+				isResolved : true
+			}
+			/* Save Bet */
+			let bet = await self.save(params);
+
 			await JackpotRepository.prototype.updatePot(jackpot._id, currency, parseFloat(pot) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(user_delta) );
+
+			/* Add Bet to User Profile */
+			await UsersRepository.prototype.addBet(params.user, bet);
+			/* Add Bet to Event Profile */
+			await JackpotRepository.prototype.addBet(jackpot._id, bet);
+
 			if(isWon) {
 				/* Send Notification */
 				PusherSingleton.trigger({
