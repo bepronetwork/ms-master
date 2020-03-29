@@ -37,6 +37,7 @@ import MailSenderRepository from './mailSender';
 import LoadingGifRepository from "./loadingGif";
 import AddOnRepository from "./addOn";
 import JackpotRepository from "./jackpot";
+import PermissionRepository from "./permission";
 
 export{
     JackpotRepository,
@@ -77,5 +78,6 @@ export{
     TypographyRepository,
     TopIconRepository,
     MailSenderRepository,
-    LoadingGifRepository
+    LoadingGifRepository,
+    PermissionRepository
 }

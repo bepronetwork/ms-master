@@ -52,11 +52,24 @@ async function loginAdmin(req, res) {
 
 async function setAdmin2FA(req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.set2FA();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function editAdminType(req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+		let admin = new Admin(params);
+        let data = await admin.editAdminType();
         MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -80,7 +93,7 @@ async function loginAdmin2FA(req, res) {
 // JSON WebToken Security Functions
 async function authAdmin (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
@@ -93,7 +106,7 @@ async function authAdmin (req, res) {
 
 async function addAdmin (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
@@ -111,5 +124,6 @@ export {
     loginAdmin2FA,
     authAdmin,
     setAdmin2FA,
-    getAdminAll
+    getAdminAll,
+    editAdminType
 }

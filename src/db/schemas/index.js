@@ -29,7 +29,7 @@ import { MailSenderSchema } from './integrations/mailSender';
 import { LoadingGifSchema } from "./customization/loadingGif";
 import {AddOnSchema } from './addOn';
 import { JackpotSchema } from './addOn/jackpot';
-
+import { PermissionSchema } from "./permission";
 
 export {
     CurrencySchema,
@@ -62,5 +62,6 @@ export {
     MailSenderSchema,
     LoadingGifSchema,
     AddOnSchema,
-    JackpotSchema
+    JackpotSchema,
+    PermissionSchema
 }

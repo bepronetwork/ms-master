@@ -53,6 +53,7 @@ class User extends ModelComponent {
     }
 
     async resendEmail() {
+        // Output = {}
         try {
             let res = await this.process('ResendEmail');
             return res;
@@ -71,6 +72,7 @@ class User extends ModelComponent {
     }
 
     async resetPassword() {
+        // Output = Boolean
         try {
             let res = await this.process('ResetPassword');
             return res;
@@ -80,6 +82,7 @@ class User extends ModelComponent {
     }
 
     async setPassword() {
+        // No Output
         try {
             let res = await this.process('SetPassword');
             return res;
@@ -108,6 +111,7 @@ class User extends ModelComponent {
     }
 
     async summary() {
+        // No Output
         try {
             let res = await this.process('Summary');
             return res;
@@ -117,6 +121,7 @@ class User extends ModelComponent {
     }
 
     async getInfo() {
+        // No Output
         try {
             let res = await this.process('GetInfo');
             return res;
@@ -126,6 +131,7 @@ class User extends ModelComponent {
     }
 
     async confirmEmail() {
+        // Output = {}
         try {
             let res = await this.process('ConfirmEmail');
             return res;
@@ -144,6 +150,7 @@ class User extends ModelComponent {
     }
 
     async updateWallet() {
+        // No Output
         const { user } = this.self.params;
         try {
             let res = await this.process('UpdateWallet');
@@ -170,6 +177,7 @@ class User extends ModelComponent {
     }
 
     async getBets() {
+        // No Output
         try {
             let res = await this.process('GetBets');
             return res;

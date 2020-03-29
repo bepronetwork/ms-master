@@ -1,92 +1,111 @@
-import {AdminLogic} from '../logic';
+import { AdminLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import {AdminsRepository} from '../db/repos';
-import { MapperSingleton } from '../controllers/Mapper/Mapper';
+import { AdminsRepository } from '../db/repos';
+import {
+    MapperAddAdminSingleton,
+    MapperAuthAdminSingleton,
+    MapperEditAdminTypeSingleton,
+    MapperGetAdminAllSingleton,
+    MapperLoginAdminSingleton,
+    MapperLogin2faAdminSingleton,
+    MapperRegisterAdminSingleton,
+    MapperSet2FASingleton
+} from "../controllers/Mapper";
 import Security from './security';
+import Permission from "./permission";
 
-class Admin extends ModelComponent{
+class Admin extends ModelComponent {
 
-    constructor(params){
+    constructor(params) {
 
         let db = new AdminsRepository();
 
         super(
             {
-                name : 'Admin', 
-                logic : new AdminLogic({db : db}), 
-                db : db,
-                self : null, 
-                params : params,
-                children : [
-                    new Security(params)
+                name: 'Admin',
+                logic: new AdminLogic({ db: db }),
+                db: db,
+                self: null,
+                params: params,
+                children: [
+                    new Security(params),
+                    new Permission(params)
                 ]
             }
-            );
+        );
     }
-    
-    async auth(){
-        try{
+
+    async auth() {
+        try {
             let res = await this.process('Auth');
-            return MapperSingleton.output('Admin', res);
-        }catch(err){
+            return MapperAuthAdminSingleton.output('Auth', res);
+        } catch (err) {
             throw err;
         }
     }
 
     async getAdminAll() {
-        try{
+        try {
             let res = await this.process('GetAdminAll');
-            return res;
-            // return MapperSingleton.output('Admin', res);
-        }catch(err){
+            return MapperGetAdminAllSingleton.output('GetAdminAll', res);
+        } catch (err) {
             throw err;
         }
     }
 
-    async login(){
-        try{
+    async login() {
+        try {
             let res = await this.process('Login');
-            return MapperSingleton.output('Admin', res);
-        }catch(err){
+            return MapperLoginAdminSingleton.output('Login', res);
+        } catch (err) {
             throw err;
         }
     }
 
-    async login2FA(){
-        try{
+    async login2FA() {
+        try {
             let res = await this.process('Login2FA');
-            return MapperSingleton.output('Admin', res);
-        }catch(err){
+            return MapperLogin2faAdminSingleton.output('Login2FA', res);
+        } catch (err) {
             throw err;
         }
     }
 
-    async set2FA(){
-        try{
+    async set2FA() {
+        try {
             let res = await this.process('Set2FA');
-            return res;
-        }catch(err){
+            return MapperSet2FASingleton.output('Set2fa', res);
+        } catch (err) {
             throw err;
         }
     }
 
     async addAdmin() {
-        try{
+        try {
             let res = await this.process('AddAdmin');
-            return res;
-        }catch(err){
+            return MapperAddAdminSingleton.output('AddAdmin', res);
+        } catch (err) {
             throw err;
         }
     }
-    async register(){
-        try{
-            return await this.process('Register');
-        }catch(err){
+    async register() {
+        try {
+            let res = await this.process('Register');
+            return MapperRegisterAdminSingleton.output('Register', res);
+        } catch (err) {
             throw err;
         }
     }
 
-    
+    async editAdminType() {
+        try {
+            let res = await this.process('EditAdminType');
+            return MapperEditAdminTypeSingleton.output('EditAdminType', res);
+        } catch (err) {
+            throw err;
+        }
+    }
+
 }
 
 export default Admin;

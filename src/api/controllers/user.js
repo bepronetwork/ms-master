@@ -30,7 +30,7 @@ async function registUser (req, res) {
 
 async function resendEmail (req, res) {
     try{
-        SecuritySingleton.verify({type : 'user', req});
+        await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
@@ -93,7 +93,7 @@ async function resetPassword(req, res) {
 
 async function setUser2FA(req, res) {
     try{
-        SecuritySingleton.verify({type : 'user', req});
+        await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
@@ -118,7 +118,7 @@ async function loginUser2FA(req, res) {
 
 async function authUser (req, res) {
     try{
-        SecuritySingleton.verify({type : 'user', req});
+        await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
@@ -131,7 +131,7 @@ async function authUser (req, res) {
 
 async function getUserInfo (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let user = new User(params);
@@ -144,7 +144,7 @@ async function getUserInfo (req, res) {
 
 async function userSummary (req, res) {
     try{
-        SecuritySingleton.verify({type : 'user', req});
+        await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
@@ -157,7 +157,7 @@ async function userSummary (req, res) {
 
 async function getBets (req, res) {
     try{
-        SecuritySingleton.verify({type : 'user', req});
+        await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);

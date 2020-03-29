@@ -150,6 +150,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /admins/editType:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Edit Type of Admin
+      operationId: editAdminType
+      description: Edit Type of Admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/EditAdminTypeRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /admins/login:
     x-swagger-router-controller: admin
     post:
@@ -2065,6 +2097,51 @@ definitions:
         example: "43256291237846817623"
         description: |
           Unique identifier of the user, ID
+
+  EditAdminTypeRequest : 
+    type: object
+    required:
+      - admin
+      - adminToModify
+      - permission
+    properties:
+      admin:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Admin Id
+      adminToModify:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Admin Id
+      permission:
+        type : object
+        required:
+          - super_admin
+          - customization
+          - withdraw
+          - user_withdraw
+          - financials
+        properties:
+          super_admin:
+            type : boolean
+            example: true
+          customization:
+            type : boolean
+            example: true
+          withdraw:
+            type : boolean
+            example: true
+          user_withdraw:
+            type : boolean
+            example: true
+          financials:
+            type : boolean
+            example: true
+
   AdminLoginRequest : 
     type: object
     required:

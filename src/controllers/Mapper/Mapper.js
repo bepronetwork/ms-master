@@ -15,14 +15,13 @@ let outputs = {
         return {
             "username"      : object.username,
             "email"         : object.email,
-            "bearerToken"   : object.bearerToken,
+            "bearerToken"       : object.bearerToken,
             "name"          : object.name,
             "id"            : object._id,
             "app"           : !object.app ? {} : {
                 "id"          : object.app._id,
                 "name"        : object.app.name,
                 "description" : object.app.description,
-                "bearerToken" : object.app.bearerToken,
                 "withdraws"   : object.app.withdraws,
                 "isValid"     : object.app.isValid,
                 "services"    : object.app.services,
@@ -30,11 +29,11 @@ let outputs = {
                 "wallet"        : object.app.wallet
             },
             "security" : {
-                "id"                    : object.security._id,    
+                "id"                    : object.security._id,
                 "2fa_set"               : object.security['2fa_set'],
                 "email_verified"        : object.security['email_verified'],
                 "bearerToken"           : object.security['bearerToken'],
-            } 
+            }
         }
     },
     app : (object) => {
@@ -76,10 +75,10 @@ let outputs = {
             "id"                    : object._id,
             "name"                  : object.name,
             "description"           : object.description,
-            "bearerToken"           : object.bearerToken,
             "ownerAddress"          : object.ownerAddress,
             "authorizedAddresses"   : object.authorizedAddresses,
             "croupierAddress"       : object.croupierAddress,
+            "bearerToken"       : object.bearerToken,
             "isValid"               : object.isValid,
             "currencyTicker"        : object.currencyTicker,
             "decimals"              : object.decimals,

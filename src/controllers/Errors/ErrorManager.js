@@ -641,6 +641,16 @@ class ErrorManager {
         }
     }
 
+    permission = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     address = function (object, type){
         try{
             switch(type){

@@ -54,8 +54,8 @@ let outputs = {
                     },
                 })
             }) : object.affiliate.wallet,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
             "bearerToken": object.bearerToken,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
             "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {
@@ -97,7 +97,7 @@ let outputs = {
                 "id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
                 "email_verified": object.security.email_verified,
-                "bearerToken": object.security.bearerToken,
+                "bearerToken": object.security['bearerToken'],
             },
         }
     },

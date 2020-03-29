@@ -48,6 +48,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async editAdminType(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/admins/editType')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async loginAdmin(params) {
         return request(global.server)
         .post('/api/admins/login')
