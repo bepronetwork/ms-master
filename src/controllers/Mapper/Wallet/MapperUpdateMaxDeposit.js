@@ -1,4 +1,4 @@
-var mongoose = require('mongoose'); 
+
 
 let self;
 
@@ -15,7 +15,11 @@ let outputs = {
     updateMaxDeposit: (object) => {
         return {
             "_id": object._id,
-            "depositAddresses": !object.depositAddresses ? [] : object.depositAddresses.map(deposit_ddress_id => mongoose.Types.ObjectId(deposit_ddress_id)),
+            "depositAddresses": !object.depositAddresses ? [] : object.depositAddresses.map(deposit_address_id => {
+                return({
+                    "_id": deposit_address_id
+                })
+            }),
             "playBalance": object.playBalance,
             "max_deposit": object.max_deposit,
             "max_withdraw": object.max_withdraw,

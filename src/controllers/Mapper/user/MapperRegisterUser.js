@@ -109,7 +109,8 @@ let outputs = {
                         "link": object.app_id.integrations.chat.link,
                         "_id": object.app_id.integrations.chat._id,
                         "privateKey": object.app_id.integrations.chat.privateKey,
-                        "publicKey": object.app_id.integrations.chat.publicKey
+                        "publicKey": object.app_id.integrations.chat.publicKey,
+                        "token": object.app_id.integrations.chat.token
                     }
                 },
                 "description": object.app_id.description,

@@ -23,8 +23,16 @@ let outputs = {
                         "multiplier": !result_space.multiplier ? '' : result_space.multiplier,
                     })
                 }),
-                "result": object.result ? object.result.map(result_id => result_id) : object.result,
-                "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
+                "result": object.result ? object.result.map(result_id => {
+                    return({
+                        "_id": result_id
+                    })
+                }) : object.result,
+                "bets": object.bets ? object.bets.map(bet_id => {
+                    return({
+                        "_id": bet_id
+                    })
+                }) : object.bets,
                 "isClosed": object.isClosed,
                 "maxBet": object.maxBet,
                 "background_url": object.background_url,
