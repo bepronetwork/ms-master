@@ -29,7 +29,8 @@ BetSchema.prototype.schema = {
     winAmount           : { type : Number, required : true},
     outcomeResultSpace  : { type : JSON, required : true},
     isWon               : { type : Boolean, required : true},
-    isResolved          : { type : Boolean , required : true, default : false}
+    isResolved          : { type : Boolean , required : true, default : false},
+    isJackpot           : { type : Boolean , required : true, default : false}
 }
 
 

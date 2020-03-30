@@ -263,15 +263,14 @@ const progressActions = {
 			params = {
 				...params,
 				result : betResultSpacesIds,
-				isResolved : true
+				isResolved : true,
+				isJackpot  : true
 			}
 			/* Save Bet */
 			let bet = await (new Bet(params).save());
 
 			await JackpotRepository.prototype.updatePot(jackpot._id, currency, parseFloat(pot) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(user_delta) );
-
-			console.log(bet);
 
 			/* Add Bet to User Profile */
 			await UsersRepository.prototype.addBet(params.user, bet._id);
@@ -293,7 +292,8 @@ const progressActions = {
 				};
 				mail.sendEmail({app_id : params.app.id, user: params.user, action : 'USER_NOTIFICATION', attributes});
 			}
-			return params;
+			let jackpotResult = await JackpotRepository.prototype.findJackpotById(jackpot._id);
+			return jackpotResult;
 		}catch(err){
 			throw err;
 		}

@@ -15,6 +15,18 @@ let outputs = {
         return {
             "id": object._id,
             "isValid": object.isValid,
+            "addOn": object.addOn.jackpot ? {
+                "jackpot" : {
+                    edge : object.addOn.jackpot.edge,
+                    limits : object.addOn.jackpot.limits ? object.addOn.jackpot.limits.map(limit => {
+                        return {
+                            currency: limit.currency,
+                            pot     : limit.pot
+                        }
+                    }) : [],
+                    bets : object.addOn.jackpot.bets ? object.addOn.jackpot.bets.map(bet => bet) : [],
+                }
+            } : {},
             "games": object.games ? object.games.map(game => {
                 return ({
                     "_id": game._id,
