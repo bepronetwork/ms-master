@@ -213,7 +213,7 @@ const processActions = {
         }
     },
 	__register : async (params) => {
-
+        return params;
 	},
 	__resolve : async (params) => {
 	
@@ -273,7 +273,8 @@ const progressActions = {
 		return res;
 	},
 	__register : async (params) => {
-      
+        let bet = await self.save(params);
+        return bet;
 	},
 	__resolve : async (params) => {
     

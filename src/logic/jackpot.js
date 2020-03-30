@@ -1,13 +1,13 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AppRepository, AddOnRepository, JackpotRepository, WalletsRepository, UsersRepository, GamesRepository } from '../db/repos';
+import { AppRepository, AddOnRepository, JackpotRepository, WalletsRepository, UsersRepository, GamesRepository, BetRepository } from '../db/repos';
 import CasinoLogicSingleton from './utils/casino';
 import { CryptographySingleton } from '../controllers/Helpers';
 import MathSingleton from './utils/math';
 import PusherSingleton from './third-parties/pusher';
 import Mailer from './services/mailer';
-import { BetResultSpace } from '../models';
+import { BetResultSpace, Bet } from '../models';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 
 let error = new ErrorManager();
@@ -266,7 +266,7 @@ const progressActions = {
 				isResolved : true
 			}
 			/* Save Bet */
-			let bet = await self.save(params);
+			let bet = await (new Bet().save(params));
 
 			await JackpotRepository.prototype.updatePot(jackpot._id, currency, parseFloat(pot) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(user_delta) );
@@ -274,9 +274,9 @@ const progressActions = {
 			console.log(bet);
 
 			/* Add Bet to User Profile */
-			await UsersRepository.prototype.addBet(params.user, bet);
+			await UsersRepository.prototype.addBet(params.user, bet._id);
 			/* Add Bet to Event Profile */
-			await JackpotRepository.prototype.addBet(jackpot._id, bet);
+			await JackpotRepository.prototype.addBet(jackpot._id, bet._id);
 
 			if(isWon) {
 				/* Send Notification */
