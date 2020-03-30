@@ -169,8 +169,12 @@ async function createBet (req, res) {
         let bet = new Bet({...params, percentage});
         let data = await bet.register();
 
-        // put it in the jackpot
-        let dataJackpot = await jackpot.bet();
+        // put it in the jackpot if percentage > 0
+        let dataJackpot = {};
+        if(percentage > 0) {
+            dataJackpot = await jackpot.bet();
+        }
+
         MiddlewareSingleton.respond(res, {...data, jackpot: { ...dataJackpot}});
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
