@@ -8,6 +8,7 @@ import MathSingleton from './utils/math';
 import PusherSingleton from './third-parties/pusher';
 import Mailer from './services/mailer';
 import { BetResultSpace } from '../models';
+import GamesEcoRepository from '../db/repos/ecosystem/game';
 
 let error = new ErrorManager();
 
