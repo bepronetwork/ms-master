@@ -293,7 +293,8 @@ const progressActions = {
 				mail.sendEmail({app_id : params.app.id, user: params.user, action : 'USER_NOTIFICATION', attributes});
 			}
 			let jackpotResult = await JackpotRepository.prototype.findJackpotById(jackpot._id);
-			return jackpotResult;
+
+			return {...params, ...jackpotResult};
 		}catch(err){
 			throw err;
 		}
