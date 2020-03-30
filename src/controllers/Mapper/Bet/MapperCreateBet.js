@@ -52,14 +52,22 @@ let outputs = {
             "user_delta": object.user_delta,
             "app_delta": object.app_delta,
             "isUserAffiliated": object.isUserAffiliated,
-            "affiliateReturns": !object.affiliateReturns ? [] : object.affiliateReturns.map(affiliate_return_id => affiliate_return_id),
+            "affiliateReturns": !object.affiliateReturns ? [] : object.affiliateReturns.map(affiliate_return_id => {
+                return({
+                    "_id": affiliate_return_id
+                })
+            }),
             "totalAffiliateReturn": object.totalAffiliateReturn,
             "appWallet": !object.appWallet ? {} : {
                 "_id": object.appWallet._id,
                 "playBalance": object.appWallet.playBalance,
                 "max_deposit": object.appWallet.max_deposit,
                 "max_withdraw": object.appWallet.max_withdraw,
-                "depositAddresses": object.appWallet.depositAddresses ? object.appWallet.depositAddresses.map(depositAddress_id => depositAddress_id) : object.appWallet.depositAddresses,
+                "depositAddresses": object.appWallet.depositAddresses ? object.appWallet.depositAddresses.map(depositAddress_id => {
+                    return({
+                        "_id": depositAddress_id
+                    })
+                }) : object.appWallet.depositAddresses,
                 "link_url": object.appWallet.link_url,
                 "currency": {
                     "_id": object.appWallet.currency._id,

@@ -35,8 +35,16 @@ let outputs = {
                                 "multiplier": !result_space.multiplier ? '' : result_space.multiplier,
                             })
                         }),
-                        "result": game.result ? game.result.map(result_id => result_id) : game.result,
-                        "bets": game.bets ? game.bets.map(bet_id => bet_id) : game.bets,
+                        "result": game.result ? game.result.map(result_id => {
+                            return({
+                                "_id": result_id
+                            })
+                        }) : game.result,
+                        "bets": game.bets ? game.bets.map(bet_id => {
+                            return({
+                                "_id": bet_id
+                            })
+                        }) : game.bets,
                         "isClosed": game.isClosed,
                         "maxBet": game.maxBet,
                         "background_url": game.background_url,
@@ -58,15 +66,39 @@ let outputs = {
                         }) : game.wallets,
                     })
                 }) : object.app.games,
-                "listAdmins": object.app.listAdmins ? object.app.listAdmins.map(list_admin_id => list_admin_id) : object.app.listAdmins,
+                "listAdmins": object.app.listAdmins ? object.app.listAdmins.map(list_admin_id => {
+                    return({
+                        "_id": list_admin_id
+                    })
+                }) : object.app.listAdmins,
                 "services": object.app.services ? object.app.services.map(service => service) : object.app.services,
-                "currencies": object.app.currencies ? object.app.currencies.map(currency_id => currency_id) : object.app.currencies,
+                "currencies": object.app.currencies ? object.app.currencies.map(currency_id => {
+                    return({
+                        "_id": currency_id
+                    })
+                }) : object.app.currencies,
                 "users": object.app.users ? object.app.users.map(user => {
                     return ({
-                        "bets": user.bets ? user.bets.map(bet_id => bet_id) : user.bets,
-                        "deposits": user.deposits ? user.deposits.map(deposit_id => deposit_id) : user.deposits,
-                        "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => withdraw_id) : user.withdraws,
-                        "wallet": user.wallet ? user.wallet.map(wallet_id => wallet_id) : user.wallet,
+                        "bets": user.bets ? user.bets.map(bet_id => {
+                            return({
+                                "_id": bet_id
+                            })
+                        }) : user.bets,
+                        "deposits": user.deposits ? user.deposits.map(deposit_id => {
+                            return({
+                                "_id": deposit_id
+                            })
+                        }) : user.deposits,
+                        "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
+                            return({
+                                "_id": withdraw_id
+                            })
+                        }) : user.withdraws,
+                        "wallet": user.wallet ? user.wallet.map(wallet_id => {
+                            return({
+                                "_id": wallet_id
+                            })
+                        }) : user.wallet,
                         "isWithdrawing": user.isWithdrawing,
                         "email_confirmed": user.email_confirmed,
                         "_id": user._id,
@@ -109,9 +141,24 @@ let outputs = {
                         "hashed_passphrase": wallet.hashed_passphrase
                     })
                 }) : object.app.wallet,
-                "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => deposit_id) : object.app.deposits,
-                "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw_id => withdraw_id) : object.app.withdraws,
-                "typography": object.app.typography ? object.app.typography.map(typography_id => typography_id) : object.app.typography,
+                "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => {
+                    return({
+                        "_id": deposit_id
+                    })
+                }) : object.app.deposits,
+                "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw_id => {
+                    return({
+                        "_id": withdraw_id
+                    })
+                }) : object.app.withdraws,
+                "typography": object.app.typography ? object.app.typography.map(typography => {
+                    return ({
+                        "_id": typography._id,
+                        "local": !typography.local ? [] : typography.local.map(local_name => local_name),
+                        "url": typography.url,
+                        "format": typography.format,
+                    })
+                }) : object.app.typography,
                 "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(country_available => country_available) : object.app.countriesAvailable,
                 "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
                 "isWithdrawing": object.app.isWithdrawing,
@@ -199,6 +246,7 @@ let outputs = {
                         "link": object.app.integrations.chat.link,
                         "privateKey": object.app.integrations.chat.privateKey,
                         "publicKey": object.app.integrations.chat.publicKey,
+                        "token": object.app.integrations.chat.token
                     },
                     "mailSender": !object.app.integrations.mailSender ? {} : {
                         "_id": object.app.integrations.mailSender._id,

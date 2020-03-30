@@ -251,6 +251,7 @@ let outputs = {
                     "link": object.integrations.chat.link,
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
+                    "token": object.integrations.chat.token
                 },
                 "mailSender": !object.integrations.mailSender ? {} : {
                     "_id": object.integrations.mailSender._id,
