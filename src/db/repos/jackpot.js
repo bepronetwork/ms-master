@@ -50,7 +50,15 @@ class JackpotRepository extends MongoComponent{
     findJackpotById(_id){ 
         return new Promise( (resolve, reject) => {
             JackpotRepository.prototype.schema.model.findById(_id)
-            .populate(foreignKeys)
+            .populate(
+                [
+                    {
+                        path : 'resultSpace',
+                        model : 'ResultSpace',
+                        select : { '__v': 0}
+                    }
+                ]
+            )
             .exec( (err, jackpot) => {
                 if(err) { reject(err) }
                 resolve(jackpot);
