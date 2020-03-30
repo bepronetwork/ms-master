@@ -266,7 +266,7 @@ const progressActions = {
 				isResolved : true
 			}
 			/* Save Bet */
-			let bet = await (new Bet(params).save(params));
+			let bet = await (new Bet(params).save());
 
 			await JackpotRepository.prototype.updatePot(jackpot._id, currency, parseFloat(pot) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(user_delta) );
