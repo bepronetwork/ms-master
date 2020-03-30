@@ -15,9 +15,25 @@ let outputs = {
     editGameEdge: (object) => {
         return {
             "_id": object._id,
-            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space_id => mongoose.Types.ObjectId(result_space_id)),
-            "result": object.result ? object.result.map(result_id => result_id) : object.result,
-            "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
+            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space => {
+                return ({
+                    "_id": result_space._id,
+                    "formType": result_space.formType,
+                    "probability": result_space.probability,
+                    "multiplier": !result_space.multiplier ? '' : result_space.multiplier,
+                    "__v": result_space.__v,
+                })
+            }),
+            "result": object.result ? object.result.map(result_id => {
+                return({
+                    "_id": result_id
+                })
+            }) : object.result,
+            "bets": object.bets ? object.bets.map(bet_id => {
+                return({
+                    "_id": bet_id
+                })
+            }) : object.bets,
             "isClosed": object.isClosed,
             "maxBet": object.maxBet,
             "background_url": object.background_url,

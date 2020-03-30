@@ -60,8 +60,14 @@ let outputs = {
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
                 "chat": {
-                    "token": object.integrations.chat.token,
-                    "publicKey": object.integrations.chat.publicKey
+                    "_id": object.integrations.chat._id,
+                    "isActive": object.integrations.chat.isActive,
+                    "name": object.integrations.chat.name,
+                    "metaName": object.integrations.chat.metaName,
+                    "link": object.integrations.chat.link,
+                    "privateKey": object.integrations.chat.privateKey,
+                    "publicKey": object.integrations.chat.publicKey,
+                    "token": object.integrations.chat.token
                 }
             },
             "affiliateId": object.affiliateLink._id,

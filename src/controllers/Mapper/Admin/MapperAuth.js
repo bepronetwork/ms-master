@@ -27,8 +27,12 @@ let outputs = {
             "app": !object.app ? {} : {
                 "id": object.app._id,
                 "isValid": object.app.isValid,
-                "games": object.app.games ? object.app.games.map(game_id => { return ({_id: game_id}) } ) : object.app.games,
-                "listAdmins": object.app.listAdmins ? object.app.listAdmins.map(list_admin_id => { return ({_id: list_admin_id}) } ) : object.app.listAdmins,
+                "games": object.app.games ? object.app.games.map(game_id => {
+                    return({
+                        "_id": game_id
+                    })
+                }) : object.app.games,
+                "listAdmins": object.app.listAdmins ? object.app.listAdmins.map(list_admin_id => list_admin_id) : object.app.listAdmins,
                 "services": object.app.services ? object.app.services.map(service => service) : object.app.services,
                 "currencies": object.app.currencies ? object.app.currencies.map(currency_id => { return ({_id: currency_id}) } ) : object.app.currencies,
                 "users": object.app.users ? object.app.users.map(user_id => { return ({_id: user_id}) } ) : object.app.users,

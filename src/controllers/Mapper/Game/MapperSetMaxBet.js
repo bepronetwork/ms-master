@@ -1,4 +1,3 @@
-var mongoose = require('mongoose'); 
 
 let self;
 
@@ -15,9 +14,21 @@ let outputs = {
     setMaxBet: (object) => {
         return {
             "_id": object._id,
-            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space_id => mongoose.Types.ObjectId(result_space_id)),
-            "result": object.result ? object.result.map(result_id => result_id) : object.result,
-            "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
+            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space_id => {
+                return({
+                    "_id": result_space_id
+                })
+            }),
+            "result": object.result ? object.result.map(result_id => {
+                return({
+                    "_id": result_id
+                })
+            }) : object.result,
+            "bets": object.bets ? object.bets.map(bet_id => {
+                return({
+                    "_id": bet_id
+                })
+            }) : object.bets,
             "isClosed": object.isClosed,
             "maxBet": object.maxBet,
             "background_url": object.background_url,
