@@ -131,27 +131,27 @@ let outputs = {
                     }) : object.app.affiliateSetup.affiliateStructures,
                     "customAffiliateStructures": object.app.affiliateSetup.customAffiliateStructures ? object.app.affiliateSetup.customAffiliateStructures.map(custom_affiliate_structure_id => custom_affiliate_structure_id) : object.app.affiliateSetup.customAffiliateStructures,
                 },
-                "customization": !object.app.customization ? {} : {
-                    "_id": object.app.customization._id,
-                    "colors": object.app.customization.colors ? object.app.customization.colors.map(color => {
+                "customization": !object.customization ? {} : {
+                    "_id": object.customization._id,
+                    "colors": object.customization.colors ? object.customization.colors.map(color => {
                         return ({
                             "_id": color._id,
                             "type": color.type,
                             "hex": color.hex
                         })
-                    }) : object.app.customization.colors,
-                    "topBar": !object.app.customization.topBar ? {} : {
-                        "_id": object.app.customization.topBar._id,
-                        "isActive": object.app.customization.topBar.isActive,
-                        "backgroundColor": object.app.customization.topBar.backgroundColor,
-                        "text": object.app.customization.topBar.text,
-                        "textColor": object.app.customization.topBar.textColor,
+                    }) : object.customization.colors,
+                    "topBar": !object.customization.topBar ? {} : {
+                        "_id": object.customization.topBar._id,
+                        "isActive": object.customization.topBar.isActive,
+                        "backgroundColor": object.customization.topBar.backgroundColor,
+                        "text": object.customization.topBar.text,
+                        "textColor": object.customization.topBar.textColor,
                     },
-                    "banners": !object.app.customization.banners ? {} : {
-                        "_id": object.app.customization.banners._id,
-                        "autoDisplay": object.app.customization.banners.autoDisplay,
-                        "ids": !object.app.customization.banners.ids ? [] : object.app.customization.banners.ids.map(id => {
-                            return({
+                    "banners": !object.customization.banners ? {} : {
+                        "_id": object.customization.banners._id,
+                        "autoDisplay": object.customization.banners.autoDisplay,
+                        "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
+                            return ({
                                 "_id": id._id,
                                 "image_url": id.image_url,
                                 "link_url": id.link_url,
@@ -161,33 +161,34 @@ let outputs = {
                             })
                         })
                     },
-                    "logo": !object.app.customization.logo ? {} : {
-                        "_id": object.app.customization.logo._id,
-                        "id": !object.app.customization.logo.id ? '' : object.app.customization.logo.id
+                    "logo": !object.customization.logo ? {} : {
+                        "_id": object.customization.logo._id,
+                        "id": !object.customization.logo.id ? '' : object.customization.logo.id
                     },
-                    "footer": !object.app.customization.footer ? {} : {
-                        "_id": object.app.customization.footer._id,
-                        "supportLinks": !object.app.customization.footer.supportLinks ? [] : object.app.customization.footer.supportLinks.map(support_link => {
-                            return({
+                    "footer": !object.customization.footer ? {} : {
+                        "_id": object.customization.footer._id,
+                        "supportLinks": !object.customization.footer.supportLinks ? [] : object.customization.footer.supportLinks.map(support_link => {
+                            return ({
                                 "_id": support_link._id,
                                 "name": support_link.name,
                                 "href": support_link.href,
                             })
                         }),
-                        "communityLinks": !object.app.customization.footer.communityLinks ? [] : object.app.customization.footer.communityLinks.map(community_link => {
-                            return({
+                        "communityLinks": !object.customization.footer.communityLinks ? [] : object.customization.footer.communityLinks.map(community_link => {
+                            return ({
                                 "_id": community_link._id,
                                 "name": community_link.name,
                                 "href": community_link.href,
                             })
                         })
                     },
-                    "topIcon": !object.app.customization.topIcon ? {} : {
-                        "_id": object.app.customization.topIcon._id,
-                        "id": !object.app.customization.topIcon.id ? '' : object.app.customization.topIcon.id
+                    "topIcon": !object.customization.topIcon ? {} : {
+                        "_id": object.customization.topIcon._id,
+                        "id": !object.customization.topIcon.id ? '' : object.customization.topIcon.id
                     },
-                    "loadingGif": !object.app.customization.loadingGif ? {} : {
-                        "_id": object.app.customization.loadingGif._id
+                    "loadingGif": !object.customization.loadingGif ? {} : {
+                        "_id": object.customization.loadingGif._id,
+                        "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                     },
                 },
                 "integrations": !object.app.integrations ? {} : {

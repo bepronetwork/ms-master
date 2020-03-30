@@ -28,6 +28,8 @@ import {
     MapperUpdateWalletSingleton
 } from '../controllers/Mapper';
 
+// const saveOutputTest = require('../../test/outputTest/configOutput')
+
 class App extends ModelComponent {
 
     constructor(params) {
@@ -99,6 +101,7 @@ class App extends ModelComponent {
     async getAuth() {
         try {
             let app = await this.process('Get');
+            // saveOutputTest.saveOutputTest(`AppTest`,`GetAuth`,app);
             return MapperGetAuthSingleton.output('GetAuth', app._doc);
         } catch (err) {
             throw err;
@@ -113,7 +116,8 @@ class App extends ModelComponent {
     async summary() {
         try {
             let app = await this.process('Summary');
-            return MapperSummarySingleton.output('Summary', app);
+            // return MapperSummarySingleton.output('Summary', app);
+            return app;
         } catch (err) {
             throw err;
         }
@@ -143,6 +147,7 @@ class App extends ModelComponent {
         try {
             let app = await this.process('GetGames');
             return MapperGetGamesSingleton.output('GetGames', app);
+            // return app;
         } catch (err) {
             throw err;
         }
@@ -486,6 +491,8 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditLoadingGif');
             return MapperEditLoadingGifSingleton.output('EditLoadingGif', app);
+            // saveOutputTest.saveOutputTest(`AppTest`,`EditLoadingGif`,app);
+            // return app;
         } catch (err) {
             throw err;
         }

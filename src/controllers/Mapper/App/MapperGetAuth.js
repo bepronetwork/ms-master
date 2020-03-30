@@ -210,7 +210,8 @@ let outputs = {
                     "id": !object.customization.topIcon.id ? '' : object.customization.topIcon.id
                 },
                 "loadingGif": !object.customization.loadingGif ? {} : {
-                    "_id": object.customization.loadingGif._id
+                    "_id": object.customization.loadingGif._id,
+                    "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
             },
             "integrations": !object.integrations ? {} : {
@@ -239,6 +240,9 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
+            "addOn": !object.addOn ? {} : {
+                "_id": object.addOn._id
+            },
             "__v": object.__v,
         }
     },
