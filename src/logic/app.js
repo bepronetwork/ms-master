@@ -149,7 +149,6 @@ const processActions = {
     __addJackpot : async (params) => {
 
         let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
-
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
         if(!app){throwError('APP_NOT_EXISTENT')}

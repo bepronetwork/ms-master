@@ -144,8 +144,8 @@ const processActions = {
             var clientSeed = CryptographySingleton.generateSeed();
 
 			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
-			console.log(jackpot);
-			console.log(app.addOn.jackpot);
+			console.log(jackpot.resultSpace);
+			console.log(app.addOn.jackpot.resultSpace);
 
             /* Get Bet Result */
             let { isWon, outcomeResultSpace } = betJackpotActions.auto({

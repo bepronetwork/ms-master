@@ -52,7 +52,7 @@ class JackpotRepository extends MongoComponent{
             JackpotRepository.prototype.schema.model.findById(_id)
             .populate(foreignKeys)
             .exec( (err, jackpot) => {
-                if(err) { resolve(null)}
+                if(err) { reject(err) }
                 resolve(jackpot);
             });
         });
