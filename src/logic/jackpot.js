@@ -146,6 +146,7 @@ const processActions = {
 			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
 			console.log(jackpot.resultSpace);
 			console.log(app.addOn.jackpot.resultSpace);
+			console.log(app);
 
             /* Get Bet Result */
             let { isWon, outcomeResultSpace } = betJackpotActions.auto({
