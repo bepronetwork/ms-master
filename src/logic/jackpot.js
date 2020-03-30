@@ -271,6 +271,8 @@ const progressActions = {
 			await JackpotRepository.prototype.updatePot(jackpot._id, currency, parseFloat(pot) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(user_delta) );
 
+			console.log(bet);
+
 			/* Add Bet to User Profile */
 			await UsersRepository.prototype.addBet(params.user, bet);
 			/* Add Bet to Event Profile */
