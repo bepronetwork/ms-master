@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID; 
 
 let self;
 
@@ -27,8 +25,16 @@ let outputs = {
                             "multiplier": !result_space.multiplier ? '' : result_space.multiplier,
                         })
                     }),
-                    "result": game.result ? game.result.map(result_id => result_id) : game.result,
-                    "bets": game.bets ? game.bets.map(bet_id => bet_id) : game.bets,
+                    "result": game.result ? game.result.map(result_id => {
+                        return({
+                            "_id": result_id
+                        })
+                    }) : game.result,
+                    "bets": game.bets ? game.bets.map(bet_id => {
+                        return({
+                            "_id": bet_id
+                        })
+                    }) : game.bets,
                     "isClosed": game.isClosed,
                     "maxBet": game.maxBet,
                     "background_url": game.background_url,
@@ -50,15 +56,39 @@ let outputs = {
                     }) : game.wallets,
                 })
             }) : object.games,
-            "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => new ObjectID(list_admin_id.toString())) : object.listAdmins,
+            "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => {
+                return ({
+                    "_id": list_admin_id
+                })
+            }) : object.listAdmins,
             "services": object.services ? object.services.map(service => service) : object.services,
-            "currencies": object.currencies ? object.currencies.map(currency_id => new ObjectID(currency_id.toString())) : object.currencies,
+            "currencies": object.currencies ? object.currencies.map(currency_id => {
+                return ({
+                    "_id": currency_id
+                })
+            }) : object.currencies,
             "users": object.users ? object.users.map(user => {
                 return ({
-                    "bets": user.bets ? user.bets.map(bet_id => new ObjectID(bet_id.toString())) : user.bets,
-                    "deposits": user.deposits ? user.deposits.map(deposit_id => new ObjectID(deposit_id.toString())) : user.deposits,
-                    "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => new ObjectID(withdraw_id.toString())) : user.withdraws,
-                    "wallet": user.wallet ? user.wallet.map(wallet_id => new ObjectID(wallet_id.toString())) : user.wallet,
+                    "bets": user.bets ? user.bets.map(bet_id => {
+                        return ({
+                            "_id": bet_id
+                        })
+                    }) : user.bets,
+                    "deposits": user.deposits ? user.deposits.map(deposit_id => {
+                        return({
+                            "_id": deposit_id
+                        })
+                    }) : user.deposits,
+                    "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
+                        return({
+                            "_id": withdraw_id
+                        })
+                    }) : user.withdraws,
+                    "wallet": user.wallet ? user.wallet.map(wallet_id => {
+                        return({
+                            "_id": wallet_id
+                        })
+                    }) : user.wallet,
                     "isWithdrawing": user.isWithdrawing,
                     "email_confirmed": user.email_confirmed,
                     "_id": user._id,
@@ -86,7 +116,11 @@ let outputs = {
                     "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => new ObjectID(deposit_address_id.toString())) : wallet.depositAddresses,
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => {
+                        return({
+                            "_id": deposit_address_id
+                        })
+                    }) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "currency": !wallet.currency ? {} : {
                         "_id": wallet.currency._id,
@@ -117,7 +151,11 @@ let outputs = {
                     "amount": deposit.amount,
                 })
             }) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => new ObjectID(withdraw_id.toString())) : object.withdraws,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => {
+                return({
+                    "_id": withdraw_id
+                })
+            }) : object.withdraws,
             "typography": object.typography ? object.typography.map(typography => {
                 return ({
                     "_id": typography._id,
@@ -199,7 +237,8 @@ let outputs = {
                     "id": !object.customization.topIcon.id ? '' : object.customization.topIcon.id
                 },
                 "loadingGif": !object.customization.loadingGif ? {} : {
-                    "_id": object.customization.loadingGif._id
+                    "_id": object.customization.loadingGif._id,
+                    "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
             },
             "integrations": !object.integrations ? {} : {
