@@ -25,6 +25,7 @@ let outputs = {
                 "isValid": object.app.isValid,
                 "games": object.app.games ? object.app.games.map(game => {
                     return ({
+                        "_id": game._id,
                         "resultSpace": !game.resultSpace ? [] : game.resultSpace.map(result_space => {
                             return ({
                                 "_id": result_space._id,
