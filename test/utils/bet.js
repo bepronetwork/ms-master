@@ -3,7 +3,6 @@ const expect = chai.expect;
 
 export async function digestBetResult({newBalance, res, previousBalance, percentageJackpot=1}){
     let { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta, jackpot} = res.data.message;
-    betAmount = betAmount + betAmount*0.01;
     console.log(winAmount, isWon, user_delta, newBalance, previousBalance)
     if(isWon){
         // Confirm delta is positive
@@ -12,8 +11,6 @@ export async function digestBetResult({newBalance, res, previousBalance, percent
         expect(winAmount).to.be.greaterThan(0);
         // Confirm New User Balance is equal to previous plus delta
         expect(newBalance).to.be.equal(previousBalance+user_delta+jackpot.user_delta);
-        // Check if wagered value in jackpot is n% edge limited per jackpot
-        expect(betAmount*percentageJackpot*0.01).to.be.equal(jackpot.lossAmount);
     }else{
         // Confirm delta is negative
         expect(user_delta).to.be.lessThan(0);
@@ -21,8 +18,6 @@ export async function digestBetResult({newBalance, res, previousBalance, percent
         expect(winAmount).to.be.equal(0);
         // Confirm New User Balance is equal to previous plus delta
         expect(newBalance).to.be.equal(previousBalance+user_delta+jackpot.user_delta);
-        // Check if wagered value in jackpot is n% edge limited per jackpot
-        expect(betAmount*percentageJackpot*0.01).to.be.equal(jackpot.lossAmount);
     }
     return true;
 }

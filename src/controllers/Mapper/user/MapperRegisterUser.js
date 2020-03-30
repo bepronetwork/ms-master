@@ -13,9 +13,9 @@ let self;
 let outputs = {
     userRegister: (object) => {
         return {
-            "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
-            "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
+            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
+            "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
             "isWithdrawing": object.isWithdrawing,
             "_id": object._id,
             "username": object.username,
@@ -29,7 +29,7 @@ let outputs = {
                             "playBalance": wallet.playBalance,
                             "max_deposit": wallet.max_deposit,
                             "max_withdraw": wallet.max_withdraw,
-                            "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                            "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
                             "link_url": wallet.link_url,
                             "_id": wallet._id,
                             "currency": {
@@ -52,7 +52,7 @@ let outputs = {
                     "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "_id": wallet._id,
                     "currency": {
@@ -71,8 +71,8 @@ let outputs = {
             "email": object.email,
             "app_id": {
                 "isValid": object.app_id.isValid,
-                "games": object.app_id.games ? object.app_id.games.map(game_id => game_id) : object.app_id.games,
-                "listAdmins": object.app_id.listAdmins ? object.app_id.listAdmins.map(listAdmin_id => listAdmin_id) : object.app_id.listAdmins,
+                "games": object.app_id.games ? object.app_id.games.map(game_id => { return ({_id: game_id }) } ) : object.app_id.games,
+                "listAdmins": object.app_id.listAdmins ? object.app_id.listAdmins.map(listAdmin_id => { return ({_id: listAdmin_id }) } ) : object.app_id.listAdmins,
                 "services": object.app_id.services ? object.app_id.services.map(service_id => service_id) : object.app_id.services,
                 "countriesAvailable": object.app_id.countriesAvailable ? object.app_id.countriesAvailable.map(countrieAvailable_id => countrieAvailable_id) : object.app_id.countriesAvailable,
                 "licensesId": object.app_id.licensesId ? object.app_id.licensesId.map(license_id => license_id) : object.app_id.licensesId,
@@ -82,7 +82,7 @@ let outputs = {
                         "playBalance": wallet.playBalance,
                         "max_deposit": wallet.max_deposit,
                         "max_withdraw": wallet.max_withdraw,
-                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
                         "link_url": wallet.link_url,
                         "_id": wallet._id,
                         "currency": {

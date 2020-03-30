@@ -24,7 +24,7 @@ let outputs = {
                     "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "currency": {
                         "_id": wallet.currency._id,
@@ -42,7 +42,7 @@ let outputs = {
                     "playBalance": affiliateWallet.playBalance,
                     "max_deposit": affiliateWallet.max_deposit,
                     "max_withdraw": affiliateWallet.max_withdraw,
-                    "depositAddresses": affiliateWallet.depositAddresses ? affiliateWallet.depositAddresses.map(depositAddress_id => depositAddress_id) : affiliateWallet.depositAddresses,
+                    "depositAddresses": affiliateWallet.depositAddresses ? affiliateWallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : affiliateWallet.depositAddresses,
                     "link_url": affiliateWallet.link_url,
                     "currency": {
                         "_id": affiliateWallet.currency._id,
@@ -54,9 +54,9 @@ let outputs = {
                     },
                 })
             }) : object.affiliate.wallet,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
             "bearerToken": object.bearerToken,
-            "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
+            "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
                 "chat": {
@@ -92,7 +92,7 @@ let outputs = {
                         "playBalance": wallet.playBalance,
                         "max_deposit": wallet.max_deposit,
                         "max_withdraw": wallet.max_withdraw,
-                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
                         "link_url": wallet.link_url,
                         "currency": {
                             "_id": wallet.currency._id,

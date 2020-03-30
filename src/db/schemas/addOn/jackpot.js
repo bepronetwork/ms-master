@@ -16,7 +16,8 @@ JackpotSchema.prototype.schema =  {
         pot                 : { type: Number, required : true, default : 0}
     }],
     result              : [{ type: Object}],
-    resultSpace         : {type : JSON, required : true}
+    resultSpace         : [{type: mongoose.Schema.Types.ObjectId, ref: 'ResultSpace', required : true }],
+    bets                : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bet'}]
 }
 
 

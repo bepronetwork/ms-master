@@ -28,8 +28,17 @@ class Bet extends ModelComponent{
         }catch(err){
             throw err;
         }
-    } 
-    
+    }
+
+    async save(){
+        try{
+            let res = await this.process('Register');
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async resolve(){
         try{
             return await this.process('Resolve');

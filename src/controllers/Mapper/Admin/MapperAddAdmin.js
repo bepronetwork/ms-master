@@ -55,7 +55,7 @@ let outputs = {
                         "playBalance": wallet.playBalance,
                         "max_deposit": wallet.max_deposit,
                         "max_withdraw": wallet.max_withdraw,
-                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => depositAddress_id) : wallet.depositAddresses,
+                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id}) } ) : wallet.depositAddresses,
                         "link_url": wallet.link_url,
                         "currency": {
                             "_id": wallet.currency._id,

@@ -154,6 +154,7 @@ const processActions = {
             }else{
                 /* User Lost Bet */
                 user_delta = parseFloat(-Math.abs(totalBetAmount));
+                console.log("Loss Amount: ", user_delta)
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
@@ -212,7 +213,7 @@ const processActions = {
         }
     },
 	__register : async (params) => {
-
+        return params;
 	},
 	__resolve : async (params) => {
 	
@@ -272,7 +273,8 @@ const progressActions = {
 		return res;
 	},
 	__register : async (params) => {
-      
+        let bet = await self.save(params);
+        return bet;
 	},
 	__resolve : async (params) => {
     
