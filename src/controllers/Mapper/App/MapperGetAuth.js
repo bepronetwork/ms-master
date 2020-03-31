@@ -16,15 +16,15 @@ let outputs = {
             "id": object._id,
             "isValid": object.isValid,
             "addOn": object.addOn.jackpot ? {
-                "jackpot" : {
-                    edge : object.addOn.jackpot.edge,
-                    limits : object.addOn.jackpot.limits ? object.addOn.jackpot.limits.map(limit => {
+                "jackpot": {
+                    edge: object.addOn.jackpot.edge,
+                    limits: object.addOn.jackpot.limits ? object.addOn.jackpot.limits.map(limit => {
                         return {
                             currency: limit.currency,
-                            pot     : limit.pot
+                            pot: limit.pot
                         }
                     }) : [],
-                    bets : object.addOn.jackpot.bets ? object.addOn.jackpot.bets.map(bet => bet) : [],
+                    bets: object.addOn.jackpot.bets ? object.addOn.jackpot.bets.map(bet => bet) : [],
                 }
             } : {},
             "games": object.games ? object.games.map(game => {
@@ -39,12 +39,12 @@ let outputs = {
                         })
                     }),
                     "result": game.result ? game.result.map(result_id => {
-                        return({
+                        return ({
                             "_id": result_id
                         })
                     }) : game.result,
                     "bets": game.bets ? game.bets.map(bet_id => {
-                        return({
+                        return ({
                             "_id": bet_id
                         })
                     }) : game.bets,
@@ -75,30 +75,35 @@ let outputs = {
                 })
             }) : object.listAdmins,
             "services": object.services ? object.services.map(service => service) : object.services,
-            "currencies": object.currencies ? object.currencies.map(currency_id => {
+            "currencies": object.currencies ? object.currencies.map(currency => {
                 return ({
-                    "_id": currency_id
+                    "_id": currency._id,
+                    "image": currency.image,
+                    "ticker": currency.ticker,
+                    "decimals": currency.decimals,
+                    "name": currency.name,
+                    "address": currency.address
                 })
             }) : object.currencies,
             "users": object.users ? object.users.map(user => {
                 return ({
                     "bets": user.bets ? user.bets.map(bet_id => {
-                        return({
+                        return ({
                             "_id": bet_id
                         })
                     }) : user.bets,
                     "deposits": user.deposits ? user.deposits.map(deposit_id => {
-                        return({
+                        return ({
                             "_id": deposit_id
                         })
                     }) : user.deposits,
                     "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
-                        return({
+                        return ({
                             "_id": withdraw_id
                         })
                     }) : user.withdraws,
                     "wallet": user.wallet ? user.wallet.map(wallet_id => {
-                        return({
+                        return ({
                             "_id": wallet_id
                         })
                     }) : user.wallet,

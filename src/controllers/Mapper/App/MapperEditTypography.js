@@ -71,9 +71,14 @@ let outputs = {
                     })
                 }) : object.app.listAdmins,
                 "services": object.app.services ? object.app.services.map(service => service) : object.app.services,
-                "currencies": object.app.currencies ? object.app.currencies.map(currency_id => {
+                "currencies": object.app.currencies ? object.app.currencies.map(currency => {
                     return({
-                        "_id": currency_id
+                        "_id": currency._id,
+                        "image": currency.image,
+                        "ticker": currency.ticker,
+                        "decimals": currency.decimals,
+                        "name": currency.name,
+                        "address": currency.address
                     })
                 }) : object.app.currencies,
                 "users": object.app.users ? object.app.users.map(user => {
