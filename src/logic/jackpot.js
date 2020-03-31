@@ -150,7 +150,7 @@ const processActions = {
 	},
 	__bet : async (params) => {
 		try{
-            const { currency } = params;
+            let { currency } = params;
 
 			let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -209,7 +209,7 @@ const processActions = {
 				pot = parseFloat(limit.pot) + parseFloat(lossAmount);
 			}
 
-			let currency = await CurrencyRepository.prototype.findById(currency);
+			currency = await CurrencyRepository.prototype.findById(currency);
 
             let normalized = {
 				winAmount           : user_delta,
