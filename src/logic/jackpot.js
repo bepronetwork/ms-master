@@ -49,9 +49,6 @@ const betJackpotActions = {
     }
 }
 
-
-
-
 /**
  * Login logic.
  *
@@ -278,6 +275,14 @@ const progressActions = {
 			await JackpotRepository.prototype.addBet(jackpot._id, bet._id);
 
 			if(isWon) {
+				/* Save result win jackpot */
+				await JackpotRepository.prototype.addWinResult(jackpot._id, {
+					user: user_id,
+					winAmount: pot,
+					bet: bet._id,
+					currency
+				});
+
 				/* Send Notification */
 				PusherSingleton.trigger({
 					channel_name: user_id,

@@ -79,6 +79,19 @@ class JackpotRepository extends MongoComponent{
         });
     }
 
+    addWinResult(jackpot_id, result){
+        return new Promise( (resolve,reject) => {
+            JackpotRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: jackpot_id },
+                { $push: { "winResult" : result } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 }
 
 JackpotRepository.prototype.schema = new JackpotSchema();

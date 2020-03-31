@@ -15,7 +15,12 @@ JackpotSchema.prototype.schema =  {
         maxBet              : { type: Number, required : true, default : 0},
         pot                 : { type: Number, required : true, default : 0}
     }],
-    result              : [{ type: Object}],
+    winResult           : [{
+        bet             : { type: mongoose.Schema.Types.ObjectId, ref: 'Bet'},
+        currency        : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+        winAmount       : { type: Number, default : 0},
+        user            : { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    }],
     resultSpace         : [{type: mongoose.Schema.Types.ObjectId, ref: 'ResultSpace', required : true }],
     bets                : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bet'}]
 }
