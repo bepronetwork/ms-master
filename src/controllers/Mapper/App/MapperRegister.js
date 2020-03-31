@@ -18,9 +18,14 @@ let outputs = {
             "games": !object.games ? [] : object.games.map(game_id => game_id),
             "listAdmins": !object.listAdmins ? [] : object.listAdmins.map(list_admin_id => list_admin_id),
             "services": !object.services ? [] : object.services.map(service_id => service_id),
-            "currencies": !object.currencies ? [] : object.currencies.map(currency_id => {
-                return({
-                    "_id": currency_id
+            "currencies": !object.currencies ? [] : object.currencies.map(currency => {
+                return ({
+                    "_id": currency._id,
+                    "image": currency.image,
+                    "ticker": currency.ticker,
+                    "decimals": currency.decimals,
+                    "name": currency.name,
+                    "address": currency.address
                 })
             }),
             "users": !object.users ? [] : object.users.map(user_id => user_id),

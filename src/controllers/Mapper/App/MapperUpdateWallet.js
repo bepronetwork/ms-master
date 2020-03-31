@@ -28,12 +28,12 @@ let outputs = {
                             })
                         }),
                         "result": game.result ? game.result.map(result_id => {
-                            return({
+                            return ({
                                 "_id": result_id
                             })
                         }) : game.result,
                         "bets": game.bets ? game.bets.map(bet_id => {
-                            return({
+                            return ({
                                 "_id": bet_id
                             })
                         }) : game.bets,
@@ -59,35 +59,40 @@ let outputs = {
                     })
                 }) : object.app.games,
                 "listAdmins": object.app.listAdmins ? object.app.listAdmins.map(list_admin_id => {
-                    return({
+                    return ({
                         "_id": list_admin_id
                     })
                 }) : object.app.listAdmins,
                 "services": object.app.services ? object.app.services.map(service => service) : object.app.services,
-                "currencies": object.app.currencies ? object.app.currencies.map(currency_id => {
-                    return({
-                        "_id": currency_id
+                "currencies": object.app.currencies ? object.app.currencies.map(currency => {
+                    return ({
+                        "_id": currency._id,
+                        "image": currency.image,
+                        "ticker": currency.ticker,
+                        "decimals": currency.decimals,
+                        "name": currency.name,
+                        "address": currency.address
                     })
                 }) : object.app.currencies,
                 "users": object.app.users ? object.app.users.map(user => {
                     return ({
                         "bets": user.bets ? user.bets.map(bet_id => {
-                            return({
+                            return ({
                                 "_id": bet_id
                             })
                         }) : user.bets,
                         "deposits": user.deposits ? user.deposits.map(deposit_id => {
-                            return({
+                            return ({
                                 "_id": deposit_id
                             })
                         }) : user.deposits,
                         "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
-                            return({
+                            return ({
                                 "_id": withdraw_id
                             })
                         }) : user.withdraws,
                         "wallet": user.wallet ? user.wallet.map(wallet_id => {
-                            return({
+                            return ({
                                 "_id": wallet_id
                             })
                         }) : user.wallet,
@@ -134,12 +139,12 @@ let outputs = {
                     })
                 }) : object.app.wallet,
                 "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => {
-                    return({
+                    return ({
                         "_id": deposit_id
                     })
                 }) : object.app.deposits,
                 "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw_id => {
-                    return({
+                    return ({
                         "_id": withdraw_id
                     })
                 }) : object.app.withdraws,
