@@ -47,6 +47,20 @@ class JackpotRepository extends MongoComponent{
         });
     }
 
+    editEdgeJackpot(_id, edge) {
+        return new Promise( (resolve, reject) => {
+            JackpotRepository.prototype.schema.model.findByIdAndUpdate(
+                _id,
+                {
+                    $set: { edge }
+                }
+            ).exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     findJackpotById(_id){ 
         return new Promise( (resolve, reject) => {
             JackpotRepository.prototype.schema.model.findById(_id)
