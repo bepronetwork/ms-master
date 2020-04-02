@@ -49,7 +49,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn } = params;
+        const { affiliateSetup, integrations, customization, addOn, virtual } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -59,6 +59,7 @@ const processActions = {
             hasAppAlready       : admin.app ? true : false,
             services            : params.services, // Array
             admin_id		    : admin._id,
+            virtual             : virtual ? true : false,
             name    			: params.name,
             affiliateSetup,       
             customization,
@@ -214,9 +215,8 @@ const processActions = {
 
         /* Verify if this transactionHashs was already added */
         let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
-
         let wasAlreadyAdded = deposit ? true : false;
-    
+
         return  {
             app                 : app,
             wallet              : wallet,
@@ -614,7 +614,8 @@ const progressActions = {
 		return res;
     },
     __updateWallet : async (params) => {
-        
+     
+
         /* Create Deposit Object */
         let deposit = new Deposit({
             app                     : params.app._id,
