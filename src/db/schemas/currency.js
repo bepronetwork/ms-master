@@ -10,7 +10,13 @@ CurrencySchema.prototype.schema = {
     name                : { type: String, required : true},
     address             : { type: String},
     decimals            : { type: Number, required : true},
-    image               : { type: String}
+    image               : { type: String},
+    /* For virtual currencies */
+    virtual             : { type: Boolean, default : false},
+    price               : [{ 
+        currency        : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+        amount          : { type: Number}
+    }],
 }
 
 // Mongoose only allows once per type

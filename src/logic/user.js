@@ -37,6 +37,7 @@ import { Logger } from '../helpers/logger';
 import Mailer from './services/mailer';
 import { template } from "./third-parties/sendInBlue/functions";
 import { GenerateLink } from '../helpers/generateLink';
+import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
 let error = new ErrorManager();
 
@@ -337,9 +338,10 @@ const processActions = {
 
             const from = entries[0].address;
             const to = entries[1].address;
+            var isPurchase = false, virtualWallet = null;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
-            /* Get User Id */
+            /* Get User Info */
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
@@ -352,10 +354,19 @@ const processActions = {
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
 
+            /* Verify it is a virtual casino purchase */
+            if(app.virtual){
+                isPurchase = true;
+                virtualWallet = app.wallet.find( w => w.currency.virtual == true);
+                if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                
+            }
+
             let res = {
                 maxDeposit: (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
                 app,
                 user_in_app,
+                isPurchase,
+                virtualWallet,
                 user: user,
                 wasAlreadyAdded,
                 user_id: user._id,
@@ -565,22 +576,42 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
+            const { virtualWallet, isPurchase, wallet, amount } = params;
+            var message;
+            const options = {
+                purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
+                    currency : wallet.currency,
+                    currencyAmount : amount,
+                    virtualCurrency : virtualWallet.currency
+                }) : amount,
+                isPurchase : isPurchase,
+            }
+
             /* Create Deposit Object */
             let deposit = new Deposit({
                 user: params.user_id,
                 transactionHash: params.transactionHash,
                 creation_timestamp: params.creationDate,
+                isPurchase : options.isPurchase,
                 last_update_timestamp: params.creationDate,
+                purchaseAmount : options.purchaseAmount,
                 address: params.from,                         // Deposit Address 
-                currency: params.wallet.currency._id,
-                amount: params.amount,
+                currency: wallet.currency._id,
+                amount: amount,
             })
 
             /* Save Deposit Data */
             let depositSaveObject = await deposit.createDeposit();
 
-            /* Update Balance of App */
-            await WalletsRepository.prototype.updatePlayBalance(params.wallet, params.amount);
+            if(isPurchase){
+                /* User Purchase - Virtual */
+                await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
+                message = `Bough ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
+            }else{
+                /* User Deposit - Real */
+                await WalletsRepository.prototype.updatePlayBalance(wallet, params.amount);
+                message = `Deposited ${params.amount} ${wallet.currency.ticker} in your account`
+            }
 
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
@@ -588,7 +619,7 @@ const progressActions = {
             PusherSingleton.trigger({
                 channel_name: params.user_id,
                 isPrivate: true,
-                message: `Deposited ${params.amount} ${params.wallet.currency.ticker} in your account`,
+                message ,
                 eventType: 'DEPOSIT'
             })
             /* Send Email */
