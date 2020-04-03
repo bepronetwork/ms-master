@@ -149,14 +149,7 @@ let outputs = {
                         "_id": withdraw_id
                     })
                 }) : object.app.withdraws,
-                "typography": object.app.typography ? object.app.typography.map(typography => {
-                    return ({
-                        "_id": typography._id,
-                        "local": !typography.local ? [] : typography.local.map(local_name => local_name),
-                        "url": typography.url,
-                        "format": typography.format,
-                    })
-                }) : object.app.typography,
+                "typography": object.app.typography,
                 "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(country_available => country_available) : object.app.countriesAvailable,
                 "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
                 "isWithdrawing": object.app.isWithdrawing,
