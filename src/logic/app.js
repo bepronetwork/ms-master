@@ -413,10 +413,13 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
+        let typography = await TypographyRepository.prototype.findById(app.typography);
+
         if (!app) { throwError('APP_NOT_EXISTENT') };
         return {
             ...params,
-            app
+            app,
+            oldTypography: typography
         };
     },
     __getUsers : async (params) => {
@@ -877,27 +880,12 @@ const progressActions = {
         return params;
     },
     __editTypography: async (params) => {
-        let { app, typography } = params;
-        //This Function Clening the typography from collection typographies and from the App document (typography field)
-        await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
+        let { app, typography, oldTypography } = params;
 
-        let list = [];
-        for (let correspondentTypographyType of typography) {
-            let rTypography = await TypographyRepository.prototype.setTypography({
-                local: correspondentTypographyType.local,
-                url: correspondentTypographyType.url,
-                format: correspondentTypographyType.format,
-            });
-            list.push(rTypography);
-        }
-
-        await AppRepository.prototype.addTypography(app._id, list);
-
-        // }));
+        await TypographyRepository.prototype.findByIdAndUpdate(oldTypography._id, typography);
 
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
-        // Save info on Typography Part
         return params;
     },
     __getUsers : async (params) => {
