@@ -413,9 +413,10 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
-        let typography = await TypographyRepository.prototype.findById(app.typography);
+        let typography = await TypographyRepository.prototype.findById(app.typography._id);
 
         if (!app) { throwError('APP_NOT_EXISTENT') };
+
         return {
             ...params,
             app,
