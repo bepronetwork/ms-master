@@ -70,7 +70,8 @@ const processActions = {
 			listAdmins          : [admin._id],
 			licensesId          : [], // TO DO
 			countriesAvailable  : [], // TO DO
-			isVerified          : false
+            isVerified          : false,
+            typography
 		}
 		return normalized;
     },
@@ -413,6 +414,7 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
+        console.log(app);
         let typography = await TypographyRepository.prototype.findById(app.typography._id);
 
         if (!app) { throwError('APP_NOT_EXISTENT') };
