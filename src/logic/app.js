@@ -3,12 +3,12 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
-import { Game, Jackpot, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
+import { Game, Jackpot, Deposit, Withdraw, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
 import CasinoContract from './eth/CasinoContract';
 import { globals } from '../Globals';
 import Numbers from './services/numbers';
@@ -169,6 +169,136 @@ const processActions = {
             gameEcosystem
         }
 		return res;
+    },
+    __addAutoWithdraw : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let maxWithdrawAmountCumulative = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+        let maxWithdrawAmountPerTransaction = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let res = {
+            maxWithdrawAmountPerTransaction,
+            maxWithdrawAmountCumulative,
+            app
+        }
+		return res;
+    },
+    __editAutoWithdraw : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                isAutoWithdraw : params.isAutoWithdraw
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
+    __editVerifiedEmail : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                verifiedEmail : params.verifiedEmail
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
+    __editWithdrawAmount : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                withdrawAmount : params.withdrawAmount
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
+    __editVerifiedKYC : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                verifiedKYC : params.verifiedKYC
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
+    __editMaxWithdrawAmountCumulative : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                currency : params.currency,
+                amount : params.amount,
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
+    __editMaxWithdrawAmountPerTransaction : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                currency : params.currency,
+                amount : params.amount,
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
     },
     __getLastBets : async (params) => {
         let res = await AppRepository.prototype.getLastBets({
@@ -597,6 +727,49 @@ const progressActions = {
         await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
 		return jackpotResult;
     },
+    __addAutoWithdraw : async (params) => {
+        const { app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction } = params;
+        let autoWithdraw = new AutoWithdraw({app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction});
+        const autoWithdrawResult = await autoWithdraw.register();
+        await addOnRepository.prototype.addAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
+		return autoWithdrawResult;
+    },
+    __editAutoWithdraw : async (params) => {
+        const { autoWithdraw, isAutoWithdraw } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdateIsAutoWithdraw(autoWithdraw._id, isAutoWithdraw)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
+    __editVerifiedEmail : async (params) => {
+        const { autoWithdraw, verifiedEmail } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdateVerifiedEmail(autoWithdraw._id, verifiedEmail)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
+    __editWithdrawAmount : async (params) => {
+        const { autoWithdraw, withdrawAmount } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdateWithdrawAmount(autoWithdraw._id, withdrawAmount)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
+    __editVerifiedKYC : async (params) => {
+        const { autoWithdraw, verifiedKYC } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdateVerifiedKYC(autoWithdraw._id, verifiedKYC)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
+    __editMaxWithdrawAmountCumulative : async (params) => {
+        const { autoWithdraw, currency, amount } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdateMaxWithdrawAmountCumulative(autoWithdraw._id, currency, amount)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
+    __editMaxWithdrawAmountPerTransaction : async (params) => {
+        const { autoWithdraw, currency, amount } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdateMaxWithdrawAmountPerTransaction(autoWithdraw._id, currency, amount)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
     __getLastBets : async (params) => {
         let res = params;
 		return res;
@@ -984,6 +1157,27 @@ class AppLogic extends LogicComponent{
                 case 'AddJackpot' : {
                     return await library.process.__addJackpot(params); break;
                 };
+                case 'AddAutoWithdraw' : {
+                    return await library.process.__addAutoWithdraw(params); break;
+                };
+                case 'EditAutoWithdraw' : {
+                    return await library.process.__editAutoWithdraw(params); break;
+                };
+                case 'EditVerifiedEmail' : {
+                    return await library.process.__editVerifiedEmail(params); break;
+                };
+                case 'EditWithdrawAmount' : {
+                    return await library.process.__editWithdrawAmount(params); break;
+                };
+                case 'EditVerifiedKYC' : {
+                    return await library.process.__editVerifiedKYC(params); break;
+                };
+                case 'EditMaxWithdrawAmountCumulative' : {
+                    return await library.process.__editMaxWithdrawAmountCumulative(params); break;
+                };
+                case 'EditMaxWithdrawAmountPerTransaction' : {
+                    return await library.process.__editMaxWithdrawAmountPerTransaction(params); break;
+                };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
@@ -1087,6 +1281,27 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddJackpot' : {
 					return await library.progress.__addJackpot(params); break;
+                };
+                case 'AddAutoWithdraw' : {
+                    return await library.progress.__addAutoWithdraw(params); break;
+                };
+                case 'EditAutoWithdraw' : {
+                    return await library.progress.__editAutoWithdraw(params); break;
+                };
+                case 'EditVerifiedEmail' : {
+                    return await library.progress.__editVerifiedEmail(params); break;
+                };
+                case 'EditWithdrawAmount' : {
+                    return await library.progress.__editWithdrawAmount(params); break;
+                };
+                case 'EditVerifiedKYC' : {
+                    return await library.progress.__editVerifiedKYC(params); break;
+                };
+                case 'EditMaxWithdrawAmountCumulative' : {
+                    return await library.progress.__editMaxWithdrawAmountCumulative(params); break;
+                };
+                case 'EditMaxWithdrawAmountPerTransaction' : {
+                    return await library.progress.__editMaxWithdrawAmountPerTransaction(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;

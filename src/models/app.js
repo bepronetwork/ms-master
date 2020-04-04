@@ -36,14 +36,15 @@ class App extends ModelComponent {
 
         super(
             {
-                name : 'App',
-                logic : new AppLogic({db : db}),
-                db : db,
-                self : null,
-                params : params,
-                children : [
-                    new AffiliateSetup({...params,
-                        structures : [
+                name: 'App',
+                logic: new AppLogic({ db: db }),
+                db: db,
+                self: null,
+                params: params,
+                children: [
+                    new AffiliateSetup({
+                        ...params,
+                        structures: [
                             {
                                 level: 1,
                                 percentageOnLoss: 0.02
@@ -185,20 +186,118 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-    async addJackpot(){
-        try{
+    async addJackpot() {
+        try {
             let app = await this.process('AddJackpot');
             return app;
             // return MapperAddGamesSingleton.output('AddJackpot', app);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async addAutoWithdraw() {
+        try {
+            let app = await this.process('AddAutoWithdraw');
+            return app._doc;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAutoWithdraw() {
+        try {
+            let app = await this.process('EditAutoWithdraw');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editVerifiedEmail() {
+        try {
+            let app = await this.process('EditVerifiedEmail');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+        * @param {String} 
+        * @return {bool || Exception}  
+        */
+
+    async editWithdrawAmount() {
+        try {
+            let app = await this.process('EditWithdrawAmount');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+        * @param {String} 
+        * @return {bool || Exception}  
+        */
+
+    async editVerifiedKYC() {
+        try {
+            let app = await this.process('EditVerifiedKYC');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+        * @param {String} 
+        * @return {bool || Exception}  
+        */
+
+    async editMaxWithdrawAmountCumulative() {
+        try {
+            let app = await this.process('EditMaxWithdrawAmountCumulative');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+       * @param {String} 
+       * @return {bool || Exception}  
+       */
+
+    async editMaxWithdrawAmountPerTransaction() {
+        try {
+            let app = await this.process('EditMaxWithdrawAmountPerTransaction');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
     async addCurrencyWallet() {
         try {
             let app = await this.process('AddCurrencyWallet');

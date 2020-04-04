@@ -48,6 +48,62 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addAutoWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAutoWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editAutoWithdraw')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editVerifiedEmail(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editVerifiedEmail')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editWithdrawAmount(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editWithdrawAmount')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editVerifiedKYC(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editVerifiedKYC')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editMaxWithdrawAmountCumulative(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editMaxWithdrawAmountCumulative')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editMaxWithdrawAmountPerTransaction(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editMaxWithdrawAmountPerTransaction')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAdminType(params, bearerToken, payload){
         return request(global.server)
         .post('/api/admins/editType')

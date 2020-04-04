@@ -1759,6 +1759,223 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/autoWithdraw/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Automatic Withdraw
+      operationId: addAutoWithdraw
+      description: add Auto Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddAutoWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/editAutoWithdraw:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If is Automatic Withdraw
+      operationId: editAutoWithdraw
+      description: Edit If is Automatic Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditAutoWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/editVerifiedEmail:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If is Verified Email
+      operationId: editVerifiedEmail
+      description: Edit If is Verified Email
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditVerifiedEmailRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/editWithdrawAmount:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit WithdrawAmount
+      operationId: editWithdrawAmount
+      description: Edit WithdrawAmount
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditWithdrawAmountRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/editVerifiedKYC:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If is Verified KYC
+      operationId: editVerifiedKYC
+      description: Edit If is Verified KYC
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditVerifiedKYCRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    
+  /app/autoWithdraw/editMaxWithdrawAmountCumulative:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Max Withdraw Amount Cumulative
+      operationId: editMaxWithdrawAmountCumulative
+      description: Edit Max Withdraw Amount Cumulative
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditMaxWithdrawAmountCumulativeRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    
+  /app/autoWithdraw/editMaxWithdrawAmountPerTransaction:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Max Withdraw Amount Per Transaction
+      operationId: editMaxWithdrawAmountPerTransaction
+      description: Edit Max Withdraw Amount Per Transaction
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditMaxWithdrawAmountPerTransactionRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -3034,6 +3251,170 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
+
+  AppAddAutoWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+  
+  AppEditAutoWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - isAutoWithdraw
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      isAutoWithdraw :
+        type : boolean
+        example: true
+
+  AppEditVerifiedEmailRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - verifiedEmail
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      verifiedEmail :
+        type : boolean
+        example: true
+
+  AppEditWithdrawAmountRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - withdrawAmount
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      withdrawAmount :
+        type : number
+        example: 3453456
+        description: |
+          withdrawAmount
+
+  AppEditVerifiedKYCRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - verifiedKYC
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      verifiedKYC :
+        type : boolean
+        example: true
+
+  AppEditMaxWithdrawAmountCumulativeRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - amount
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type: string
+      amount :
+        type: number
+
+  AppEditMaxWithdrawAmountPerTransactionRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - amount
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type: string
+      amount :
+        type: number
+
   AppServicesRequest : 
     type: object
     required:

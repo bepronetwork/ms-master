@@ -28,13 +28,39 @@ class AddOnRepository extends MongoComponent{
         return AddOnRepository.prototype.schema.model(AddOn)
     }
 
-    addJackpot(addOn, jackpot){ 
+    findById(_id){ 
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findById(_id)
+            .exec( (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
+    addJackpot(addOn_id, jackpot){ 
         return new Promise( (resolve, reject) => {
             AddOnRepository.prototype.schema.model.findByIdAndUpdate(
-                addOn,
+                addOn_id,
                 {
                     $set: {jackpot}
                 }
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
+    addAutoWithdraw(addOn_id, autoWithdraw){
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn_id,
+                {
+                    $set: {autoWithdraw}
+                },
+                {'new': true}
             )
             .exec( async (err, item) => {
                 if(err){reject(err)}
