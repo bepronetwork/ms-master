@@ -174,6 +174,9 @@ let outputs = {
                             })
                         }),
                     },
+                    "pusher": !object.integrations.pusher ? {} : {
+                        "key": object.integrations.pusher.key
+                    },
                 },
                 "description": object.app.description,
             },

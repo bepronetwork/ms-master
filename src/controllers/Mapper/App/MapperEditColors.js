@@ -255,6 +255,9 @@ let outputs = {
                             })
                         }),
                     },
+                    "pusher": !object.app.integrations.pusher ? {} : {
+                        "key": object.app.integrations.pusher.key
+                    },
                 },
                 "description": object.app.description,
                 "hosting_id": object.app.hosting_id,
