@@ -13,7 +13,7 @@ let self;
 let outputs = {
     editTypography: (object) => {
         return {
-            "typography": object.typography,
+            "typography": object.typography ? { name: object.typography.name, url: object.typography.url} : object.typography,
             "app": !object.app ? {} : {
                 "_id": object.app._id,
                 "isValid": object.app.isValid,
@@ -149,7 +149,7 @@ let outputs = {
                         "_id": withdraw_id
                     })
                 }) : object.app.withdraws,
-                "typography": object.app.typography,
+                "typography": object.app.typography ? { name: object.app.typography.name, url: object.app.typography.url} : object.app.typography,
                 "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(country_available => country_available) : object.app.countriesAvailable,
                 "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
                 "isWithdrawing": object.app.isWithdrawing,
