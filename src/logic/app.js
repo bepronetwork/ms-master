@@ -414,7 +414,6 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
-        console.log(app);
         let typography = await TypographyRepository.prototype.findById(app.typography._id);
 
         if (!app) { throwError('APP_NOT_EXISTENT') };
@@ -884,9 +883,7 @@ const progressActions = {
     },
     __editTypography: async (params) => {
         let { app, typography, oldTypography } = params;
-
         await TypographyRepository.prototype.findByIdAndUpdate(oldTypography._id, typography);
-
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
         return params;
