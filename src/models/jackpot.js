@@ -21,6 +21,14 @@ class Jackpot extends ModelComponent{
             );
     }
 
+    async editEdgeJackpot(){
+        try{
+            return await this.process('EditEdgeJackpot');
+        }catch(err){
+            throw err;
+        }
+    }
+
     async register(){
         try{
             return await this.process('Register');

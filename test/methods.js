@@ -48,6 +48,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editEdgeJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/jackpot/edge/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAdminType(params, bearerToken, payload){
         return request(global.server)
         .post('/api/admins/editType')
@@ -61,7 +69,6 @@ module.exports = {
         .post('/api/admins/login')
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async pingPusher(params) {
         return request(global.server)

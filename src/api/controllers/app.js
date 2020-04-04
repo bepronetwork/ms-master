@@ -153,6 +153,19 @@ async function getGame (req, res) {
 	}
 }
 
+async function editEdgeJackpot (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        await MiddlewareSingleton.log({type: "admin", req});
+	    let params = req.body;
+		let jackpot = new Jackpot(params);
+		let data = await jackpot.editEdgeJackpot();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function createBet (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
@@ -568,5 +581,6 @@ export {
     editTopIcon,
     editMailSenderIntegration,
     editLoadingGif,
-    addJackpot
+    addJackpot,
+    editEdgeJackpot
 };

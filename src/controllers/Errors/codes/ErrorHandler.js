@@ -69,7 +69,8 @@ ErrorHandler.prototype.KEYS =  {
     'MAX_BET_NOT_EXISTENT'                  : "052",
     'MAX_BET_ACHIEVED'                      : "053",
     'USERNAME_ALREADY_EXISTS'               : "054",
-    'USERNAME_OR_EMAIL_NOT_EXISTS'          : "055"
+    'USERNAME_OR_EMAIL_NOT_EXISTS'          : "055",
+    'JACKPOT_NOT_EXIST_IN_APP'              : "056"
 };
 
   /***************************

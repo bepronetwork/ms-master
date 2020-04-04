@@ -222,5 +222,9 @@
     "055" : {
         "key" : "USERNAME_OR_EMAIL_NOT_EXISTS",
         "message"   : "User not found"
+    },
+    "056" : {
+        "key" : "JACKPOT_NOT_EXIST_IN_APP",
+        "message"   : "Jackpot not exist in APP"
     }
 }
