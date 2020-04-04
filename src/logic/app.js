@@ -49,7 +49,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -70,7 +70,8 @@ const processActions = {
 			listAdmins          : [admin._id],
 			licensesId          : [], // TO DO
 			countriesAvailable  : [], // TO DO
-			isVerified          : false
+            isVerified          : false,
+            typography
 		}
 		return normalized;
     },
@@ -413,10 +414,15 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
+        console.log(app);
+        let typography = await TypographyRepository.prototype.findById(app.typography._id);
+
         if (!app) { throwError('APP_NOT_EXISTENT') };
+
         return {
             ...params,
-            app
+            app,
+            oldTypography: typography
         };
     },
     __getUsers : async (params) => {
@@ -877,27 +883,12 @@ const progressActions = {
         return params;
     },
     __editTypography: async (params) => {
-        let { app, typography } = params;
-        //This Function Clening the typography from collection typographies and from the App document (typography field)
-        await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
+        let { app, typography, oldTypography } = params;
 
-        let list = [];
-        for (let correspondentTypographyType of typography) {
-            let rTypography = await TypographyRepository.prototype.setTypography({
-                local: correspondentTypographyType.local,
-                url: correspondentTypographyType.url,
-                format: correspondentTypographyType.format,
-            });
-            list.push(rTypography);
-        }
-
-        await AppRepository.prototype.addTypography(app._id, list);
-
-        // }));
+        await TypographyRepository.prototype.findByIdAndUpdate(oldTypography._id, typography);
 
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
-        // Save info on Typography Part
         return params;
     },
     __getUsers : async (params) => {

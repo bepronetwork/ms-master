@@ -22,7 +22,7 @@ AppSchema.prototype.schema =  {
     affiliateSetup      : { type: mongoose.Schema.Types.ObjectId, ref: 'AffiliateSetup'},
     integrations        : { type: mongoose.Schema.Types.ObjectId, ref: 'Integrations'},
     customization       : { type: mongoose.Schema.Types.ObjectId, ref: 'Customization'},
-    typography          : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Typography'}],
+    typography          : { type: mongoose.Schema.Types.ObjectId, ref: 'Typography'},
     countriesAvailable  : [{ type: Number}],
     licensesId          : [{ type: String}],
     metadataJSON        : {  type: JSON},

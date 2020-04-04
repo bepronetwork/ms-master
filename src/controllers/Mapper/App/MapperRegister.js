@@ -33,7 +33,7 @@ let outputs = {
             "wallet": !object.wallet ? [] : object.wallet.map(wallet_id => wallet_id),
             "deposits": !object.deposits ? [] : object.deposits.map(deposit_id => deposit_id),
             "withdraws": !object.withdraws ? [] : object.withdraws.map(withdraw_id => withdraw_id),
-            "typography": !object.typography ? [] : object.typography.map(typography_id => typography_id),
+            "typography": object.typography,
             "countriesAvailable": !object.countriesAvailable ? [] : object.countriesAvailable.map(country_available_id => country_available_id),
             "licensesId": !object.licensesId ? [] : object.licensesId.map(license_id => license_id),
             "isWithdrawing": object.isWithdrawing,

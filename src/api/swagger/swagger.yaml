@@ -2639,19 +2639,13 @@ definitions:
         description: |
           App id
       typography:
-        type : array
-        items : 
-          type: object
-          properties:
-            local :
-              type: array
-              items:
-                type: string
-            url :
-              type: string
-            format :
-              type: string
-  AppDeploy : 
+        type: object
+        properties:
+          name :
+            type: string
+          url :
+            type: string
+  AppDeploy :
     type: object
     required:
       - app
