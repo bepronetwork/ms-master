@@ -22,12 +22,11 @@ class Progress {
 module.exports = {
   async up(db, client) {
 
-    let apps      = await db.collection('apps').find().limit(1).toArray();
+    let apps      = await db.collection('apps').find().toArray();
     let currency  = await db.collection('currencies').find().toArray();
     let processIndex  = apps.length;
     let processObj    = new Progress(processIndex, "ADD_WHITELISTED_ADDRESSES");
     for(let app of apps) {
-      console.log(app._id);
       processObj.setProcess(processIndex);
       processIndex --;
       await db.collection('apps').updateOne(
