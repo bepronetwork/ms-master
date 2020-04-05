@@ -36,7 +36,7 @@ class AddOnRepository extends MongoComponent{
                     $set: {jackpot}
                 }
             )
-            .exec( async (err, item) => {
+            .exec((err, item) => {
                 if(err){reject(err)}
                 resolve(item);
             });
