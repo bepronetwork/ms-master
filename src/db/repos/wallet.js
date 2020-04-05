@@ -1,5 +1,6 @@
 import MongoComponent from './MongoComponent';
 import { WalletSchema } from '../schemas/wallet';
+import { PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../../config';
 
 /**
  * Accounts database interaction class.
@@ -45,6 +46,23 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
                 max_deposit: amount
             })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    addCurrencyDepositToVirtualCurrency(virtual_wallet_id, currency_id){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate( 
+                { _id: virtual_wallet_id }, 
+                { $push: { "price" : {
+                    currency        : currency_id,
+                    amount          : PRICE_VIRTUAL_CURRENCY_GLOBAL
+                } } },
+                { 'new': true }
+            )
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
