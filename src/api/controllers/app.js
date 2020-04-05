@@ -635,7 +635,6 @@ export {
     addJackpot,
     addAutoWithdraw,
     editAutoWithdraw,
-    editWithdrawAmount,
     editVerifiedKYC,
     editMaxWithdrawAmountCumulative,
     editMaxWithdrawAmountPerTransaction
