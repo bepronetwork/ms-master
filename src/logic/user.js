@@ -578,11 +578,12 @@ const progressActions = {
         try {
             const { virtualWallet, isPurchase, wallet, amount } = params;
             var message;
+
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
                     currencyAmount : amount,
-                    virtualCurrency : virtualWallet.currency
+                    virtualWallet : virtualWallet
                 }) : amount,
                 isPurchase : isPurchase,
             }
@@ -606,7 +607,7 @@ const progressActions = {
             if(isPurchase){
                 /* User Purchase - Virtual */
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
-                message = `Bough ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
+                message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
             }else{
                 /* User Deposit - Real */
                 await WalletsRepository.prototype.updatePlayBalance(wallet, params.amount);
@@ -615,18 +616,21 @@ const progressActions = {
 
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
+
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
                 isPrivate: true,
                 message ,
                 eventType: 'DEPOSIT'
-            })
+            });
+
             /* Send Email */
             let mail = new Mailer();
             let attributes = {
                 TEXT: mail.setTextNotification('DEPOSIT', params.amount, params.wallet.currency.ticker)
             };
+
             mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
             return params;
         } catch (err) {

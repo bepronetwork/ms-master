@@ -68,6 +68,7 @@ class App extends ModelComponent {
     async register() {
         try {
             let app = await this.process('Register');
+            /* If app is virtual - add virtual currency*/
             return MapperRegisterSingleton.output('Register', app);
         } catch (err) {
             throw err;

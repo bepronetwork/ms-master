@@ -45,6 +45,10 @@ const processActions = {
             playBalance : 0, // Test Balance
             currency : params.currency,
             bitgo_id : params.bitgo_id,
+            price    : params.price ? params.price.map( p => { return {
+                amount : p.amount,
+                currency : p.currency
+            }}) : null,
             bank_address : params.bank_address,
 			hashed_passphrase : params.hashed_passphrase,
 			link_url : link_url

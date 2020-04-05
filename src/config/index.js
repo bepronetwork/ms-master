@@ -57,7 +57,8 @@ export const PUSHER_APP_KEY = process.env.PUSHER_APP_KEY;
 
 export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
 
-export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
+/* Later to be change with route to change price */
+export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
 /* Variables */
 

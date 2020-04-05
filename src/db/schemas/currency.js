@@ -12,11 +12,7 @@ CurrencySchema.prototype.schema = {
     decimals            : { type: Number, required : true},
     image               : { type: String},
     /* For virtual currencies */
-    virtual             : { type: Boolean, default : false},
-    price               : [{ 
-        currency        : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
-        amount          : { type: Number}
-    }],
+    virtual             : { type: Boolean, default : false}
 }
 
 // Mongoose only allows once per type
