@@ -76,9 +76,12 @@ let outputs = {
             "name"                  : object.name,
             "description"           : object.description,
             "ownerAddress"          : object.ownerAddress,
-            "authorizedAddresses"   : object.authorizedAddresses,
+            "whitelistedAddresses"  : object.whitelistedAddresses ? {
+                currency  : object.whitelistedAddresses.currency,
+                addresses : object.whitelistedAddresses.addresses
+            } : {},
             "croupierAddress"       : object.croupierAddress,
-            "bearerToken"       : object.bearerToken,
+            "bearerToken"           : object.bearerToken,
             "isValid"               : object.isValid,
             "currencyTicker"        : object.currencyTicker,
             "decimals"              : object.decimals,
