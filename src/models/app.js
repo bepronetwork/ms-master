@@ -225,34 +225,6 @@ class App extends ModelComponent {
     }
 
     /**
-    * @param {String} 
-    * @return {bool || Exception}  
-    */
-
-    async editVerifiedEmail() {
-        try {
-            let app = await this.process('EditVerifiedEmail');
-            return app;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-        * @param {String} 
-        * @return {bool || Exception}  
-        */
-
-    async editWithdrawAmount() {
-        try {
-            let app = await this.process('EditWithdrawAmount');
-            return app;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
         * @param {String} 
         * @return {bool || Exception}  
         */

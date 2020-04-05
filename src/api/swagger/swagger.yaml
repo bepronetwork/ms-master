@@ -1821,68 +1821,6 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /app/autoWithdraw/editVerifiedEmail:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Edit If is Verified Email
-      operationId: editVerifiedEmail
-      description: Edit If is Verified Email
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppEditVerifiedEmailRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
-  /app/autoWithdraw/editWithdrawAmount:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Edit WithdrawAmount
-      operationId: editWithdrawAmount
-      description: Edit WithdrawAmount
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppEditWithdrawAmountRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
   /app/autoWithdraw/editVerifiedKYC:
     x-swagger-router-controller: app
     post:
@@ -3293,54 +3231,6 @@ definitions:
       isAutoWithdraw :
         type : boolean
         example: true
-
-  AppEditVerifiedEmailRequest : 
-    type: object
-    required:
-      - app
-      - admin
-      - verifiedEmail
-    properties:
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      admin :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          Admin ID
-      verifiedEmail :
-        type : boolean
-        example: true
-
-  AppEditWithdrawAmountRequest : 
-    type: object
-    required:
-      - app
-      - admin
-      - withdrawAmount
-    properties:
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      admin :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          Admin ID
-      withdrawAmount :
-        type : number
-        example: 3453456
-        description: |
-          withdrawAmount
 
   AppEditVerifiedKYCRequest : 
     type: object

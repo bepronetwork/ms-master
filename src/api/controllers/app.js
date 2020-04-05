@@ -151,32 +151,6 @@ async function editAutoWithdraw(req, res) {
     }
 }
 
-async function editVerifiedEmail(req, res) {
-    try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        await MiddlewareSingleton.log({ type: "admin", req });
-        let params = req.body;
-        let app = new App(params);
-        let data = await app.editVerifiedEmail();
-        MiddlewareSingleton.respond(res, data);
-    } catch (err) {
-        MiddlewareSingleton.respondError(res, err);
-    }
-}
-
-async function editWithdrawAmount(req, res) {
-    try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        await MiddlewareSingleton.log({ type: "admin", req });
-        let params = req.body;
-        let app = new App(params);
-        let data = await app.editWithdrawAmount();
-        MiddlewareSingleton.respond(res, data);
-    } catch (err) {
-        MiddlewareSingleton.respondError(res, err);
-    }
-}
-
 async function editVerifiedKYC(req, res) {
     try {
         SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -661,7 +635,6 @@ export {
     addJackpot,
     addAutoWithdraw,
     editAutoWithdraw,
-    editVerifiedEmail,
     editWithdrawAmount,
     editVerifiedKYC,
     editMaxWithdrawAmountCumulative,

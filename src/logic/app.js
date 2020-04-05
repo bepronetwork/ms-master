@@ -213,40 +213,6 @@ const processActions = {
             throw err
         }
     },
-    __editVerifiedEmail : async (params) => {
-        try {
-            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
-            if(!app){throwError('APP_NOT_EXISTENT')}
-            let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
-            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
-            let res = {
-                autoWithdraw,
-                verifiedEmail : params.verifiedEmail
-            }
-		    return res;
-        } catch (err) {
-            throw err
-        }
-    },
-    __editWithdrawAmount : async (params) => {
-        try {
-            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
-            if(!app){throwError('APP_NOT_EXISTENT')}
-            let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
-            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
-            let res = {
-                autoWithdraw,
-                withdrawAmount : params.withdrawAmount
-            }
-		    return res;
-        } catch (err) {
-            throw err
-        }
-    },
     __editVerifiedKYC : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -740,18 +706,6 @@ const progressActions = {
         let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
         return res;
     },
-    __editVerifiedEmail : async (params) => {
-        const { autoWithdraw, verifiedEmail } = params
-        await AutoWithdrawRepository.prototype.findByIdAndUpdateVerifiedEmail(autoWithdraw._id, verifiedEmail)
-        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
-        return res;
-    },
-    __editWithdrawAmount : async (params) => {
-        const { autoWithdraw, withdrawAmount } = params
-        await AutoWithdrawRepository.prototype.findByIdAndUpdateWithdrawAmount(autoWithdraw._id, withdrawAmount)
-        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
-        return res;
-    },
     __editVerifiedKYC : async (params) => {
         const { autoWithdraw, verifiedKYC } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdateVerifiedKYC(autoWithdraw._id, verifiedKYC)
@@ -1163,12 +1117,6 @@ class AppLogic extends LogicComponent{
                 case 'EditAutoWithdraw' : {
                     return await library.process.__editAutoWithdraw(params); break;
                 };
-                case 'EditVerifiedEmail' : {
-                    return await library.process.__editVerifiedEmail(params); break;
-                };
-                case 'EditWithdrawAmount' : {
-                    return await library.process.__editWithdrawAmount(params); break;
-                };
                 case 'EditVerifiedKYC' : {
                     return await library.process.__editVerifiedKYC(params); break;
                 };
@@ -1287,12 +1235,6 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditAutoWithdraw' : {
                     return await library.progress.__editAutoWithdraw(params); break;
-                };
-                case 'EditVerifiedEmail' : {
-                    return await library.progress.__editVerifiedEmail(params); break;
-                };
-                case 'EditWithdrawAmount' : {
-                    return await library.progress.__editWithdrawAmount(params); break;
                 };
                 case 'EditVerifiedKYC' : {
                     return await library.progress.__editVerifiedKYC(params); break;
