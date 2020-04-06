@@ -64,22 +64,6 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async editVerifiedEmail(params, bearerToken, payload) {
-        return request(global.server)
-        .post('/api/app/autoWithdraw/editVerifiedEmail')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => detectServerError(res))
-    },
-    async editWithdrawAmount(params, bearerToken, payload) {
-        return request(global.server)
-        .post('/api/app/autoWithdraw/editWithdrawAmount')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => detectServerError(res))
-    },
     async editVerifiedKYC(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/autoWithdraw/editVerifiedKYC')

@@ -1,7 +1,7 @@
 context('App', async () => {
     require('./register');
-    require('./addOn');
     require('./misc');
+    require('./addOn');
     require('./deploy');
     require('./integrations');
     require('./games');

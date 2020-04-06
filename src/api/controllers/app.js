@@ -127,7 +127,7 @@ async function addJackpot(req, res) {
 
 async function addAutoWithdraw(req, res) {
     try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
@@ -140,7 +140,7 @@ async function addAutoWithdraw(req, res) {
 
 async function editAutoWithdraw(req, res) {
     try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
@@ -153,7 +153,7 @@ async function editAutoWithdraw(req, res) {
 
 async function editVerifiedKYC(req, res) {
     try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
@@ -166,7 +166,7 @@ async function editVerifiedKYC(req, res) {
 
 async function editMaxWithdrawAmountCumulative(req, res) {
     try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
@@ -179,7 +179,7 @@ async function editMaxWithdrawAmountCumulative(req, res) {
 
 async function editMaxWithdrawAmountPerTransaction(req, res) {
     try {
-        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
