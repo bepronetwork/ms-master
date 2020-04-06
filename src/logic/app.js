@@ -49,7 +49,12 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
+<<<<<<< HEAD
         const { affiliateSetup, integrations, customization, addOn, virtual } = params;
+=======
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        
+>>>>>>> add first commit
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
