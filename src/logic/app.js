@@ -493,7 +493,7 @@ const progressActions = {
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
         var wallet;
-
+        console.log("Currency Virtaul", currency.virtual)
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
@@ -549,7 +549,7 @@ const progressActions = {
                 hashed_passphrase : Security.prototype.encryptData(passphrase)
             })).register())._doc;
 
-            let virtualWallet = app.wallet.find( w => w.c.virtual == true);
+            let virtualWallet = app.wallet.find( w => w.currency.virtual == true);
 
             if(virtualWallet){
                 /* Add Deposit Currency to Virtual Currency */

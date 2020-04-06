@@ -161,7 +161,7 @@ const runTests = async () => {
         console.log(err);
         console.log('Test fail');
         afterTests();
-        process.exit(1);
+        throw new Error("ERROR IN TEST")
     })
     .on('end', async () =>  {
         console.log("All tests done with Succeess")
