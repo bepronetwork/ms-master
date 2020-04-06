@@ -5,7 +5,6 @@ class SendInBlue {
 
     constructor({key}) {
         this.key = key;
-
         this.contactsAPI = new SibApiV3Sdk.ContactsApi();
         this.smtpAPI = new SibApiV3Sdk.SMTPApi();
 

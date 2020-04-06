@@ -355,7 +355,7 @@ const processActions = {
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
 
             /* Verify it is a virtual casino purchase */
-            if(app.virtual){
+            if(app.virtual == true){
                 isPurchase = true;
                 virtualWallet = app.wallet.find( w => w.currency.virtual == true);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                

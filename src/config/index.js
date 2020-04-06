@@ -51,6 +51,8 @@ export const QUOTA_GUARD_URL = process.env.QUOTA_GUARD_URL;
 
 export const SENDINBLUE_EMAIL_TO = process.env.SENDINBLUE_EMAIL_TO;
 
+export const SENDINBLUE_API_KEY = process.env.SENDINBLUE_API_KEY;
+
 export const PUSHER_APP_ID = process.env.PUSHER_APP_ID;
 
 export const PUSHER_APP_KEY = process.env.PUSHER_APP_KEY;
