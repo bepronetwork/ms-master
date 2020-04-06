@@ -148,28 +148,31 @@ const processActions = {
 		return res;
     },
     __addJackpot : async (params) => {
+        try {
+            let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
-        let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
-        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
 
-        if(!app){throwError('APP_NOT_EXISTENT')}
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
 
-        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+            let limits = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency      : c._id,
+                    tableLimit    : 0,
+                    maxBet        : 0
+                }
+            }));
 
-        let limits = await Promise.all(arrayCurrency.map( async c => {
-            return {
-                currency      : c._id,
-                tableLimit    : 0,
-                maxBet        : 0
+            let res = {
+                limits,
+                app,
+                gameEcosystem
             }
-        }));
-
-        let res = {
-            limits,
-            app,
-            gameEcosystem
+            return res;
+        } catch(err) {
+            throw err;
         }
-		return res;
     },
     __getLastBets : async (params) => {
         let res = await AppRepository.prototype.getLastBets({
