@@ -114,7 +114,7 @@ async function addGame (req, res) {
 // JSON WebToken Security Functions
 async function addJackpot (req, res) {
     try{
-        SecuritySingleton.verify({type : 'admin', req});
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
