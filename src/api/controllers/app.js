@@ -112,10 +112,10 @@ async function addGame(req, res) {
 
 
 // JSON WebToken Security Functions
-async function addJackpot(req, res) {
-    try {
-        SecuritySingleton.verify({ type: 'admin', req });
-        await MiddlewareSingleton.log({ type: "admin", req });
+async function addJackpot (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
+        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
         let app = new App(params);
         let data = await app.addJackpot();
@@ -217,10 +217,23 @@ async function getGame(req, res) {
     }
 }
 
-async function createBet(req, res) {
-    try {
-        await SecuritySingleton.verify({ type: 'user', req });
-        await MiddlewareSingleton.log({ type: "user", req });
+async function editEdgeJackpot (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        await MiddlewareSingleton.log({type: "admin", req});
+	    let params = req.body;
+		let jackpot = new Jackpot(params);
+		let data = await jackpot.editEdgeJackpot();
+        MiddlewareSingleton.respond(res, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function createBet (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 
         // check how much is needed for the jackpot
@@ -637,5 +650,6 @@ export {
     editAutoWithdraw,
     editVerifiedKYC,
     editMaxWithdrawAmountCumulative,
-    editMaxWithdrawAmountPerTransaction
+    editMaxWithdrawAmountPerTransaction,
+    editEdgeJackpot
 };

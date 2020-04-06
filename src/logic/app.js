@@ -49,7 +49,7 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography } = params;
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -70,7 +70,8 @@ const processActions = {
 			listAdmins          : [admin._id],
 			licensesId          : [], // TO DO
 			countriesAvailable  : [], // TO DO
-			isVerified          : false
+            isVerified          : false,
+            typography
 		}
 		return normalized;
     },
@@ -147,28 +148,31 @@ const processActions = {
 		return res;
     },
     __addJackpot : async (params) => {
+        try {
+            let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
-        let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
-        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
 
-        if(!app){throwError('APP_NOT_EXISTENT')}
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
 
-        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+            let limits = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency      : c._id,
+                    tableLimit    : 0,
+                    maxBet        : 0
+                }
+            }));
 
-        let limits = await Promise.all(arrayCurrency.map( async c => {
-            return {
-                currency      : c._id,
-                tableLimit    : 0,
-                maxBet        : 0
+            let res = {
+                limits,
+                app,
+                gameEcosystem
             }
-        }));
-
-        let res = {
-            limits,
-            app,
-            gameEcosystem
+            return res;
+        } catch(err) {
+            throw err;
         }
-		return res;
     },
     __addAutoWithdraw : async (params) => {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -509,10 +513,14 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
+        let typography = await TypographyRepository.prototype.findById(app.typography._id);
+
         if (!app) { throwError('APP_NOT_EXISTENT') };
+
         return {
             ...params,
-            app
+            app,
+            oldTypography: typography
         };
     },
     __getUsers : async (params) => {
@@ -1004,27 +1012,10 @@ const progressActions = {
         return params;
     },
     __editTypography: async (params) => {
-        let { app, typography } = params;
-        //This Function Clening the typography from collection typographies and from the App document (typography field)
-        await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
-
-        let list = [];
-        for (let correspondentTypographyType of typography) {
-            let rTypography = await TypographyRepository.prototype.setTypography({
-                local: correspondentTypographyType.local,
-                url: correspondentTypographyType.url,
-                format: correspondentTypographyType.format,
-            });
-            list.push(rTypography);
-        }
-
-        await AppRepository.prototype.addTypography(app._id, list);
-
-        // }));
-
+        let { app, typography, oldTypography } = params;
+        await TypographyRepository.prototype.findByIdAndUpdate(oldTypography._id, typography);
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
-        // Save info on Typography Part
         return params;
     },
     __getUsers : async (params) => {

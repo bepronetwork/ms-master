@@ -1,7 +1,7 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AppRepository, AddOnRepository, JackpotRepository, WalletsRepository, UsersRepository, GamesRepository, BetRepository } from '../db/repos';
+import { AppRepository, AddOnRepository, JackpotRepository, WalletsRepository, UsersRepository, GamesRepository, BetRepository, CurrencyRepository } from '../db/repos';
 import CasinoLogicSingleton from './utils/casino';
 import { CryptographySingleton } from '../controllers/Helpers';
 import MathSingleton from './utils/math';
@@ -9,6 +9,7 @@ import PusherSingleton from './third-parties/pusher';
 import Mailer from './services/mailer';
 import { BetResultSpace, Bet } from '../models';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
+import { throwError } from '../controllers/Errors/ErrorManager';
 
 let error = new ErrorManager();
 
@@ -49,9 +50,6 @@ const betJackpotActions = {
     }
 }
 
-
-
-
 /**
  * Login logic.
  *
@@ -62,72 +60,97 @@ const betJackpotActions = {
 
 
 const processActions = {
+
+	__editEdgeJackpot : async (params) => {
+		try {
+			let app = await AppRepository.prototype.findAppById(user.app_id);
+			if(!app){throwError('APP_NOT_EXISTENT')}
+			if(app.addOn.jackpot==undefined || app.addOn.jackpot==null) {throwError('JACKPOT_NOT_EXIST_IN_APP')}
+			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
+			if(!jackpot){throwError('JACKPOT_NOT_EXIST_IN_APP')}
+
+			return {
+				edge: params.edge,
+				jackpot_id: jackpot._id
+			}
+
+		}catch(err){
+			throw err;
+		}
+	},
 	__register : async (params) => {
 		return params;
 	},
 	__percentage : async (params) => {
-		let user 	= await UsersRepository.prototype.findUserById(params.user);
-		let app  	= await AppRepository.prototype.findAppById(user.app_id);
-		if(app.addOn.jackpot==undefined){
-			return {percentage: 0};
-		}
-		let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
-		if(!jackpot) {
-			return {percentage: 0};
-		}
+		try {
+			let user 	= await UsersRepository.prototype.findUserById(params.user);
+			let app  	= await AppRepository.prototype.findAppById(user.app_id);
+			if(app.addOn.jackpot==undefined){
+				return {percentage: 0};
+			}
+			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
+			if(!jackpot) {
+				return {percentage: 0};
+			}
 
-		let result = params.result.map(r => {
+			let result = params.result.map(r => {
+				return {
+					value: (parseFloat(r.value) * parseFloat(jackpot.edge) * 0.01)
+				};
+			});
+
+			let percentage = result.reduce( (acc, result) => {
+				return acc + parseFloat(result.value);
+			}, 0);
+
+			let toTestResult = params.result.map(r => {
+				return {
+					value: (parseFloat(r.value))
+				};
+			});
+			let amountTest = toTestResult.reduce( (acc, result) => {
+				return acc + parseFloat(result.value);
+			}, 0);
+			console.log("To bet Amount: ",  amountTest);
+
 			return {
-				value: (parseFloat(r.value) * parseFloat(jackpot.edge) * 0.01)
+				percentage
 			};
-		});
-
-		let percentage = result.reduce( (acc, result) => {
-			return acc + parseFloat(result.value);
-		}, 0);
-
-		let toTestResult = params.result.map(r => {
-			return {
-				value: (parseFloat(r.value))
-			};
-		});
-		let amountTest = toTestResult.reduce( (acc, result) => {
-			return acc + parseFloat(result.value);
-		}, 0);
-		console.log("To bet Amount: ",  amountTest);
-
-		return {
-			percentage
-		};
+		}catch(err){
+			throw err;
+		}
 	},
 	__normalizeSpaceResult : async (params) => {
+		try {
+			let user 	= await UsersRepository.prototype.findUserById(params.user);
+			let app  	= await AppRepository.prototype.findAppById(user.app_id);
+			if(app.addOn.jackpot==undefined){
+				return {res: params};
+			}
+			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
+			if(!jackpot) {
+				return {res: params};
+			}
 
-		let user 	= await UsersRepository.prototype.findUserById(params.user);
-		let app  	= await AppRepository.prototype.findAppById(user.app_id);
-		if(app.addOn.jackpot==undefined){
-			return {res: params};
-		}
-		let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
-		if(!jackpot) {
-			return {res: params};
-		}
+			let result = params.result.map(r => {
+				return {
+					place: r.place,
+					value: (parseFloat(r.value) * (100 - parseFloat(jackpot.edge)) * 0.01)
+				};
+			});
 
-		let result = params.result.map(r => {
+			params.result = result;
+
 			return {
-				place: r.place,
-				value: (parseFloat(r.value) * (100 - parseFloat(jackpot.edge)) * 0.01)
+				res: params
 			};
-		});
-
-		params.result = result;
-
-		return {
-			res: params
-		};
+		}catch(err){
+			throw err;
+		}
 	},
 	__bet : async (params) => {
 		try{
-            const { currency } = params;
+            let { currency } = params;
 
 			let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -186,6 +209,8 @@ const processActions = {
 				pot = parseFloat(limit.pot) + parseFloat(lossAmount);
 			}
 
+			currency = await CurrencyRepository.prototype.findById(currency);
+
             let normalized = {
 				winAmount           : user_delta,
 				nonce               : params.nonce,
@@ -195,6 +220,7 @@ const processActions = {
 				betAmount 			: lossAmount,
 				game    			: game._id,
 				result 				: resultBetted,
+				currency 			: currency._id,
 				user_id 			: user._id,
 				outcomeResultSpace,
 				serverSeed,
@@ -202,7 +228,6 @@ const processActions = {
 				clientSeed,
 				isWon,
 				jackpot,
-				currency,
 				user_delta,
 				lossAmount,
 				userWallet,
@@ -226,6 +251,14 @@ const processActions = {
 
 
 const progressActions = {
+	__editEdgeJackpot : async (params) => {
+		try {
+			let res = await JackpotRepository.prototype.editEdgeJackpot(params.jackpot_id, params.edge);
+			return res;
+		}catch(err){
+			throw err;
+		}
+	},
 	__register : async (params) => {
 		try{
 			let jackpot = await self.save(params);
@@ -278,6 +311,14 @@ const progressActions = {
 			await JackpotRepository.prototype.addBet(jackpot._id, bet._id);
 
 			if(isWon) {
+				/* Save result win jackpot */
+				await JackpotRepository.prototype.addWinResult(jackpot._id, {
+					user: user_id,
+					winAmount: pot,
+					bet: bet._id,
+					currency
+				});
+
 				/* Send Notification */
 				PusherSingleton.trigger({
 					channel_name: user_id,

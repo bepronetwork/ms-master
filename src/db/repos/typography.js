@@ -39,14 +39,14 @@ class TypographyRepository extends MongoComponent{
         });
     }
 
+
     findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
             TypographyRepository.prototype.schema.model.findByIdAndUpdate(
-                _id, 
-                { $set: { 
-                    "local"          : newStructure.local,
-                    "url"            : newStructure.url,
-                    "format"         : newStructure.format
+                _id,
+                { $set: {
+                    "name" : newStructure.name,
+                    "url"  : newStructure.url
                 } },
                 { 'new': true })
                 .exec( (err, item) => {
@@ -56,6 +56,24 @@ class TypographyRepository extends MongoComponent{
             )
         });
     }
+
+    // findByIdAndUpdate(_id, newStructure){
+    //     return new Promise( (resolve,reject) => {
+    //         TypographyRepository.prototype.schema.model.findByIdAndUpdate(
+    //             _id, 
+    //             { $set: { 
+    //                 "local"          : newStructure.local,
+    //                 "url"            : newStructure.url,
+    //                 "format"         : newStructure.format
+    //             } },
+    //             { 'new': true })
+    //             .exec( (err, item) => {
+    //                 if(err){reject(err)}
+    //                 resolve(item);
+    //             }
+    //         )
+    //     });
+    // }
 
     setTypography(newStructure) {
         return new Promise(async (resolve, reject) => {

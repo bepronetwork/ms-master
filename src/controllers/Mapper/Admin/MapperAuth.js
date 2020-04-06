@@ -69,7 +69,7 @@ let outputs = {
                 }) : object.app.wallet,
                 "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => { return ({ _id: deposit_id }) }) : object.app.deposits,
                 "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw_id => { return ({ _id: withdraw_id }) }) : object.app.withdraws,
-                "typography": object.app.typography ? object.app.typography.map(typography_id => { return ({ _id: typography_id }) }) : object.app.typography,
+                "typography": object.app.typography ? { name: object.app.typography.name, url: object.app.typography.url} : object.app.typography,
                 "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(country_available => country_available) : object.app.countriesAvailable,
                 "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
                 "isWithdrawing": object.app.isWithdrawing,

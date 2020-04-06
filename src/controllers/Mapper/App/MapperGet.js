@@ -162,14 +162,11 @@ let outputs = {
                     "_id": withdraw_id
                 })
             }) : object.withdraws,
-            "typography": object.typography ? object.typography.map(typography => {
-                return ({
-                    "_id": typography._id,
-                    "local": !typography.local ? [] : typography.local.map(local_name => local_name),
-                    "url": typography.url,
-                    "format": typography.format,
-                })
-            }) : object.typography,
+            "typography": object.typography ? {
+                "_id"   : object.typography._id,
+                "name"  : object.typography.name,
+                "url"   : object.typography.url
+            } : object.typography,
             "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
             "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
             "isWithdrawing": object.isWithdrawing,
@@ -269,6 +266,9 @@ let outputs = {
                             "contactlist_Id": template.contactlist_Id
                         })
                     }),
+                },
+                "pusher": !object.integrations.pusher ? {} : {
+                    "key": object.integrations.pusher.key
                 },
             },
             "description": object.description,
