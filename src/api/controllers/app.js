@@ -151,44 +151,6 @@ async function editAutoWithdraw(req, res) {
     }
 }
 
-async function editVerifiedKYC(req, res) {
-    try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        await MiddlewareSingleton.log({ type: "admin", req });
-        let params = req.body;
-        let app = new App(params);
-        let data = await app.editVerifiedKYC();
-        MiddlewareSingleton.respond(res, data);
-    } catch (err) {
-        MiddlewareSingleton.respondError(res, err);
-    }
-}
-
-async function editMaxWithdrawAmountCumulative(req, res) {
-    try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        await MiddlewareSingleton.log({ type: "admin", req });
-        let params = req.body;
-        let app = new App(params);
-        let data = await app.editMaxWithdrawAmountCumulative();
-        MiddlewareSingleton.respond(res, data);
-    } catch (err) {
-        MiddlewareSingleton.respondError(res, err);
-    }
-}
-
-async function editMaxWithdrawAmountPerTransaction(req, res) {
-    try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        await MiddlewareSingleton.log({ type: "admin", req });
-        let params = req.body;
-        let app = new App(params);
-        let data = await app.editMaxWithdrawAmountPerTransaction();
-        MiddlewareSingleton.respond(res, data);
-    } catch (err) {
-        MiddlewareSingleton.respondError(res, err);
-    }
-}
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try {
@@ -648,8 +610,5 @@ export {
     addJackpot,
     addAutoWithdraw,
     editAutoWithdraw,
-    editVerifiedKYC,
-    editMaxWithdrawAmountCumulative,
-    editMaxWithdrawAmountPerTransaction,
     editEdgeJackpot
 };

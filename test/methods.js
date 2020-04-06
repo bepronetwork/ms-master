@@ -64,30 +64,6 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async editVerifiedKYC(params, bearerToken, payload) {
-        return request(global.server)
-        .post('/api/app/autoWithdraw/editVerifiedKYC')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => detectServerError(res))
-    },
-    async editMaxWithdrawAmountCumulative(params, bearerToken, payload) {
-        return request(global.server)
-        .post('/api/app/autoWithdraw/editMaxWithdrawAmountCumulative')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => detectServerError(res))
-    },
-    async editMaxWithdrawAmountPerTransaction(params, bearerToken, payload) {
-        return request(global.server)
-        .post('/api/app/autoWithdraw/editMaxWithdrawAmountPerTransaction')
-        .set("authorization", "Bearer " + bearerToken)
-        .set("payload", getPayloadString(payload))
-        .send(params)
-        .then(res => detectServerError(res))
-    },
     async editEdgeJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/jackpot/edge/edit')

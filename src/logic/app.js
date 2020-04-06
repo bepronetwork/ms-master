@@ -210,60 +210,8 @@ const processActions = {
             if(!autoWithdraw){throwError()}
             let res = {
                 autoWithdraw,
-                isAutoWithdraw : params.isAutoWithdraw
-            }
-		    return res;
-        } catch (err) {
-            throw err
-        }
-    },
-    __editVerifiedKYC : async (params) => {
-        try {
-            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
-            if(!app){throwError('APP_NOT_EXISTENT')}
-            let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
-            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
-            let res = {
-                autoWithdraw,
-                verifiedKYC : params.verifiedKYC
-            }
-		    return res;
-        } catch (err) {
-            throw err
-        }
-    },
-    __editMaxWithdrawAmountCumulative : async (params) => {
-        try {
-            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
-            if(!app){throwError('APP_NOT_EXISTENT')}
-            let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
-            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
-            let res = {
-                autoWithdraw,
                 currency : params.currency,
-                amount : params.amount,
-            }
-		    return res;
-        } catch (err) {
-            throw err
-        }
-    },
-    __editMaxWithdrawAmountPerTransaction : async (params) => {
-        try {
-            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
-            if(!app){throwError('APP_NOT_EXISTENT')}
-            let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
-            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
-            let res = {
-                autoWithdraw,
-                currency : params.currency,
-                amount : params.amount,
+                autoWithdrawParams : params.autoWithdrawParams
             }
 		    return res;
         } catch (err) {
@@ -709,26 +657,9 @@ const progressActions = {
 		return autoWithdrawResult;
     },
     __editAutoWithdraw : async (params) => {
-        const { autoWithdraw, isAutoWithdraw } = params
-        await AutoWithdrawRepository.prototype.findByIdAndUpdateIsAutoWithdraw(autoWithdraw._id, isAutoWithdraw)
-        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
-        return res;
-    },
-    __editVerifiedKYC : async (params) => {
-        const { autoWithdraw, verifiedKYC } = params
-        await AutoWithdrawRepository.prototype.findByIdAndUpdateVerifiedKYC(autoWithdraw._id, verifiedKYC)
-        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
-        return res;
-    },
-    __editMaxWithdrawAmountCumulative : async (params) => {
-        const { autoWithdraw, currency, amount } = params
-        await AutoWithdrawRepository.prototype.findByIdAndUpdateMaxWithdrawAmountCumulative(autoWithdraw._id, currency, amount)
-        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
-        return res;
-    },
-    __editMaxWithdrawAmountPerTransaction : async (params) => {
-        const { autoWithdraw, currency, amount } = params
-        await AutoWithdrawRepository.prototype.findByIdAndUpdateMaxWithdrawAmountPerTransaction(autoWithdraw._id, currency, amount)
+        const { autoWithdraw, currency, autoWithdrawParams } = params
+        console.log("autoWithdraw._id:: ",autoWithdraw._id)
+        await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
         let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
         return res;
     },
@@ -1108,15 +1039,6 @@ class AppLogic extends LogicComponent{
                 case 'EditAutoWithdraw' : {
                     return await library.process.__editAutoWithdraw(params); break;
                 };
-                case 'EditVerifiedKYC' : {
-                    return await library.process.__editVerifiedKYC(params); break;
-                };
-                case 'EditMaxWithdrawAmountCumulative' : {
-                    return await library.process.__editMaxWithdrawAmountCumulative(params); break;
-                };
-                case 'EditMaxWithdrawAmountPerTransaction' : {
-                    return await library.process.__editMaxWithdrawAmountPerTransaction(params); break;
-                };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
@@ -1226,15 +1148,6 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditAutoWithdraw' : {
                     return await library.progress.__editAutoWithdraw(params); break;
-                };
-                case 'EditVerifiedKYC' : {
-                    return await library.progress.__editVerifiedKYC(params); break;
-                };
-                case 'EditMaxWithdrawAmountCumulative' : {
-                    return await library.progress.__editMaxWithdrawAmountCumulative(params); break;
-                };
-                case 'EditMaxWithdrawAmountPerTransaction' : {
-                    return await library.progress.__editMaxWithdrawAmountPerTransaction(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;

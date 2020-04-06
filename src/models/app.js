@@ -25,7 +25,9 @@ import {
     MapperGetUsersSingleton,
     MapperRegisterSingleton,
     MapperSummarySingleton,
-    MapperUpdateWalletSingleton
+    MapperUpdateWalletSingleton,
+    MapperAddAutoWithdrawSingleton,
+    MapperEditAutoWithdrawSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -204,7 +206,7 @@ class App extends ModelComponent {
     async addAutoWithdraw() {
         try {
             let app = await this.process('AddAutoWithdraw');
-            return app._doc;
+            return MapperAddAutoWithdrawSingleton.output('AddAutoWithdraw', app._doc);
         } catch (err) {
             throw err;
         }
@@ -218,49 +220,7 @@ class App extends ModelComponent {
     async editAutoWithdraw() {
         try {
             let app = await this.process('EditAutoWithdraw');
-            return app;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-        * @param {String} 
-        * @return {bool || Exception}  
-        */
-
-    async editVerifiedKYC() {
-        try {
-            let app = await this.process('EditVerifiedKYC');
-            return app;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-        * @param {String} 
-        * @return {bool || Exception}  
-        */
-
-    async editMaxWithdrawAmountCumulative() {
-        try {
-            let app = await this.process('EditMaxWithdrawAmountCumulative');
-            return app;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-       * @param {String} 
-       * @return {bool || Exception}  
-       */
-
-    async editMaxWithdrawAmountPerTransaction() {
-        try {
-            let app = await this.process('EditMaxWithdrawAmountPerTransaction');
-            return app;
+            return MapperEditAutoWithdrawSingleton.output('EditAutoWithdraw', app);
         } catch (err) {
             throw err;
         }

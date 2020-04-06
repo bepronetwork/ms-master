@@ -1852,99 +1852,6 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /app/autoWithdraw/editVerifiedKYC:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Edit If is Verified KYC
-      operationId: editVerifiedKYC
-      description: Edit If is Verified KYC
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppEditVerifiedKYCRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    
-  /app/autoWithdraw/editMaxWithdrawAmountCumulative:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Edit Max Withdraw Amount Cumulative
-      operationId: editMaxWithdrawAmountCumulative
-      description: Edit Max Withdraw Amount Cumulative
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppEditMaxWithdrawAmountCumulativeRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    
-  /app/autoWithdraw/editMaxWithdrawAmountPerTransaction:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Edit Max Withdraw Amount Per Transaction
-      operationId: editMaxWithdrawAmountPerTransaction
-      description: Edit Max Withdraw Amount Per Transaction
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/AppEditMaxWithdrawAmountPerTransactionRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -3239,54 +3146,8 @@ definitions:
     required:
       - app
       - admin
-      - isAutoWithdraw
-    properties:
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      admin :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          Admin ID
-      isAutoWithdraw :
-        type : boolean
-        example: true
-
-  AppEditVerifiedKYCRequest : 
-    type: object
-    required:
-      - app
-      - admin
-      - verifiedKYC
-    properties:
-      app :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      admin :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          Admin ID
-      verifiedKYC :
-        type : boolean
-        example: true
-
-  AppEditMaxWithdrawAmountCumulativeRequest : 
-    type: object
-    required:
-      - app
-      - admin
       - currency
-      - amount
+      - autoWithdrawParams
     properties:
       app :
         type : string
@@ -3301,34 +3162,24 @@ definitions:
         description: |
           Admin ID
       currency :
-        type: string
-      amount :
-        type: number
-
-  AppEditMaxWithdrawAmountPerTransactionRequest : 
-    type: object
-    required:
-      - app
-      - admin
-      - currency
-      - amount
-    properties:
-      app :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          App ID
-      admin :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          Admin ID
-      currency :
-        type: string
-      amount :
-        type: number
+          currency ID
+      autoWithdrawParams :
+        type: object
+        properties:
+          isAutoWithdraw :
+            type : boolean
+            example: true
+          verifiedKYC :
+            type : boolean
+            example: true
+          maxWithdrawAmountCumulative :
+            type: number
+          maxWithdrawAmountPerTransaction :
+            type: number
 
   AppServicesRequest : 
     type: object

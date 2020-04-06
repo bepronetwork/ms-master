@@ -38,60 +38,18 @@ class AutoWithdrawRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdateIsAutoWithdraw(_id, isAutoWithdraw){ 
+    findByIdAndUpdate(_id, currency, newStructure){ 
         return new Promise( (resolve, reject) => {
             AutoWithdrawRepository.prototype.schema.model.findByIdAndUpdate(
                 _id,
                 { $set: {
-                    "isAutoWithdraw"  : isAutoWithdraw
+                    "isAutoWithdraw"  : newStructure.isAutoWithdraw,
+                    "verifiedKYC" : newStructure.verifiedKYC,
                 }} 
                 )
-            .exec( (err, item) => {
-                if(err) { reject(err)}
-                resolve(item);
-            });
-        });
-    }
-
-    findByIdAndUpdateWithdrawAmount(_id, withdrawAmount){ 
-        return new Promise( (resolve, reject) => {
-            AutoWithdrawRepository.prototype.schema.model.findByIdAndUpdate(
-                _id,
-                { $set: {
-                    "withdrawAmount"  : parseFloat(withdrawAmount)
-                }} 
-                )
-            .exec( (err, item) => {
-                if(err) { reject(err)}
-                resolve(item);
-            });
-        });
-    }
-
-    findByIdAndUpdateVerifiedEmail(_id, verifiedEmail){ 
-        return new Promise( (resolve, reject) => {
-            AutoWithdrawRepository.prototype.schema.model.findByIdAndUpdate(
-                _id,
-                { $set: {
-                    "verifiedEmail"  : verifiedEmail
-                }} 
-                )
-            .exec( (err, item) => {
-                if(err) { reject(err)}
-                resolve(item);
-            });
-        });
-    }
-
-    findByIdAndUpdateVerifiedKYC(_id, verifiedKYC){ 
-        return new Promise( (resolve, reject) => {
-            AutoWithdrawRepository.prototype.schema.model.findByIdAndUpdate(
-                _id,
-                { $set: {
-                    "verifiedKYC"  : verifiedKYC
-                }} 
-                )
-            .exec( (err, item) => {
+            .exec( async (err, item) => {
+                await this.findByIdAndUpdateMaxWithdrawAmountCumulative(_id, currency, newStructure.maxWithdrawAmountCumulative)
+                await this.findByIdAndUpdateMaxWithdrawAmountPerTransaction(_id, currency, newStructure.maxWithdrawAmountPerTransaction)
                 if(err) { reject(err)}
                 resolve(item);
             });
