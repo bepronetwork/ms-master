@@ -683,6 +683,16 @@ class ErrorManager {
         }
     }
 
+    autoWithdraw = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
 
     addOn = function (object, type){
         try{

@@ -146,6 +146,7 @@ const processActions = {
                 throwError('TOKEN_INVALID');
             }
             newBearerToken = MiddlewareSingleton.sign(admin._id);
+            params.permission.super_admin = false;
         }
         let password = new Security(params.password).hash();
 
