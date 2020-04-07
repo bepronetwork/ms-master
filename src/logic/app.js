@@ -49,7 +49,8 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn, virtual, typography } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 

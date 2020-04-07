@@ -2801,6 +2801,7 @@ definitions:
       - name
       - description
       - marketType
+      - virtual
       - metadataJSON
       - admin_id
     properties:

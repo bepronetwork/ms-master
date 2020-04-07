@@ -577,7 +577,6 @@ const progressActions = {
         try {
             const { virtualWallet, isPurchase, wallet, amount } = params;
             var message;
-
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
