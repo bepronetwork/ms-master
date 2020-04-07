@@ -1,8 +1,8 @@
 import chai from 'chai';
 const expect = chai.expect;
 
-export async function digestBetResult({newBalance, res, previousBalance, percentageJackpot=1}){
-    let { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta, jackpot} = res.data.message;
+export async function digestBetResult({newBalance, res, previousBalance}){
+    let { winAmount, isWon, user_delta, jackpot} = res.data.message;
     console.log(winAmount, isWon, user_delta, newBalance, previousBalance)
     if(isWon){
         // Confirm delta is positive

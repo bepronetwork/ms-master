@@ -2,7 +2,7 @@ import {
     casino
 } from "./interfaces";
 import contract from "./models/contract";
-import { fromBigNumberToInteger, fromDecimals, fromExponential } from "../services/services";
+import { fromBigNumberToInteger } from "../services/services";
 import ERC20TokenContract from "./ERC20Contract";
 
 import Numbers from "../services/numbers";

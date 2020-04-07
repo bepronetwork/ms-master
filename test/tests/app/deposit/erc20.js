@@ -3,8 +3,7 @@ import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getAppAuth, updateAppWallet } from '../../../methods';
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
-import { shouldUpdateWalletWithVerifiedTransactionERC20, shouldntUpdateWalletWithPendingTransaction } from '../../output/AppTestMethod';
-import models from '../../../models';
+import { shouldntUpdateWalletWithPendingTransaction } from '../../output/AppTestMethod';
 import Numbers from '../../../logic/services/numbers';
 
 const expect = chai.expect;

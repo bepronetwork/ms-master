@@ -1,11 +1,7 @@
-
-
 const _ = require('lodash');
-import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import { WalletsRepository, UsersRepository, AppRepository, CurrencyRepository } from '../db/repos';
-import DepositsRepository from '../db/repos/deposit';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { setLinkUrl } from '../helpers/linkUrl';
 let error = new ErrorManager();

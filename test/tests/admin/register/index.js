@@ -9,7 +9,6 @@ import {
 import chai from 'chai';
 import Security from '../../../../src/controllers/Security/Security';
 import { detectValidationErrors, mochaAsync } from '../../../utils';
-import { SendInBlue } from '../../../../src/logic/third-parties';
 import { mail } from "../../../../src/mocks";
 
 import {
@@ -24,7 +23,6 @@ import {
     shouldntLoginTheAdmin
 } from '../../output/AdminTestMethod'
 import { SendinBlueSingleton } from '../../../../src/logic/third-parties/sendInBlue';
-import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
 
 const expect = chai.expect;
 

@@ -1,5 +1,3 @@
-import Numbers from "../logic/services/numbers";
-
 class math{
     constructor(){}
 

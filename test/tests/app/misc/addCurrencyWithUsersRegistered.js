@@ -2,7 +2,6 @@ import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getAppAuth, addCurrencyWalletToApp, getEcosystemData,  getAppUsers} from '../../../methods';
 import { get_app } from '../../../models/apps';
-import models from '../../../models';
 const expect = chai.expect;
 
 context('Add Currency Wallet', async () => {

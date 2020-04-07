@@ -1,10 +1,9 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
-import { getAppAuth, webhookConfirmDepositFromBitgo, setAppMaxDeposit } from '../../../methods';
+import { getAppAuth, webhookConfirmDepositFromBitgo } from '../../../methods';
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
 import { shouldntUpdateWalletWithAlreadyPresentTransaction } from '../../output/AppTestMethod';
-import Numbers from '../../../logic/services/numbers';
 import { bitgoDepositExample } from './examples/bitgoDepositExample';
 import { DepositRepository } from '../../../../src/db/repos';
 import { provideFunds } from '../../../utils/env';

@@ -1,7 +1,6 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { editFooterCustomizationApp, getAppAuth } from '../../../methods';
-import { get_app } from '../../../models/apps';
 const expect = chai.expect;
 
 context('Edit Footer', async () => {

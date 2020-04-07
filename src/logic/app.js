@@ -6,12 +6,8 @@ import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, 
     AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
-import MiddlewareSingleton from '../api/helpers/middleware';
-import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
-import { Game, Jackpot, Deposit, Withdraw, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
-import CasinoContract from './eth/CasinoContract';
-import { globals } from '../Globals';
-import Numbers from './services/numbers';
+import { getServices } from './services/services';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -24,7 +20,6 @@ import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY } from '../config';
 import addOnRepository from '../db/repos/addOn';
-const jsonResult = require("./../config/games.config.json");
 let error = new ErrorManager();
 
 
@@ -658,7 +653,6 @@ const progressActions = {
     },
     __editAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
-        console.log("autoWithdraw._id:: ",autoWithdraw._id)
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
         let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
         return res;
