@@ -15,9 +15,11 @@ class BitGoClass {
         const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(currency).toLowerCase()}`;
         /* All test wallets start with t${currency_name} --- t behind the currency ex : tbtc */
         var { wallet, userKeychain, backupKeychain, bitgoKeychain } = await this.bitgo.coin(currencyTicker).wallets().generateWallet({label, passphrase, enterprise : BITGO_ENTERPRISE_ID});
+        console.log("currencyTicker 2", currencyTicker)
 
         // Wait for wallet tx init - force delay
         wallet = await this.getWallet({ticker : currency, id : wallet.id()});
+
         let receiveAddress = (wallet._wallet.receiveAddress && wallet._wallet.receiveAddress.address) ? wallet._wallet.receiveAddress.address : wallet._wallet.coinSpecific.baseAddress;
 
         return { 
