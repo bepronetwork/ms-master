@@ -30,6 +30,7 @@ import { LoadingGifSchema } from "./customization/loadingGif";
 import {AddOnSchema } from './addOn';
 import { JackpotSchema } from './addOn/jackpot';
 import { PermissionSchema } from "./permission";
+import { AutoWithdrawSchema } from "./addOn/autoWithdraw";
 
 export {
     CurrencySchema,
@@ -63,5 +64,6 @@ export {
     LoadingGifSchema,
     AddOnSchema,
     JackpotSchema,
-    PermissionSchema
+    PermissionSchema,
+    AutoWithdrawSchema
 }

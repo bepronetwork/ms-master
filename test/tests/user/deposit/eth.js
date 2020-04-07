@@ -4,7 +4,6 @@ import { getAppAuth, webhookConfirmDepositFromBitgo, getDepositAddress, setAppMa
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
 import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
-import { getNonce } from '../../../lib';
 import { bitgoDepositExample, bitgoDepositExampleMaxDeposit } from '../../app/deposit/examples/bitgoDepositExample';
 import { DepositRepository } from '../../../../src/db/repos';
 import delay from 'delay';

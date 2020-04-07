@@ -15,15 +15,13 @@ import models from '../../../models';
 import Random from '../../../tools/Random';
 import {
     shouldntRegisterTheUser
-} from "../../output/UserTestMethod"
-import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
+} from "../../output/UserTestMethod";
 
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
 
 const BOILERPLATES = global.BOILERPLATES;
-const CONST = global.CONST;
 
 context('Login & Register', async () => {
     var app, user, userPostData, secret;

@@ -2,7 +2,6 @@ import { MailSenderRepository } from "../../db/repos";
 import { Security } from "../../controllers/Security";
 import { Logger } from "../../helpers/logger";
 import { SendInBlue } from "../third-parties/sendInBlue";
-import { throwError } from "../../controllers/Errors/ErrorManager";
 
 class Mailer {
     constructor() { }

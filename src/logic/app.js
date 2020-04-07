@@ -3,15 +3,11 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
-import MiddlewareSingleton from '../api/helpers/middleware';
-import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
-import { Game, Jackpot, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
-import CasinoContract from './eth/CasinoContract';
-import { globals } from '../Globals';
-import Numbers from './services/numbers';
+import { getServices } from './services/services';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -24,7 +20,6 @@ import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import addOnRepository from '../db/repos/addOn';
-const jsonResult = require("./../config/games.config.json");
 let error = new ErrorManager();
 
 
@@ -149,28 +144,75 @@ const processActions = {
 		return res;
     },
     __addJackpot : async (params) => {
+        try {
+            let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
 
-        let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+            let limits = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency      : c._id,
+                    tableLimit    : 0,
+                    maxBet        : 0
+                }
+            }));
+
+            let res = {
+                limits,
+                app,
+                gameEcosystem
+            }
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __addAutoWithdraw : async (params) => {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
-
         if(!app){throwError('APP_NOT_EXISTENT')}
 
         let arrayCurrency = await CurrencyRepository.prototype.getAll();
 
-        let limits = await Promise.all(arrayCurrency.map( async c => {
+        let maxWithdrawAmountCumulative = await Promise.all(arrayCurrency.map( async c => {
             return {
-                currency      : c._id,
-                tableLimit    : 0,
-                maxBet        : 0
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+        let maxWithdrawAmountPerTransaction = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
             }
         }));
 
         let res = {
-            limits,
-            app,
-            gameEcosystem
+            maxWithdrawAmountPerTransaction,
+            maxWithdrawAmountCumulative,
+            app
         }
 		return res;
+    },
+    __editAutoWithdraw : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                currency : params.currency,
+                autoWithdrawParams : params.autoWithdrawParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
     },
     __getLastBets : async (params) => {
         let res = await AppRepository.prototype.getLastBets({
@@ -623,6 +665,19 @@ const progressActions = {
         await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
 		return jackpotResult;
     },
+    __addAutoWithdraw : async (params) => {
+        const { app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction } = params;
+        let autoWithdraw = new AutoWithdraw({app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction});
+        const autoWithdrawResult = await autoWithdraw.register();
+        await addOnRepository.prototype.addAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
+		return autoWithdrawResult;
+    },
+    __editAutoWithdraw : async (params) => {
+        const { autoWithdraw, currency, autoWithdrawParams } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
+    },
     __getLastBets : async (params) => {
         let res = params;
 		return res;
@@ -994,6 +1049,12 @@ class AppLogic extends LogicComponent{
                 case 'AddJackpot' : {
                     return await library.process.__addJackpot(params); break;
                 };
+                case 'AddAutoWithdraw' : {
+                    return await library.process.__addAutoWithdraw(params); break;
+                };
+                case 'EditAutoWithdraw' : {
+                    return await library.process.__editAutoWithdraw(params); break;
+                };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
                 };
@@ -1097,6 +1158,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddJackpot' : {
 					return await library.progress.__addJackpot(params); break;
+                };
+                case 'AddAutoWithdraw' : {
+                    return await library.progress.__addAutoWithdraw(params); break;
+                };
+                case 'EditAutoWithdraw' : {
+                    return await library.progress.__editAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;

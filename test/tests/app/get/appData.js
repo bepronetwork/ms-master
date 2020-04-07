@@ -33,8 +33,6 @@ import {
 } from '../../output/AppTestMethod';
 import { mochaAsync } from '../../../utils';
 
-import { getUserInfo } from '../../../services';
-
 const expect = chai.expect;
 const ticker = 'ETH'
 

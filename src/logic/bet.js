@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { GamesRepository, UsersRepository, WalletsRepository, CurrencyRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
 import CasinoLogicSingleton from './utils/casino';
@@ -82,7 +82,7 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            const { currency, percentage } = params;
+            const { currency } = params;
 
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -124,11 +124,7 @@ const processActions = {
                 resultSpace : game.resultSpace,
                 houseEdge : game.edge,
                 game : game.metaName
-            });
-
-            /* Sum of the amount to be bet, minus the amount that goes into the pot */
-            totalBetAmount = totalBetAmount - parseFloat(percentage);
-
+            }); 
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
@@ -158,7 +154,7 @@ const processActions = {
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
                         currency : currency,
-                        lostAmount : totalBetAmount+parseFloat(percentage)
+                        lostAmount : totalBetAmount
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;

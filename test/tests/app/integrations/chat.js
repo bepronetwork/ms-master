@@ -1,9 +1,4 @@
-import {
-    getApp
-} from '../../../methods';
-
 import chai from 'chai';
-import models from '../../../models';
 
 import {
 

@@ -1,6 +1,3 @@
-
-
-
 const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
@@ -18,24 +15,16 @@ import {
     AffiliateLinkRepository,
     AffiliateRepository,
     SecurityRepository,
-    AddressRepository,
-    TokenRepository,
-    MailSenderRepository
+    TokenRepository
 } from '../db/repos';
-import Numbers from './services/numbers';
 import { Deposit, AffiliateLink, Wallet, Address } from '../models';
-import { globals } from '../Globals';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
 import { BitGoSingleton } from './third-parties';
-import { SENDINBLUE_EMAIL_TO } from '../config';
 import PusherSingleton from './third-parties/pusher';
-import { SendInBlue } from './third-parties/sendInBlue';
-import { Logger } from '../helpers/logger';
 import Mailer from './services/mailer';
-import { template } from "./third-parties/sendInBlue/functions";
 import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 

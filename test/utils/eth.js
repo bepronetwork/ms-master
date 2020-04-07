@@ -1,6 +1,5 @@
 import Numbers from "../logic/services/numbers";
 import CasinoContract from "../logic/eth/CasinoContract";
-import CasinoContractETH from '../logic/eth/CasinoContractETH';
 import account from "../logic/eth/models/account";
 import { globalsTest } from "../GlobalsTest";
 

@@ -1,6 +1,3 @@
-
-
-
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, GamesRepository, EventsRepository } from '../db/repos';

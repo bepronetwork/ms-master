@@ -1,13 +1,11 @@
 import {
     getUserAuth,
-    pingPusher,
-    getPushNotificationsChannel
+    pingPusher
 } from '../../../methods';
 
 import chai from 'chai';
 import Pusher from 'pusher-js';
 import { mochaAsync } from '../../../utils';
-import delay from 'delay';
 
 
 const expect = chai.expect;

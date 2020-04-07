@@ -25,7 +25,9 @@ import {
     MapperGetUsersSingleton,
     MapperRegisterSingleton,
     MapperSummarySingleton,
-    MapperUpdateWalletSingleton
+    MapperUpdateWalletSingleton,
+    MapperAddAutoWithdrawSingleton,
+    MapperEditAutoWithdrawSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -36,14 +38,15 @@ class App extends ModelComponent {
 
         super(
             {
-                name : 'App',
-                logic : new AppLogic({db : db}),
-                db : db,
-                self : null,
-                params : params,
-                children : [
-                    new AffiliateSetup({...params,
-                        structures : [
+                name: 'App',
+                logic: new AppLogic({ db: db }),
+                db: db,
+                self: null,
+                params: params,
+                children: [
+                    new AffiliateSetup({
+                        ...params,
+                        structures: [
                             {
                                 level: 1,
                                 percentageOnLoss: 0.02
@@ -186,20 +189,47 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-    async addJackpot(){
-        try{
+    async addJackpot() {
+        try {
             let app = await this.process('AddJackpot');
             return app;
-            // return MapperAddGamesSingleton.output('AddJackpot', app);
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async addAutoWithdraw() {
+        try {
+            let app = await this.process('AddAutoWithdraw');
+            return MapperAddAutoWithdrawSingleton.output('AddAutoWithdraw', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAutoWithdraw() {
+        try {
+            let app = await this.process('EditAutoWithdraw');
+            return MapperEditAutoWithdrawSingleton.output('EditAutoWithdraw', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
     async addCurrencyWallet() {
         try {
             let app = await this.process('AddCurrencyWallet');

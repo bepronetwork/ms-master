@@ -13,7 +13,6 @@ import {
 import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
-import { SendInBlue } from '../../../../src/logic/third-parties';
 
 import {
     shouldCreateTheApp,

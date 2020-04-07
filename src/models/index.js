@@ -33,8 +33,10 @@ import MailSender from './mailSender';
 import LoadingGif from "./loadingGif";
 import AddOn from "./addOn";
 import Jackpot from "./jackpot";
+import AutoWithdraw from "./autoWithdraw";
 
 export {
+    AutoWithdraw,
     AddOn,
     Jackpot,
     User,

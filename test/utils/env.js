@@ -1,4 +1,4 @@
-import { generateEthAccountWithTokensAndEthereum, fundEthAccountWithTokensAndEthereum } from "./eth";
+import { generateEthAccountWithTokensAndEthereum } from "./eth";
 import { WalletsRepository } from "../../src/db/repos";
 
 export async function createEthAccount({ethAmount, tokenAmount}){

@@ -1,5 +1,4 @@
 import {
-    getApp,
     editAppMailSenderIntegration,
     registerUser,
     loginUser,

@@ -1,4 +1,3 @@
-import { globals } from "../../../Globals";
 import { ETH_CONFIRMATION_NEEDED } from "../../../config";
 
 class contract{

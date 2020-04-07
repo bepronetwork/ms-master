@@ -13,6 +13,10 @@ AppSchema.prototype.schema =  {
     games               : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game'}],
     listAdmins          : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin', required : true}],
     services            : [{type: Number}],
+    whitelistedAddresses: [{
+        currency            : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+        addresses           : [{ type: String, required : true, default : 'N/A' }]
+    }],
     currencies          : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Currency'}],
     users               : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     external_users      : [{type: String}],

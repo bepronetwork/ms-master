@@ -1,11 +1,8 @@
-
-
-
 const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AdminsRepository, SecurityRepository, AppRepository, PermissionRepository, JackpotRepository } from '../db/repos';
+import { SecurityRepository, AppRepository, PermissionRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
@@ -145,6 +142,7 @@ const processActions = {
                 throwError('TOKEN_INVALID');
             }
             newBearerToken = MiddlewareSingleton.sign(admin._id);
+            params.permission.super_admin = false;
         }
         let password = new Security(params.password).hash();
 

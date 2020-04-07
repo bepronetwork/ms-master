@@ -38,6 +38,7 @@ import LoadingGifRepository from "./loadingGif";
 import AddOnRepository from "./addOn";
 import JackpotRepository from "./jackpot";
 import PermissionRepository from "./permission";
+import AutoWithdrawRepository from "./autoWithdraw";
 
 export{
     JackpotRepository,
@@ -79,5 +80,6 @@ export{
     TopIconRepository,
     MailSenderRepository,
     LoadingGifRepository,
-    PermissionRepository
+    PermissionRepository,
+    AutoWithdrawRepository
 }

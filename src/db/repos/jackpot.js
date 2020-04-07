@@ -1,8 +1,6 @@
 import MongoComponent from './MongoComponent';
 import { JackpotSchema } from '../schemas';
 
-const foreignKeys = ['resultSpace'];
-
 /**
  * Accounts database interaction class.
  *
