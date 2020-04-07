@@ -192,7 +192,6 @@ class App extends ModelComponent {
         try {
             let app = await this.process('AddJackpot');
             return app;
-            // return MapperAddGamesSingleton.output('AddJackpot', app);
         } catch (err) {
             throw err;
         }

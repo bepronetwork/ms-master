@@ -1,8 +1,6 @@
-
-
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AffiliateLinkRepository, AppRepository, AffiliateRepository, UsersRepository, AffiliateSetupRepository } from '../db/repos';
+import { AffiliateLinkRepository, AppRepository, UsersRepository, AffiliateSetupRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import _ from 'lodash';
 import { AffiliateLink, AffiliateStructure } from '../models';

@@ -7,12 +7,11 @@ import {
     setCustomAffiliateStructureToUser,
     updateUserWallet
 } from '../methods';
-import { genData, detectValidationErrors } from "../utils";
+import { genData } from "../utils";
 import models from "../models";
 import Random from "../tools/Random";
 import { generateEthAccount, userDepositToContract } from "../utils/eth";
 import { getNonce } from '../lib';
-import { WalletsRepository } from '../../src/db/repos';
 import { provideFunds } from '../utils/env';
 
 

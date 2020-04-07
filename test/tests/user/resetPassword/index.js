@@ -1,31 +1,19 @@
 import {
     registerUser,
-    loginUser,
-    setUser2FA,
-    loginUser2FA,
-    authUser,
     resetPassword,
     setPassword
 } from '../../../methods';
 
-import Security from '../../../../src/controllers/Security/Security';
-import { detectValidationErrors, mochaAsync } from '../../../utils';
+import { mochaAsync } from '../../../utils';
 
 import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
 import Random from '../../../tools/Random';
-import {
-    shouldntRegisterTheUser
-} from "../../output/UserTestMethod"
-import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
 
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
-
-const BOILERPLATES = global.BOILERPLATES;
-const CONST = global.CONST;
 
 context('Reset Password', async () => {
     var app, user, userPostData, secret;

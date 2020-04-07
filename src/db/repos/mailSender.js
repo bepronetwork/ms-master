@@ -2,7 +2,6 @@ import MongoComponent from './MongoComponent';
 import { MailSenderSchema } from '../schemas';
 import AppRepository from './app';
 import IntegrationsRepository from './integrations';
-import Security from '../../controllers/Security/Security';
 
 /**
  * Accounts database interaction class.

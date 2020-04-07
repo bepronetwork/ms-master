@@ -1,5 +1,4 @@
 import MathSingleton from "./math";
-import Numbers from "../services/numbers";
 import { throwError } from "../../controllers/Errors/ErrorManager";
 
 function findWithAttr(array, attr, value) {
