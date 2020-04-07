@@ -2,7 +2,7 @@ import chai from 'chai';
 const expect = chai.expect;
 
 export async function digestBetResult({newBalance, res, previousBalance}){
-    let { winAmount, isWon, user_delta, jackpot} = res.data.message;
+    const { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta} = res.data.message;
     console.log(winAmount, isWon, user_delta, newBalance, previousBalance)
     if(isWon){
         // Confirm delta is positive
@@ -10,14 +10,14 @@ export async function digestBetResult({newBalance, res, previousBalance}){
         // Confirm Win Amount is Positive
         expect(winAmount).to.be.greaterThan(0);
         // Confirm New User Balance is equal to previous plus delta
-        expect(newBalance).to.be.equal(previousBalance+user_delta+jackpot.user_delta);
+        expect(newBalance).to.be.equal(previousBalance+user_delta);
     }else{
         // Confirm delta is negative
         expect(user_delta).to.be.lessThan(0);
         // Confirm Win Amount is 0
         expect(winAmount).to.be.equal(0);
         // Confirm New User Balance is equal to previous plus delta
-        expect(newBalance).to.be.equal(previousBalance+user_delta+jackpot.user_delta);
+        expect(newBalance).to.be.equal(previousBalance+user_delta);
     }
     return true;
 }
