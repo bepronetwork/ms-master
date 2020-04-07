@@ -6,6 +6,7 @@ import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
 import { BitGoSingleton } from '../../logic/third-parties';
 import { getNormalizedTicker } from '../../logic/third-parties/bitgo/helpers';
+const perf = require('execution-time')();
 
 /**
  * Description of the function.
@@ -196,12 +197,10 @@ async function createBet (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
-        let params = req.body;
-
+        let params = req.body;   
         // place a bet on the game
         let bet = new Bet(params);
         let data = await bet.register();
-
         MiddlewareSingleton.respond(res, data );
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);

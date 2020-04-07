@@ -33,7 +33,8 @@ AppSchema.prototype.schema =  {
     isWithdrawing       : { type : Boolean, default : false, required : true },
     hosting_id          : { type : String },
     web_url             : { type : String },
-    addOn               : { type: mongoose.Schema.Types.ObjectId, ref: 'AddOn'}
+    addOn               : { type: mongoose.Schema.Types.ObjectId, ref: 'AddOn'},
+    virtual             : { type : Boolean, default : false, required : true },
 }
 
 

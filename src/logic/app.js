@@ -18,7 +18,7 @@ import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
-import { PUSHER_APP_KEY } from '../config';
+import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import addOnRepository from '../db/repos/addOn';
 let error = new ErrorManager();
 
@@ -44,7 +44,8 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn, typography } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -54,6 +55,7 @@ const processActions = {
             hasAppAlready       : admin.app ? true : false,
             services            : params.services, // Array
             admin_id		    : admin._id,
+            virtual             : virtual,
             name    			: params.name,
             affiliateSetup,       
             customization,
@@ -107,7 +109,6 @@ const processActions = {
 
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
-
         let currency = await CurrencyRepository.prototype.findById(currency_id);
 
         return  {
@@ -257,9 +258,8 @@ const processActions = {
 
         /* Verify if this transactionHashs was already added */
         let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
-
         let wasAlreadyAdded = deposit ? true : false;
-    
+
         return  {
             app                 : app,
             wallet              : wallet,
@@ -535,48 +535,70 @@ const progressActions = {
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
-        /* Create Wallet on Bitgo */
-        var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
-            label : `${app._id}-${currency.ticker}`,
-            passphrase,
-            currency : currency.ticker
-        })
-        
-        /* Record webhooks */
-        await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
+        var wallet;
+        console.log("Currency Virtaul", currency.virtual)
+        if(currency.virtual){
+            /* Save Wallet on DB */
+            wallet = (await (new Wallet({
+                currency : currency._id,
+                price : app.currencies.map( c => {
+                    return {
+                        currency : c._id,
+                        amount : PRICE_VIRTUAL_CURRENCY_GLOBAL
+                    }
+                })
+            })).register())._doc;
+        }else{
 
-        /* Create Policy for Day */
-        await BitGoSingleton.addPolicyToWallet({
-            ticker : currency.ticker,
-            bitGoWalletId : bitgo_wallet.id(),
-            timeWindow : 'day'
-        })
+            /* Create Wallet on Bitgo */
+            var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
+                label : `${app._id}-${currency.ticker}`,
+                passphrase,
+                currency : currency.ticker
+            })
+            
+            /* Record webhooks */
+            await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
-        /* Create Policy for Transaction */
-        await BitGoSingleton.addPolicyToWallet({
-            ticker : currency.ticker,
-            bitGoWalletId : bitgo_wallet.id(),
-            timeWindow : 'hour',
-        })
+            /* Create Policy for Day */
+            await BitGoSingleton.addPolicyToWallet({
+                ticker : currency.ticker,
+                bitGoWalletId : bitgo_wallet.id(),
+                timeWindow : 'day'
+            })
 
-        /* Create Policy for Hour */
-        await BitGoSingleton.addPolicyToWallet({
-            ticker : currency.ticker,
-            bitGoWalletId : bitgo_wallet.id(),
-            timeWindow : 'transaction',
-        })
+            /* Create Policy for Transaction */
+            await BitGoSingleton.addPolicyToWallet({
+                ticker : currency.ticker,
+                bitGoWalletId : bitgo_wallet.id(),
+                timeWindow : 'hour',
+            })
 
-        /* No Bitgo Wallet created */
-        if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+            /* Create Policy for Hour */
+            await BitGoSingleton.addPolicyToWallet({
+                ticker : currency.ticker,
+                bitGoWalletId : bitgo_wallet.id(),
+                timeWindow : 'transaction',
+            })
 
-        /* Hash Passphrase */
-        /* Save Wallet on DB */
-        let wallet = (await (new Wallet({
-            currency : currency._id,
-            bitgo_id : bitgo_wallet.id(),
-            bank_address : receiveAddress,
-            hashed_passphrase : Security.prototype.encryptData(passphrase)
-        })).register())._doc;
+            /* No Bitgo Wallet created */
+            if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+
+            /* Save Wallet on DB */
+            wallet = (await (new Wallet({
+                currency : currency._id,
+                bitgo_id : bitgo_wallet.id(),
+                bank_address : receiveAddress,
+                hashed_passphrase : Security.prototype.encryptData(passphrase)
+            })).register())._doc;
+
+            let virtualWallet = app.wallet.find( w => w.currency.virtual == true);
+
+            if(virtualWallet){
+                /* Add Deposit Currency to Virtual Currency */
+                await WalletsRepository.prototype.addCurrencyDepositToVirtualCurrency(virtualWallet._id, currency._id);
+            }
+        }
 
         /* Add Currency to Platform */
         await AppRepository.prototype.addCurrency(app._id, currency._id);
@@ -594,7 +616,6 @@ const progressActions = {
 
 
         /* Add Wallet to all Users */
-    
         await Promise.all(await app.users.map( async u => {
             let w = (await (new Wallet({
                 currency : currency._id
@@ -674,7 +695,8 @@ const progressActions = {
 		return res;
     },
     __updateWallet : async (params) => {
-        
+     
+
         /* Create Deposit Object */
         let deposit = new Deposit({
             app                     : params.app._id,

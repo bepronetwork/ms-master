@@ -16,7 +16,6 @@ let outputs = {
             "id": object._id,
             "username": object.username,
             "name": object.name,
-            "hash_password": object.hash_password,
             "security": {
                 "id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
@@ -63,8 +62,7 @@ let outputs = {
                             "address": wallet.currency.address
                         },
                         "bitgo_id": wallet.bitgo_id,
-                        "bank_address": wallet.bank_address,
-                        "hashed_passphrase": wallet.hashed_passphrase,
+                        "bank_address": wallet.bank_address
                     })
                 }) : object.app.wallet,
                 "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => { return ({ _id: deposit_id }) }) : object.app.deposits,

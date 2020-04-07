@@ -2863,6 +2863,7 @@ definitions:
       - name
       - description
       - marketType
+      - virtual
       - metadataJSON
       - admin_id
     properties:
@@ -2878,6 +2879,9 @@ definitions:
         example: "A betting App with the goals"
         description: |
           App Description
+      virtual : 
+        type : boolean
+        example : false
       marketType:
         type : integer
         format: int32

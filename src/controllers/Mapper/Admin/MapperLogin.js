@@ -21,7 +21,6 @@ let outputs = {
             "verifiedAccount": object.verifiedAccount,
             "id": object._id,
             "name": object.name,
-            "hash_password": object.hash_password,
             "security": {
                 "id"                    : object.security._id,
                 "2fa_set"               : object.security['2fa_set'],
@@ -30,8 +29,7 @@ let outputs = {
             },
             "email": object.email,
             "app": {
-                "id": object.app._id,
-                "bearerToken": object.app.bearerToken,
+                "id": object.app._id
             },
             "registered": object.registered,
             "permission": {

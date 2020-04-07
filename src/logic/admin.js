@@ -135,7 +135,6 @@ const processActions = {
             if(!payload) {
                 throwError('TOKEN_EXPIRED');
             }
-            console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
             if( Number((new Date()).getTime()) > Number(payload.time) ) {
                 throwError('TOKEN_EXPIRED');
             }

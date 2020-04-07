@@ -25,9 +25,7 @@ let outputs = {
                         "link_url": wallet.link_url,
                         "currency": wallet.currency,
                         "bitgo_id": wallet.bitgo_id,
-                        "bank_address": wallet.bank_address,
-                        "hashed_passphrase": wallet.hashed_passphrase,
-                        "__v": wallet.__v,
+                        "bank_address": wallet.bank_address
                     })
                 }) : object.wallet,
             })

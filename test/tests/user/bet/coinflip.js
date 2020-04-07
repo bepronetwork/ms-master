@@ -58,7 +58,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
 
         const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        console.log(`Old Balance User: ${global.test.user.id} - `, userPreBetCurrencyWallet.playBalance);
         let postData = {  
             game: game._id,
             user: user.id,
@@ -74,7 +73,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
-        console.log(`new Balance User: ${global.test.user.id} - `, userPosBetCurrencyWallet.playBalance);
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
         expect(await digestBetResult({newBalance : userPosBetCurrencyWallet.playBalance, res : res, previousBalance : userPreBetCurrencyWallet.playBalance}), true);

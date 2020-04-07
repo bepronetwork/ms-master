@@ -91,7 +91,6 @@ let outputs = {
                         "full_name": user.full_name,
                         "affiliate": user.affiliate,
                         "name": user.name,
-                        "hash_password": user.hash_password,
                         "register_timestamp": user.register_timestamp,
                         "nationality": user.nationality,
                         "age": user.age,
@@ -100,8 +99,7 @@ let outputs = {
                         "app_id": user.app_id,
                         "external_user": user.external_user,
                         "external_id": user.external_id,
-                        "affiliateLink": user.affiliateLink,
-                        "bearerToken": user.bearerToken,
+                        "affiliateLink": user.affiliateLink
                     })
                 }) : object.app.users,
                 "external_users": object.app.external_users ? object.app.external_users.map(external_user_id => external_user_id) : object.app.external_users,

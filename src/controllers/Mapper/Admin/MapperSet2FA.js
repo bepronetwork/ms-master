@@ -20,7 +20,6 @@ let outputs = {
             "security_id": object.security._id,
             "_id": object._id,
             "name": object.name,
-            "hash_password": object.hash_password,
             "security": {
                 "_id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
