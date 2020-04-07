@@ -42,8 +42,7 @@ let outputs = {
                             })
                         }),
                         "link_url": wallet.link_url,
-                        "currency": wallet.currency,
-                        "__v": wallet.__v,
+                        "currency": wallet.currency
                     })
                 }) : object.wallet,
                 "username": object.username,
@@ -61,8 +60,7 @@ let outputs = {
                                 })
                             }),
                             "link_url": wallet.link_url,
-                            "currency": wallet.currency,
-                            "__v": wallet.__v,
+                            "currency": wallet.currency
                         })
                     }) : object.wallet,
                 },

@@ -78,8 +78,7 @@ let outputs = {
                     "address": object.appWallet.currency.address
                 },
                 "bitgo_id": object.appWallet.bitgo_id,
-                "bank_address": object.appWallet.bank_address,
-                "hashed_passphrase": object.appWallet.hashed_passphrase,
+                "bank_address": object.appWallet.bank_address
             },
             "currency": object.currency,
             "tableLimit": object.tableLimit,

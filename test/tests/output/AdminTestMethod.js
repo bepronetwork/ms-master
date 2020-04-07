@@ -10,8 +10,6 @@ module.exports = {
         expect(data.message.username).to.be.an('string');
         expect(data.message.name).to.not.be.null;
         expect(data.message.name).to.be.an('string');
-        expect(data.message.hash_password).to.not.be.null;
-        expect(data.message.hash_password).to.be.an('string');
         expect(data.message.security).to.not.be.null;
         expect(data.message.security).to.be.an('string');
         expect(data.message.email).to.not.be.null;
@@ -89,8 +87,6 @@ module.exports = {
         expect(data.message._id).to.be.an('string');
         expect(data.message.name).to.not.be.null;
         expect(data.message.name).to.be.an('string');
-        expect(data.message.hash_password).to.not.be.null;
-        expect(data.message.hash_password).to.be.an('string');
         expect(data.message.security).to.not.be.null;
         expect(data.message.security).to.be.an('object');
         expect(data.message.security._id).to.not.be.null;

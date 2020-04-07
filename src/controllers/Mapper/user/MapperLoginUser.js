@@ -17,6 +17,7 @@ let outputs = {
             "email": object.email,
             "id": object._id,
             "name": object.name,
+            "bearerToken": object.bearerToken,
             "email_confirmed": object.email_confirmed,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
@@ -55,7 +56,6 @@ let outputs = {
                 })
             }) : object.affiliate.wallet,
             "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
-            "bearerToken": object.bearerToken,
             "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
@@ -110,6 +110,7 @@ let outputs = {
                 "_id": object.security._id,
                 "2fa_set": object.security['2fa_set'],
                 "email_verified": object.security.email_verified,
+                "bearerToken" : object.security.bearerToken
             },
         }
     },

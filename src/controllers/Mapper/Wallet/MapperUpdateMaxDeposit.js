@@ -26,9 +26,7 @@ let outputs = {
             "link_url": object.link_url,
             "currency": object.currency,
             "bitgo_id": object.bitgo_id,
-            "bank_address": object.bank_address,
-            "hashed_passphrase": object.hashed_passphrase,
-            "__v": object.__v
+            "bank_address": object.bank_address
         }
     },
 }

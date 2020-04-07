@@ -102,7 +102,6 @@ let outputs = {
                     "full_name": user.full_name,
                     "affiliate": user.affiliate,
                     "name": user.name,
-                    "hash_password": user.hash_password,
                     "register_timestamp": user.register_timestamp,
                     "nationality": user.nationality,
                     "age": user.age,
@@ -111,8 +110,7 @@ let outputs = {
                     "app_id": user.app_id,
                     "external_user": user.external_user,
                     "external_id": user.external_id,
-                    "affiliateLink": user.affiliateLink,
-                    "bearerToken": user.bearerToken,
+                    "affiliateLink": user.affiliateLink
                 })
             }) : object.users,
             "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
@@ -137,8 +135,7 @@ let outputs = {
                         "address": wallet.currency.address,
                     },
                     "bitgo_id": wallet.bitgo_id,
-                    "bank_address": wallet.bank_address,
-                    "hashed_passphrase": wallet.hashed_passphrase
+                    "bank_address": wallet.bank_address
                 })
             }) : object.wallet,
             "deposits": object.deposits ? object.deposits.map(deposit => {

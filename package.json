@@ -70,6 +70,7 @@
         "errors": "^0.3.0",
         "es6-promise": "^4.0.5",
         "event-lite": "^0.1.2",
+        "execution-time": "^1.4.1",
         "express": "^4.17.1",
         "express-ip": "^1.0.3",
         "express-jwt": "^5.3.1",

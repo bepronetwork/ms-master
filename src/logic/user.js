@@ -115,7 +115,6 @@ const processActions = {
 
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
-
         if (user) {
             normalized = {
                 app_id: user.app_id,

@@ -16,7 +16,6 @@ let outputs = {
             "_id": object._id,
             "username": object.username,
             "name": object.name,
-            "hash_password": object.hash_password,
             "security": object.security,
             "email": object.email,
             "registered": object.registered,

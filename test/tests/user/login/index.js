@@ -61,12 +61,13 @@ context('Login & Register', async () => {
     it('should set 2FA for the User', mochaAsync(async () => {
         let res_login = await loginUser(userPostData);
         user = res_login.data.message;
+
         secret = Security.prototype.generateSecret2FA({ name: 'BetProtocol', account_id: user.id });
         let token = Security.prototype.generateToken2FA(secret);
         var res = await setUser2FA({
             '2fa_secret': secret,
             '2fa_token': token,
-            user: user.id
+            'user': user.id
         }, user.bearerToken, { id: user.id });
         expect(res.data.status).to.equal(200);
     }));

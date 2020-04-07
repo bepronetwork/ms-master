@@ -15,6 +15,7 @@ let outputs = {
         return {
             "username": object.username,
             "email": object.email,
+            "bearerToken": object.security.bearerToken,
             "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
@@ -54,7 +55,6 @@ let outputs = {
                     },
                 })
             }) : object.affiliate.wallet,
-            "bearerToken": object.bearerToken,
             "withdraws": object.withdraws ? object.withdraws.map(withdraw => {
                 return ({
                     "_id": withdraw._id,

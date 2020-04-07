@@ -6,6 +6,7 @@ import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
 import { BitGoSingleton } from '../../logic/third-parties';
 import { getNormalizedTicker } from '../../logic/third-parties/bitgo/helpers';
+const perf = require('execution-time')();
 
 /**
  * Description of the function.
@@ -171,21 +172,33 @@ async function createBet (req, res) {
         await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
+        //at beginning of your code
+        perf.start();
 
         // check how much is needed for the jackpot
+
         let jackpot = new Jackpot(params);
         let percentage = await jackpot.percentage();
 
-        console.log("To jackpot: ", percentage);
-
+        //at end of your code
+        let results = perf.stop();
+        console.log("percentage", results.time);  // in milliseconds
         // place a bet on the game
+
+        perf.start();
         let bet = new Bet({...params, percentage});
         let data = await bet.register();
+        //at end of your code
+        results = perf.stop();
+        console.log("bet", results.time);  // in milliseconds
 
         // put it in the jackpot if percentage > 0
         let dataJackpot = {};
         if(percentage > 0) {
+            perf.start();
             dataJackpot = await jackpot.bet();
+            results = perf.stop();
+            console.log("jackpot bet", results.time);  // in milliseconds
         }
 
         MiddlewareSingleton.respond(res, {...data, jackpot: { ...dataJackpot}});

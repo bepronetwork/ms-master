@@ -83,8 +83,9 @@ const processActions = {
 	},
 	__percentage : async (params) => {
 		try {
-			let user 	= await UsersRepository.prototype.findUserById(params.user);
-			let app  	= await AppRepository.prototype.findAppById(user.app_id);
+			let user = await UsersRepository.prototype.findUserById(params.user);
+            let app = await AppRepository.prototype.findAppById(user.app_id);
+            
 			if(app.addOn.jackpot==undefined){
 				return {percentage: 0};
 			}
@@ -201,11 +202,9 @@ const processActions = {
             if(isWon){
                 /* User Won Bet */
 				user_delta = parseFloat(limit.pot+lossAmount);
-				console.log("Win Jackpot: ", user_delta);
             } else {
 				/* User Lost Bet */
 				user_delta = parseFloat(-lossAmount);
-				console.log("Loss Jackpot: ", user_delta);
 				pot = parseFloat(limit.pot) + parseFloat(lossAmount);
 			}
 

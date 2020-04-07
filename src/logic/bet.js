@@ -146,7 +146,6 @@ const processActions = {
             });
 
             if(isWon){
-                console.log("win Amount: ", winAmount)
                 /* User Won Bet */
                 const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
                 user_delta = parseFloat(delta);
@@ -154,7 +153,6 @@ const processActions = {
             }else{
                 /* User Lost Bet */
                 user_delta = parseFloat(-Math.abs(totalBetAmount));
-                console.log("Loss Amount: ", user_delta)
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
