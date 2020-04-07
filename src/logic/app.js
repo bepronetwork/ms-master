@@ -536,7 +536,7 @@ const progressActions = {
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
         var wallet;
-        console.log("Currency Virtaul", currency.virtual)
+        console.log("Currency Virtual", currency.virtual)
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
@@ -549,6 +549,7 @@ const progressActions = {
                 })
             })).register())._doc;
         }else{
+
 
             /* Create Wallet on Bitgo */
             var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
