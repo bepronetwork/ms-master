@@ -49,6 +49,18 @@ export const getCurrencyAmountToBitGo = ({ticker, amount}) => {
             // to wei
             return parseFloat(amount)*1000000000000000000;
         };
+        case 'usdc' : {
+            // 6 decimals
+            return parseFloat(amount)*1000000;
+        };
+        case 'dai' : {
+            // 18 decimals
+            return parseFloat(amount)*1000000000000000000;
+        };
+        case 'usdt' : {
+            // 6 decimals
+            return parseFloat(amount)*1000000;
+        };
         case 'btc' : {
             // to satoshi
             return parseFloat(amount)*100000000;
@@ -63,6 +75,18 @@ export const getCurrencyAmountFromBitGo = ({ticker, amount}) => {
         case 'eth' : {
             // to wei
             return parseFloat(amount)/1000000000000000000;
+        };
+        case 'usdc' : {
+            // 6 decimals
+            return parseFloat(amount)/1000000;
+        };
+        case 'dai' : {
+            // 18 decimals
+            return parseFloat(amount)/1000000000000000000;
+        };
+        case 'usdt' : {
+            // 6 decimals
+            return parseFloat(amount)/1000000;
         };
         case 'btc' : {
             // to satoshi
