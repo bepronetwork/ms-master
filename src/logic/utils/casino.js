@@ -1,5 +1,4 @@
 import MathSingleton from "./math";
-import Numbers from "../services/numbers";
 import { throwError } from "../../controllers/Errors/ErrorManager";
 
 function findWithAttr(array, attr, value) {
@@ -211,29 +210,6 @@ class CasinoLogic{
                     }  
                     break;
                 };
-                case 'jackpot_auto' : {
-                    var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.index));
-                    if(!el){
-                        // Lost
-                        isWon = false;
-                        winAmount = 0
-                    }else{
-                        isWon = true;
-                        let probability = userResultSpace.reduce( (acc, result) => {
-                            return acc+resultSpace[result.place].probability;
-                        }, 0);
-                        let odd = parseFloat(this.probabilityToOdd(probability));
-                        totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                            if(item.value <= 0){ throw throwError('BAD_BET')}
-                            return acc+item.value;
-                        }, 0))
-                        maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
-                        /* Default Logic */
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
-                    }  
-                    break;
-                };
                 default : { 
                     throw new Error('Game Not Fully Integrated')
                 }
@@ -362,22 +338,6 @@ class CasinoLogic{
                     break;
                 };
                 case 'linear_dice_simple' : {
-                    /* Calculate Multipliers on Odd (Example Roulette) */
-                    let probability = userResultSpace.reduce( (acc, result) => {
-                        return acc+resultSpace[result.place].probability;
-                    }, 0);
-                    let odd = parseFloat(this.probabilityToOdd(probability));
-                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
-                        if(item.value <= 0){ throw throwError('BAD_BET')}
-                        return acc+item.value;
-                    }, 0))
-                    let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
-                    let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
-                    winAmount = parseFloat(winBalance - houseEdgeBalance);
-                    break;
-                };
-                case 'jackpot_auto' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let probability = userResultSpace.reduce( (acc, result) => {
                         return acc+resultSpace[result.place].probability;

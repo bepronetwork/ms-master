@@ -38,16 +38,20 @@ class Security{
                 const bearer = bearerHeader.split(' ');
                 // Get Token From Array
                 const bearerToken = bearer[1];
-                let verified = MiddlewareSingleton.verify({token : bearerToken, payload, id});
+                let verified = MiddlewareSingleton.verify({token : bearerToken, payload, id, isUser: (type=="user")});
                 if(!verified){throw new Error()}
                 return verified;
             } else {
                 throw new Error();
             }
         }catch(err){
-            throw {
-                code : 304,
-                messsage : 'Forbidden Access'
+            if(err.code!=undefined) {
+                throw err;
+            } else {
+                throw {
+                    code : 304,
+                    messsage : 'Forbidden Access'
+                }
             }
         }
     }

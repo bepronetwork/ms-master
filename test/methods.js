@@ -40,6 +40,38 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async addJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/jackpot/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async addAutoWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAutoWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/autoWithdraw/editAutoWithdraw')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editEdgeJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/jackpot/edge/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAdminType(params, bearerToken, payload){
         return request(global.server)
         .post('/api/admins/editType')
@@ -47,14 +79,12 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async loginAdmin(params) {
         return request(global.server)
         .post('/api/admins/login')
         .send(params)
         .then(res => detectServerError(res))
-        
     },
     async pingPusher(params) {
         return request(global.server)

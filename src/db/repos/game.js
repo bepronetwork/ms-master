@@ -1,6 +1,5 @@
 import MongoComponent from './MongoComponent';
 import { GameSchema } from '../schemas';
-import Numbers from '../../logic/services/numbers';
 
 
 const foreignKeys = ['resultSpace'];
@@ -44,7 +43,7 @@ class GamesRepository extends MongoComponent{
     }
 
     findGameByIdAndNotPopulate = async(_id) => {
-        return new Promisse((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             GamesRepository.prototype.schema.model.findById(_id)
             .exec( (err, item) => {
                 if(err){reject(err)}

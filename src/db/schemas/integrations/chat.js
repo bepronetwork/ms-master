@@ -1,5 +1,4 @@
 import {globals} from "../../../Globals";
-import mongoose from 'mongoose';
 let db = globals.main_db;
 
 class ChatSchema{};

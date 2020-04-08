@@ -1,34 +1,21 @@
 import {
     registerUser,
     loginUser,
-    setUser2FA,
-    loginUser2FA,
-    authUser,
-    resetPassword,
-    setPassword,
     confirmEmail,
     resendEmail
 } from '../../../methods';
 
-import Security from '../../../../src/controllers/Security/Security';
-import { detectValidationErrors, mochaAsync } from '../../../utils';
+import { mochaAsync } from '../../../utils';
 
 import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
 import Random from '../../../tools/Random';
-import {
-    shouldntRegisterTheUser
-} from "../../output/UserTestMethod"
-import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
 import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
 
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
-
-const BOILERPLATES = global.BOILERPLATES;
-const CONST = global.CONST;
 
 context('Confirm Email', async () => {
     var app, user, userPostData, secret;
@@ -49,6 +36,7 @@ context('Confirm Email', async () => {
 
     it('should resend email to confirm', mochaAsync(async () => {
         const userLocal = await loginUser(userPostData);
+        console.log(userLocal.data.message.bearerToken);
         const res = await resendEmail({user: userLocal.data.message.id}, userLocal.data.message.bearerToken, {id : userLocal.data.message.id});
 
         expect(userLocal.data.status).to.not.null;

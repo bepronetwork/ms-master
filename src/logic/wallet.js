@@ -1,11 +1,7 @@
-
-
 const _ = require('lodash');
-import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import { WalletsRepository, UsersRepository, AppRepository, CurrencyRepository } from '../db/repos';
-import DepositsRepository from '../db/repos/deposit';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { setLinkUrl } from '../helpers/linkUrl';
 let error = new ErrorManager();
@@ -45,6 +41,10 @@ const processActions = {
             playBalance : 0, // Test Balance
             currency : params.currency,
             bitgo_id : params.bitgo_id,
+            price    : params.price ? params.price.map( p => { return {
+                amount : p.amount,
+                currency : p.currency
+            }}) : null,
             bank_address : params.bank_address,
 			hashed_passphrase : params.hashed_passphrase,
 			link_url : link_url

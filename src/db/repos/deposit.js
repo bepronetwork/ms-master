@@ -1,6 +1,5 @@
 import MongoComponent from './MongoComponent';
 import { DepositSchema } from '../schemas/deposit';
-import { populate_deposit } from './populates';
 import { pipeline_transactions_app } from './pipelines/transactions';
 
 /**

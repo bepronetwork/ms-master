@@ -35,9 +35,14 @@ import TopIconRepository from './topIcon';
 import TokenRepository from './token';
 import MailSenderRepository from './mailSender';
 import LoadingGifRepository from "./loadingGif";
+import AddOnRepository from "./addOn";
+import JackpotRepository from "./jackpot";
 import PermissionRepository from "./permission";
+import AutoWithdrawRepository from "./autoWithdraw";
 
 export{
+    JackpotRepository,
+    AddOnRepository,
     TokenRepository,
     ChatRepository,
     FooterRepository,
@@ -75,5 +80,6 @@ export{
     TopIconRepository,
     MailSenderRepository,
     LoadingGifRepository,
-    PermissionRepository
+    PermissionRepository,
+    AutoWithdrawRepository
 }

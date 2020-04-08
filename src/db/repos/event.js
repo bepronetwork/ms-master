@@ -1,6 +1,5 @@
 import MongoComponent from './MongoComponent';
 import { EventSchema } from '../schemas';
-import { populate_bet } from './populates';
 /**
  * Accounts database interaction class.
  *

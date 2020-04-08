@@ -1,5 +1,4 @@
 import {globals} from "../../../Globals";
-import mongoose from 'mongoose';
 import { SendInBlueFunctions } from "../../../logic/third-parties";
 let db = globals.main_db;
 

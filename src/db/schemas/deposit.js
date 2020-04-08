@@ -21,7 +21,10 @@ DepositSchema.prototype.schema = {
     confirmations           : { type: Number, required : true, default : 0},
     maxConfirmations        : { type: Number, required : true, default : 0},
     confirmed               : { type: Boolean, default : false},
-    link_url                : { type: String, default : null}
+    link_url                : { type: String, default : null},
+    /* If Purchase */
+    isPurchase              : { type: Boolean, default : false, required : true},
+    purchaseAmount          : { type: Number, default : 0}
 }
 
 // db o only allows once per type

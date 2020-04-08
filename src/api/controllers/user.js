@@ -47,9 +47,7 @@ async function loginUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.login();
-        user = new User(data);
-        let bearerToken  = await user.createAPIToken();
-        MiddlewareSingleton.respond(res, {...data, bearerToken});
+        MiddlewareSingleton.respond(res, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

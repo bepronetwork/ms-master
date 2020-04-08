@@ -3,6 +3,7 @@ import { getAppAuth, authAdmin, setMaxBet } from '../../../methods';
 import chai from 'chai';
 import { editAppStructure, getApp, getUserInfo, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
+const perf = require('execution-time')();
 
 const expect = chai.expect;
 const ticker = 'ETH';
@@ -73,6 +74,7 @@ context('Bet', async () => {
             var BET_RESULT = [{
                 place: 0, value: betAmount
             }];
+
             /* Verify that was Lost */
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             detectValidationErrors(bet_res);
@@ -133,7 +135,6 @@ context('Bet', async () => {
 
         var user_5_currrencyWallet = (user_5.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
-        console.log("Wallet Id : ", user_5_currrencyWallet._id)
         await provideFunds({wallet : user_5_currrencyWallet._id, amount : ethDepositAmount});
 
         /* Get Info for User 4 before Bet */

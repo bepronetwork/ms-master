@@ -1,13 +1,11 @@
 import {
     getUserAuth,
-    pingPusher,
-    getPushNotificationsChannel
+    pingPusher
 } from '../../../methods';
 
 import chai from 'chai';
 import Pusher from 'pusher-js';
 import { mochaAsync } from '../../../utils';
-import delay from 'delay';
 
 
 const expect = chai.expect;
@@ -16,7 +14,6 @@ context(`Get`, async () =>  {
     var user, pusher;
 
     before( async () =>  {
-        console.log((await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})))
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
 
         pusher = new Pusher(process.env.PUSHER_APP_KEY, 

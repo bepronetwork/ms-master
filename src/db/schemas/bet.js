@@ -15,7 +15,7 @@ BetSchema.prototype.schema = {
     address             : { type : String, require : true},
     fee                 : { type : Number, required: true},
     result              : [{ type : mongoose.Schema.Types.ObjectId, ref: 'BetResultSpace', required : true }],
-    currency                : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true},      
+    currency            : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true},      
     /* Security Data */
     timestamp           : { type : Date, required : true},
     nonce               : { type : Number, required: true},
@@ -29,7 +29,8 @@ BetSchema.prototype.schema = {
     winAmount           : { type : Number, required : true},
     outcomeResultSpace  : { type : JSON, required : true},
     isWon               : { type : Boolean, required : true},
-    isResolved          : { type : Boolean , required : true, default : false}
+    isResolved          : { type : Boolean , required : true, default : false},
+    isJackpot           : { type : Boolean , required : true, default : false}
 }
 
 

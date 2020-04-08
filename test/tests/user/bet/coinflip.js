@@ -58,7 +58,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
 
         const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
         let postData = {  
             game: game._id,
             user: user.id,

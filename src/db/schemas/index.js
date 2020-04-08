@@ -27,7 +27,10 @@ import { TopIconSchema } from './customization/topIcon'
 import { TokenSchema } from './token';
 import { MailSenderSchema } from './integrations/mailSender';
 import { LoadingGifSchema } from "./customization/loadingGif";
+import {AddOnSchema } from './addOn';
+import { JackpotSchema } from './addOn/jackpot';
 import { PermissionSchema } from "./permission";
+import { AutoWithdrawSchema } from "./addOn/autoWithdraw";
 
 export {
     CurrencySchema,
@@ -59,5 +62,8 @@ export {
     TokenSchema,
     MailSenderSchema,
     LoadingGifSchema,
-    PermissionSchema
+    AddOnSchema,
+    JackpotSchema,
+    PermissionSchema,
+    AutoWithdrawSchema
 }

@@ -3,15 +3,11 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
-import MiddlewareSingleton from '../api/helpers/middleware';
-import { getServices, fromDecimals, verifytransactionHashDirectDeposit } from './services/services';
-import { Game, Deposit, Withdraw, AffiliateSetup, Link, Wallet } from '../models';
-import CasinoContract from './eth/CasinoContract';
-import { globals } from '../Globals';
-import Numbers from './services/numbers';
+import { getServices } from './services/services';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -22,8 +18,8 @@ import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
-import { PUSHER_APP_KEY } from '../config';
-// const patternWallet = require("../mocks/wallets/pattern.json");
+import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
+import addOnRepository from '../db/repos/addOn';
 let error = new ErrorManager();
 
 
@@ -48,7 +44,8 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
 
@@ -58,17 +55,20 @@ const processActions = {
             hasAppAlready       : admin.app ? true : false,
             services            : params.services, // Array
             admin_id		    : admin._id,
+            virtual             : virtual,
             name    			: params.name,
             affiliateSetup,       
             customization,
             integrations,
+            addOn,
 			description         : params.description,
 			marketType          : params.marketType,
 			metadataJSON        : JSON.parse(params.metadataJSON),
 			listAdmins          : [admin._id],
 			licensesId          : [], // TO DO
 			countriesAvailable  : [], // TO DO
-			isVerified          : false
+            isVerified          : false,
+            typography
 		}
 		return normalized;
     },
@@ -109,7 +109,6 @@ const processActions = {
 
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
-
         let currency = await CurrencyRepository.prototype.findById(currency_id);
 
         return  {
@@ -143,6 +142,77 @@ const processActions = {
             app
         }
 		return res;
+    },
+    __addJackpot : async (params) => {
+        try {
+            let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+            let limits = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency      : c._id,
+                    tableLimit    : 0,
+                    maxBet        : 0
+                }
+            }));
+
+            let res = {
+                limits,
+                app,
+                gameEcosystem
+            }
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __addAutoWithdraw : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let maxWithdrawAmountCumulative = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+        let maxWithdrawAmountPerTransaction = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let res = {
+            maxWithdrawAmountPerTransaction,
+            maxWithdrawAmountCumulative,
+            app
+        }
+		return res;
+    },
+    __editAutoWithdraw : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
+            if(!autoWithdraw){throwError()}
+            let res = {
+                autoWithdraw,
+                currency : params.currency,
+                autoWithdrawParams : params.autoWithdrawParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
     },
     __getLastBets : async (params) => {
         let res = await AppRepository.prototype.getLastBets({
@@ -188,9 +258,8 @@ const processActions = {
 
         /* Verify if this transactionHashs was already added */
         let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
-
         let wasAlreadyAdded = deposit ? true : false;
-    
+
         return  {
             app                 : app,
             wallet              : wallet,
@@ -387,10 +456,14 @@ const processActions = {
     __editTypography: async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
+        let typography = await TypographyRepository.prototype.findById(app.typography._id);
+
         if (!app) { throwError('APP_NOT_EXISTENT') };
+
         return {
             ...params,
-            app
+            app,
+            oldTypography: typography
         };
     },
     __getUsers : async (params) => {
@@ -462,48 +535,71 @@ const progressActions = {
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
-        /* Create Wallet on Bitgo */
-        var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
-            label : `${app._id}-${currency.ticker}`,
-            passphrase,
-            currency : currency.ticker
-        })
-        
-        /* Record webhooks */
-        await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
+        var wallet;
+        console.log("Currency Virtual", currency.virtual)
+        if(currency.virtual){
+            /* Save Wallet on DB */
+            wallet = (await (new Wallet({
+                currency : currency._id,
+                price : app.currencies.map( c => {
+                    return {
+                        currency : c._id,
+                        amount : PRICE_VIRTUAL_CURRENCY_GLOBAL
+                    }
+                })
+            })).register())._doc;
+        }else{
 
-        /* Create Policy for Day */
-        await BitGoSingleton.addPolicyToWallet({
-            ticker : currency.ticker,
-            bitGoWalletId : bitgo_wallet.id(),
-            timeWindow : 'day'
-        })
 
-        /* Create Policy for Transaction */
-        await BitGoSingleton.addPolicyToWallet({
-            ticker : currency.ticker,
-            bitGoWalletId : bitgo_wallet.id(),
-            timeWindow : 'hour',
-        })
+            /* Create Wallet on Bitgo */
+            var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
+                label : `${app._id}-${currency.ticker}`,
+                passphrase,
+                currency : currency.ticker
+            })
+            
+            /* Record webhooks */
+            await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
-        /* Create Policy for Hour */
-        await BitGoSingleton.addPolicyToWallet({
-            ticker : currency.ticker,
-            bitGoWalletId : bitgo_wallet.id(),
-            timeWindow : 'transaction',
-        })
+            /* Create Policy for Day */
+            await BitGoSingleton.addPolicyToWallet({
+                ticker : currency.ticker,
+                bitGoWalletId : bitgo_wallet.id(),
+                timeWindow : 'day'
+            })
 
-        /* No Bitgo Wallet created */
-        if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+            /* Create Policy for Transaction */
+            await BitGoSingleton.addPolicyToWallet({
+                ticker : currency.ticker,
+                bitGoWalletId : bitgo_wallet.id(),
+                timeWindow : 'hour',
+            })
 
-        /* Hash Passphrase */
-        /* Save Wallet on DB */
-        let wallet = (await (new Wallet({
-            currency : currency._id,
-            bitgo_id : bitgo_wallet.id(),
-            bank_address : receiveAddress,
-            hashed_passphrase : Security.prototype.encryptData(passphrase)
-        })).register())._doc;
+            /* Create Policy for Hour */
+            await BitGoSingleton.addPolicyToWallet({
+                ticker : currency.ticker,
+                bitGoWalletId : bitgo_wallet.id(),
+                timeWindow : 'transaction',
+            })
+
+            /* No Bitgo Wallet created */
+            if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+
+            /* Save Wallet on DB */
+            wallet = (await (new Wallet({
+                currency : currency._id,
+                bitgo_id : bitgo_wallet.id(),
+                bank_address : receiveAddress,
+                hashed_passphrase : Security.prototype.encryptData(passphrase)
+            })).register())._doc;
+
+            let virtualWallet = app.wallet.find( w => w.currency.virtual == true);
+
+            if(virtualWallet){
+                /* Add Deposit Currency to Virtual Currency */
+                await WalletsRepository.prototype.addCurrencyDepositToVirtualCurrency(virtualWallet._id, currency._id);
+            }
+        }
 
         /* Add Currency to Platform */
         await AppRepository.prototype.addCurrency(app._id, currency._id);
@@ -521,7 +617,6 @@ const progressActions = {
 
 
         /* Add Wallet to all Users */
-    
         await Promise.all(await app.users.map( async u => {
             let w = (await (new Wallet({
                 currency : currency._id
@@ -562,9 +657,27 @@ const progressActions = {
 
         const gam = await game.register();
 
-        // console.log(gam);
-
 		return params;
+    },
+    __addJackpot : async (params) => {
+        const { app, limits, gameEcosystem } = params;
+        let jackpot = new Jackpot({app, limits, resultSpace: gameEcosystem.resultSpace});
+        const jackpotResult = await jackpot.register();
+        await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
+		return jackpotResult;
+    },
+    __addAutoWithdraw : async (params) => {
+        const { app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction } = params;
+        let autoWithdraw = new AutoWithdraw({app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction});
+        const autoWithdrawResult = await autoWithdraw.register();
+        await addOnRepository.prototype.addAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
+		return autoWithdrawResult;
+    },
+    __editAutoWithdraw : async (params) => {
+        const { autoWithdraw, currency, autoWithdrawParams } = params
+        await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
+        let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
+        return res;
     },
     __getLastBets : async (params) => {
         let res = params;
@@ -583,7 +696,8 @@ const progressActions = {
 		return res;
     },
     __updateWallet : async (params) => {
-        
+     
+
         /* Create Deposit Object */
         let deposit = new Deposit({
             app                     : params.app._id,
@@ -846,27 +960,10 @@ const progressActions = {
         return params;
     },
     __editTypography: async (params) => {
-        let { app, typography } = params;
-        //This Function Clening the typography from collection typographies and from the App document (typography field)
-        await TypographyRepository.prototype.cleanTypographyOfApp(app._id);
-
-        let list = [];
-        for (let correspondentTypographyType of typography) {
-            let rTypography = await TypographyRepository.prototype.setTypography({
-                local: correspondentTypographyType.local,
-                url: correspondentTypographyType.url,
-                format: correspondentTypographyType.format,
-            });
-            list.push(rTypography);
-        }
-
-        await AppRepository.prototype.addTypography(app._id, list);
-
-        // }));
-
+        let { app, typography, oldTypography } = params;
+        await TypographyRepository.prototype.findByIdAndUpdate(oldTypography._id, typography);
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
-        // Save info on Typography Part
         return params;
     },
     __getUsers : async (params) => {
@@ -949,6 +1046,15 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddGame' : {
 					return await library.process.__addGame(params); break;
+                };
+                case 'AddJackpot' : {
+                    return await library.process.__addJackpot(params); break;
+                };
+                case 'AddAutoWithdraw' : {
+                    return await library.process.__addAutoWithdraw(params); break;
+                };
+                case 'EditAutoWithdraw' : {
+                    return await library.process.__editAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
@@ -1037,7 +1143,7 @@ class AppLogic extends LogicComponent{
     }
 
 	async progress(params, progressAction){
-		try{			
+		try{
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params); break;
@@ -1050,6 +1156,15 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddGame' : {
 					return await library.progress.__addGame(params); break;
+                };
+                case 'AddJackpot' : {
+					return await library.progress.__addJackpot(params); break;
+                };
+                case 'AddAutoWithdraw' : {
+                    return await library.progress.__addAutoWithdraw(params); break;
+                };
+                case 'EditAutoWithdraw' : {
+                    return await library.progress.__editAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;

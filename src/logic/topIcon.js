@@ -1,5 +1,3 @@
-
-
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
@@ -22,7 +20,6 @@ let __private = {};
  * @param {function} params - Function Params
  **/
 
-  
 const processActions = {
 	__register : async (params) => {
 		return params;

@@ -11,23 +11,22 @@ let self;
 
 
 let outputs = {
-    walletTransaction: (object) => {
+    register: (object) => {
         return {
-            app_id: object.app_id,
-            wallet : object.app.wallet,
-            creationDate: object.creationDate,
-            transactionHash: object.transactionHash,
-            from: object.from,
-            currencyTicker: object.currencyTicker,
-            amount: object.amount,
-            wasAlreadyAdded: object.wasAlreadyAdded,
-            isValid: object.isValid
+            "_id": object._id,
+            "username": object.username,
+            "name": object.name,
+            "security": object.security,
+            "email": object.email,
+            "registered": object.registered,
+            "permission": object.permission,
+            "__v": object.__v
         }
     },
 }
 
 
-class MapperWallet {
+class MapperRegisterAdmin {
 
     constructor() {
         self = {
@@ -41,7 +40,7 @@ class MapperWallet {
          */
 
         this.KEYS = {
-            WalletTransaction: 'walletTransaction'
+            Register: 'register'
         }
     }
 
@@ -54,8 +53,8 @@ class MapperWallet {
     }
 }
 
-let MapperWalletSingleton = new MapperWallet();
+let MapperRegisterAdminSingleton = new MapperRegisterAdmin();
 
 export {
-    MapperWalletSingleton
+    MapperRegisterAdminSingleton
 }

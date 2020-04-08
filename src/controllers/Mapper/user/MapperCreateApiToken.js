@@ -13,10 +13,10 @@ let self;
 let outputs = {
     createApiTokenUser: (object) => {
         return {
-            "bets": object.bets ? object.bets.map(bet_id => bet_id) : object.bets,
-            "deposits": object.deposits ? object.deposits.map(deposit_id => deposit_id) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
-            "wallet": object.wallet ? object.wallet.map(wallet_id => wallet_id) : object.wallet,
+            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
+            "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
+            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
+            "wallet": object.wallet ? object.wallet.map(wallet_id => { return ({_id: wallet_id }) } ) : object.wallet,
             "isWithdrawing": object.isWithdrawing,
             "email_confirmed": object.email_confirmed,
             "_id": object._id,
@@ -33,8 +33,7 @@ let outputs = {
             "external_user": object.external_user,
             "external_id": object.external_id,
             "__v": object.__v,
-            "affiliateLink": object.affiliateLink,
-            "bearerToken": object.bearerToken,
+            "affiliateLink": object.affiliateLink
         }
     },
 }

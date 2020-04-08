@@ -15,15 +15,13 @@ import models from '../../../models';
 import Random from '../../../tools/Random';
 import {
     shouldntRegisterTheUser
-} from "../../output/UserTestMethod"
-import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
+} from "../../output/UserTestMethod";
 
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
 
 const BOILERPLATES = global.BOILERPLATES;
-const CONST = global.CONST;
 
 context('Login & Register', async () => {
     var app, user, userPostData, secret;
@@ -61,12 +59,13 @@ context('Login & Register', async () => {
     it('should set 2FA for the User', mochaAsync(async () => {
         let res_login = await loginUser(userPostData);
         user = res_login.data.message;
+
         secret = Security.prototype.generateSecret2FA({ name: 'BetProtocol', account_id: user.id });
         let token = Security.prototype.generateToken2FA(secret);
         var res = await setUser2FA({
             '2fa_secret': secret,
             '2fa_token': token,
-            user: user.id
+            'user': user.id
         }, user.bearerToken, { id: user.id });
         expect(res.data.status).to.equal(200);
     }));
@@ -100,6 +99,21 @@ context('Login & Register', async () => {
 
         expect(res.data.status).to.equal(200);
     }));
+
+    it('should´t auth for User - BearerToken Expired', mochaAsync(async () => {
+        let token = Security.prototype.generateToken2FA(secret);
+        let res = await loginUser2FA({...userPostData,
+            '2fa_token' : token
+        });
+        global.test.user = res.data.message;
+
+        res = await authUser({
+            user : user.id
+        }, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA", { id : user.id});
+
+        expect(res.data.status).to.equal(48);
+    }));
+
 
     it('shouldn´t login the User - WRONG TOKEN', mochaAsync(async () => {
         let res = await loginUser2FA({...userPostData,

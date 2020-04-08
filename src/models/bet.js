@@ -2,7 +2,7 @@ import {BetLogic} from '../logic';
 import ModelComponent from './modelComponent';
 import {BetsRepository} from '../db/repos';
 import { isCasino } from '../logic/markets/betSystems';
-import { MapperBetSingleton } from '../controllers/Mapper/MapperBet';
+import { MapperBetSingleton } from "../controllers/Mapper";
 
 class Bet extends ModelComponent{
 
@@ -24,19 +24,21 @@ class Bet extends ModelComponent{
     async register(){
         try{
             let res = await this.process('Auto');
-            if(isCasino(res.betSystem)){
-                /* if(res.hasJackpot){
-                    // Auto Jackpot
-                    let res_playJackpot = await this.process('PlayAutoJackpot');
-                    res.jackpot = res_playJackpot;
-                }*/
-            }
             return MapperBetSingleton.output('Bet', res);
         }catch(err){
             throw err;
         }
-    } 
-    
+    }
+
+    async save(){
+        try{
+            let res = await this.process('Register');
+            return res;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async resolve(){
         try{
             return await this.process('Resolve');

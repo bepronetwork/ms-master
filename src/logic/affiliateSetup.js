@@ -1,9 +1,7 @@
-
-
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { AffiliateSetupRepository, AffiliateStructureRepository } from '../db/repos';
+import { AffiliateStructureRepository } from '../db/repos';
 import { AffiliateStructure } from '../models';
 let error = new ErrorManager();
 

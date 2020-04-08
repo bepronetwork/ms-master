@@ -13,16 +13,15 @@ import {
 import faker from 'faker';
 import chai from 'chai';
 import models from '../../../models';
-import { SendInBlue } from '../../../../src/logic/third-parties';
 
 import {
     shouldCreateTheApp,
     shouldGetNewBearerToken,
     shouldGetAppDataAuth,
     shouldGetAppData,
-    shouldIntegrateServicesIntoApp,
-
+    shouldIntegrateServicesIntoApp
 } from '../../output/AppTestMethod';
+
 import { mochaAsync, genData, detectValidationErrors } from '../../../utils';
 import MiddlewareSingleton from '../../../../src/api/helpers/middleware';
 import { SendinBlueSingleton } from '../../../../src/logic/third-parties/sendInBlue';
@@ -42,6 +41,7 @@ context('Normal', async () =>  {
         var res = await registerApp(app_call_model);
         detectValidationErrors(res);
         shouldCreateTheApp(res.data, expect);
+        expect(res.data.message.virtual).to.equal(false);
     }));
 
     it('Should update a contact', mochaAsync(async () => {

@@ -1,6 +1,3 @@
-const WEI = 1000000000;
-const GAS_PRICE = 10000*WEI;
-
 class account{
     constructor(web3, account){
         this.web3 = web3;

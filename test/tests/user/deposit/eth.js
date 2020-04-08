@@ -4,7 +4,6 @@ import { getAppAuth, webhookConfirmDepositFromBitgo, getDepositAddress, setAppMa
 import { get_app } from '../../../models/apps';
 import { globalsTest } from '../../../GlobalsTest';
 import { generateEthAccountWithTokensAndEthereum } from '../../../utils/eth';
-import { getNonce } from '../../../lib';
 import { bitgoDepositExample, bitgoDepositExampleMaxDeposit } from '../../app/deposit/examples/bitgoDepositExample';
 import { DepositRepository } from '../../../../src/db/repos';
 import delay from 'delay';
@@ -47,7 +46,7 @@ context(`${ticker}`, async () => {
         /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
         tx = await new Promise( async  (resolve, reject) => {
             try{
-                await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 23593}, async (tx) => {
+                await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 53000}, async (tx) => {
                     resolve(tx);
                 });
             }catch(err){reject(err)}

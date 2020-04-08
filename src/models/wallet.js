@@ -1,6 +1,7 @@
 import {WalletLogic} from '../logic';
 import {WalletsRepository} from '../db/repos';
 import ModelComponent from './modelComponent';
+import { MapperUpdateMaxDepositSingleton } from "../controllers/Mapper";
 
 class Wallet extends ModelComponent{
 
@@ -38,7 +39,8 @@ class Wallet extends ModelComponent{
 
     async setMaxDeposit(){
         try {
-            return await this.process('UpdateMaxDeposit');
+            let res = await this.process('UpdateMaxDeposit');
+            return MapperUpdateMaxDepositSingleton.output('UpdateMaxDeposit',res);
         }catch(err){
             throw err;
         }

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { GamesRepository, UsersRepository, WalletsRepository, CurrencyRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
 import CasinoLogicSingleton from './utils/casino';
@@ -207,14 +207,11 @@ const processActions = {
         }
     },
 	__register : async (params) => {
-
+        return params;
 	},
 	__resolve : async (params) => {
 	
-    },
-    __playAutoJackpot : async (params) => {
-        return params;
-	}
+    }
 }
 
 
@@ -270,14 +267,12 @@ const progressActions = {
 		return res;
 	},
 	__register : async (params) => {
-      
+        let bet = await self.save(params);
+        return bet;
 	},
 	__resolve : async (params) => {
     
-    },
-    __playAutoJackpot : async (params) => {
-        return params;
-	}
+    }
 }
 /**
  * Main Bet logic.
@@ -335,9 +330,6 @@ class BetLogic extends LogicComponent{
 				case 'Resolve' : {
 					return await library.process.__resolve(params); break;
                 };
-                case 'PlayAutoJackpot' : {
-					return await library.process.__playAutoJackpot(params); break;
-				};
 			}
 		}catch(err){
 			throw err;
@@ -372,9 +364,6 @@ class BetLogic extends LogicComponent{
 				case 'Resolve' : {
 					return await library.progress.__resolve(params); break;
                 };
-                case 'PlayAutoJackpot' : {
-					return await library.progress.__playAutoJackpot(params); break;
-				};
 			}
 		}catch(report){
 			throw `Failed to validate user schema: User \n See Stack Trace : ${report}`;

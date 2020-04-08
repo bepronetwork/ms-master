@@ -7,7 +7,7 @@ import {
 
 import chai from 'chai';
 
-import { mochaAsync, detectValidationErrors } from '../../../utils';
+import { mochaAsync } from '../../../utils';
 
 const expect = chai.expect;
 const metaName = 'linear_dice_simple';

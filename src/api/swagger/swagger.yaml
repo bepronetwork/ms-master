@@ -1727,6 +1727,131 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/jackpot/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit
+      operationId: addJackpot
+      description: add Jackpot
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/jackpot/edge/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Percentage
+      operationId: editEdgeJackpot
+      description: Edit Edge Jackpot
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditEdgeJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Automatic Withdraw
+      operationId: addAutoWithdraw
+      description: add Auto Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppAddAutoWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/editAutoWithdraw:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If is Automatic Withdraw
+      operationId: editAutoWithdraw
+      description: Edit If is Automatic Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditAutoWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -2576,19 +2701,13 @@ definitions:
         description: |
           App id
       typography:
-        type : array
-        items : 
-          type: object
-          properties:
-            local :
-              type: array
-              items:
-                type: string
-            url :
-              type: string
-            format :
-              type: string
-  AppDeploy : 
+        type: object
+        properties:
+          name :
+            type: string
+          url :
+            type: string
+  AppDeploy :
     type: object
     required:
       - app
@@ -2759,6 +2878,9 @@ definitions:
         example: "A betting App with the goals"
         description: |
           App Description
+      virtual : 
+        type : boolean
+        example : false
       marketType:
         type : integer
         format: int32
@@ -2984,6 +3106,84 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
+  AppAddJackpotRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+
+  AppAddAutoWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+  
+  AppEditAutoWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - autoWithdrawParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      autoWithdrawParams :
+        type: object
+        properties:
+          isAutoWithdraw :
+            type : boolean
+            example: true
+          verifiedKYC :
+            type : boolean
+            example: true
+          maxWithdrawAmountCumulative :
+            type: number
+          maxWithdrawAmountPerTransaction :
+            type: number
+
   AppServicesRequest : 
     type: object
     required:
@@ -3003,7 +3203,34 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
-  AuthAdminRequest : 
+
+  EditEdgeJackpotRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - edge
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      edge :
+        type : number
+        format: number
+        example: 1
+        description: |
+          Edge to percentage of jackpot
+
+  AuthAdminRequest :
     type: object
     required:
       - admin

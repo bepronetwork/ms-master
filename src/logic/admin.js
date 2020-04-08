@@ -1,11 +1,8 @@
-
-
-
 const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AdminsRepository, SecurityRepository, AppRepository, PermissionRepository } from '../db/repos';
+import { SecurityRepository, AppRepository, PermissionRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
@@ -125,6 +122,7 @@ const processActions = {
         return normalized;
     },
 	__register : async (params) => {
+
         let admin = await __private.db.findAdminEmail(params.email);
         let adminUsername = await __private.db.findAdminUsername(params.username);
         let registered = false;
@@ -137,7 +135,6 @@ const processActions = {
             if(!payload) {
                 throwError('TOKEN_EXPIRED');
             }
-            console.log(`${Number((new Date()).getTime())} > ${Number(payload.time)}`);
             if( Number((new Date()).getTime()) > Number(payload.time) ) {
                 throwError('TOKEN_EXPIRED');
             }
@@ -145,6 +142,7 @@ const processActions = {
                 throwError('TOKEN_INVALID');
             }
             newBearerToken = MiddlewareSingleton.sign(admin._id);
+            params.permission.super_admin = false;
         }
         let password = new Security(params.password).hash();
 

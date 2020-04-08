@@ -33,10 +33,14 @@ import TokenLogic from "./token";
 import TopIconLogic from './topIcon';
 import MailSenderLogic from './mailSender';
 import LoadingGifLogic from "./loadingGif";
+import AddOnLogic from "./addOn";
+import JackpotLogic from "./jackpot";
 import PermissionLogic from "./permission";
-
+import AutoWithdrawLogic from "./autoWithdraw";
 
 export {
+    JackpotLogic,
+    AddOnLogic,
     TokenLogic,
     CurrencyLogic,
     UserLogic,
@@ -72,6 +76,7 @@ export {
     TopIconLogic,
     MailSenderLogic,
     LoadingGifLogic,
-    PermissionLogic
+    PermissionLogic,
+    AutoWithdrawLogic
 }
 

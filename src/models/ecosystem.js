@@ -1,5 +1,6 @@
 import {EcosystemLogic} from '../logic';
 import ModelComponent from './modelComponent';
+import { MapperGetEcosystemDataSingleton, MapperGetCasinoGamesSingleton } from "../controllers/Mapper";
 
 class Ecosystem extends ModelComponent{
 
@@ -27,7 +28,8 @@ class Ecosystem extends ModelComponent{
 
     async getEcosystemData(){
         try{
-            return await this.process('GetEcosystemData');
+            let res = await this.process('GetEcosystemData');
+            return MapperGetEcosystemDataSingleton.output('GetEcosystemData', res);
         }catch(err){
             throw err;
         }
@@ -42,7 +44,8 @@ class Ecosystem extends ModelComponent{
 
     async getCasinoGames(){
         try{
-            return await this.process('GetCasinoGames');
+            let res = await this.process('GetCasinoGames');
+            return MapperGetCasinoGamesSingleton.output('GetCasinoGames', res);
         }catch(err){
             throw err;
         }
