@@ -15,6 +15,7 @@ let outputs = {
         return {
             "id": object._id,
             "isValid": object.isValid,
+            "licenseID"  : object.licenseID,
             "addOn": object.addOn.jackpot ? {
                 "jackpot": {
                     edge: object.addOn.jackpot.edge,
