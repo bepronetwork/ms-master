@@ -20,7 +20,7 @@ async function getEcosystemData(req, res) {
         await MiddlewareSingleton.log({type: "global", req});
         let ecosystem = new Ecosystem();
         let data = await ecosystem.getEcosystemData();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -31,7 +31,7 @@ async function getCasinoGames(req, res) {
         await MiddlewareSingleton.log({type: "global", req});
         let ecosystem = new Ecosystem();
         let data = await ecosystem.getCasinoGames();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

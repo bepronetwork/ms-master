@@ -15,6 +15,7 @@ let outputs = {
         return {
             "id": object._id,
             "isValid": object.isValid,
+            "licenseID"  : object.licenseID,
             "addOn": object.addOn.jackpot ? {
                 "jackpot": {
                     edge: object.addOn.jackpot.edge,
@@ -82,7 +83,8 @@ let outputs = {
                     "ticker": currency.ticker,
                     "decimals": currency.decimals,
                     "name": currency.name,
-                    "address": currency.address
+                    "address": currency.address,
+                    "virtual": currency.virtual
                 })
             }) : object.currencies,
             "users": object.users ? object.users.map(user => {
@@ -141,7 +143,9 @@ let outputs = {
                         "decimals": wallet.currency.decimals,
                         "name": wallet.currency.name,
                         "address": wallet.currency.address,
+                        "virtual": wallet.currency.virtual,
                     },
+                    "price" : wallet.price,
                     "bitgo_id": wallet.bitgo_id,
                     "bank_address": wallet.bank_address
                 })

@@ -69,52 +69,6 @@ let outputs = {
             "nationality": object.nationality,
             "age": object.age,
             "email": object.email,
-            "app_id": {
-                "isValid": object.app_id.isValid,
-                "games": object.app_id.games ? object.app_id.games.map(game_id => { return ({_id: game_id }) } ) : object.app_id.games,
-                "listAdmins": object.app_id.listAdmins ? object.app_id.listAdmins.map(listAdmin_id => { return ({_id: listAdmin_id }) } ) : object.app_id.listAdmins,
-                "services": object.app_id.services ? object.app_id.services.map(service_id => service_id) : object.app_id.services,
-                "countriesAvailable": object.app_id.countriesAvailable ? object.app_id.countriesAvailable.map(countrieAvailable_id => countrieAvailable_id) : object.app_id.countriesAvailable,
-                "licensesId": object.app_id.licensesId ? object.app_id.licensesId.map(license_id => license_id) : object.app_id.licensesId,
-                "_id": object.app_id._id,
-                "wallet": object.app_id.wallet.map(wallet => {
-                    return ({
-                        "playBalance": wallet.playBalance,
-                        "max_deposit": wallet.max_deposit,
-                        "max_withdraw": wallet.max_withdraw,
-                        "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
-                        "link_url": wallet.link_url,
-                        "_id": wallet._id,
-                        "currency": {
-                            "_id": wallet.currency._id,
-                            "image": wallet.currency.image,
-                            "ticker": wallet.currency.ticker,
-                            "decimals": wallet.currency.decimals,
-                            "name": wallet.currency.name,
-                            "address": wallet.currency.address
-                        },
-                        "bitgo_id": wallet.bitgo_id,
-                        "bank_address": wallet.bank_address
-                    })
-                }),
-                "name": object.app_id.name,
-                "affiliateSetup": object.app_id.affiliateSetup,
-                "customization": object.app_id.customization,
-                "integrations": {
-                    "_id": object.app_id.integrations._id,
-                    "chat": {
-                        "isActive": object.app_id.integrations.chat.isActive,
-                        "name": object.app_id.integrations.chat.name,
-                        "metaName": object.app_id.integrations.chat.metaName,
-                        "link": object.app_id.integrations.chat.link,
-                        "_id": object.app_id.integrations.chat._id,
-                        "privateKey": object.app_id.integrations.chat.privateKey,
-                        "publicKey": object.app_id.integrations.chat.publicKey,
-                        "token": object.app_id.integrations.chat.token
-                    }
-                },
-                "description": object.app_id.description,
-            },
             "external_user": object.external_user,
             "external_id": object.external_id,
             "affiliateLink": {

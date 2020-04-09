@@ -36,7 +36,8 @@ const processActions = {
 			var link_url = setLinkUrl({ticker, address, isTransactionHash: false});
 		} catch (err) {
 			
-		}
+        }
+
 		let normalized = {
             playBalance : 0, // Test Balance
             currency : params.currency,
@@ -45,6 +46,7 @@ const processActions = {
                 amount : p.amount,
                 currency : p.currency
             }}) : null,
+            virtual : params.virtual,
             bank_address : params.bank_address,
 			hashed_passphrase : params.hashed_passphrase,
 			link_url : link_url

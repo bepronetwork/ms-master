@@ -33,7 +33,8 @@ let outputs = {
                         "ticker": wallet.currency.ticker,
                         "decimals": wallet.currency.decimals,
                         "name": wallet.currency.name,
-                        "address": wallet.currency.address
+                        "address": wallet.currency.address,
+                        "virtual": wallet.currency.virtual
                     },
                 })
             }) : object.wallet,
@@ -111,7 +112,7 @@ let outputs = {
                 "2fa_set": object.security['2fa_set'],
                 "email_verified": object.security.email_verified,
                 "bearerToken" : object.security.bearerToken
-            },
+            }
         }
     },
 }

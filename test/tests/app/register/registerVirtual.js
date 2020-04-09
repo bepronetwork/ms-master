@@ -1,8 +1,8 @@
 import {
     registerApp,
-    getApp,
     registerAdmin,
     addAppServices,
+    getAppAuth,
     loginAdmin
 } from '../../../methods';
 
@@ -11,7 +11,8 @@ import models from '../../../models';
 
 import {
     shouldCreateTheApp,
-    shouldIntegrateServicesIntoApp
+    shouldIntegrateServicesIntoApp,
+    shouldGetAppDataAuth
 } from '../../output/AppTestMethod';
 
 import {
@@ -42,6 +43,7 @@ context('Virtual', async () =>  {
         detectValidationErrors(res);
         shouldLoginTheAdmin(res.data, expect);
         admin = res.data.message;
+        global.test.virtual_admin = res.data.message;
     }));
 
     it('should register the App with admin id provided', mochaAsync( async () => {
@@ -60,4 +62,15 @@ context('Virtual', async () =>  {
         shouldIntegrateServicesIntoApp(res.data, expect);
     }));
 
+
+    it('should Get App Data Auth', mochaAsync(async () => {
+        let get_app_model = models.apps.get_app(app.id);
+        let res = await getAppAuth({...get_app_model, admin: admin.id}, admin.bearerToken, { id: admin.id });
+        /* Set app Global Variable for Further Test */
+        global.test.virtual_app = res.data.message;
+        detectValidationErrors(res);
+        shouldGetAppDataAuth(res.data, expect);
+    }));
+
+    
 });

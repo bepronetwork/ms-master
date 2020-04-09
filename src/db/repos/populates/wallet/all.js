@@ -9,7 +9,7 @@ let populate_wallet_all = [
         path : 'depositAddresses',
         model : 'Address',
         select : { '__v': 0},
-    },
+    }
 ] 
 
 export default populate_wallet_all;

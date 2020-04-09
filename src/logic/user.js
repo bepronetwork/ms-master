@@ -341,7 +341,7 @@ const processActions = {
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
-
+            console.log("virtual", app.virtual);
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){
                 isPurchase = true;
@@ -566,6 +566,8 @@ const progressActions = {
         try {
             const { virtualWallet, isPurchase, wallet, amount } = params;
             var message;
+            console.log("Is Purchase", isPurchase);
+
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
@@ -574,6 +576,8 @@ const progressActions = {
                 }) : amount,
                 isPurchase : isPurchase,
             }
+
+            console.log(options, "options");
 
             /* Create Deposit Object */
             let deposit = new Deposit({
