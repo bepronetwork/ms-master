@@ -100,7 +100,8 @@ let outputs = {
                             "ticker": wallet.currency.ticker,
                             "decimals": wallet.currency.decimals,
                             "name": wallet.currency.name,
-                            "address": wallet.currency.address
+                            "address": wallet.currency.address,
+                            "virtual": wallet.currency.virtual
                         },
                     })
                 }) : object.affiliate.wallet,

@@ -12,7 +12,7 @@ async function editGameTableLimit (req, res) {
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameTableLimit();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -25,7 +25,7 @@ async function editGameEdge(req, res) {
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameEdge();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -38,7 +38,7 @@ async function editGameImage(req, res) {
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameImage();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -51,7 +51,7 @@ async function editGameBackgroundImage(req, res) {
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameBackgroundImage();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

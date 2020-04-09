@@ -51,17 +51,11 @@ let outputs = {
                     "wallets": game.wallets ? game.wallets.map(wallet => {
                         return ({
                             "_id": wallet._id,
-                            "wallet": wallet.wallet,
                             "tableLimit": wallet.tableLimit,
                         })
                     }) : game.wallets,
                 })
             }) : object.games,
-            "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => {
-                return ({
-                    "_id": list_admin_id
-                })
-            }) : object.listAdmins,
             "services": object.services ? object.services.map(service => service) : object.services,
             "currencies": object.currencies ? object.currencies.map(currency => {
                 return ({
@@ -70,62 +64,15 @@ let outputs = {
                     "ticker": currency.ticker,
                     "decimals": currency.decimals,
                     "name": currency.name,
-                    "address": currency.address
+                    "address": currency.address,
+                    "virtual": currency.virtual
                 })
             }) : object.currencies,
-            "users": object.users ? object.users.map(user => {
-                return ({
-                    "bets": user.bets ? user.bets.map(bet_id => {
-                        return ({
-                            "_id": bet_id
-                        })
-                    }) : user.bets,
-                    "deposits": user.deposits ? user.deposits.map(deposit_id => {
-                        return ({
-                            "_id": deposit_id
-                        })
-                    }) : user.deposits,
-                    "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
-                        return ({
-                            "_id": withdraw_id
-                        })
-                    }) : user.withdraws,
-                    "wallet": user.wallet ? user.wallet.map(wallet_id => {
-                        return ({
-                            "_id": wallet_id
-                        })
-                    }) : user.wallet,
-                    "isWithdrawing": user.isWithdrawing,
-                    "email_confirmed": user.email_confirmed,
-                    "_id": user._id,
-                    "username": user.username,
-                    "full_name": user.full_name,
-                    "affiliate": user.affiliate,
-                    "name": user.name,
-                    "register_timestamp": user.register_timestamp,
-                    "nationality": user.nationality,
-                    "age": user.age,
-                    "security": user.security,
-                    "email": user.email,
-                    "app_id": user.app_id,
-                    "external_user": user.external_user,
-                    "external_id": user.external_id,
-                    "affiliateLink": user.affiliateLink
-                })
-            }) : object.users,
-            "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
-                    "playBalance": wallet.playBalance,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => {
-                        return ({
-                            "_id": deposit_address_id
-                        })
-                    }) : wallet.depositAddresses,
-                    "link_url": wallet.link_url,
                     "currency": !wallet.currency ? {} : {
                         "_id": wallet.currency._id,
                         "image": wallet.currency.image,
@@ -133,32 +80,11 @@ let outputs = {
                         "decimals": wallet.currency.decimals,
                         "name": wallet.currency.name,
                         "address": wallet.currency.address,
+                        "virtual" : wallet.currency.virtual
                     },
-                    "bitgo_id": wallet.bitgo_id,
-                    "bank_address": wallet.bank_address
+                    "price" : wallet.price
                 })
             }) : object.wallet,
-            "deposits": object.deposits ? object.deposits.map(deposit => {
-                return ({
-                    "_id": deposit._id,
-                    "confirmations": deposit.confirmations,
-                    "maxConfirmations": deposit.maxConfirmations,
-                    "confirmed": deposit.confirmed,
-                    "link_url": deposit.link_url,
-                    "app": deposit.app,
-                    "creation_timestamp": deposit.creation_timestamp,
-                    "last_update_timestamp": deposit.last_update_timestamp,
-                    "address": deposit.address,
-                    "currency": deposit.currency,
-                    "transactionHash": deposit.transactionHash,
-                    "amount": deposit.amount,
-                })
-            }) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => {
-                return ({
-                    "_id": withdraw_id
-                })
-            }) : object.withdraws,
             "typography": object.typography ? {
                 "_id"   : object.typography._id,
                 "name"  : object.typography.name,
@@ -252,17 +178,6 @@ let outputs = {
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
-                },
-                "mailSender": !object.integrations.mailSender ? {} : {
-                    "_id": object.integrations.mailSender._id,
-                    "apiKey": object.integrations.mailSender.apiKey,
-                    "templateIds": !object.integrations.mailSender.templateIds ? [] : object.integrations.mailSender.templateIds.map(template => {
-                        return ({
-                            "template_id": template.template_id,
-                            "functionName": template.functionName,
-                            "contactlist_Id": template.contactlist_Id
-                        })
-                    }),
                 },
                 "pusher": !object.integrations.pusher ? {} : {
                     "key": object.integrations.pusher.key

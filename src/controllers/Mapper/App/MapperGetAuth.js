@@ -82,7 +82,8 @@ let outputs = {
                     "ticker": currency.ticker,
                     "decimals": currency.decimals,
                     "name": currency.name,
-                    "address": currency.address
+                    "address": currency.address,
+                    "virtual": currency.virtual
                 })
             }) : object.currencies,
             "users": object.users ? object.users.map(user => {
@@ -141,7 +142,9 @@ let outputs = {
                         "decimals": wallet.currency.decimals,
                         "name": wallet.currency.name,
                         "address": wallet.currency.address,
+                        "virtual": wallet.currency.virtual,
                     },
+                    "price" : wallet.price,
                     "bitgo_id": wallet.bitgo_id,
                     "bank_address": wallet.bank_address
                 })

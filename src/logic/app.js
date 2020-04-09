@@ -110,7 +110,6 @@ const processActions = {
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
-
         return  {
             currency, 
             passphrase,
@@ -536,11 +535,11 @@ const progressActions = {
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
         var wallet;
-        console.log("Currency Virtual", currency.virtual)
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
                 currency : currency._id,
+                virtual : true,
                 price : app.currencies.map( c => {
                     return {
                         currency : c._id,
@@ -589,6 +588,7 @@ const progressActions = {
             wallet = (await (new Wallet({
                 currency : currency._id,
                 bitgo_id : bitgo_wallet.id(),
+                virtual : false,
                 bank_address : receiveAddress,
                 hashed_passphrase : Security.prototype.encryptData(passphrase)
             })).register())._doc;
@@ -619,12 +619,12 @@ const progressActions = {
         /* Add Wallet to all Users */
         await Promise.all(await app.users.map( async u => {
             let w = (await (new Wallet({
-                currency : currency._id
+                currency : currency._id,
             })).register())._doc;
             await UsersRepository.prototype.addCurrencyWallet(u._id, w);
 
             let wAffiliate = (await (new Wallet({
-                currency : currency._id
+                currency : currency._id,
             })).register())._doc;
             await AffiliateRepository.prototype.addCurrencyWallet(u.affiliate, wAffiliate);
         }));

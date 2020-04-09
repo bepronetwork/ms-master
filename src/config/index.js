@@ -59,6 +59,8 @@ export const PUSHER_APP_KEY = process.env.PUSHER_APP_KEY;
 
 export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
 
+export const IS_TEST = process.env.IS_TEST;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
