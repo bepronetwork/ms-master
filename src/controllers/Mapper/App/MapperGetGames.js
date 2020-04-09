@@ -20,7 +20,7 @@ let outputs = {
                         "_id": result_space._id,
                         "formType": result_space.formType,
                         "probability": result_space.probability,
-                        "multiplier": !result_space.multiplier ? '' : result_space.multiplier,
+                        "multiplier": result_space.multiplier,
                     })
                 }),
                 "result": object.result ? object.result.map(result_id => {
