@@ -16,6 +16,7 @@ WalletSchema.prototype.schema = {
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
     hashed_passphrase           : { type: String},
     link_url                    : { type: String, default : null},
+    virtual                     : { type : Boolean, default : false, required : true},
     /* If Virtual Wallet */
     price                       : [{ 
         currency        : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },

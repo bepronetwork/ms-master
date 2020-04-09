@@ -226,5 +226,13 @@
     "056" : {
         "key" : "JACKPOT_NOT_EXIST_IN_APP",
         "message"   : "Jackpot not exist in APP"
+    },
+    "057" : {
+        "key" : "NOT_A_VIRTUAL_CASINO",
+        "message"   : "The action can´t be taken since this is not a social casino"
+    },
+    "058" : {
+        "key" : "IS_VIRTUAL_WALLET",
+        "message"   : "The action can´t be taken since this is a social casino"
     }
 }

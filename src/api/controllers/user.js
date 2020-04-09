@@ -22,7 +22,7 @@ async function registUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.register();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -35,7 +35,7 @@ async function resendEmail (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.resendEmail();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -47,7 +47,7 @@ async function loginUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.login();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -59,7 +59,7 @@ async function setPassword(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.setPassword();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -71,7 +71,7 @@ async function confirmEmail(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.confirmEmail();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -83,7 +83,7 @@ async function resetPassword(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.resetPassword();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -96,7 +96,7 @@ async function setUser2FA(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.set2FA();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -108,7 +108,7 @@ async function loginUser2FA(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.login2FA();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -121,7 +121,7 @@ async function authUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.auth();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -134,7 +134,7 @@ async function getUserInfo (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getInfo();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -147,7 +147,7 @@ async function userSummary (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.summary();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -160,7 +160,7 @@ async function getBets (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getBets();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -172,7 +172,7 @@ async function getDepositAddress(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -205,7 +205,7 @@ async function pingPushNotifications(req, res) {
             eventType : "PING"
         });
 
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

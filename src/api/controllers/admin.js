@@ -21,7 +21,7 @@ async function registAdmin (req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.register();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -33,7 +33,7 @@ async function getAdminAll(req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.getAdminAll();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -44,7 +44,7 @@ async function loginAdmin(req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -57,7 +57,7 @@ async function setAdmin2FA(req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.set2FA();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -70,7 +70,7 @@ async function editAdminType(req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.editAdminType();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -83,7 +83,7 @@ async function loginAdmin2FA(req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login2FA();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -98,7 +98,7 @@ async function authAdmin (req, res) {
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.auth();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -111,7 +111,7 @@ async function addAdmin (req, res) {
         let params = req.body;
 		let admin = new Admin(params);
 		let data = await admin.addAdmin();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

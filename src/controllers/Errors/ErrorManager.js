@@ -114,6 +114,17 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID));
                     break;
                 };
+
+                case '__getDepositAddress' : {
+                    // Verify User
+                    if(typeof object == 'undefined' || Object.is(object, null)){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                    }
+                    // Verify User is in App
+                    if(object.app_wallet.currency.virtual){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_VIRTUAL_WALLET));
+                    }
+                }
             }
         }catch(err){
             throw err
@@ -241,13 +252,19 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
                     }
                     // Verify Bank_address
-                    if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null)){
+                    if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null) && !object.currency.virtual){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
                     }
                     //Verify Currency exists 
                     if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
                     }
+
+                    //Verify App is not Virtual but currency is
+                    if(object.currency.virtual && !object.app.virtual){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NOT_A_VIRTUAL_CASINO)); break;
+                    }
+                    
                     if(object.app.wallet.find( w => new String(w.currency._id).toLowerCase() == new String(object.currency._id).toLowerCase()))
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.CURRENCY_ALREADY_EXISTENT)); break;
                     

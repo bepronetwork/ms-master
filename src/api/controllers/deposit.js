@@ -20,7 +20,7 @@ async function setMaxDeposit(req, res) {
         await MiddlewareSingleton.log({type: "admin", req});
 		let wallet = new Wallet(params);
         let data = await wallet.setMaxDeposit();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}

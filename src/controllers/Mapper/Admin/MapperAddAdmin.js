@@ -44,7 +44,8 @@ let outputs = {
                         "ticker": currency.ticker,
                         "decimals": currency.decimals,
                         "name": currency.name,
-                        "address": currency.address
+                        "address": currency.address,
+                        "virtual": currency.virtual
                     })
                 }) : object.app.currencies,
                 "users": object.app.users ? object.app.users.map(user_id => {

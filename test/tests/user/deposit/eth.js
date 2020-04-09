@@ -91,6 +91,7 @@ context(`${ticker}`, async () => {
         detectValidationErrors(res);
 
     }));
+    
     it('should not allow double deposit after first confirmed', mochaAsync(async () => {
         let body = bitgoDepositExample();
         let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);

@@ -13,14 +13,15 @@ let self;
 let outputs = {
     getEcosystemData: (object) => {
         return {
-            "currencies": object.currencies ? object.currencies.map(currencie =>{
+            "currencies": object.currencies ? object.currencies.map(currency =>{
                 return({
-                    "_id": currencie._id,
-                    "image": currencie.image,
-                    "ticker": currencie.ticker,
-                    "decimals": currencie.decimals,
-                    "name": currencie.name,
-                    "address": currencie.address
+                    "_id": currency._id,
+                    "image": currency.image,
+                    "ticker": currency.ticker,
+                    "decimals": currency.decimals,
+                    "name": currency.name,
+                    "address": currency.address,
+                    "virtual" : currency.virtual
                 })
             }) : object.currencies,
             "blockchains": object.blockchains ? object.blockchains.map(blockchain =>{

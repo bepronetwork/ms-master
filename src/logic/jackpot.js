@@ -112,7 +112,6 @@ const processActions = {
 			let amountTest = toTestResult.reduce( (acc, result) => {
 				return acc + parseFloat(result.value);
 			}, 0);
-			console.log("To bet Amount: ",  amountTest);
 
 			return {
 				percentage

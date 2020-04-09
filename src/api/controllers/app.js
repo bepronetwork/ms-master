@@ -25,7 +25,7 @@ async function createApp(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.register();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -38,7 +38,7 @@ async function getAppAuth(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getAuth();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -50,7 +50,7 @@ async function getApp(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.get();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -63,7 +63,7 @@ async function getGames(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getGames();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -77,7 +77,7 @@ async function deployApp(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.deployApp();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -91,7 +91,7 @@ async function createGame(req, res) {
         let params = req.body;
         let game = new Game(params);
         let data = await game.register();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -105,7 +105,7 @@ async function addGame(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addGame();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -120,7 +120,7 @@ async function addJackpot (req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addJackpot();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -133,7 +133,7 @@ async function addAutoWithdraw(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addAutoWithdraw();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -146,7 +146,7 @@ async function editAutoWithdraw(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editAutoWithdraw();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -160,7 +160,7 @@ async function addCurrencyWallet(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addCurrencyWallet();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -174,7 +174,7 @@ async function getGame(req, res) {
         let params = req.body;
         let game = new Game(params);
         let data = await game.get();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -187,7 +187,7 @@ async function editEdgeJackpot (req, res) {
 	    let params = req.body;
 		let jackpot = new Jackpot(params);
 		let data = await jackpot.editEdgeJackpot();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -201,7 +201,7 @@ async function createBet (req, res) {
         // place a bet on the game
         let bet = new Bet(params);
         let data = await bet.register();
-        MiddlewareSingleton.respond(res, data );
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -213,7 +213,7 @@ async function setMaxBet(req, res) {
         let params = req.body;
         let game = new Game(params);
         let data = await game.setMaxBet();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -229,7 +229,7 @@ async function resolveBet(req, res) {
         let params = req.body;
         let bet = new Bet(params);
         let data = await bet.resolve();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -242,7 +242,7 @@ async function resolveGame (req, res) {
         let params = req.body;
 		let event = new Event(params);
         let data = await event.resolve();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
 	}
@@ -257,7 +257,7 @@ async function summary(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.summary();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -271,7 +271,7 @@ async function getTransactions(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getTransactions();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -286,7 +286,7 @@ async function addServices(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addServices();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -298,7 +298,7 @@ async function getLastBets(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getLastBets();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -310,7 +310,7 @@ async function getBiggestBetWinners(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getBiggestBetWinners();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -322,7 +322,7 @@ async function getBiggestUserWinners(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getBiggestUserWinners();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -334,7 +334,7 @@ async function getPopularNumbers(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getPopularNumbers();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -347,7 +347,7 @@ async function editAffiliateStructure(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editAffiliateStructure();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -360,7 +360,7 @@ async function editIntegration(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editIntegration();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -373,7 +373,7 @@ async function editMailSenderIntegration(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editMailSenderIntegration();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -386,7 +386,7 @@ async function editTopBar(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTopBar();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -399,7 +399,7 @@ async function editBanners(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editBanners();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -412,7 +412,7 @@ async function editLogo(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editLogo();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -425,7 +425,7 @@ async function editColors(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editColors();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -438,7 +438,7 @@ async function editFooter(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editFooter();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -451,7 +451,7 @@ async function editTopIcon(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTopIcon();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -464,7 +464,7 @@ async function editLoadingGif(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editLoadingGif();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -477,7 +477,7 @@ async function editTypography(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTypography();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -490,7 +490,7 @@ async function getUsers(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getUsers();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -532,7 +532,7 @@ async function webhookBitgoDeposit(req, res) {
                 return err;
             }
         }))
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
@@ -552,7 +552,7 @@ async function createAffiliateCustom(req, res) {
         let params = req.body;
         let affiliateLink = new AffiliateLink(params);
         let data = await affiliateLink.setCustomAffiliatePercentage();
-        MiddlewareSingleton.respond(res, data);
+        MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         console.log(err)
         MiddlewareSingleton.respondError(res, err);
