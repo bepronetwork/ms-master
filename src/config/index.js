@@ -9,6 +9,10 @@ export const ENV = process.env.ENV;
 
 export const DB_USER =  process.env.DB_USER;
 
+export const URL_RABBIT =  process.env.URL_RABBIT;
+
+export const PORT_RABBIT =  process.env.PORT_RABBIT;
+
 export const DB_PASSWORD =  process.env.DB_PASSWORD;
 
 export const ETH_TEST_NET = process.env.ETH_NET; 
