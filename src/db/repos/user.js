@@ -232,6 +232,7 @@ class UsersRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model
             .aggregate(usersFromAppFiltered({size, offset, app, user}))
+            .populate(populate_user)
             .exec( (err, docs) => {
                 if(err){reject(err)}
                 resolve(docs);
