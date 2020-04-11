@@ -188,6 +188,7 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
+            "addOn": object.addOn,
             "__v": object.__v,
         }
     },
