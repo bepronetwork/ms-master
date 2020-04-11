@@ -88,6 +88,20 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'foreignField': '_id', 
                 'as': 'bets'
                 }
+        },{
+            '$lookup': {
+                'from': 'games', 
+                'localField': 'bets.game', 
+                'foreignField': '_id', 
+                'as': 'games'
+                }
+        },{
+            '$lookup': {
+                'from': 'currencies', 
+                'localField': 'bets.currency', 
+                'foreignField': '_id', 
+                'as': 'currency'
+                }
         },
         
     ]   
