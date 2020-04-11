@@ -64,15 +64,7 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'foreignField': '_id', 
                 'as': 'affiliate.wallet'
             }
-        }, 
-        {
-            '$lookup': {
-                'from': 'bets', 
-                'localField': 'bets', 
-                'foreignField': '_id', 
-                'as': 'bets'
-                }
-        },{
+        }, {
             '$project': {
                 '_id': true, 
                 'username': true, 
@@ -89,7 +81,15 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'deposits': true, 
                 'bets': true
             }
-        }
+        },{
+            '$lookup': {
+                'from': 'bets', 
+                'localField': 'bets', 
+                'foreignField': '_id', 
+                'as': 'bets'
+                }
+        },
+        
     ]   
             
 
