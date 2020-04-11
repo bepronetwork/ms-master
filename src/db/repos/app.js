@@ -10,7 +10,8 @@ import {
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
     pipeline_biggest_user_winners_by_currency,
-    pipeline_popular_numbers
+    pipeline_popular_numbers,
+    pipeline_biggest_user_winners_all_currency
 } from './pipelines/app';
 
 import { populate_app_all, populate_app_affiliates } from './populates';

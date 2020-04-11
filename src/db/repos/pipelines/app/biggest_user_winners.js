@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { pipeline_match_by_currency } from '../filters/by_currency';
 
 
 const pipeline_biggest_user_winners_by_currency = (_id, { currency }) =>
@@ -201,9 +202,7 @@ const pipeline_biggest_user_winners_all_currency = (_id, { currency }) =>
                 'username': '$user.username',
                 'game': '$game.name'
             }
-        },
-        ...pipeline_match_by_currency({ currency }),
-        {
+        }, {
             '$group': {
                 '_id': '$game',
                 'winAmount': {
@@ -233,7 +232,7 @@ const pipeline_biggest_user_winners_all_currency = (_id, { currency }) =>
     ]
 
 
-export{
+export {
     pipeline_biggest_user_winners_by_currency,
     pipeline_biggest_user_winners_all_currency
-} 
+}
