@@ -70,7 +70,7 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'from': 'bets', 
                 'localField': 'bets', 
                 'foreignField': '_id', 
-                'as': 'bet'
+                'as': 'bets'
                 }
         },{
             '$project': {
@@ -87,7 +87,7 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'email': true, 
                 'withdraws': true, 
                 'deposits': true, 
-                'bet': true
+                'bets': true
             }
         }
     ]   
