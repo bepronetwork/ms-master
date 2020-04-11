@@ -16,18 +16,6 @@ let outputs = {
             "id": object._id,
             "isValid": object.isValid,
             "licenseID"  : object.licenseID,
-            "addOn": object.addOn.jackpot ? {
-                "jackpot": {
-                    edge: object.addOn.jackpot.edge,
-                    limits: object.addOn.jackpot.limits ? object.addOn.jackpot.limits.map(limit => {
-                        return {
-                            currency: limit.currency,
-                            pot: limit.pot
-                        }
-                    }) : [],
-                    bets: object.addOn.jackpot.bets ? object.addOn.jackpot.bets.map(bet => bet) : [],
-                }
-            } : {},
             "games": object.games ? object.games.map(game => {
                 return ({
                     "_id": game._id,
@@ -279,9 +267,7 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
-            "addOn": !object.addOn ? {} : {
-                "_id": object.addOn._id
-            },
+            "addOn": object.addOn,
             "__v": object.__v,
         }
     },
