@@ -211,7 +211,7 @@ async function createBet (req, res) {
         let bet = new Bet({...params, percentage});
         let data = await bet.register();
 
-        await workerQueueSingleton.prototype.sendToQueue("betJackpot", {req});
+        await workerQueueSingleton.sendToQueue("betJackpot", {req});
 
         MiddlewareSingleton.respond(res, req, data);
 
