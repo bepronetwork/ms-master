@@ -87,11 +87,7 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'email': true, 
                 'withdraws': true, 
                 'deposits': true, 
-                'bet': {
-                    '$arrayElemAt': [
-                    '$bet', 0
-                    ]
-                }
+                'bet': true
             }
         }
     ]   
