@@ -9,7 +9,7 @@ import {
     pipeline_get_by_external_id,
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
-    pipeline_biggest_user_winners,
+    pipeline_biggest_user_winners_by_currency,
     pipeline_popular_numbers
 } from './pipelines/app';
 
@@ -215,11 +215,12 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestUserWinners({id, size=15}){ 
-        try{
+    getBiggestUserWinners({id, size=15}, currency = null){ 
+        const pipeline = currency ? pipeline_biggest_user_winners_by_currency : pipeline_biggest_user_winners_all_currency;
+        try{ 
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_biggest_user_winners(id))
+                .aggregate(pipeline(id, {currency}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
