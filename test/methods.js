@@ -315,6 +315,23 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async getAppUsersBets(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/get/users/bets')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))  
+    },
+    async getUserBetsByPipeline(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/users/get/bets')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
     async createGame(params, bearerToken){
         return request(global.server)
         .post('/api/app/games/add')

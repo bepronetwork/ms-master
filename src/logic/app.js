@@ -103,6 +103,14 @@ const processActions = {
 
        return normalized;
     },
+    __appGetUsersBets : async (params) => {
+        let res = await AppRepository.prototype.getAppUserBets({
+            id : params.app,
+            size : params.size,
+            currency: params.currency
+        });
+		return res;
+    },
     __addCurrencyWallet : async (params) => {
         
         var { currency_id, app, passphrase } = params;
@@ -498,6 +506,9 @@ const progressActions = {
         // Get Specific App Data
         let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts);
         return res;
+    },
+    __appGetUsersBets : async (params) => {
+        return params;
     },
     __deployApp : async (params) => {
 
@@ -1026,6 +1037,9 @@ class AppLogic extends LogicComponent{
 				case 'Summary' : {
 					return await library.process.__summary(params); break;
                 };
+                case 'AppGetUsersBets' : {
+					return await library.process.__appGetUsersBets(params); break;
+                };
                 case 'DeployApp' : {
 					return await library.process.__deployApp(params); break;
                 };
@@ -1171,6 +1185,9 @@ class AppLogic extends LogicComponent{
                 };
 				case 'Summary' : {
 					return await library.progress.__summary(params); break;
+                };
+                case 'AppGetUsersBets' : {
+					return await library.progress.__appGetUsersBets(params); break;
                 };
                 case 'DeployApp' : {
 					return await library.progress.__deployApp(params); break;

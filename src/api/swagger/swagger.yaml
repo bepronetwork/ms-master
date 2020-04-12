@@ -639,6 +639,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /users/get/bets:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Get User Bets
+      operationId: userGetBets
+      description: Get User Bets
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserGetBetsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/pusher/auth:
     x-swagger-router-controller: user
     post:
@@ -746,6 +776,36 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AppSummaryRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/get/users/bets:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Users Bets From App
+      operationId: appGetUsersBets
+      description: Get Users Bets From App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGetUsersBetsRequest'
       responses:
         "200":
           description: Success
@@ -2388,6 +2448,30 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Currency ID
+  UserGetBetsRequest:
+    type: object
+    required:
+      - user
+    properties:
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
   UserPusherNotificationsAuth : 
     type: object
     properties:
@@ -3088,6 +3172,30 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Currency ID
+  AppGetUsersBetsRequest:
+    type: object
+    required:
+      - app
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
   AppAddGameRequest : 
     type: object
     required:
