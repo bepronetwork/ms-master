@@ -9,5 +9,4 @@ context('User', async () => {
     require('./affiliates');
     //require('../app/misc/addCurrencyWithUsersRegistered');
     require('./bet');
-    require('./get')
 });
