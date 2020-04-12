@@ -43,9 +43,6 @@ context('App Data Auth', async () =>  {
     })); 
 
     it('should get All App Users Bets', mochaAsync(async () => {
-        console.log(app.id)
-        console.log(admin.id)
-        console.log(app.currencies[0]._id)
         let res = await getAppUsersBets({app: app.id, admin: admin.id, currency: app.currencies[0]._id}, admin.security.bearerToken, {id : admin.id});
         console.log(res.data)
         detectValidationErrors(res);
