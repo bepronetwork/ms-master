@@ -3176,6 +3176,7 @@ definitions:
     type: object
     required:
       - app
+      - admin
     properties:
       app :
         type : string
@@ -3183,6 +3184,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
       currency :
         type : string
         format: name

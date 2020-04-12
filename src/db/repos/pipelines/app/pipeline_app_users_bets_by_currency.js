@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import { pipeline_bets_by_currency } from '../filters';
 
-
-const pipeline_app_users_bets_by_currency = (_id, { currency }) =>
+const pipeline_app_users_bets_by_currency = (_id, currency ) =>
     [
         {
             '$match': {
@@ -42,7 +41,7 @@ const pipeline_app_users_bets_by_currency = (_id, { currency }) =>
                 'path': '$bets'
             }
         },
-        ...pipeline_bets_by_currency({ currency }),
+        ...pipeline_bets_by_currency(currency),
         {
             '$lookup': {
                 'from': 'betresultspaces',

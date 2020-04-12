@@ -207,7 +207,7 @@ class AppRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline(id,{ currency }))
+                .aggregate(pipeline(id, currency))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
