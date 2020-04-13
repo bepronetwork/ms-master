@@ -366,6 +366,8 @@ const processActions = {
             if(app.virtual == true){
                 isPurchase = true;
                 virtualWallet = user.wallet.find( w => w.currency.virtual == true);
+                appVirtualWallet = app.wallet.find( w => w.currency.virtual == true);
+                console.log("Virtual wallet", virtuaWallet);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                
             }
 
@@ -375,6 +377,7 @@ const processActions = {
                 user_in_app,
                 isPurchase,
                 virtualWallet,
+                appVirtualWallet,
                 user: user,
                 wasAlreadyAdded,
                 user_id: user._id,
@@ -587,15 +590,15 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            const { virtualWallet, isPurchase, wallet, amount } = params;
+            const { virtualWallet, appVirtualWallet, isPurchase, wallet, amount } = params;
             var message;
-            console.log("Is Purchase", isPurchase);
+            console.log("Is Purchase", isPurchase, virtualWallet);
 
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
                     currencyAmount : amount,
-                    virtualWallet : virtualWallet
+                    virtualWallet : appVirtualWallet
                 }) : amount,
                 isPurchase : isPurchase,
             }
