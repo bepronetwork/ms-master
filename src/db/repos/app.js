@@ -203,6 +203,13 @@ class AppRepository extends MongoComponent{
     }
 
     getAppUserBets({_id, currency, user, bet, game, offset, size}){
+        console.log(_id)
+        console.log(currency)
+        console.log(user)
+        console.log(bet)
+        console.log(game)
+        console.log(offset)
+        console.log(size)
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model

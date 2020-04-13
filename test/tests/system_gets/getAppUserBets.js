@@ -1,13 +1,13 @@
 import {
     getAppUsersBets
-} from '../../../methods';
+} from '../../methods';
 import chai from 'chai';
-import { mochaAsync, detectValidationErrors } from '../../../utils';
+import { mochaAsync, detectValidationErrors } from '../../utils';
 
 const expect = chai.expect;
 
 
-context('App Data Auth', async () =>  {
+context('App Data Filters Bets', async () =>  {
     var admin, app;
 
 
