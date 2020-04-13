@@ -8,7 +8,7 @@ const expect = chai.expect;
 
 
 context('App Data Filters Bets', async () =>  {
-    var admin, app;
+    var admin, app, user;
 
 
     before( async () =>  {
