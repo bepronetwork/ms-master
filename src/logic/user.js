@@ -600,8 +600,6 @@ const progressActions = {
                 isPurchase : isPurchase,
             }
 
-            console.log(options, "options");
-
             /* Create Deposit Object */
             let deposit = new Deposit({
                 user: params.user_id,
@@ -619,7 +617,7 @@ const progressActions = {
             let depositSaveObject = await deposit.createDeposit();
 
             if(isPurchase){
-                console.log("virtual Wallet", virtualWallet, options.purchaseAmount)
+                console.log("Purchase", isPurchase)
                 /* User Purchase - Virtual */
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
                 message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
@@ -631,7 +629,7 @@ const progressActions = {
 
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-
+            console.log("Triggering Push Notification")
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
