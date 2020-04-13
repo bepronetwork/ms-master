@@ -9,6 +9,7 @@ import {
     pipeline_get_by_external_id,
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
+    pipeline_app_users_bets_by_currency,
     pipeline_biggest_user_winners_by_currency,
     pipeline_popular_numbers,
     pipeline_biggest_user_winners_all_currency
@@ -191,6 +192,21 @@ class AppRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_popular_numbers(id))
+                .exec( (err, data) => {
+                    if(err) { reject(err)}
+                    resolve(data.slice(0, size));
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAppUserBets({_id, currency, user, bet, game, offset, size}){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model
+                .aggregate(pipeline_app_users_bets_by_currency(_id, {currency, user, bet, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

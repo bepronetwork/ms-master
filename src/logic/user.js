@@ -295,6 +295,26 @@ const processActions = {
         }
         return normalized;
     },
+    __userGetBets: async (params) => {
+        if(!params.currency){
+            params.currency = null
+        }
+        if(!params.bet){
+            params.bet = null
+        }
+        if(!params.game){
+            params.game = null
+        }
+        let bets = await UsersRepository.prototype.getUserBets({
+            _id: params.user,
+            offset: params.offset,
+            size: params.size,
+            currency: params.currency,
+            bet: params.bet,
+            game: params.game
+        });
+        return bets;
+    },
     __getDepositAddress: async (params) => {
         var { currency, id, app } = params;
         /* Get User Id */
@@ -532,6 +552,9 @@ const progressActions = {
         }
         return normalized;
     },
+    __userGetBets: async (params) => {
+        return params;
+    },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user } = params;
         var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
@@ -706,6 +729,9 @@ class UserLogic extends LogicComponent {
                 case 'Summary': {
                     return await library.process.__summary(params); break;
                 };
+                case 'UserGetBets': {
+                    return await library.process.__userGetBets(params); break;
+                };
                 case 'GetDepositAddress': {
                     return await library.process.__getDepositAddress(params);
                 };
@@ -776,6 +802,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'Summary': {
                     return await library.progress.__summary(params);
+                };
+                case 'UserGetBets': {
+                    return await library.progress.__userGetBets(params); break;
                 };
                 case 'GetDepositAddress': {
                     return await library.progress.__getDepositAddress(params);

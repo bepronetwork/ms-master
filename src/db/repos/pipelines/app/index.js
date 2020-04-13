@@ -9,6 +9,8 @@ import { pipeline_biggest_user_winners_all_currency } from './biggest_user_winne
 import { pipeline_biggest_user_winners_by_currency } from "./biggest_user_winners_by_currency";
 import pipeline_biggest_bet_winners from './biggest_bet_winners';
 import pipeline_popular_numbers from './popular_numbers';
+import pipeline_app_users_bets_by_currency from "./pipeline_app_users_bets_by_currency";
+import pipeline_app_users_bets_all from "./pipeline_app_users_bets_all";
 
 export {
     pipeline_bet_stats,
@@ -20,6 +22,8 @@ export {
     pipeline_app_wallet,
     pipeline_get_by_external_id,
     pipeline_last_bets,
+    pipeline_app_users_bets_by_currency,
+    pipeline_app_users_bets_all,
     pipeline_biggest_user_winners_all_currency,
     pipeline_biggest_user_winners_by_currency
 }

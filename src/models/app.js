@@ -124,6 +124,15 @@ class App extends ModelComponent {
         }
     }
 
+    async appGetUsersBets() {
+        try {
+            let app = await this.process('AppGetUsersBets');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
      * @param {String} 
      * @return {bool || Exception}  
