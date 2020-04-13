@@ -171,7 +171,7 @@ context('Bet', async () => {
         const affiliateReturns = betAmount*(user_4_percentageOnLoss);
 
         /* Verify balance on App */
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns).toFixed(6));
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns - (betAmount*0.01)).toFixed(6));
         /* Verify Balance on User 5 */
         expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
 
@@ -244,7 +244,7 @@ context('Bet', async () => {
 
         /* Verify balance on App */
         const affiliateReturns = betAmount*(user_2_percentageOnLoss);
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns));
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns - (betAmount*0.01)));
 
         /* Verify Balance on User 3 */
         expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
