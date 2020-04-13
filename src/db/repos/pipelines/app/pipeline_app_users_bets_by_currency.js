@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { pipeline_bets_by_currency, pipeline_user_by_id, pipeline_offset, pipeline_size, pipeline_app_user_by_bet, pipeline_app_user_by_game } from '../filters';
+import { pipeline_bets_by_currency_id, pipeline_user_by_id, pipeline_offset, pipeline_size, pipeline_app_user_by_bet, pipeline_app_user_by_game } from '../filters';
 
 const pipeline_app_users_bets_by_currency = (_id, {currency, user, bet, game, offset, size} ) =>
     [
@@ -44,7 +44,7 @@ const pipeline_app_users_bets_by_currency = (_id, {currency, user, bet, game, of
             }
         },
         ...pipeline_app_user_by_bet({bet}),
-        ...pipeline_bets_by_currency({currency}),
+        ...pipeline_bets_by_currency_id({currency}),
         {
             '$lookup': {
                 'from': 'betresultspaces',
