@@ -367,7 +367,7 @@ const processActions = {
                 isPurchase = true;
                 virtualWallet = user.wallet.find( w => w.currency.virtual == true);
                 appVirtualWallet = app.wallet.find( w => w.currency.virtual == true);
-                console.log("Virtual wallet", virtuaWallet);
+                console.log("Virtual wallet", virtualWallet);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                
             }
 
