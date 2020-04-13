@@ -3100,6 +3100,12 @@ definitions:
         example : 50
         description: |
           size
+      currency :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Currency ID
   AppUsersRequest : 
     type: object
     required:

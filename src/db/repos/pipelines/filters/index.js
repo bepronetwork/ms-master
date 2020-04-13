@@ -7,6 +7,7 @@ import { pipeline_size } from "./size";
 import { pipeline_user_by_id } from "./by_user_id";
 import { pipeline_app_user_by_game } from "./by_app_user_game";
 import { pipeline_app_user_by_bet } from "./by_app_user_bet";
+import { pipeline_match_by_currency } from "./match_by_currency";
 
 
 export {
@@ -18,5 +19,6 @@ export {
     pipeline_size,
     pipeline_user_by_id,
     pipeline_app_user_by_game,
-    pipeline_app_user_by_bet
+    pipeline_app_user_by_bet,
+    pipeline_match_by_currency
 }
