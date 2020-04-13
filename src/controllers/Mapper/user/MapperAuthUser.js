@@ -103,6 +103,7 @@ let outputs = {
                     "link_url": deposit.link_url
                 })
             }) : object.deposits,
+            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {
                 "_id": object.affiliateLink._id,

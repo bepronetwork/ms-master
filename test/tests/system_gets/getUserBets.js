@@ -16,6 +16,7 @@ context('Get', async () => {
 
     it('should Get User Bets', mochaAsync(async () => {
         let res = await getUserBetsByPipeline({user: user.id}, user.bearerToken, {id : user.id});
+        console.log("User:: ",user)
         console.log(res.data)
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);

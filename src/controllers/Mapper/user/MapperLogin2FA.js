@@ -37,6 +37,7 @@ let outputs = {
                     },
                 })
             }) : object.wallet,
+            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
             "affiliateWallet": object.affiliate.wallet ? object.affiliate.wallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,
