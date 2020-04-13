@@ -827,7 +827,7 @@ class ErrorManager {
                     // console.log(`${parseFloat(Math.abs(bet.user_delta)).toFixed(6)}`);
 
                     /* Verify if when Bet is Lost the total Affiliate Return + App Cut equals User Lost */
-                    if(!bet.isWon && ( bet.totalAffiliateReturn + bet.app_delta + bet.percentage != Math.abs(bet.user_delta))){
+                    if(!bet.isWon && ( parseFloat(bet.totalAffiliateReturn + bet.app_delta + bet.percentage).toFixed(6) != parseFloat(Math.abs(bet.user_delta)).toFixed(6)) ){
                         console.log( bet.totalAffiliateReturn + bet.app_delta + bet.percentage);
                         console.log(`${bet.totalAffiliateReturn} + ${bet.app_delta} + ${bet.percentage}`);
                         console.log(`${bet.user_delta}`);
