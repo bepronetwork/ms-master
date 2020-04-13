@@ -19,7 +19,6 @@ context('App Data Filters Bets', async () =>  {
 
     it('should get All App Users Bets', mochaAsync(async () => {
         let res = await getAppUsersBets({app: app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
-        console.log("User:: ",user)
         detectValidationErrors(res);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
@@ -34,7 +33,6 @@ context('App Data Filters Bets', async () =>  {
 
     it('should get All App Users Bets By User', mochaAsync(async () => {
         let res = await getAppUsersBets({app: app.id, admin: admin.id, user: app.users[0]._id}, admin.security.bearerToken, {id : admin.id});
-        console.log(res.data)
         detectValidationErrors(res);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
@@ -42,7 +40,6 @@ context('App Data Filters Bets', async () =>  {
 
     it('should get All App Users Bets By Game', mochaAsync(async () => {
         let res = await getAppUsersBets({app: app.id, admin: admin.id, game: app.games[0]._id}, admin.security.bearerToken, {id : admin.id});
-        console.log(res.data)
         detectValidationErrors(res);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
@@ -50,7 +47,6 @@ context('App Data Filters Bets', async () =>  {
 
     it('should get All App Users Bets By Bet Id', mochaAsync(async () => {
         let res = await getAppUsersBets({app: app.id, admin: admin.id, bet: app.users[0].bets[0]}, admin.security.bearerToken, {id : admin.id});
-        console.log(res.data)
         detectValidationErrors(res);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
