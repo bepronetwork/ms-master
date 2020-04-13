@@ -2466,6 +2466,18 @@ definitions:
           Amount of Bets Wanted
       offset :
         type : number
+      bet :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Bet ID
+      game :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Game ID
       currency :
         type : string
         format: name
@@ -3190,12 +3202,30 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
       currency :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
           Currency ID
+      bet :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Bet ID
+      game :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Game ID
       size:
         type : number
         example: 15

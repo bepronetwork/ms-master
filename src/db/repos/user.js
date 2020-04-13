@@ -87,12 +87,11 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    getUserBets({id, size=15, currency}){
-        const pipeline = currency ? pipeline_user_bets_by_currency : pipeline_user_bets_all;
+    getUserBets({_id, currency, bet, game, offset, size}){
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
-                .aggregate(pipeline(id,{ currency }))
+                .aggregate(pipeline_user_bets_by_currency(_id,{ currency, bet, game, offset, size }))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

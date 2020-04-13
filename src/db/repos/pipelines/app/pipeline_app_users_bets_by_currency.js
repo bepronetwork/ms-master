@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { pipeline_bets_by_currency } from '../filters';
+import { pipeline_bets_by_currency, pipeline_user_by_id, pipeline_offset, pipeline_size, pipeline_app_user_by_bet, pipeline_app_user_by_game } from '../filters';
 
-const pipeline_app_users_bets_by_currency = (_id, currency ) =>
+const pipeline_app_users_bets_by_currency = (_id, {currency, user, bet, game, offset, size} ) =>
     [
         {
             '$match': {
@@ -29,7 +29,9 @@ const pipeline_app_users_bets_by_currency = (_id, currency ) =>
             '$unwind': {
                 'path': '$user'
             }
-        }, {
+        },
+        ...pipeline_user_by_id({user}), 
+        {
             '$lookup': {
                 'from': 'bets',
                 'localField': 'user.bets',
@@ -41,7 +43,8 @@ const pipeline_app_users_bets_by_currency = (_id, currency ) =>
                 'path': '$bets'
             }
         },
-        ...pipeline_bets_by_currency(currency),
+        ...pipeline_app_user_by_bet({bet}),
+        ...pipeline_bets_by_currency({currency}),
         {
             '$lookup': {
                 'from': 'betresultspaces',
@@ -71,7 +74,10 @@ const pipeline_app_users_bets_by_currency = (_id, currency ) =>
             '$unwind': {
                 'path': '$game'
             }
-        }
+        },
+        ...pipeline_app_user_by_game({ game }),
+        ...pipeline_offset({ offset }),
+        ...pipeline_size({ size })
     ]
 
 

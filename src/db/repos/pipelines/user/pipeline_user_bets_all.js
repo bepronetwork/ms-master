@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-//Need User
 const pipeline_user_bets_all = (_id, { currency }) =>
     [
         {

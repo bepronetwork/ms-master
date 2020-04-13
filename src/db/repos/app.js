@@ -202,12 +202,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppUserBets({id, size=15, currency}){
-        const pipeline = currency ? pipeline_app_users_bets_by_currency : pipeline_app_users_bets_all;
+    getAppUserBets({_id, currency, user, bet, game, offset, size}){
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline(id, currency))
+                .aggregate(pipeline_app_users_bets_by_currency(_id, {currency, user, bet, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
