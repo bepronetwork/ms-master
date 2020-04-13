@@ -346,7 +346,7 @@ const processActions = {
 
             const from = entries[0].address;
             const to = entries[1].address;
-            var isPurchase = false, virtualWallet = null;
+            var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
             /* Get User Info */
@@ -361,7 +361,7 @@ const processActions = {
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
-            console.log("virtual", app.virtual);
+
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){
                 isPurchase = true;
