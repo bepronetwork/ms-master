@@ -9,7 +9,6 @@ import {
     pipeline_get_by_external_id,
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
-    pipeline_popular_numbers,
     pipeline_app_users_bets_by_currency,
     pipeline_biggest_user_winners_by_currency,
     pipeline_popular_numbers,
