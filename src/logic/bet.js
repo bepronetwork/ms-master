@@ -169,7 +169,7 @@ const processActions = {
             const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
-                percentage: parseFloat(percentage).toFixed(6),
+                percentage,
                 user_in_app,
                 isUserWithdrawingAPI,
                 isAppWithdrawingAPI,

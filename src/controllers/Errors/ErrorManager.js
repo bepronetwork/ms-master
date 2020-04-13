@@ -821,6 +821,11 @@ class ErrorManager {
                         console.log(1);
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
                     }
+
+                    // console.log(parseFloat(bet.totalAffiliateReturn + bet.app_delta + bet.percentage).toFixed(6));
+                    // console.log(`${bet.totalAffiliateReturn} + ${bet.app_delta} + ${bet.percentage}`);
+                    // console.log(`${parseFloat(Math.abs(bet.user_delta)).toFixed(6)}`);
+                    
                     /* Verify if when Bet is Lost the total Affiliate Return + App Cut equals User Lost */
                     if(!bet.isWon && ( parseFloat(bet.totalAffiliateReturn + bet.app_delta + bet.percentage).toFixed(6) != parseFloat(Math.abs(bet.user_delta)).toFixed(6) )){
                         console.log(parseFloat(bet.totalAffiliateReturn + bet.app_delta + bet.percentage).toFixed(6));
