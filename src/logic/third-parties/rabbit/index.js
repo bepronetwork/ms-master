@@ -1,4 +1,4 @@
-import { PORT_RABBIT, URL_RABBIT } from '../../../config';
+import { CLOUDAMQP_URL } from '../../../config';
 
 class workerQueue {
 
@@ -7,7 +7,7 @@ class workerQueue {
     }
 
     __init__() {
-        this.__connectInstance = require('amqplib').connect(`amqp://${URL_RABBIT}:${PORT_RABBIT}`).then(conn => conn.createChannel());
+        this.__connectInstance = require('amqplib').connect(CLOUDAMQP_URL).then(conn => conn.createChannel());
     }
 
     __connect(){

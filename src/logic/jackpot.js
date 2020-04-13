@@ -63,7 +63,7 @@ const processActions = {
 
 	__editEdgeJackpot : async (params) => {
 		try {
-			let app = await AppRepository.prototype.findAppById(user.app_id);
+			let app = await AppRepository.prototype.findAppById(params.app);
 			if(!app){throwError('APP_NOT_EXISTENT')}
 			if(app.addOn.jackpot==undefined || app.addOn.jackpot==null) {throwError('JACKPOT_NOT_EXIST_IN_APP')}
 			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
@@ -251,6 +251,7 @@ const processActions = {
 const progressActions = {
 	__editEdgeJackpot : async (params) => {
 		try {
+			console.log(params.jackpot_id);
 			let res = await JackpotRepository.prototype.editEdgeJackpot(params.jackpot_id, params.edge);
 			return res;
 		}catch(err){
@@ -400,6 +401,10 @@ class JackpotLogic extends LogicComponent {
 				case 'Percentage' : {
 					return await library.process.__percentage(params); break;
 				};
+				case 'EditEdgeJackpot' : {
+					return await library.process.__editEdgeJackpot(params); break;
+				};
+
 			}
 		}catch(error){
 			throw error;
@@ -436,6 +441,9 @@ class JackpotLogic extends LogicComponent {
 				};
 				case 'Percentage' : {
 					return await library.progress.__percentage(params); break;
+				};
+				case 'EditEdgeJackpot' : {
+					return await library.progress.__editEdgeJackpot(params); break;
 				};
 			}
 		}catch(error){

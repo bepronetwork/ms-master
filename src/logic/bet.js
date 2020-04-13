@@ -82,7 +82,7 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            const { currency } = params;
+            const { currency, percentage } = params;
 
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -137,7 +137,7 @@ const processActions = {
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : totalBetAmount,
+                betAmount : totalBetAmount - parseFloat(percentage).toFixed(6),
                 edge : game.edge
             });
 
@@ -161,7 +161,7 @@ const processActions = {
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
+                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn - parseFloat(percentage).toFixed(6)));
             }
 
             var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
