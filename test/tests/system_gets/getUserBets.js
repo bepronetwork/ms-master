@@ -6,7 +6,7 @@ import { mochaAsync } from '../../utils';
 import chai from 'chai';
 const expect = chai.expect;
 
-context('Get', async () => {
+context('User Data Filters Bets', async () => {
     var app, user
 
     before( async () =>  {
