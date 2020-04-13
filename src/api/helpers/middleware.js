@@ -2,6 +2,7 @@ import { PUBLIC_KEY, PRIVATE_KEY } from '../../config';
 import Log from '../../models/log';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { writeFile } from './file';
+import {Security as SecurityCrypt} from "../../controllers/Security";
 
 const jwt   = require('jsonwebtoken');
 // use 'utf8' to get string instead of byte array  (512 bit key)
@@ -105,6 +106,15 @@ class Middleware{
                 }
             });
         }
+    }
+
+    convertToJson(req) {
+        return JSON.stringify({
+            req : {
+                body : req.body,
+                hash:  SecurityCrypt.prototype.encryptData( SecurityCrypt.prototype.generateHash( JSON.stringify( req.body ).trim() ) )
+            }
+        });
     }
 
     async log(json) {

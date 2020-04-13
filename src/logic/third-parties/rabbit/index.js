@@ -29,9 +29,8 @@ class workerQueue {
             this.__connect()
             .then(channel => this.__createQueue(channel, queue))
             .then(channel => {
-                channel.sendToQueue(queue, Buffer.from(JSON.stringify(message))).then(() => {
-                    resolve(true);
-                });
+                channel.sendToQueue( queue, Buffer.from(JSON.stringify(message)) );
+                resolve(true);
             })
             .catch(err => console.log(err))
         });
