@@ -42,11 +42,4 @@ context('App Data Auth', async () =>  {
         shouldGetAllAppGamesUserIntegration(res.data, expect);
     })); 
 
-    it('should get All App Users Bets', mochaAsync(async () => {
-        let res = await getAppUsersBets({app: app.id, admin: admin.id, currency: app.currencies[0]._id}, admin.security.bearerToken, {id : admin.id});
-        detectValidationErrors(res);
-        expect(res.data.status).to.not.null;
-        expect(res.data.status).to.equal(200);
-    })); 
-
 });
