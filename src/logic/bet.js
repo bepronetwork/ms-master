@@ -124,10 +124,8 @@ const processActions = {
                 game : game.metaName
             }); 
             totalBetAmount = MathSingleton.toFloatPositiveNDecimal(totalBetAmount).value;
-            console.log(totalBetAmount);
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
-            console.log(`${maxBetValue} < ${totalBetAmount}`)
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
 
             /* Get Bet Result */
@@ -149,9 +147,7 @@ const processActions = {
                 app_delta = MathSingleton.toFloatPositiveNDecimal(-delta).value;
             }else{
                 /* User Lost Bet */
-                console.log(totalBetAmount)
                 user_delta = -MathSingleton.toFloatPositiveNDecimal(Math.abs(totalBetAmount)).value;
-                console.log(user_delta);
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
