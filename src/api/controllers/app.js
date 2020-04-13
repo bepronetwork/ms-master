@@ -211,7 +211,10 @@ async function createBet (req, res) {
         let bet = new Bet({...params, percentage});
         let data = await bet.register();
 
-        await workerQueueSingleton.sendToQueue("betJackpot", MiddlewareSingleton.convertToJson(req));
+        // Check if percentage to jackpot is > 0, and if yes, then call jackpot queue
+        if(percentage > 0) {
+            await workerQueueSingleton.sendToQueue("betJackpot", MiddlewareSingleton.convertToJson(req));
+        }
 
         MiddlewareSingleton.respond(res, req, data);
 
