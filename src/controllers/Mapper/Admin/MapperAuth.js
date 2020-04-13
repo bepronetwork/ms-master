@@ -62,7 +62,7 @@ let outputs = {
                             "decimals": wallet.currency.decimals,
                             "name": wallet.currency.name,
                             "address": wallet.currency.address,
-                            "virtual" : wallet.currency.virtual,
+                            "virtual" : wallet.currency.virtual
                         },
                         "price" : wallet.price,
                         "bitgo_id": wallet.bitgo_id,
