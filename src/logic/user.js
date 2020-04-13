@@ -619,6 +619,7 @@ const progressActions = {
             let depositSaveObject = await deposit.createDeposit();
 
             if(isPurchase){
+                console.log("virtual Wallet", virtualWallet, options.purchaseAmount)
                 /* User Purchase - Virtual */
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
                 message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
