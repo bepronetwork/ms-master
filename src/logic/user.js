@@ -365,7 +365,7 @@ const processActions = {
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){
                 isPurchase = true;
-                virtualWallet = app.wallet.find( w => w.currency.virtual == true);
+                virtualWallet = user.wallet.find( w => w.currency.virtual == true);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                
             }
 
@@ -617,7 +617,7 @@ const progressActions = {
             let depositSaveObject = await deposit.createDeposit();
 
             if(isPurchase){
-                console.log("Purchase", isPurchase, virtualWallet, options.purchaseAmount, params)
+                console.log("Purchase", isPurchase)
                 /* User Purchase - Virtual */
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
                 message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
@@ -626,7 +626,7 @@ const progressActions = {
                 await WalletsRepository.prototype.updatePlayBalance(wallet, params.amount);
                 message = `Deposited ${params.amount} ${wallet.currency.ticker} in your account`
             }
-
+            console.log("Notificating user", params.user_id)
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
             /* Push Webhook Notification */
