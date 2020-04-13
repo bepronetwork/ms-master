@@ -19,6 +19,7 @@ context('App Data Filters Bets', async () =>  {
 
     it('should get All App Users Bets', mochaAsync(async () => {
         let res = await getAppUsersBets({app: app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+        console.log("User:: ",user)
         detectValidationErrors(res);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
