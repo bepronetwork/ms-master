@@ -231,7 +231,7 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestUserWinners({_id, currency, game}){ 
+    getBiggestUserWinners({_id, size, currency, game}){ 
         try{ 
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
