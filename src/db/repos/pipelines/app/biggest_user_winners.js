@@ -1,109 +1,109 @@
 import mongoose from 'mongoose';
+import { pipeline_match_by_currency, pipeline_match_by_game } from '../filters';
 
 
-const pipeline_biggest_user_winners = (_id) => 
-    [
-        //Stage 0
+const pipeline_biggest_user_winners = (_id, { currency, game }) => 
+[
     {
-        '$match' : {
-            "_id" : mongoose.Types.ObjectId(_id)
-        }
-    },
-    {
-        '$lookup': {
+      '$match': {
+        '_id': mongoose.Types.ObjectId(_id)
+      }
+    }, {
+      '$lookup': {
         'from': 'games', 
         'localField': 'games', 
         'foreignField': '_id', 
         'as': 'games'
-        }
+      }
     }, {
-        '$project': {
-            'games.bets': true, 
-            '_id': false
-        }
+      '$project': {
+        'games.bets': true, 
+        '_id': false
+      }
     }, {
-        '$unwind': {
+      '$unwind': {
         'path': '$games'
-        }
+      }
     }, {
-        '$project': {
+      '$project': {
         'bets': '$games.bets'
-        }
+      }
     }, {
-        '$unwind': {
+      '$unwind': {
         'path': '$bets'
-        }
+      }
     }, {
-        '$lookup': {
+      '$lookup': {
         'from': 'bets', 
         'localField': 'bets', 
         'foreignField': '_id', 
         'as': 'bet'
-        }
+      }
     }, {
-        '$project': {
+      '$project': {
         'bet': {
-            '$arrayElemAt': [
+          '$arrayElemAt': [
             '$bet', 0
-            ]
+          ]
         }
-        }
+      }
     }, {
-        '$lookup': {
+      '$lookup': {
         'from': 'users', 
         'localField': 'bet.user', 
         'foreignField': '_id', 
         'as': 'bet.user'
-        }
+      }
     }, {
-        '$lookup': {
+      '$lookup': {
         'from': 'games', 
         'localField': 'bet.game', 
         'foreignField': '_id', 
         'as': 'bet.game'
-        }
+      }
     }, {
-        '$project': {
+      '$project': {
         'bet': true, 
         'user': {
-            '$arrayElemAt': [
+          '$arrayElemAt': [
             '$bet.user', 0
-            ]
+          ]
         }, 
         'game': {
-            '$arrayElemAt': [
+          '$arrayElemAt': [
             '$bet.game', 0
-            ]
+          ]
         }
-        }
+      }
     }, {
-        '$project': {
-            '_id': '$bet._id', 
-            'betAmount': '$bet.betAmount', 
-            'currency' : '$bet.currency',
-            'timestamp': '$bet.timestamp', 
-            'isWon': '$bet.isWon', 
-            'winAmount': '$bet.winAmount', 
-            'username': '$user.username', 
-            'game': '$game.name'
-        }
-    },
+      '$project': {
+        '_id': '$bet._id', 
+        'betAmount': '$bet.betAmount', 
+        'currency': '$bet.currency', 
+        'timestamp': '$bet.timestamp', 
+        'isWon': '$bet.isWon', 
+        'winAmount': '$bet.winAmount', 
+        'username': '$user.username', 
+        'game': '$game._id'
+      }
+    }, 
+    ...pipeline_match_by_currency({ currency }), 
+    ...pipeline_match_by_game({ game }), 
     {
-        '$group': {
-            '_id':  '$username',
-            'winAmount': {
-                '$sum': '$winAmount'
-            }, 
+      '$group': {
+        '_id': '$username', 
+        'winAmount': {
+          '$sum': '$winAmount'
         }
-    },{
-        '$sort': {
-            'winAmount': -1
-        }
-    },
-    {
-        '$limit': 100
-    },
-]
+      }
+    }, {
+      '$sort': {
+        'winAmount': -1
+      }
+    }, {
+      '$limit': 100
+    }
+  ]
 
 
 export default pipeline_biggest_user_winners;

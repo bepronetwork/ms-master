@@ -25,6 +25,7 @@ let outputs = {
             "email": object.email,
             "app": !object.app ? {} : {
                 "id": object.app._id,
+                "virtual" : object.app.virtual,
                 "isValid": object.app.isValid,
                 "games": object.app.games ? object.app.games.map(game_id => {
                     return ({
@@ -61,7 +62,7 @@ let outputs = {
                             "decimals": wallet.currency.decimals,
                             "name": wallet.currency.name,
                             "address": wallet.currency.address,
-                            "virtual" : wallet.currency.virtual,
+                            "virtual" : wallet.currency.virtual
                         },
                         "price" : wallet.price,
                         "bitgo_id": wallet.bitgo_id,

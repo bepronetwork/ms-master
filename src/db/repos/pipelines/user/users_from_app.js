@@ -81,7 +81,14 @@ export function usersFromAppFiltered({size, offset, app, user}){
                 'deposits': true, 
                 'bets': true
             }
-        }
+        },{
+            '$lookup': {
+                'from': 'bets', 
+                'localField': 'bets', 
+                'foreignField': '_id', 
+                'as': 'bets'
+                }
+        },
     ]   
             
 

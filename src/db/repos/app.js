@@ -9,8 +9,9 @@ import {
     pipeline_get_by_external_id,
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
-    pipeline_biggest_user_winners,
-    pipeline_popular_numbers
+    pipeline_app_users_bets_by_currency,
+    pipeline_popular_numbers,
+    pipeline_biggest_user_winners
 } from './pipelines/app';
 
 import { populate_app_all, populate_app_affiliates } from './populates';
@@ -200,6 +201,21 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    getAppUserBets({_id, currency, user, bet, game, offset, size}){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model
+                .aggregate(pipeline_app_users_bets_by_currency(_id, {currency, user, bet, game, offset, size}))
+                .exec( (err, data) => {
+                    if(err) { reject(err)}
+                    resolve(data.slice(0, size));
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
     getBiggestBetWinners({id, size=15}){ 
         try{
             return new Promise( (resolve, reject) => {
@@ -215,11 +231,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestUserWinners({id, size=15}){ 
-        try{
+    getBiggestUserWinners({_id, size, currency, game}){ 
+        try{ 
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_biggest_user_winners(id))
+                .aggregate(pipeline_biggest_user_winners(_id, {currency, game}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

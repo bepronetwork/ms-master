@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 
-const pipeline_bets_by_currency = ({ currency }) => {
+const pipeline_bets_by_currency_id = ({ currency }) => {
     if (!currency) { return {} };
     return [
         {
             '$match': {
-                "bet.currency": mongoose.Types.ObjectId(currency)
+                "bets.currency": mongoose.Types.ObjectId(currency)
             }
         }
     ];
 }
 
 export {
-    pipeline_bets_by_currency
+    pipeline_bets_by_currency_id
 }
 
 

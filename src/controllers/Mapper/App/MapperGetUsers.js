@@ -15,9 +15,34 @@ let outputs = {
         return object.map(object => {
             return ({
                 "_id": object._id,
-                "bets": object.bets ? object.bets.map(bet_id => {
+                "bets": object.bets ? object.bets.map(bet => {
                     return({
-                        "_id": bet_id
+                        "_id": bet._id,
+                        "result": bet.result ? bet.result.map(result_id => {
+                            return({
+                                "_id": result_id
+                            })
+                        }) : bet.result,
+                        "isResolved": bet.isResolved,
+                        "currency": bet.currency,
+                        "user": bet.user,
+                        "outcomeResultSpace": {
+                            "key": bet.outcomeResultSpace.key,
+                            "start": bet.outcomeResultSpace.start,
+                            "probability": bet.outcomeResultSpace.probability,
+                            "index": bet.outcomeResultSpace.index,
+                        },
+                        "isWon": bet.isWon,
+                        "game": bet.game,
+                        "winAmount": bet.winAmount,
+                        "betAmount": bet.betAmount,
+                        "fee": bet.fee,
+                        "timestamp": bet.timestamp,
+                        "nonce": bet.nonce,
+                        "clientSeed": bet.clientSeed,
+                        "serverHashedSeed": bet.serverHashedSeed,
+                        "serverSeed": bet.serverSeed,
+                        "__v": bet.__v,
                     })
                 }) : object.bets,
                 "deposits": object.deposits ? object.deposits.map(deposit_id => {

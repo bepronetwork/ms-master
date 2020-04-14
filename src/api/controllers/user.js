@@ -140,6 +140,19 @@ async function getUserInfo (req, res) {
 	}
 }
 
+async function userGetBets (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'user', req});
+        await MiddlewareSingleton.log({type: "user", req});
+        let params = req.body;
+		let user = new User(params);
+		let data = await user.userGetBets();
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function userSummary (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
@@ -227,5 +240,6 @@ export {
     resetPassword,
     setPassword,
     confirmEmail,
-    resendEmail
+    resendEmail,
+    userGetBets
 }
