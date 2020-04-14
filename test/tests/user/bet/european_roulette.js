@@ -56,10 +56,10 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             app: app.id,
             currency : currency._id,
             nonce: getRandom(123,2384723),
-            result: [{
-                place: 0, value: betAmount/4,
-                place: 4, value: betAmount/2,
-            }]
+            result: [
+                { place: 0, value: betAmount/4},
+                {place: 4, value: betAmount/2}
+            ]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * ( (betAmount/4) + (betAmount/2) ));
         console.log("6============= ", (global.test.jackpotEdge * ( (betAmount/4) + (betAmount/2) )));

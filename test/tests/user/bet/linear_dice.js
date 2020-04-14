@@ -57,11 +57,11 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             app: app.id,
             currency : currency._id,
             nonce: getRandom(123,2384723),
-            result: [{
-                place: 0, value: betAmount/3,
-                place: 1, value: betAmount/3,
-                place: 2, value: betAmount/3
-            }]
+            result: [
+                {place: 0, value: betAmount/3},
+                {place: 1, value: betAmount/3},
+                {place: 2, value: betAmount/3}
+            ]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
         console.log("8============= ", ( global.test.jackpotEdge * (betAmount) ) );
@@ -86,12 +86,11 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             currency : currency._id,
             app: app.id,
             nonce: getRandom(123,2384723),
-            result: [{
-                place: 0, value: betAmount/3,
-                place: 40, value: betAmount/3,                
-                place: 12, value: betAmount/3,
-
-            }]
+            result: [
+                {place: 0, value: betAmount/3},
+                {place: 40, value: betAmount/3},                
+                {place: 12, value: betAmount/3},
+            ]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
         console.log("9============= ", (global.test.jackpotEdge * (betAmount)) );
