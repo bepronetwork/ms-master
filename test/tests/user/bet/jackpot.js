@@ -4,7 +4,7 @@ import {
     getAppAuth
 } from '../../../methods';
 
-import AppRepository from "../../../../src/db/repos";
+import {AppRepository} from "../../../../src/db/repos";
 
 import chai from 'chai';
 
