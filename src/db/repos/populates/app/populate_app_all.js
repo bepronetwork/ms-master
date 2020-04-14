@@ -13,7 +13,7 @@ let populate_app_all = [
         path : 'addOn',
         model : 'AddOn',
         select : { '__v': 0},
-        populate :
+        populate : [
         {
             path : 'jackpot',
             model : 'Jackpot',
@@ -28,7 +28,7 @@ let populate_app_all = [
             path: 'autoWithdraw',
             model: 'AutoWithdraw',
             select : { '__v': 0}
-        }
+        }]
     },
     {
         path : 'wallet',
