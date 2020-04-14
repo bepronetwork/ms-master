@@ -6,7 +6,9 @@ import {
     pipeline_financial_stats, 
     pipeline_user_wallet,
     pipeline_all_users_balance,
-    pipeline_my_bets
+    pipeline_my_bets,
+    pipeline_user_bets_all,
+    pipeline_user_bets_by_currency
 } from './pipelines/user';
 import { populate_user } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
@@ -75,6 +77,21 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_my_bets(id,{ dates, currency }))
+                .exec( (err, data) => {
+                    if(err) { reject(err)}
+                    resolve(data.slice(0, size));
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getUserBets({_id, currency, bet, game, offset, size}){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model
+                .aggregate(pipeline_user_bets_by_currency(_id,{ currency, bet, game, offset, size }))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

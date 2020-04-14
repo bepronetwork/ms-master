@@ -15,6 +15,7 @@ let outputs = {
         return {
             "id": object._id,
             "isValid": object.isValid,
+            "virtual"   : object.virtual,
             "licenseID"  : object.licenseID,
             "games": object.games ? object.games.map(game => {
                 return ({
@@ -187,6 +188,7 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
+            "addOn": object.addOn,
             "__v": object.__v,
         }
     },

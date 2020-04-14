@@ -102,6 +102,8 @@ class AdminsRepository{
     findAdminByApp(app) {
         return new Promise((resolve)=>{
             AdminSchema.prototype.schema.model.find({app})
+                .populate(populate_admin)
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

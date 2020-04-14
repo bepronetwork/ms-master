@@ -58,6 +58,7 @@ let outputs = {
             }) : object.affiliate.wallet,
             "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
             "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
+            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
                 "chat": {

@@ -168,6 +168,7 @@ const processActions = {
         if(adminEmail && adminEmail.registered === true) { throwError()}
         let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() );
         let password = new Security(String((new Date()).getTime())).hash();
+        let permissionObject = await PermissionRepository.prototype.findById(params.permission)
 		let normalized = {
             adminEmail      : adminEmail,
 			username 		: `user${params.admin}${String((new Date()).getTime())}`,
@@ -178,7 +179,7 @@ const processActions = {
             app             : admin.app,
             bearerToken     : bearerToken,
             registered      : false,
-            permission      : params.permission
+            permission      : permissionObject
         }
 		return normalized;
     },

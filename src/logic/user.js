@@ -295,6 +295,26 @@ const processActions = {
         }
         return normalized;
     },
+    __userGetBets: async (params) => {
+        if(!params.currency){
+            params.currency = null
+        }
+        if(!params.bet){
+            params.bet = null
+        }
+        if(!params.game){
+            params.game = null
+        }
+        let bets = await UsersRepository.prototype.getUserBets({
+            _id: params.user,
+            offset: params.offset,
+            size: params.size,
+            currency: params.currency,
+            bet: params.bet,
+            game: params.game
+        });
+        return bets;
+    },
     __getDepositAddress: async (params) => {
         var { currency, id, app } = params;
         /* Get User Id */
@@ -326,7 +346,7 @@ const processActions = {
 
             const from = entries[0].address;
             const to = entries[1].address;
-            var isPurchase = false, virtualWallet = null;
+            var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
             /* Get User Info */
@@ -341,11 +361,12 @@ const processActions = {
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
-            console.log("virtual", app.virtual);
+
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){
                 isPurchase = true;
-                virtualWallet = app.wallet.find( w => w.currency.virtual == true);
+                virtualWallet = user.wallet.find( w => w.currency.virtual == true);
+                appVirtualWallet = app.wallet.find( w => w.currency.virtual == true);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                
             }
 
@@ -355,6 +376,7 @@ const processActions = {
                 user_in_app,
                 isPurchase,
                 virtualWallet,
+                appVirtualWallet,
                 user: user,
                 wasAlreadyAdded,
                 user_id: user._id,
@@ -532,6 +554,9 @@ const progressActions = {
         }
         return normalized;
     },
+    __userGetBets: async (params) => {
+        return params;
+    },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user } = params;
         var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
@@ -564,20 +589,17 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            const { virtualWallet, isPurchase, wallet, amount } = params;
+            const { virtualWallet, appVirtualWallet, isPurchase, wallet, amount } = params;
             var message;
-            console.log("Is Purchase", isPurchase);
 
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
                     currencyAmount : amount,
-                    virtualWallet : virtualWallet
+                    virtualWallet : appVirtualWallet
                 }) : amount,
                 isPurchase : isPurchase,
             }
-
-            console.log(options, "options");
 
             /* Create Deposit Object */
             let deposit = new Deposit({
@@ -604,15 +626,13 @@ const progressActions = {
                 await WalletsRepository.prototype.updatePlayBalance(wallet, params.amount);
                 message = `Deposited ${params.amount} ${wallet.currency.ticker} in your account`
             }
-
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
                 isPrivate: true,
-                message ,
+                message,
                 eventType: 'DEPOSIT'
             });
 
@@ -706,6 +726,9 @@ class UserLogic extends LogicComponent {
                 case 'Summary': {
                     return await library.process.__summary(params); break;
                 };
+                case 'UserGetBets': {
+                    return await library.process.__userGetBets(params); break;
+                };
                 case 'GetDepositAddress': {
                     return await library.process.__getDepositAddress(params);
                 };
@@ -776,6 +799,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'Summary': {
                     return await library.progress.__summary(params);
+                };
+                case 'UserGetBets': {
+                    return await library.progress.__userGetBets(params); break;
                 };
                 case 'GetDepositAddress': {
                     return await library.progress.__getDepositAddress(params);

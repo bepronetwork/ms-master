@@ -1,6 +1,7 @@
 import {
     getAppAuth,
-    getGames
+    getGames,
+    getAppUsersBets
 } from '../../../methods';
 
 import chai from 'chai';
@@ -40,6 +41,5 @@ context('App Data Auth', async () =>  {
         detectValidationErrors(res);
         shouldGetAllAppGamesUserIntegration(res.data, expect);
     })); 
-
 
 });

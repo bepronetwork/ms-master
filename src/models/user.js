@@ -120,6 +120,15 @@ class User extends ModelComponent {
         }
     }
 
+    async userGetBets() {
+        try {
+            let res = await this.process('UserGetBets');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async getInfo() {
         // No Output
         try {
