@@ -252,9 +252,17 @@ const processActions = {
 		return res;
     },
     __getBiggestUserWinners : async (params) => {
+        if(!params.currency){
+            params.currency = null
+        }
+        if(!params.game){
+            params.game = null
+        }
         let res = await AppRepository.prototype.getBiggestUserWinners({
-            id : params.app,
-            size : params.size
+            _id : params.app,
+            size : params.size,
+            currency : params.currency,
+            game : params.game
         });
 		return res;
     },
