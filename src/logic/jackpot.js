@@ -85,7 +85,6 @@ const processActions = {
 		try {
 			let user = await UsersRepository.prototype.findUserById(params.user);
             let app = await AppRepository.prototype.findAppById(user.app_id);
-            
 			if(app.addOn.jackpot==undefined){
 				return {percentage: 0};
 			}
@@ -94,27 +93,12 @@ const processActions = {
 				return {percentage: 0};
 			}
 
-			let result = params.result.map(r => {
-				return {
-					value: (parseFloat(r.value) * parseFloat(jackpot.edge) * 0.01)
-				};
-			});
-
-			let percentage = result.reduce( (acc, result) => {
-				return acc + parseFloat(result.value);
-			}, 0);
-
-			let toTestResult = params.result.map(r => {
-				return {
-					value: (parseFloat(r.value))
-				};
-			});
-			let amountTest = toTestResult.reduce( (acc, result) => {
+			let valueSumSpace = params.result.reduce( (acc, result) => {
 				return acc + parseFloat(result.value);
 			}, 0);
 
 			return {
-				percentage
+				percentage: (valueSumSpace*jackpot.edge*0.01)
 			};
 		}catch(err){
 			throw err;

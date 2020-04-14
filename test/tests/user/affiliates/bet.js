@@ -75,7 +75,7 @@ context('Bet', async () => {
                 place: 0, value: betAmount
             }];
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
-            console.log("============= ", (global.test.jackpotEdge * betAmount));
+            console.log("1============= ", (global.test.jackpotEdge * betAmount));
             /* Verify that was Lost */
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             detectValidationErrors(bet_res);
@@ -147,7 +147,7 @@ context('Bet', async () => {
         while(wasWon){
             /* Verify that was Lost */
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
-            console.log("============= ", (global.test.jackpotEdge * betAmount));
+            console.log("2============= ", (global.test.jackpotEdge * betAmount));
             bet_res = await bet({user : user_5, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
             wasWon = message.isWon;
@@ -213,7 +213,7 @@ context('Bet', async () => {
         /* Creater User Bet */
         while(wasWon){
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
-            console.log("============= ", (global.test.jackpotEdge * betAmount));
+            console.log("3============= ", (global.test.jackpotEdge * betAmount));
             /* Verify that was Lost */
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;

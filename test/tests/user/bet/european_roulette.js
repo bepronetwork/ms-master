@@ -62,7 +62,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * ( (betAmount/4) + (betAmount/2) ));
-        console.log("============= ", (global.test.jackpotEdge * ( (betAmount/4) + (betAmount/2) )));
+        console.log("6============= ", (global.test.jackpotEdge * ( (betAmount/4) + (betAmount/2) )));
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
@@ -88,7 +88,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount/2));
-        console.log("============= ", (global.test.jackpotEdge * (betAmount/2)) );
+        console.log("7============= ", (global.test.jackpotEdge * (betAmount/2)) );
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
 
