@@ -108,11 +108,11 @@ class Middleware{
         }
     }
 
-    convertToJson(req) {
+    convertToJson(req, jackpotBet) {
         return JSON.stringify({
             req : {
-                body : req.body,
-                hash:  SecurityCrypt.prototype.encryptData( SecurityCrypt.prototype.generateHash( JSON.stringify( req.body ).trim() ) )
+                body : {...req.body, jackpotBet},
+                hash:  SecurityCrypt.prototype.encryptData( SecurityCrypt.prototype.generateHash( JSON.stringify( {...req.body, jackpotBet} ).trim() ) )
             }
         });
     }
