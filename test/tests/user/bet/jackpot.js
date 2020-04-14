@@ -23,6 +23,7 @@ context(`Jackpot`, async () =>  {
     it('should pot of jackpot OK', mochaAsync(async () => {
 
         let appResultAll = await AppRepository.prototype.findAppById(app.id);
+        console.log(appResultAll.addOn.jackpot);
         console.log(appResultAll.addOn.jackpot.limits[0]);
         console.log(global.test.pot);
         expect(200).to.equal(200);
