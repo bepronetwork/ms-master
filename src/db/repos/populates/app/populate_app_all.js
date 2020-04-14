@@ -24,7 +24,8 @@ let populate_app_all = [
                     model : 'ResultSpace',
                     select : { '__v': 0}
                 }
-            ],
+            ]
+        },{
             path: 'autoWithdraw',
             model: 'AutoWithdraw',
             select : { '__v': 0}
