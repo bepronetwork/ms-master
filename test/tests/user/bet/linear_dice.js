@@ -94,7 +94,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
-        console.log("============= ", (global.test.jackpotEdge * (betAmount) );
+        console.log("============= ", (global.test.jackpotEdge * (betAmount)) );
 
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
