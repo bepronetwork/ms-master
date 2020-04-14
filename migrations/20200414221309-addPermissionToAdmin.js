@@ -22,7 +22,7 @@ class Progress {
 
 module.exports = {
   async up(db, client) {
-    let admins = await db.collection('admins').find().limit(1).toArray();
+    let admins = await db.collection('admins').find().toArray();
     let processIndex = admins.length;
     let processObj = new Progress(processIndex, "ADD_PERMISSION_TO_ADMIN");
     for (let admin of admins) {
