@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { pipeline_match_by_currency, pipeline_match_by_game } from '../filters';
+import { pipeline_match_by_currency, pipeline_match_by_game, pipeline_offset, pipeline_size } from '../filters';
 
 
 const pipeline_biggest_user_winners = (_id, { currency, game, offset, size }) =>
