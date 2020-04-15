@@ -3,17 +3,15 @@ import {
     authAdmin,
     getAppAuth
 } from '../../../methods';
-
 import {AppRepository} from "../../../../src/db/repos";
-
 import chai from 'chai';
-
 import { mochaAsync } from '../../../utils';
+import delay from 'delay';
 
 const expect = chai.expect;
 
 context(`Jackpot`, async () =>  {
-    var admin, app, user, currency, game;
+    var admin, app;
 
     before( async () =>  {
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
@@ -21,11 +19,11 @@ context(`Jackpot`, async () =>  {
     });
 
     it('should pot of jackpot OK', mochaAsync(async () => {
-
+        console.log("Waiting for 30 seconds for pot accumulate...");
+        await delay(30000);
         let appResultAll = await AppRepository.prototype.findAppById(app.id);
-        console.log(appResultAll.addOn.jackpot);
-        console.log(appResultAll.addOn.jackpot.limits[0]);
-        console.log(global.test.pot);
-        expect(200).to.equal(200);
+        console.log(appResultAll.addOn.jackpot._id);
+        // TODO change to all currencies. ([0] is ETH)
+        expect(global.test.pot).to.equal(appResultAll.addOn.jackpot.limits[0].pot);
     }));
 });
