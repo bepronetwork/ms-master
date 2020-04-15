@@ -72,7 +72,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
+        global.test.user.bets.push(res.data.message.bet._id)
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
         expect(await digestBetResult({newBalance : userPosBetCurrencyWallet.playBalance, res : res, previousBalance : userPreBetCurrencyWallet.playBalance}), true);

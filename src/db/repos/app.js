@@ -10,9 +10,8 @@ import {
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
     pipeline_app_users_bets_by_currency,
-    pipeline_biggest_user_winners_by_currency,
     pipeline_popular_numbers,
-    pipeline_biggest_user_winners_all_currency
+    pipeline_biggest_user_winners
 } from './pipelines/app';
 
 import { populate_app_all, populate_app_affiliates } from './populates';
@@ -172,11 +171,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getLastBets({id, size=15}){ 
+    getLastBets({_id, size, offset, currency, game}){ 
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_last_bets(id))
+                .aggregate(pipeline_last_bets(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
@@ -217,11 +216,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestBetWinners({id, size=15}){ 
+    getBiggestBetWinners({_id, size, offset, currency, game}){ 
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_biggest_bet_winners(id))
+                .aggregate(pipeline_biggest_bet_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
@@ -232,12 +231,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestUserWinners({id, size=15}, currency = null){ 
-        const pipeline = currency ? pipeline_biggest_user_winners_by_currency : pipeline_biggest_user_winners_all_currency;
+    getBiggestUserWinners({_id, size, offset, currency, game}){ 
         try{ 
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline(id, {currency}))
+                .aggregate(pipeline_biggest_user_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

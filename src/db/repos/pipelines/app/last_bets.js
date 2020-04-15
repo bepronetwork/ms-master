@@ -1,103 +1,107 @@
 import mongoose from 'mongoose';
+import { pipeline_match_by_currency, pipeline_match_by_game, pipeline_offset, pipeline_size } from '../filters';
 
 
-const pipeline_last_bets = (_id) => 
-    [
-        //Stage 0
+const pipeline_last_bets = (_id, { currency, game, offset, size }) => 
+[
+    //Stage 0
     {
-        '$match' : {
-            "_id" : mongoose.Types.ObjectId(_id)
+        '$match': {
+            "_id": mongoose.Types.ObjectId(_id)
         }
     },
     {
         '$lookup': {
-        'from': 'games', 
-        'localField': 'games', 
-        'foreignField': '_id', 
-        'as': 'games'
+            'from': 'games',
+            'localField': 'games',
+            'foreignField': '_id',
+            'as': 'games'
         }
     }, {
         '$project': {
-        'games.bets': true, 
-        '_id': false
+            'games.bets': true,
+            '_id': false
         }
     }, {
         '$unwind': {
-        'path': '$games'
+            'path': '$games'
         }
     }, {
         '$project': {
-        'bets': '$games.bets'
+            'bets': '$games.bets'
         }
     }, {
         '$unwind': {
-        'path': '$bets'
+            'path': '$bets'
         }
     }, {
         '$lookup': {
-        'from': 'bets', 
-        'localField': 'bets', 
-        'foreignField': '_id', 
-        'as': 'bet'
+            'from': 'bets',
+            'localField': 'bets',
+            'foreignField': '_id',
+            'as': 'bet'
         }
     }, {
         '$project': {
-        'bet': {
-            '$arrayElemAt': [
-            '$bet', 0
-            ]
-        }
-        }
-    }, {
-        '$lookup': {
-        'from': 'users', 
-        'localField': 'bet.user', 
-        'foreignField': '_id', 
-        'as': 'bet.user'
+            'bet': {
+                '$arrayElemAt': [
+                    '$bet', 0
+                ]
+            }
         }
     }, {
         '$lookup': {
-        'from': 'games', 
-        'localField': 'bet.game', 
-        'foreignField': '_id', 
-        'as': 'bet.game'
+            'from': 'users',
+            'localField': 'bet.user',
+            'foreignField': '_id',
+            'as': 'bet.user'
+        }
+    }, {
+        '$lookup': {
+            'from': 'games',
+            'localField': 'bet.game',
+            'foreignField': '_id',
+            'as': 'bet.game'
         }
     }, {
         '$project': {
-        'bet': true, 
-        'user': {
-            '$arrayElemAt': [
-            '$bet.user', 0
-            ]
-        }, 
-        'game': {
-            '$arrayElemAt': [
-            '$bet.game', 0
-            ]
-        }
+            'bet': true,
+            'user': {
+                '$arrayElemAt': [
+                    '$bet.user', 0
+                ]
+            },
+            'game': {
+                '$arrayElemAt': [
+                    '$bet.game', 0
+                ]
+            }
         }
     },
+
+    {
+        '$project': {
+            '_id': '$bet._id',
+            'currency': '$bet.currency',
+            'betAmount': '$bet.betAmount',
+            'timestamp': '$bet.timestamp',
+            'isWon': '$bet.isWon',
+            'winAmount': '$bet.winAmount',
+            'username': '$user.username',
+            'game': '$game._id'
+        }
+    },
+    ...pipeline_match_by_currency({ currency }),
+    ...pipeline_match_by_game({ game }),
     {
         '$sort': {
-            'bet.timestamp': -1
+            'timestamp': -1
         }
     },
-    {
-        '$limit': 100
-    },
-    {
-        '$project': {
-            '_id': '$bet._id', 
-            'betAmount': '$bet.betAmount', 
-            'timestamp': '$bet.timestamp', 
-            'isWon': '$bet.isWon', 
-            'currency' : '$bet.currency',
-            'winAmount': '$bet.winAmount', 
-            'username': '$user.username', 
-            'game': '$game.name'
-        }
-    }
+    ...pipeline_offset({ offset }),
+    ...pipeline_size({ size })
 ]
+
 
 
 export default pipeline_last_bets;

@@ -238,23 +238,50 @@ const processActions = {
         }
     },
     __getLastBets : async (params) => {
+        if(!params.currency){
+            params.currency = null
+        }
+        if(!params.game){
+            params.game = null
+        }
         let res = await AppRepository.prototype.getLastBets({
-            id : params.app,
-            size : params.size
+            _id : params.app,
+            size : params.size,
+            offset: params.offset,
+            currency : params.currency,
+            game : params.game
         });
 		return res;
     },
     __getBiggestBetWinners : async (params) => {
+        if(!params.currency){
+            params.currency = null
+        }
+        if(!params.game){
+            params.game = null
+        }
         let res = await AppRepository.prototype.getBiggestBetWinners({
-            id : params.app,
-            size : params.size
+            _id : params.app,
+            size : params.size,
+            offset: params.offset,
+            currency : params.currency,
+            game : params.game
         });
 		return res;
     },
     __getBiggestUserWinners : async (params) => {
+        if(!params.currency){
+            params.currency = null
+        }
+        if(!params.game){
+            params.game = null
+        }
         let res = await AppRepository.prototype.getBiggestUserWinners({
-            id : params.app,
-            size : params.size
+            _id : params.app,
+            size : params.size,
+            offset: params.offset,
+            currency : params.currency,
+            game : params.game
         });
 		return res;
     },

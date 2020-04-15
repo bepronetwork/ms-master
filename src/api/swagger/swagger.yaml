@@ -3045,7 +3045,6 @@ definitions:
     type: object
     required:
       - app
-      - size
     properties:
       app :
         type : string
@@ -3058,6 +3057,20 @@ definitions:
         example : 50
         description: |
           size
+      offset :
+        type : number
+      currency :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34"
+        description: |
+          Currency ID
+      game :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Game ID
   AppUserDepositAddressRequest : 
     type: object
     required:
@@ -3087,7 +3100,6 @@ definitions:
     type: object
     required:
       - app
-      - size
     properties:
       app :
         type : string
@@ -3100,12 +3112,20 @@ definitions:
         example : 50
         description: |
           size
+      offset :
+        type : number
       currency :
         type : string
         format : name
         example : "5cuedgq7e6t334t34" 
         description: |
           Currency ID
+      game :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Game ID
   AppUsersRequest : 
     type: object
     required:
@@ -3131,7 +3151,6 @@ definitions:
     type: object
     required:
       - user
-      - size
       - currency
     properties:
       size:
@@ -3157,6 +3176,14 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Currency ID
+      offset :
+        type : number
+      game :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Game ID
   AppSummaryRequest:
     type: object
     required:
