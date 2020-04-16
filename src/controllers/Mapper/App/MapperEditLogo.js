@@ -14,7 +14,7 @@ let outputs = {
     editLogo: (object) => {
         return {
             "logo": object.logo,
-            "app": app_object(object),
+            "app": !object.app ? {} : app_object(object),
             "admin": object.admin,
         }
     },

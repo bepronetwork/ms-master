@@ -19,7 +19,7 @@ let outputs = {
                     "hex": color.hex
                 })
             }),
-            "app": app_object(object),
+            "app": !object.app ? {} : app_object(object),
             "admin": object.admin,
         }
     },

@@ -14,7 +14,7 @@ let outputs = {
     editLoadingGif: (object) => {
         return {
             "loadingGif": object.loadingGif,
-            "app": app_object(object),
+            "app": !object.app ? {} : app_object(object),
             "admin": object.admin,
         }
     },

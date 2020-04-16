@@ -22,7 +22,7 @@ let outputs = {
                     "subtitle": banner.subtitle,
                 })
             }),
-            "app": app_object(object),
+            "app": !object.app ? {} : app_object(object),
             "autoDisplay": object.autoDisplay,
             "admin": object.admin,
         }

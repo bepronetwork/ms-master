@@ -14,7 +14,7 @@ let outputs = {
     editTopIcon: (object) => {
         return {
             "topIcon": object.topIcon,
-            "app": app_object(object),
+            "app": !object.app ? {} : app_object(object),
             "admin": object.admin,
         }
     },
