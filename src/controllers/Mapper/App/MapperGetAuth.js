@@ -15,6 +15,7 @@ let outputs = {
         return {
             "id": object._id,
             "isValid": object.isValid,
+            "storeAddOn": object.storeAddOn,
             "virtual"   : object.virtual,
             "licenseID"  : object.licenseID,
             "games": object.games ? object.games.map(game => {
