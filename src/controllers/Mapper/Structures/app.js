@@ -214,7 +214,7 @@ const app_object = (object) => {
                 "id": !object.app.customization.loadingGif.id ? '' : object.app.customization.loadingGif.id
             },
         },
-        "integrations": !object.app.integrations ? object.app.integrations : {
+        "integrations": !object.app.integrations ? {} : (!object.app.integrations.chat && !object.app.integrations.mailSender && !object.app.integrations.pusher) ? object.app.customization._id : {
             "_id": object.app.integrations._id,
             "chat": !object.app.integrations.chat ? {} : {
                 "_id": object.app.integrations.chat._id,
