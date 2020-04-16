@@ -3,6 +3,7 @@ const app_object = (object) => {
     return {
         "app": !object.app ? {} : {
             "id": object.app._id,
+            "_id": object.app._id,
             "isValid": object.app.isValid,
             "games": object.app.games ? object.app.games.map(game => {
                 return ({
