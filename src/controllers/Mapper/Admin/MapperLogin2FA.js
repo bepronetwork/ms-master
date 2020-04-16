@@ -32,7 +32,7 @@ let outputs = {
                 "2fa_secret": object.security['2fa_secret'],
             },
             "email": object.email,
-            ...app_object(object),
+            "app": app_object(object),
             "registered": object.registered,
             "permission": {
                 "_id": object.permission._id,

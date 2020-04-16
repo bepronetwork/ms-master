@@ -17,7 +17,7 @@ let outputs = {
             "textColor": object.textColor,
             "text": object.text,
             "isActive": object.isActive,
-            ...app_object(object),
+            "app": app_object(object),
             "admin": object.admin,
         }
     },

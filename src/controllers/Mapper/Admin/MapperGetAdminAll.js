@@ -20,7 +20,7 @@ let outputs = {
                 "name": object.name,
                 "security": object.security,
                 "email": object.email,
-                ...app_object(object),
+                "app": app_object(object),
                 "registered": object.registered,
                 "permission": object.permission,
                 "__v": object.__v
