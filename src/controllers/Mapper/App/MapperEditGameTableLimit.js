@@ -1,3 +1,4 @@
+import { result_space_object } from "../Structures";
 
 let self;
 
@@ -14,15 +15,7 @@ let outputs = {
     editGameTableLimit: (object) => {
         return {
             "_id": object._id,
-            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space => {
-                return ({
-                    "_id": result_space._id,
-                    "formType": result_space.formType,
-                    "probability": result_space.probability,
-                    "multiplier": result_space.multiplier,
-                    "__v": result_space.__v,
-                })
-            }),
+            ...result_space_object(object),
             "result": object.result ? object.result.map(result_id => {
                 return({
                     "_id": result_id

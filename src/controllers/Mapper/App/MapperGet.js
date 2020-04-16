@@ -1,3 +1,4 @@
+import { wallet_object } from "../Structures";
 
 let self;
 
@@ -70,23 +71,7 @@ let outputs = {
                     "virtual": currency.virtual
                 })
             }) : object.currencies,
-            "wallet": object.wallet ? object.wallet.map(wallet => {
-                return ({
-                    "_id": wallet._id,
-                    "max_deposit": wallet.max_deposit,
-                    "max_withdraw": wallet.max_withdraw,
-                    "currency": !wallet.currency ? {} : {
-                        "_id": wallet.currency._id,
-                        "image": wallet.currency.image,
-                        "ticker": wallet.currency.ticker,
-                        "decimals": wallet.currency.decimals,
-                        "name": wallet.currency.name,
-                        "address": wallet.currency.address,
-                        "virtual" : wallet.currency.virtual
-                    },
-                    "price" : wallet.price
-                })
-            }) : object.wallet,
+            ...wallet_object(object),
             "typography": object.typography ? {
                 "_id"   : object.typography._id,
                 "name"  : object.typography.name,

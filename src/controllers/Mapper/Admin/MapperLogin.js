@@ -1,3 +1,4 @@
+import { app_object } from "../Structures";
 
 let self;
 
@@ -28,9 +29,7 @@ let outputs = {
                 "bearerToken"           : object.security['bearerToken'],
             },
             "email": object.email,
-            "app": {
-                "id": object.app._id
-            },
+            ...app_object(object),
             "registered": object.registered,
             "permission": {
                 "_id": object.permission._id,

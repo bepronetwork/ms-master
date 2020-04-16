@@ -1,3 +1,4 @@
+import { app_object } from "../Structures";
 
 let self;
 
@@ -31,9 +32,7 @@ let outputs = {
                 "2fa_secret": object.security['2fa_secret'],
             },
             "email": object.email,
-            "app": {
-                "id": object.app._id
-            },
+            ...app_object(object),
             "registered": object.registered,
             "permission": {
                 "_id": object.permission._id,

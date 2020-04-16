@@ -1,3 +1,4 @@
+import { result_space_object } from "../Structures";
 
 let self;
 
@@ -14,11 +15,7 @@ let outputs = {
     setMaxBet: (object) => {
         return {
             "_id": object._id,
-            "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space_id => {
-                return({
-                    "_id": result_space_id
-                })
-            }),
+            ...result_space_object(object),
             "result": object.result ? object.result.map(result_id => {
                 return({
                     "_id": result_id
