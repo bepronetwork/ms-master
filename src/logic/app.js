@@ -20,6 +20,7 @@ import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import addOnRepository from '../db/repos/addOn';
+import {AddOnsEcoRepository} from '../db/repos';
 let error = new ErrorManager();
 
 
@@ -73,11 +74,13 @@ const processActions = {
 		return normalized;
     },
     __get : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app     = await AppRepository.prototype.findAppById(params.app);
+        let addOns  = await AddOnsEcoRepository.prototype.getAll();
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
 		let normalized = {
-            ...app
+            ...app,
+            storeAddOn: addOns
         }
 		return normalized;
     },
@@ -575,7 +578,6 @@ const progressActions = {
                 key : PUSHER_APP_KEY
             }
         }
-        
 		return params;
     },
     __getGames : async (params) => {
