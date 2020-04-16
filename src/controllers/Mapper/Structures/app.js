@@ -141,7 +141,7 @@ const app_object = (object) => {
         "isWithdrawing": object.app.isWithdrawing,
         "virtual": object.app.virtual,
         "name": object.app.name,
-        "affiliateSetup": !object.app.affiliateSetup ? {} : {
+        "affiliateSetup": !object.app.affiliateSetup ? {} : typeof object.app.affiliateSetup  == 'string' ? object.app.affiliateSetup._id : {
             "_id": object.app.affiliateSetup._id,
             "isActive": object.app.affiliateSetup.isActive,
             "affiliateStructures": object.app.affiliateSetup.affiliateStructures ? object.app.affiliateSetup.affiliateStructures.map(affiliate_structure => {
