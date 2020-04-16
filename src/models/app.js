@@ -187,6 +187,7 @@ class App extends ModelComponent {
     async addGame() {
         try {
             let app = await this.process('AddGame');
+            console.log(MapperAddGameSingleton.output('AddGame', app));
             return MapperAddGameSingleton.output('AddGame', app);
         } catch (err) {
             throw err;
