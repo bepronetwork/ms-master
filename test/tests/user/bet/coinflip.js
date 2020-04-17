@@ -69,6 +69,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }]
         };
 
+        global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
@@ -92,6 +93,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: 1, value: betAmount
             }]
         };
+        global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
 
@@ -125,7 +127,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: 0, value: betAmount
             }]
         };
-
         res = await placeBet(postData, user.bearerToken, {id : user.id});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(29);

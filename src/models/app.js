@@ -103,7 +103,7 @@ class App extends ModelComponent {
     async getAuth() {
         try {
             let app = await this.process('Get');
-            return MapperGetAuthSingleton.output('GetAuth', app._doc);
+            return MapperGetAuthSingleton.output('GetAuth', {...app._doc, storeAddOn : app.storeAddOn});
         } catch (err) {
             throw err;
         }

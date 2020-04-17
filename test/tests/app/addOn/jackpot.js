@@ -26,9 +26,11 @@ context('Jackpot', async () => {
     }));
 
     it('should modify edge jackpot to 1', mochaAsync(async () => {
-        let res = await editEdgeJackpot({ edge: 1, app: app.id, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
+        const edgeToJackpot = 1;
+        const res = await editEdgeJackpot({ edge: edgeToJackpot, app: app.id, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status} = res.data;
+        global.test.jackpotEdge = edgeToJackpot*0.01;
         expect(status).to.be.equal(200);
     }));
 });

@@ -6,6 +6,7 @@ import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
 import { BitGoSingleton } from '../../logic/third-parties';
 import { getNormalizedTicker } from '../../logic/third-parties/bitgo/helpers';
+import { workerQueueSingleton } from '../../logic/third-parties/rabbit';
 const perf = require('execution-time')();
 
 /**
@@ -207,14 +208,27 @@ async function editEdgeJackpot (req, res) {
 }
 
 async function createBet (req, res) {
-    try{
+    try {
+
         await SecuritySingleton.verify({type : 'user', req});
         await MiddlewareSingleton.log({type: "user", req});
-        let params = req.body;   
+        let params = req.body;
+
+        // check how much is needed for the jackpot
+        let jackpot = new Jackpot(params);
+        let percentage = await jackpot.percentage();
+
         // place a bet on the game
-        let bet = new Bet(params);
+        let bet = new Bet({...params, percentage});
         let data = await bet.register();
+
+        // Check if percentage to jackpot is > 0, and if yes, then call jackpot queue
+        if(percentage > 0) {
+            await workerQueueSingleton.sendToQueue("betJackpot", MiddlewareSingleton.convertToJson(req, percentage));
+        }
+
         MiddlewareSingleton.respond(res, req, data);
+
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }

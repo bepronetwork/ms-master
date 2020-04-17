@@ -7,10 +7,9 @@ import CasinoLogicSingleton from './utils/casino';
 import { BetResultSpace } from '../models';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getAffiliatesReturn } from './utils/affiliates';
+import MathSingleton from './utils/math';
 
- 
 let error = new ErrorManager();
-
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars
@@ -18,7 +17,6 @@ let library;
 let modules;
 
 let __private = {};
-
 
 // TO DO : Create Different Type of Resolving Actions for Casino
 const betResolvingActions = {
@@ -64,7 +62,7 @@ const betResolvingActions = {
             gameMetaName : params.gameMetaName
         });
 
-        let winAmount = isWon ? possibleWinAmount : 0;
+        let winAmount = MathSingleton.toFloatPositiveNDecimal( isWon ? possibleWinAmount : 0 ).value;
         
         return {...params, winAmount, outcomeResultSpace, isWon, possibleWinAmount, outcome, hmca_hash};
 
@@ -82,20 +80,20 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            const { currency } = params;
+            let { currency, percentage } = params;
+            percentage = MathSingleton.toFloatPositiveNDecimal(percentage).value;
 
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
             let app = user.app_id;
-            if(game){var maxBetValue = game.maxBet}
-            
+            if(game){var maxBetValue = game.maxBet; }
 
             /* No Mapping Error Verification */
             if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
             if(!game){throwError('GAME_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
             if(maxBetValue){if(maxBetValue === undefined || maxBetValue === null){throwError('MAX_BET_NOT_EXISTENT')}}
-            
+
             var affiliateReturns = [], totalAffiliateReturn = 0;
             var user_delta, app_delta;
             var user_in_app = (app._id == params.app);
@@ -104,8 +102,8 @@ const processActions = {
             const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
-            let appPlayBalance = parseFloat(appWallet.playBalance);
-            let userBalance = parseFloat(userWallet.playBalance);
+            let appPlayBalance = MathSingleton.toFloatPositiveNDecimal(appWallet.playBalance).value;
+            let userBalance = MathSingleton.toFloatPositiveNDecimal(userWallet.playBalance).value;
 
             let resultBetted = CasinoLogicSingleton.normalizeBet(params.result);
             var serverSeed = CryptographySingleton.generateSeed();
@@ -125,6 +123,7 @@ const processActions = {
                 houseEdge : game.edge,
                 game : game.metaName
             }); 
+            totalBetAmount = MathSingleton.toFloatPositiveNDecimal(totalBetAmount).value;
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
@@ -137,18 +136,18 @@ const processActions = {
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : totalBetAmount,
+                betAmount : totalBetAmount - percentage,
                 edge : game.edge
             });
 
             if(isWon){
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
-                user_delta = parseFloat(delta);
-                app_delta = parseFloat(-delta);
+                const delta = MathSingleton.toFloatPositiveNDecimal(Math.abs(winAmount)).value - MathSingleton.toFloatPositiveNDecimal(Math.abs(totalBetAmount)).value;
+                user_delta = MathSingleton.toFloatPositiveNDecimal(delta).value;
+                app_delta = MathSingleton.toFloatPositiveNDecimal(-delta).value;
             }else{
                 /* User Lost Bet */
-                user_delta = parseFloat(-Math.abs(totalBetAmount));
+                user_delta = -MathSingleton.toFloatPositiveNDecimal(Math.abs(totalBetAmount)).value;
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
@@ -158,17 +157,18 @@ const processActions = {
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
-                    totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
+                    totalAffiliateReturn = MathSingleton.toFloatPositiveNDecimal(affiliateReturnResponse.totalAffiliateReturn).value;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
+                app_delta = MathSingleton.toFloatPositiveNDecimal(Math.abs(totalBetAmount - totalAffiliateReturn - percentage)).value;
             }
 
-            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
+            var possibleWinBalance = MathSingleton.toFloatPositiveNDecimal(possibleWinAmount + userBalance).value;
 
             const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
+                percentage,
                 user_in_app,
                 isUserWithdrawingAPI,
                 isAppWithdrawingAPI,

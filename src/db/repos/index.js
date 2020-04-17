@@ -39,8 +39,10 @@ import AddOnRepository from "./addOn";
 import JackpotRepository from "./jackpot";
 import PermissionRepository from "./permission";
 import AutoWithdrawRepository from "./autoWithdraw";
+import AddOnsEcoRepository from "./ecosystem/addon";
 
-export{
+export {
+    AddOnsEcoRepository,
     JackpotRepository,
     AddOnRepository,
     TokenRepository,
