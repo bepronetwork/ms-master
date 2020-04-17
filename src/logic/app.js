@@ -1012,6 +1012,9 @@ const progressActions = {
         await LoadingGifRepository.prototype.findByIdAndUpdate(app.customization.loadingGif._id, {
             id : loadingGifURL
         })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         // Save info on Customization Part
         return params;
     },
