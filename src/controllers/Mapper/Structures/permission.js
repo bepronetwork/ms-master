@@ -1,7 +1,7 @@
 
 const permission_object = (object) => {
     return {
-        "permission": !object.permission ? {} : (object.permission.super_admin && object.permission.withdraw) == undefined ? object.permission._id : {
+        "permission": !object.permission ? {} : (object.permission.super_admin && object.permission.withdraw) == undefined ? object.permission : {
             "_id": object.permission._id,
             "super_admin": object.permission.super_admin,
             "customization": object.permission.customization,
