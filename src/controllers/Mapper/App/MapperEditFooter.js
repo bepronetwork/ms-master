@@ -25,7 +25,7 @@ let outputs = {
                     "href": community_link.href
                 })
             }),
-            "app": !object.app ? {} : app_object(object),
+            ...app_object(object),
             "admin": object.admin,
         }
     },

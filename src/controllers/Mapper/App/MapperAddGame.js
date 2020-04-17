@@ -38,7 +38,7 @@ let outputs = {
                 }),
                 "__v": object.gameEcosystem.__v,
             },
-            "app" : !object.app ? {} : app_object(object),
+            ...app_object(object),
         }
     },
 }
