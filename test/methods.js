@@ -48,6 +48,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addBalance(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/balance/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAutoWithdraw(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/autoWithdraw/add')
