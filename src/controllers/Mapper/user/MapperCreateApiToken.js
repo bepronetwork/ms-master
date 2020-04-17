@@ -1,3 +1,4 @@
+import { security_object } from "../Structures";
 
 let self;
 
@@ -27,7 +28,7 @@ let outputs = {
             "register_timestamp": object.register_timestamp,
             "nationality": object.nationality,
             "age": object.age,
-            "security": object.security,
+            ...security_object(object),
             "email": object.email,
             "app_id": object.app_id,
             "external_user": object.external_user,

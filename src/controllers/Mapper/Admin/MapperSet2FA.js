@@ -1,4 +1,4 @@
-import { permission_object } from "../Structures";
+import { permission_object, security_object } from "../Structures";
 
 let self;
 
@@ -21,12 +21,7 @@ let outputs = {
             "security_id": object.security._id,
             "_id": object._id,
             "name": object.name,
-            "security": {
-                "_id": object.security._id,
-                "2fa_set": object.security['2fa_set'],
-                "email_verified": object.security.email_verified,
-                "bearerToken": object.security['bearerToken'],
-            },
+            ...security_object(object),
             "email": object.email,
             "registered": object.registered,
             ...permission_object(object),
