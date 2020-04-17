@@ -18,6 +18,13 @@ class Balance extends ModelComponent{
         });
     }
 
+    async register() {
+        try {
+            return await this.process('Register');
+        } catch (err) {
+            throw err;
+        }
+    }
     async editBalance(){
         try{
             return await this.process('EditBalance');

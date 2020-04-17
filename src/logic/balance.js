@@ -25,6 +25,9 @@ const processActions = {
     __register: async (params) => {
         return params;
     },
+    __editBalance: async (params) => {
+        return params;
+    }
 }
 
 /**
@@ -48,6 +51,9 @@ const progressActions = {
             throw err;
         }
     },
+    __editBalance: async (params) => {
+        return params;
+    }
 }
 
 /**
@@ -101,6 +107,9 @@ class BalanceLogic extends LogicComponent {
                 case 'Register': {
                     return await library.process.__register(params); break;
                 };
+                case 'EditBalance': {
+                    return await library.process.__editBalance(params); break;
+                };
             }
         } catch (error) {
             throw error;
@@ -128,6 +137,9 @@ class BalanceLogic extends LogicComponent {
             switch (progressAction) {
                 case 'Register': {
                     return await library.progress.__register(params); break;
+                };
+                case 'EditBalance': {
+                    return await library.progress.__editBalance(params); break;
                 };
             }
         } catch (error) {

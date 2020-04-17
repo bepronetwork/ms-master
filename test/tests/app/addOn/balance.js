@@ -18,21 +18,4 @@ context('Balance', async () => {
         const { status } = res.data;
         expect(status).to.be.equal(200);
     }));
-
-    // it('should Edit if is Automatic Withdraw', mochaAsync(async () => {
-    //     let res = await editAutoWithdraw({
-    //         app: app.id,
-    //         admin: admin.id,
-    //         currency : app.currencies[0]._id,
-    //         autoWithdrawParams: {
-    //             isAutoWithdraw: true,
-    //             verifiedKYC: true,
-    //             maxWithdrawAmountCumulative: 1,
-    //             maxWithdrawAmountPerTransaction: 1,
-    //         }
-    //     }, admin.security.bearerToken, { id: admin.id });
-    //     expect(detectValidationErrors(res)).to.be.equal(false);
-    //     const { status } = res.data;
-    //     expect(status).to.be.equal(200);
-    // }));
 });
