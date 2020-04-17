@@ -1206,8 +1206,10 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.process.__getUsers(params); break;
                 };
+                case 'AddBalance' : {
+					return await library.process.__addBalance(params); break;
+                };
 			}
-			
 		}catch(error){
 			throw error
 		}
@@ -1334,7 +1336,9 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.progress.__getUsers(params); break;
                 };
-                
+                case 'AddBalance' : {
+					return await library.progress.__addBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error;
