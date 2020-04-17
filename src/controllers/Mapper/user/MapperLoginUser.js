@@ -1,3 +1,4 @@
+import { wallet_object } from "../Structures";
 
 let self;
 
@@ -19,25 +20,7 @@ let outputs = {
             "name": object.name,
             "bearerToken": object.bearerToken,
             "email_confirmed": object.email_confirmed,
-            "wallet": object.wallet ? object.wallet.map(wallet => {
-                return ({
-                    "_id": wallet._id,
-                    "playBalance": wallet.playBalance,
-                    "max_deposit": wallet.max_deposit,
-                    "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
-                    "link_url": wallet.link_url,
-                    "currency": {
-                        "_id": wallet.currency._id,
-                        "image": wallet.currency.image,
-                        "ticker": wallet.currency.ticker,
-                        "decimals": wallet.currency.decimals,
-                        "name": wallet.currency.name,
-                        "address": wallet.currency.address,
-                        "virtual": wallet.currency.virtual
-                    },
-                })
-            }) : object.wallet,
+            ...wallet_object(object),
             "affiliateWallet": object.affiliate.wallet ? object.affiliate.wallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,

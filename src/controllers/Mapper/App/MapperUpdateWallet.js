@@ -1,4 +1,4 @@
-import { app_object } from "../Structures";
+import { app_object, wallet_object } from "../Structures";
 let self;
 
 
@@ -14,24 +14,7 @@ let outputs = {
     updateWallet: (object) => {
         return {
             ...app_object(object),
-            "wallet": !object.wallet ? {} : {
-                "playBalance": object.wallet.playBalance,
-                "max_deposit": object.wallet.max_deposit,
-                "max_withdraw": object.wallet.max_withdraw,
-                "depositAddresses": !object.wallet.depositAddresses ? [] : object.wallet.depositAddresses.map(deposit_address_id => deposit_address_id),
-                "link_url": object.wallet.link_url,
-                "_id": object.wallet._id,
-                "currency": !object.wallet.currency ? {} : {
-                    "_id": object.wallet.currency._id,
-                    "image": object.wallet.currency.image,
-                    "ticker": object.wallet.currency.ticker,
-                    "decimals": object.wallet.currency.decimals,
-                    "name": object.wallet.currency.name,
-                    "address": object.wallet.currency.address,
-                },
-                "bitgo_id": object.wallet.bitgo_id,
-                "bank_address": object.wallet.bank_address
-            },
+            ...wallet_object(object),
             "creationDate": object.creationDate,
             "transactionHash": object.transactionHash,
             "from": object.from,

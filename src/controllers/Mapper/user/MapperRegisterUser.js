@@ -1,3 +1,4 @@
+import { wallet_object } from "../Structures";
 
 let self;
 
@@ -47,24 +48,7 @@ let outputs = {
                 },
             },
             "name": object.name,
-            "wallet": object.wallet.map(wallet => {
-                return ({
-                    "playBalance": wallet.playBalance,
-                    "max_deposit": wallet.max_deposit,
-                    "max_withdraw": wallet.max_withdraw,
-                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
-                    "link_url": wallet.link_url,
-                    "_id": wallet._id,
-                    "currency": {
-                        "_id": wallet.currency._id,
-                        "image": wallet.currency.image,
-                        "ticker": wallet.currency.ticker,
-                        "decimals": wallet.currency.decimals,
-                        "name": wallet.currency.name,
-                        "address": wallet.currency.address
-                    },
-                })
-            }),
+            ...wallet_object(object),
             "register_timestamp": object.register_timestamp,
             "nationality": object.nationality,
             "age": object.age,
