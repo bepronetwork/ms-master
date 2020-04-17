@@ -1,4 +1,4 @@
-import { app_object } from "../Structures";
+import { app_object, permission_object } from "../Structures";
 
 let self;
 
@@ -22,7 +22,7 @@ let outputs = {
                 "email": object.email,
                 ...app_object(object),
                 "registered": object.registered,
-                "permission": object.permission,
+                ...permission_object(object),
                 "__v": object.__v
             })
         })

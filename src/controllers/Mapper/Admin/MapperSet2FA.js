@@ -1,3 +1,4 @@
+import { permission_object } from "../Structures";
 
 let self;
 
@@ -28,14 +29,7 @@ let outputs = {
             },
             "email": object.email,
             "registered": object.registered,
-            "permission": {
-                "_id": object.permission._id,
-                "super_admin": object.permission.super_admin,
-                "customization": object.permission.customization,
-                "withdraw": object.permission.withdraw,
-                "user_withdraw": object.permission.user_withdraw,
-                "financials": object.permission.financials
-            },
+            ...permission_object(object),
             "__v": object.__v
         }
     },

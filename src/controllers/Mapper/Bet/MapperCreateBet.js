@@ -1,4 +1,3 @@
-import { wallet_object } from "../Structures";
 
 let self;
 
@@ -83,7 +82,29 @@ let outputs = {
             },
             "currency": object.currency,
             "tableLimit": object.tableLimit,
-            ...wallet_object(object),
+            "wallet": !object.wallet ? {} : {
+                "_id": object.wallet._id,
+                "playBalance": object.wallet.playBalance,
+                "max_deposit": object.wallet.max_deposit,
+                "max_withdraw": object.wallet.max_withdraw,
+                "depositAddresses": object.wallet.depositAddresses ? object.wallet.depositAddresses.map(deposit_address => {
+                    return ({
+                        "_id": deposit_address._id,
+                        "currency": deposit_address.currency,
+                        "user": deposit_address.user,
+                        "bitgo_id": deposit_address.bitgo_id,
+                    })
+                }) : object.wallet.depositAddresses,
+                "link_url": object.wallet.link_url,
+                "currency": {
+                    "_id": object.wallet.currency._id,
+                    "image": object.wallet.currency.image,
+                    "ticker": object.wallet.currency.ticker,
+                    "decimals": object.wallet.currency.decimals,
+                    "name": object.wallet.currency.name,
+                    "address": object.wallet.currency.address
+                }
+            },
             "user": object.user,
             "app": object.app,
             "outcomeResultSpace": {
