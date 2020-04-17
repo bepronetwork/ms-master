@@ -1,4 +1,4 @@
-import { app_object } from "../Structures";
+import { app_object, wallets_object } from "../Structures";
 let self;
 
 
@@ -13,12 +13,7 @@ let self;
 let outputs = {
     addGame: (object) => {
         return {
-            "wallets": !object.wallets ? [] : object.wallets.map(wallet => {
-                return ({
-                    "wallet": wallet.wallet,
-                    "tableLimit": wallet.tableLimit,
-                })
-            }),
+            ...wallets_object(object),
             "gameEcosystem": !object.gameEcosystem ? {} : {
                 "_id": object.gameEcosystem._id,
                 "name": object.gameEcosystem.name,

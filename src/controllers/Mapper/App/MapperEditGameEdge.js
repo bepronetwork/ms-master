@@ -1,4 +1,4 @@
-import { result_space_object } from '../Structures';
+import { result_space_object, wallets_object } from '../Structures';
 
 var mongoose = require('mongoose'); 
 
@@ -40,13 +40,7 @@ let outputs = {
             "metaName": object.metaName,
             "rules": object.rules,
             "description": object.description,
-            "wallets": object.wallets ? object.wallets.map(wallet => {
-                return ({
-                    "_id": wallet._id,
-                    "wallet": wallet.wallet,
-                    "tableLimit": wallet.tableLimit,
-                })
-            }) : object.wallets,
+            ...wallets_object(object),
             "__v": object.__v,
         }
     },
