@@ -7,7 +7,7 @@ import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, 
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
