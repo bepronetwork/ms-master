@@ -135,7 +135,11 @@ const app_object = (object) => {
                 "_id": withdraw_id
             })
         }) : object.app.withdraws,
-        "typography": object.app.typography ? { name: object.app.typography.name, url: object.app.typography.url, _id: object.app.typography._id } : object.app.typography,
+        "typography": !object.app.typography ? object.app.typography : (object.app.typography.name && object.app.typography.url)  == undefined ? object.app.typography._id : { 
+            name: object.app.typography.name, 
+            url: object.app.typography.url, 
+            _id: object.app.typography._id 
+        },
         "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(country_available => country_available) : object.app.countriesAvailable,
         "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
         "isWithdrawing": object.app.isWithdrawing,
