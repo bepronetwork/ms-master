@@ -212,6 +212,20 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
+    async addBalance() {
+        try {
+            let balance = await this.process('AddBalance');
+            return balance;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
     async addAutoWithdraw() {
         try {
             let app = await this.process('AddAutoWithdraw');

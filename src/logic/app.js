@@ -219,6 +219,29 @@ const processActions = {
         }
 		return res;
     },
+    __addBalance : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+            let initialBalanceList = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency        : c._id,
+                    initialBalance  : 0,
+                }
+            }));
+
+            let res = {
+                app,
+                initialBalanceList
+            }
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    },
     __editAutoWithdraw : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -726,6 +749,13 @@ const progressActions = {
         const autoWithdrawResult = await autoWithdraw.register();
         await addOnRepository.prototype.addAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
 		return autoWithdrawResult;
+    },
+    __addBalance : async (params) => {
+        const { app, initialBalanceList } = params;
+        let balance = new Balance({initialBalanceList});
+        const balanceResult = await balance.register();
+        await addOnRepository.prototype.addBalance(app.addOn, balanceResult._id);
+		return balanceResult;
     },
     __editAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params

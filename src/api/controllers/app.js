@@ -111,6 +111,19 @@ async function addGame(req, res) {
     }
 }
 
+// JSON WebToken Security Functions
+async function addBalance (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        await MiddlewareSingleton.log({type: "admin", req});
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addBalance();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
 
 // JSON WebToken Security Functions
 async function addJackpot (req, res) {
@@ -611,5 +624,6 @@ export {
     addAutoWithdraw,
     editAutoWithdraw,
     editEdgeJackpot,
-    appGetUsersBets
+    appGetUsersBets,
+    addBalance
 };
