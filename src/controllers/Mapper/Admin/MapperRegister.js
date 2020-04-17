@@ -19,7 +19,7 @@ let outputs = {
             "security": object.security,
             "email": object.email,
             "registered": object.registered,
-            ...permission_object(object),
+            "permission": object.permission,
             "__v": object.__v
         }
     },
