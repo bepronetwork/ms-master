@@ -72,6 +72,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editBalance(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/balance/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editEdgeJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/jackpot/edge/edit')

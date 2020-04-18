@@ -19,8 +19,8 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
-import addOnRepository from '../db/repos/addOn';
 import {AddOnsEcoRepository} from '../db/repos';
+import addOnRepository from '../db/repos/addOn';
 let error = new ErrorManager();
 
 
@@ -235,7 +235,6 @@ const processActions = {
                     initialBalance  : 0,
                 }
             }));
-
             let res = {
                 app,
                 initialBalanceList
@@ -756,7 +755,7 @@ const progressActions = {
         const { app, initialBalanceList } = params;
         let balance = new Balance({initialBalanceList});
         const balanceResult = await balance.register();
-        await addOnRepository.prototype.addBalance(app.addOn, balanceResult._id);
+        await addOnRepository.prototype.addBalance(app.addOn, balanceResult._doc._id);
 		return balanceResult;
     },
     __editAutoWithdraw : async (params) => {

@@ -1,6 +1,6 @@
 
 import {
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot
+    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Balance
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -192,6 +192,19 @@ async function getGame(req, res) {
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
+}
+
+async function editBalance (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        await MiddlewareSingleton.log({type: "admin", req});
+	    let params = req.body;
+		let balance = new Balance(params);
+		let data = await balance.editBalance();
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
 }
 
 async function editEdgeJackpot (req, res) {
@@ -639,5 +652,6 @@ export {
     editAutoWithdraw,
     editEdgeJackpot,
     appGetUsersBets,
-    addBalance
+    addBalance,
+    editBalance
 };

@@ -1,6 +1,8 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
+import { AppRepository, BalanceRepository, CurrencyRepository } from '../db/repos';
+import { throwError } from '../controllers/Errors/ErrorManager';
 
 let error = new ErrorManager();
 
@@ -26,7 +28,18 @@ const processActions = {
         return params;
     },
     __editBalance: async (params) => {
-        return params;
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            const currency = await CurrencyRepository.prototype.findById(params.currency);
+            if(!currency){
+                throwError("CURRENCY_NOT_EXISTENT");
+            }
+            return {...params, balance_id: app.addOn.balance._id};
+
+        }catch(err){
+            throw err;
+        }
     }
 }
 
@@ -52,6 +65,7 @@ const progressActions = {
         }
     },
     __editBalance: async (params) => {
+        await BalanceRepository.prototype.updateBalance(params.balance_id, params.currency, params.balance);
         return params;
     }
 }

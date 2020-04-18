@@ -27,6 +27,24 @@ class BalanceRepository extends MongoComponent{
     setModel = (Balance) => {
         return BalanceRepository.prototype.schema.model(Balance)
     }
+
+    updateBalance(_id, currency, initialBalance){
+        return new Promise( (resolve,reject) => {
+            BalanceRepository.prototype.schema.model.updateOne(
+                {_id, "initialBalanceList.currency": currency},
+                {
+                    $set: {
+                        "initialBalanceList.$.initialBalance" : parseFloat(initialBalance)
+                    }
+                }
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
 }
 
 BalanceRepository.prototype.schema = new BalanceSchema();

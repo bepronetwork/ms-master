@@ -1881,6 +1881,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/balance/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit balance initial
+      operationId: editBalance
+      description: Edit Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditBalanceRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/autoWithdraw/add:
     x-swagger-router-controller: app
     post:
@@ -3431,6 +3462,39 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
+
+  EditBalanceRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - balance
+      - currency
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      balance :
+        type : number
+        format: number
+        example: 1
+        description: |
+          Balance Initial
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          ID Currency
 
   EditEdgeJackpotRequest : 
     type: object
