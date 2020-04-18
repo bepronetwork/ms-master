@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import { pipeline_bets_by_currency, pipeline_bets_by_date } from '../filters';
+import { pipeline_bets_by_currency, pipeline_bets_by_date, pipeline_match_by_game, pipeline_offset, pipeline_size } from '../filters';
 
 
-const pipeline_my_bets = (_id, { currency, dates}) => 
+const pipeline_my_bets = (_id, { dates, currency, game, offset, size }) => 
     [
         //Stage 0
     {
@@ -50,14 +50,6 @@ const pipeline_my_bets = (_id, { currency, dates}) =>
             ]
         }
         }
-    }, 
-    {
-        '$limit': 100
-    },
-    {
-        '$sort': {
-            'bet.timestamp': -1
-        }
     },
     {
         '$project': {
@@ -66,10 +58,17 @@ const pipeline_my_bets = (_id, { currency, dates}) =>
             'timestamp': '$bet.timestamp', 
             'isWon': '$bet.isWon', 
             'winAmount': '$bet.winAmount', 
-            'game': '$game.name'
+            'game': '$game._id'
         }
     },
-   
+    ...pipeline_match_by_game({ game }),
+    {
+        '$sort': {
+            'timestamp': -1
+        }
+    },
+    ...pipeline_offset({ offset }),
+    ...pipeline_size({ size })
 ]
 
 

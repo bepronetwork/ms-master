@@ -6,6 +6,7 @@ const get_object = (object) => {
     return {
         "id": object._id,
         "isValid": object.isValid,
+        "storeAddOn": object.storeAddOn,
         "virtual": object.virtual,
         "licenseID": object.licenseID,
         ...games_object(object),

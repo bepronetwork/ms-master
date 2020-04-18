@@ -71,12 +71,11 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    getBets({id, size=15, dates, currency}){ 
-        console.log("dates ", dates, currency);
+    getBets({_id, size, dates, currency, game, offset}){
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
-                .aggregate(pipeline_my_bets(id,{ dates, currency }))
+                .aggregate(pipeline_my_bets(_id,{ dates, currency, game, offset, size  }))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

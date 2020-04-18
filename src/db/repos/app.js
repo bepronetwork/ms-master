@@ -171,11 +171,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getLastBets({id, size=15}){ 
+    getLastBets({_id, size, offset, currency, game}){ 
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_last_bets(id))
+                .aggregate(pipeline_last_bets(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
@@ -216,11 +216,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestBetWinners({id, size=15}){ 
+    getBiggestBetWinners({_id, size, offset, currency, game}){ 
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_biggest_bet_winners(id))
+                .aggregate(pipeline_biggest_bet_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));
@@ -231,11 +231,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getBiggestUserWinners({_id, size, currency, game}){ 
+    getBiggestUserWinners({_id, size, offset, currency, game}){ 
         try{ 
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model
-                .aggregate(pipeline_biggest_user_winners(_id, {currency, game}))
+                .aggregate(pipeline_biggest_user_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

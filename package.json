@@ -30,6 +30,7 @@
         "@google-cloud/storage": "^4.1.0",
         "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
+        "amqplib": "^0.5.5",
         "asymmetric-crypto": "^1.0.1",
         "async-lock": "^1.1.4",
         "authy": "^1.4.0",

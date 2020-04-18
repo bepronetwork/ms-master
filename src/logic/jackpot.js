@@ -63,7 +63,7 @@ const processActions = {
 
 	__editEdgeJackpot : async (params) => {
 		try {
-			let app = await AppRepository.prototype.findAppById(user.app_id);
+			let app = await AppRepository.prototype.findAppById(params.app);
 			if(!app){throwError('APP_NOT_EXISTENT')}
 			if(app.addOn.jackpot==undefined || app.addOn.jackpot==null) {throwError('JACKPOT_NOT_EXIST_IN_APP')}
 			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
@@ -85,7 +85,6 @@ const processActions = {
 		try {
 			let user = await UsersRepository.prototype.findUserById(params.user);
             let app = await AppRepository.prototype.findAppById(user.app_id);
-            
 			if(app.addOn.jackpot==undefined){
 				return {percentage: 0};
 			}
@@ -94,27 +93,12 @@ const processActions = {
 				return {percentage: 0};
 			}
 
-			let result = params.result.map(r => {
-				return {
-					value: (parseFloat(r.value) * parseFloat(jackpot.edge) * 0.01)
-				};
-			});
-
-			let percentage = result.reduce( (acc, result) => {
-				return acc + parseFloat(result.value);
-			}, 0);
-
-			let toTestResult = params.result.map(r => {
-				return {
-					value: (parseFloat(r.value))
-				};
-			});
-			let amountTest = toTestResult.reduce( (acc, result) => {
+			let valueSumSpace = params.result.reduce( (acc, result) => {
 				return acc + parseFloat(result.value);
 			}, 0);
 
 			return {
-				percentage
+				percentage: (valueSumSpace*jackpot.edge*0.01)
 			};
 		}catch(err){
 			throw err;
@@ -251,6 +235,7 @@ const processActions = {
 const progressActions = {
 	__editEdgeJackpot : async (params) => {
 		try {
+			console.log(params.jackpot_id);
 			let res = await JackpotRepository.prototype.editEdgeJackpot(params.jackpot_id, params.edge);
 			return res;
 		}catch(err){
@@ -400,6 +385,10 @@ class JackpotLogic extends LogicComponent {
 				case 'Percentage' : {
 					return await library.process.__percentage(params); break;
 				};
+				case 'EditEdgeJackpot' : {
+					return await library.process.__editEdgeJackpot(params); break;
+				};
+
 			}
 		}catch(error){
 			throw error;
@@ -436,6 +425,9 @@ class JackpotLogic extends LogicComponent {
 				};
 				case 'Percentage' : {
 					return await library.progress.__percentage(params); break;
+				};
+				case 'EditEdgeJackpot' : {
+					return await library.progress.__editEdgeJackpot(params); break;
 				};
 			}
 		}catch(error){
