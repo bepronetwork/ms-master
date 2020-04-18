@@ -1,3 +1,4 @@
+import { result_space_object } from "../Structures";
 
 let self;
 
@@ -21,14 +22,7 @@ let outputs = {
                 "image_url": object.image_url,
                 "isValid": object.isValid,
                 "rules": object.rules,
-                "resultSpace": object.resultSpace ? object.resultSpace.map(resultSpace => {
-                    return ({
-                        "_id": resultSpace._id,
-                        "formType": resultSpace.formType,
-                        "probability": resultSpace.probability,
-                        "__v": resultSpace.__v
-                    })
-                }) : object.resultSpace,
+                ...result_space_object(object),
                 "__v": object.__v,
             })
         })
