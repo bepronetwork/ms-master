@@ -12,7 +12,7 @@ let self;
 
 
 let outputs = {
-    editAutoWithdraw: (object) => {
+    editAddonAutoWithdraw: (object) => {
         return {
             ...auto_withdraw_object(object)
         }
@@ -20,7 +20,7 @@ let outputs = {
 }
 
 
-class MapperEditAutoWithdraw {
+class MappereditAddonAutoWithdraw {
 
     constructor() {
         self = {
@@ -34,7 +34,7 @@ class MapperEditAutoWithdraw {
          */
 
         this.KEYS = {
-            EditAutoWithdraw: 'editAutoWithdraw'
+            editAddonAutoWithdraw: 'editAddonAutoWithdraw'
         }
     }
 
@@ -47,8 +47,8 @@ class MapperEditAutoWithdraw {
     }
 }
 
-let MapperEditAutoWithdrawSingleton = new MapperEditAutoWithdraw();
+let MappereditAddonAutoWithdrawSingleton = new MappereditAddonAutoWithdraw();
 
 export {
-    MapperEditAutoWithdrawSingleton
+    MappereditAddonAutoWithdrawSingleton
 }

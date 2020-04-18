@@ -31,8 +31,10 @@ import {AddOnSchema } from './addOn';
 import { JackpotSchema } from './addOn/jackpot';
 import { PermissionSchema } from "./permission";
 import { AutoWithdrawSchema } from "./addOn/autoWithdraw";
+import { BalanceSchema } from "./addOn/balance";
 
 export {
+    BalanceSchema,
     CurrencySchema,
     UserSchema,
     LinkSchema,

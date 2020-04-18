@@ -235,7 +235,6 @@ const processActions = {
 const progressActions = {
 	__editEdgeJackpot : async (params) => {
 		try {
-			console.log(params.jackpot_id);
 			let res = await JackpotRepository.prototype.editEdgeJackpot(params.jackpot_id, params.edge);
 			return res;
 		}catch(err){

@@ -38,7 +38,7 @@ class AddOnRepository extends MongoComponent{
         });
     }
 
-    addJackpot(addOn_id, jackpot){ 
+    addAddonJackpot(addOn_id, jackpot){ 
         return new Promise( (resolve, reject) => {
             AddOnRepository.prototype.schema.model.findByIdAndUpdate(
                 addOn_id,
@@ -53,7 +53,22 @@ class AddOnRepository extends MongoComponent{
         });
     }
 
-    addAutoWithdraw(addOn_id, autoWithdraw){
+    addAddonBalance(addOn_id, balance){ 
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn_id,
+                {
+                    $set: {balance}
+                }
+            )
+            .exec((err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
+    addAddonAutoWithdraw(addOn_id, autoWithdraw){
         return new Promise( (resolve, reject) => {
             AddOnRepository.prototype.schema.model.findByIdAndUpdate(
                 addOn_id,

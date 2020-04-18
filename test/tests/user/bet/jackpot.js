@@ -22,7 +22,6 @@ context(`Jackpot`, async () =>  {
         console.log("Waiting for 30 seconds for pot accumulate...");
         await delay(30000);
         let appResultAll = await AppRepository.prototype.findAppById(app.id);
-        console.log(appResultAll.addOn.jackpot._id);
         // TODO change to all currencies. ([0] is ETH)
         expect(global.test.pot).to.equal(appResultAll.addOn.jackpot.limits[0].pot);
     }));

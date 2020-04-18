@@ -731,6 +731,14 @@ class ErrorManager {
         }
     }
 
+    balance = function (object, type){
+        try{
+            switch(type){}
+        }catch(err){
+            throw err
+        }
+    }
+
     affiliateSetup = function (object, type){
         try{
             switch(type){
@@ -818,7 +826,6 @@ class ErrorManager {
                     }
                     /* Verify if Affiliate Return is higher than total Bet Amount Lost Amount */
                     if(bet.totalAffiliateReturn > bet.betAmount){
-                        console.log(1);
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
                     }
 

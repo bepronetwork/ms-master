@@ -7,9 +7,9 @@ AddOnSchema.prototype.name = 'AddOn';
 
 AddOnSchema.prototype.schema =  {
     jackpot       : { type : mongoose.Schema.Types.ObjectId, ref: 'Jackpot' },
-    autoWithdraw  : { type : mongoose.Schema.Types.ObjectId, ref: 'AutoWithdraw' }
+    autoWithdraw  : { type : mongoose.Schema.Types.ObjectId, ref: 'AutoWithdraw' },
+    balance       : { type : mongoose.Schema.Types.ObjectId, ref: 'Balance' }
 }
-
 
 AddOnSchema.prototype.model = db.model(AddOnSchema.prototype.name, new db.Schema(AddOnSchema.prototype.schema));
 export {

@@ -1794,7 +1794,7 @@ paths:
       tags:
       - app
       summary: Edit Table Limit
-      operationId: addJackpot
+      operationId: addAddonJackpot
       description: add Jackpot
       consumes:
         - application/json
@@ -1806,7 +1806,38 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppAddJackpotRequest'
+            $ref: '#/definitions/AddAddonJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/balance/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Balance
+      operationId: addAddonBalance
+      description: Add Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonBalanceRequest'
       responses:
         "200":
           description: Success
@@ -1850,14 +1881,14 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /app/autoWithdraw/add:
+  /app/balance/edit:
     x-swagger-router-controller: app
     post:
       tags:
       - app
-      summary: Add Automatic Withdraw
-      operationId: addAutoWithdraw
-      description: add Auto Withdraw
+      summary: Edit balance initial
+      operationId: editAddonBalance
+      description: Edit Balance
       consumes:
         - application/json
       produces:
@@ -1868,7 +1899,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppAddAutoWithdrawRequest'
+            $ref: '#/definitions/editAddonBalanceRequest'
       responses:
         "200":
           description: Success
@@ -1881,13 +1912,44 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /app/autoWithdraw/editAutoWithdraw:
+  /app/autoWithdraw/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Automatic Withdraw
+      operationId: addAddonAutoWithdraw
+      description: add Auto Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonAutoWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/autoWithdraw/editAddonAutoWithdraw:
     x-swagger-router-controller: app
     post:
       tags:
       - app
       summary: Edit If is Automatic Withdraw
-      operationId: editAutoWithdraw
+      operationId: editAddonAutoWithdraw
       description: Edit If is Automatic Withdraw
       consumes:
         - application/json
@@ -1899,7 +1961,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppEditAutoWithdrawRequest'
+            $ref: '#/definitions/AppeditAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -3284,7 +3346,7 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
-  AppAddJackpotRequest : 
+  AddAddonJackpotRequest : 
     type: object
     required:
       - app
@@ -3303,7 +3365,26 @@ definitions:
         description: |
           Admin ID
 
-  AppAddAutoWithdrawRequest : 
+  AddAddonBalanceRequest :
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+
+  AddAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
@@ -3322,7 +3403,7 @@ definitions:
         description: |
           Admin ID
   
-  AppEditAutoWithdrawRequest : 
+  AppeditAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
@@ -3381,6 +3462,39 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
+
+  editAddonBalanceRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - balance
+      - currency
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      balance :
+        type : number
+        format: number
+        example: 1
+        description: |
+          Balance Initial
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          ID Currency
 
   EditEdgeJackpotRequest : 
     type: object

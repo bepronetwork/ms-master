@@ -12,7 +12,7 @@ let self;
 
 
 let outputs = {
-    addAutoWithdraw: (object) => {
+    addAddonAutoWithdraw: (object) => {
         return {
             ...auto_withdraw_object(object)
         }
@@ -20,7 +20,7 @@ let outputs = {
 }
 
 
-class MapperAddAutoWithdraw {
+class MapperaddAddonAutoWithdraw {
 
     constructor() {
         self = {
@@ -34,7 +34,7 @@ class MapperAddAutoWithdraw {
          */
 
         this.KEYS = {
-            AddAutoWithdraw: 'addAutoWithdraw'
+            addAddonAutoWithdraw: 'addAddonAutoWithdraw'
         }
     }
 
@@ -47,8 +47,8 @@ class MapperAddAutoWithdraw {
     }
 }
 
-let MapperAddAutoWithdrawSingleton = new MapperAddAutoWithdraw();
+let MapperaddAddonAutoWithdrawSingleton = new MapperaddAddonAutoWithdraw();
 
 export {
-    MapperAddAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton
 }
