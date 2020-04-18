@@ -1806,7 +1806,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppaddAddonJackpotRequest'
+            $ref: '#/definitions/AddAddonJackpotRequest'
       responses:
         "200":
           description: Success
@@ -1837,7 +1837,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppaddAddonBalanceRequest'
+            $ref: '#/definitions/AddAddonBalanceRequest'
       responses:
         "200":
           description: Success
@@ -1930,7 +1930,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppaddAddonAutoWithdrawRequest'
+            $ref: '#/definitions/AddAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -3346,7 +3346,7 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
-  AppaddAddonJackpotRequest : 
+  AddAddonJackpotRequest : 
     type: object
     required:
       - app
@@ -3365,7 +3365,7 @@ definitions:
         description: |
           Admin ID
 
-  AppaddAddonBalanceRequest :
+  AddAddonBalanceRequest :
     type: object
     required:
       - app
@@ -3384,7 +3384,7 @@ definitions:
         description: |
           Admin ID
 
-  AppaddAddonAutoWithdrawRequest : 
+  AddAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
