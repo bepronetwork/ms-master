@@ -39,7 +39,7 @@ const processActions = {
         }
 
 		let normalized = {
-            playBalance : 0, // Test Balance
+            playBalance : (params.playBalance == undefined) ? 0 : params.playBalance, // Test Balance
             currency : params.currency,
             bitgo_id : params.bitgo_id,
             price    : params.price ? params.price.map( p => { return {
