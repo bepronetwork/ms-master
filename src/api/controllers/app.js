@@ -113,13 +113,13 @@ async function addGame(req, res) {
 }
 
 // JSON WebToken Security Functions
-async function addBalance (req, res) {
+async function addAddonBalance (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
         let app = new App(params);
-        let data = await app.addBalance();
+        let data = await app.addAddonBalance();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
@@ -127,39 +127,39 @@ async function addBalance (req, res) {
 }
 
 // JSON WebToken Security Functions
-async function addJackpot (req, res) {
+async function addAddonJackpot (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
         await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
         let app = new App(params);
-        let data = await app.addJackpot();
+        let data = await app.addAddonJackpot();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
 }
 
-async function addAutoWithdraw(req, res) {
+async function addAddonAutoWithdraw(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
-        let data = await app.addAutoWithdraw();
+        let data = await app.addAddonAutoWithdraw();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
     }
 }
 
-async function editAutoWithdraw(req, res) {
+async function editAddonAutoWithdraw(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         await MiddlewareSingleton.log({ type: "admin", req });
         let params = req.body;
         let app = new App(params);
-        let data = await app.editAutoWithdraw();
+        let data = await app.editAddonAutoWithdraw();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err);
@@ -194,13 +194,13 @@ async function getGame(req, res) {
     }
 }
 
-async function editBalance (req, res) {
+async function editAddonBalance (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         await MiddlewareSingleton.log({type: "admin", req});
 	    let params = req.body;
 		let balance = new Balance(params);
-		let data = await balance.editBalance();
+		let data = await balance.editAddonBalance();
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.respondError(res, err);
@@ -647,11 +647,11 @@ export {
     editTopIcon,
     editMailSenderIntegration,
     editLoadingGif,
-    addJackpot,
-    addAutoWithdraw,
-    editAutoWithdraw,
+    addAddonJackpot,
+    addAddonAutoWithdraw,
+    editAddonAutoWithdraw,
     editEdgeJackpot,
     appGetUsersBets,
-    addBalance,
-    editBalance
+    addAddonBalance,
+    editAddonBalance
 };

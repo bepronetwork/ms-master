@@ -25,9 +25,9 @@ class Balance extends ModelComponent{
             throw err;
         }
     }
-    async editBalance(){
+    async editAddonBalance(){
         try{
-            return await this.process('EditBalance');
+            return await this.process('editAddonBalance');
         }catch(err){
             throw err;
         }

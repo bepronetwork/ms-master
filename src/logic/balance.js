@@ -27,7 +27,7 @@ const processActions = {
     __register: async (params) => {
         return params;
     },
-    __editBalance: async (params) => {
+    __editAddonBalance: async (params) => {
         try {
             let app = await AppRepository.prototype.findAppById(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
@@ -64,7 +64,7 @@ const progressActions = {
             throw err;
         }
     },
-    __editBalance: async (params) => {
+    __editAddonBalance: async (params) => {
         await BalanceRepository.prototype.updateBalance(params.balance_id, params.currency, params.balance);
         return params;
     }
@@ -121,8 +121,8 @@ class BalanceLogic extends LogicComponent {
                 case 'Register': {
                     return await library.process.__register(params); break;
                 };
-                case 'EditBalance': {
-                    return await library.process.__editBalance(params); break;
+                case 'editAddonBalance': {
+                    return await library.process.__editAddonBalance(params); break;
                 };
             }
         } catch (error) {
@@ -152,8 +152,8 @@ class BalanceLogic extends LogicComponent {
                 case 'Register': {
                     return await library.progress.__register(params); break;
                 };
-                case 'EditBalance': {
-                    return await library.progress.__editBalance(params); break;
+                case 'editAddonBalance': {
+                    return await library.progress.__editAddonBalance(params); break;
                 };
             }
         } catch (error) {

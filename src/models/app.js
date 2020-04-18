@@ -26,8 +26,8 @@ import {
     MapperRegisterSingleton,
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -198,9 +198,9 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-    async addJackpot() {
+    async addAddonJackpot() {
         try {
-            let app = await this.process('AddJackpot');
+            let app = await this.process('addAddonJackpot');
             return app;
         } catch (err) {
             throw err;
@@ -212,9 +212,9 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-    async addBalance() {
+    async addAddonBalance() {
         try {
-            let balance = await this.process('AddBalance');
+            let balance = await this.process('addAddonBalance');
             return balance;
         } catch (err) {
             throw err;
@@ -226,10 +226,10 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-    async addAutoWithdraw() {
+    async addAddonAutoWithdraw() {
         try {
-            let app = await this.process('AddAutoWithdraw');
-            return MapperAddAutoWithdrawSingleton.output('AddAutoWithdraw', app._doc);
+            let app = await this.process('addAddonAutoWithdraw');
+            return MapperaddAddonAutoWithdrawSingleton.output('addAddonAutoWithdraw', app._doc);
         } catch (err) {
             throw err;
         }
@@ -240,10 +240,10 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-    async editAutoWithdraw() {
+    async editAddonAutoWithdraw() {
         try {
-            let app = await this.process('EditAutoWithdraw');
-            return MapperEditAutoWithdrawSingleton.output('EditAutoWithdraw', app);
+            let app = await this.process('editAddonAutoWithdraw');
+            return MappereditAddonAutoWithdrawSingleton.output('editAddonAutoWithdraw', app);
         } catch (err) {
             throw err;
         }
