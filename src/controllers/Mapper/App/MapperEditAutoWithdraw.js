@@ -1,3 +1,4 @@
+import { auto_withdraw_object } from "../Structures";
 
 let self;
 
