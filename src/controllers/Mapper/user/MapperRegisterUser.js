@@ -1,4 +1,4 @@
-import { wallet_object } from "../Structures";
+import { wallet_object, bets_object } from "../Structures";
 
 let self;
 
@@ -14,7 +14,7 @@ let self;
 let outputs = {
     userRegister: (object) => {
         return {
-            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
+            ...bets_object(object),
             "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
             "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
             "isWithdrawing": object.isWithdrawing,

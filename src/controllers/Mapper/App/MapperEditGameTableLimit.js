@@ -1,4 +1,4 @@
-import { result_space_object, wallets_object } from "../Structures";
+import { edit_game_object } from "../Structures";
 
 let self;
 
@@ -14,32 +14,7 @@ let self;
 let outputs = {
     editGameTableLimit: (object) => {
         return {
-            "_id": object._id,
-            ...result_space_object(object),
-            "result": object.result ? object.result.map(result_id => {
-                return({
-                    "_id": result_id
-                })
-            }) : object.result,
-            "bets": object.bets ? object.bets.map(bet_id => {
-                return({
-                    "_id": bet_id
-                })
-            }) : object.bets,
-            "isClosed": object.isClosed,
-            "maxBet": object.maxBet,
-            "background_url": object.background_url,
-            "name": object.name,
-            "edge": object.edge,
-            "app": object.app,
-            "betSystem": object.betSystem,
-            "timestamp": object.timestamp,
-            "image_url": object.image_url,
-            "metaName": object.metaName,
-            "rules": object.rules,
-            "description": object.description,
-            ...wallets_object(object),
-            "__v": object.__v,
+            ...edit_game_object(object)
         }
     },
 }

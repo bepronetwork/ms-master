@@ -1,4 +1,4 @@
-import { wallet_object, security_object } from "../Structures";
+import { wallet_object, security_object, bets_object } from "../Structures";
 
 let self;
 
@@ -21,7 +21,7 @@ let outputs = {
             "name": object.name,
             "email_confirmed": object.email_confirmed,
             ...wallet_object(object),
-            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
+            ...bets_object(object),
             "affiliateWallet": object.affiliate.wallet ? object.affiliate.wallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,

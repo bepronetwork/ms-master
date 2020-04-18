@@ -1,4 +1,4 @@
-import { wallet_object, security_object } from "../Structures";
+import { wallet_object, security_object, bets_object } from "../Structures";
 
 let self;
 
@@ -86,7 +86,7 @@ let outputs = {
                     "link_url": deposit.link_url
                 })
             }) : object.deposits,
-            "bets": object.bets ? object.bets.map(bet_id => { return ({_id: bet_id }) } ) : object.bets,
+            ...bets_object(object),
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {
                 "_id": object.affiliateLink._id,

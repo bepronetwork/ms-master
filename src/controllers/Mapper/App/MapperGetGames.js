@@ -1,4 +1,4 @@
-import { result_space_object, wallets_object } from "../Structures";
+import { result_space_object, wallets_object, bets_object, result_object } from "../Structures";
 
 let self;
 
@@ -17,16 +17,8 @@ let outputs = {
             return ({
                 "_id": object._id,
                 ...result_space_object(object),
-                "result": object.result ? object.result.map(result_id => {
-                    return({
-                        "_id": result_id
-                    })
-                }) : object.result,
-                "bets": object.bets ? object.bets.map(bet_id => {
-                    return({
-                        "_id": bet_id
-                    })
-                }) : object.bets,
+                ...result_object(object),
+                ...bets_object(object),
                 "isClosed": object.isClosed,
                 "maxBet": object.maxBet,
                 "background_url": object.background_url,
