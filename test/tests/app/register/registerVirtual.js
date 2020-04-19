@@ -62,7 +62,6 @@ context('Virtual', async () =>  {
         shouldIntegrateServicesIntoApp(res.data, expect);
     }));
 
-
     it('should Get App Data Auth', mochaAsync(async () => {
         let get_app_model = models.apps.get_app(app.id);
         let res = await getAppAuth({...get_app_model, admin: admin.id}, admin.bearerToken, { id: admin.id });
@@ -71,6 +70,4 @@ context('Virtual', async () =>  {
         detectValidationErrors(res);
         shouldGetAppDataAuth(res.data, expect);
     }));
-
-    
 });

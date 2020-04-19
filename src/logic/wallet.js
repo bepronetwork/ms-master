@@ -53,6 +53,23 @@ const processActions = {
 		}
 		return normalized;
 	},
+	__editVirtualCurrency : async () => {
+		try{
+			const app = await AppRepository.prototype.findAppById(params.app);
+			if(!app){throwError('APP_NOT_EXISTENT')}
+			const currency = app.wallet.price.find( p => new String(p.currency).toString() == new String(params.currency).toString());
+			if(!currency){throwError('CURRENCY_NOT_EXISTENT')};
+			const wallet = (app.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == "gold"))._id;
+			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
+
+			return {
+				...params,
+				wallet
+			};
+		}catch(err){
+			throw err;
+		}
+	},
 	__confirmDeposit : async (params) => {
 		try{
 			let entity, entityType;
@@ -113,6 +130,24 @@ const progressActions = {
 		}catch(err){
 			throw err;
 		}
+	},
+	__editVirtualCurrency : async () => {
+		let { wallet, price , image, currency } = params;
+        let imageURL;
+        if(image.includes("https")){
+            /* If it is a link already */
+            imageURL = image;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            imageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-wallet', file : image});
+		}
+
+		if(price!=undefined && price!=null && price >= 0){
+			await WalletsRepository.prototype.updatePriceCurrencyVirtual({wallet, price, currency});
+		}
+		await WalletsRepository.prototype.updateLogoCurrencyVirtual({wallet, imageURL});
+
+        return params;
 	},
 	__confirmDeposit : async (params) => {
         // 1 - Confirm Deposit in Serve
@@ -190,6 +225,9 @@ class WalletLogic extends LogicComponent {
 				case 'UpdateMaxDeposit' : {
 					return await library.process.__updateMaxDeposit(params);
 				}
+				case 'EditVirtualCurrency' : {
+					return await library.process.__editVirtualCurrency(params);
+				}
 			}
 		}catch(report){
 			throw `Failed to validate Wallet schema: Wallet \n See Stack Trace : ${report}`;
@@ -225,6 +263,9 @@ class WalletLogic extends LogicComponent {
 				}
 				case 'UpdateMaxDeposit' : {
 					return await library.progress.__updateMaxDeposit(params);
+				}
+				case 'EditVirtualCurrency' : {
+					return await library.progress.__editVirtualCurrency(params);
 				}
 			}
 		}catch(report){

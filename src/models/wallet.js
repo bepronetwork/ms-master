@@ -29,6 +29,14 @@ class Wallet extends ModelComponent{
         }
     }
 
+    async editVirtualCurrency() {
+        try{
+            return await this.process('EditVirtualCurrency');
+        }catch(err){
+            throw err;
+        }
+    }
+
     async confirmDeposit(){
         try{
             return await this.process('ConfirmDeposit');

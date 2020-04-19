@@ -1,6 +1,7 @@
 context('App', async () => {
     require('./register');
     require('./misc');
+    require('./customization/editVirtualCurrency');
     require('./addOn');
     require('./deploy');
     require('./integrations');

@@ -12,13 +12,14 @@ WalletSchema.prototype.schema = {
     max_deposit                 : { type: Number, default: 1},
     max_withdraw                : { type: Number, default: 1},
     bank_address                : { type: String},
-    bitgo_id                    : { type: String} ,
+    bitgo_id                    : { type: String},
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
     hashed_passphrase           : { type: String},
     link_url                    : { type: String, default : null},
     virtual                     : { type : Boolean, default : false, required : true},
     /* If Virtual Wallet */
-    price                       : [{ 
+    image                       : { type : String, default : ''},
+    price                       : [{
         currency        : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
         amount          : { type: Number}
     }],
