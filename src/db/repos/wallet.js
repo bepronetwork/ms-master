@@ -43,7 +43,7 @@ class WalletsRepository extends MongoComponent{
 
     updatePriceCurrencyVirtual({wallet, price, currency}) {
         return new Promise((resolve, reject)=>{
-            WalletsRepository.prototype.schema.model.findByIdAndUpdate(
+            WalletsRepository.prototype.schema.model.updateOne(
                 {_id: wallet, "price.currency": currency},
                 { $set: {
                     "price.$.amount" : parseFloat(price).toFixed(6)

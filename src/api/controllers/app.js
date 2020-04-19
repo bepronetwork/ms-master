@@ -1,10 +1,6 @@
 
 import {
-<<<<<<< HEAD
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet
-=======
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Balance
->>>>>>> dev
+    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';

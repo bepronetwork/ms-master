@@ -4,6 +4,7 @@ import LogicComponent from './logicComponent';
 import { WalletsRepository, UsersRepository, AppRepository, CurrencyRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { setLinkUrl } from '../helpers/linkUrl';
+import { GoogleStorageSingleton } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -53,18 +54,23 @@ const processActions = {
 		}
 		return normalized;
 	},
-	__editVirtualCurrency : async () => {
+	__editVirtualCurrency : async (params) => {
 		try{
 			const app = await AppRepository.prototype.findAppById(params.app);
 			if(!app){throwError('APP_NOT_EXISTENT')}
-			const currency = app.wallet.price.find( p => new String(p.currency).toString() == new String(params.currency).toString());
-			if(!currency){throwError('CURRENCY_NOT_EXISTENT')};
-			const wallet = (app.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == "gold"))._id;
+			const wallet = (app.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == "gold"));
 			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
-
+			let currency;
+			if(params.currency) {
+				currency = wallet.price.find( p => {
+					return (new String(p.currency).toString() == new String(params.currency).toString())
+				});
+				if(!currency){throwError('CURRENCY_NOT_EXISTENT')};
+			}
 			return {
 				...params,
-				wallet
+				wallet 	: wallet._id,
+				image 	: params.image == undefined ? '' : params.image // if img null then convert to string
 			};
 		}catch(err){
 			throw err;
@@ -131,22 +137,21 @@ const progressActions = {
 			throw err;
 		}
 	},
-	__editVirtualCurrency : async () => {
+	__editVirtualCurrency : async (params) => {
 		let { wallet, price , image, currency } = params;
-        let imageURL;
+		let imageURL;
+		image
         if(image.includes("https")){
             /* If it is a link already */
             imageURL = image;
         }else{
             /* Does not have a Link and is a blob encoded64 */
-            imageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-wallet', file : image});
+			imageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : image});
 		}
-
 		if(price!=undefined && price!=null && price >= 0){
 			await WalletsRepository.prototype.updatePriceCurrencyVirtual({wallet, price, currency});
 		}
 		await WalletsRepository.prototype.updateLogoCurrencyVirtual({wallet, imageURL});
-
         return params;
 	},
 	__confirmDeposit : async (params) => {
