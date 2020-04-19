@@ -726,7 +726,38 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"            
+            $ref: "#/definitions/ErrorResponse"
+
+  /wallet/virtualCurrency/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit virtual currency
+      operationId: editVirtualCurrency
+      description: Edit virtual currency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditVirtualCurrencyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/create:
     x-swagger-router-controller: app
     post:
@@ -1794,7 +1825,7 @@ paths:
       tags:
       - app
       summary: Edit Table Limit
-      operationId: addJackpot
+      operationId: addAddonJackpot
       description: add Jackpot
       consumes:
         - application/json
@@ -1806,7 +1837,38 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppAddJackpotRequest'
+            $ref: '#/definitions/AddAddonJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/balance/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Balance
+      operationId: addAddonBalance
+      description: Add Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonBalanceRequest'
       responses:
         "200":
           description: Success
@@ -1850,13 +1912,44 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/balance/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit balance initial
+      operationId: editAddonBalance
+      description: Edit Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/editAddonBalanceRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/autoWithdraw/add:
     x-swagger-router-controller: app
     post:
       tags:
       - app
       summary: Add Automatic Withdraw
-      operationId: addAutoWithdraw
+      operationId: addAddonAutoWithdraw
       description: add Auto Withdraw
       consumes:
         - application/json
@@ -1868,7 +1961,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppAddAutoWithdrawRequest'
+            $ref: '#/definitions/AddAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -1881,13 +1974,13 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /app/autoWithdraw/editAutoWithdraw:
+  /app/autoWithdraw/editAddonAutoWithdraw:
     x-swagger-router-controller: app
     post:
       tags:
       - app
       summary: Edit If is Automatic Withdraw
-      operationId: editAutoWithdraw
+      operationId: editAddonAutoWithdraw
       description: Edit If is Automatic Withdraw
       consumes:
         - application/json
@@ -1899,38 +1992,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppEditAutoWithdrawRequest'
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GeneralResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
-  /wallet/virtualCurrency/edit:
-    x-swagger-router-controller: app
-    post:
-      tags:
-      - app
-      summary: Edit virtual currency
-      operationId: editVirtualCurrency
-      description: Edit virtual currency
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: app
-          description: App Information
-          required: true
-          schema:
-            $ref: '#/definitions/EditVirtualCurrencyRequest'
+            $ref: '#/definitions/AppeditAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -2530,7 +2592,45 @@ definitions:
         type : string
         format: name
         example: "0xhi834ty2034thg"
-  AppGameEditEdge : 
+
+  EditVirtualCurrencyRequest :
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      image :
+        type : string
+        format: name
+        example: "https://test/0xhi834ty2034thg.jpg"
+        description: |
+          Logo currency
+      price :
+        type : number
+        format: number
+        example: 2.20
+        description: |
+          Price of virtual currency
+
+  AppGameEditEdge :
     type: object
     required:
       - app
@@ -3315,7 +3415,7 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
-  AppAddJackpotRequest : 
+  AddAddonJackpotRequest : 
     type: object
     required:
       - app
@@ -3334,7 +3434,7 @@ definitions:
         description: |
           Admin ID
 
-  AppAddAutoWithdrawRequest : 
+  AddAddonBalanceRequest :
     type: object
     required:
       - app
@@ -3353,7 +3453,7 @@ definitions:
         description: |
           Admin ID
 
-  EditVirtualCurrencyRequest :
+  AddAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
@@ -3371,26 +3471,8 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
-      currency :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          currency ID
-      image :
-        type : string
-        format: name
-        example: "https://test/0xhi834ty2034thg.jpg"
-        description: |
-          Logo currency
-      price :
-        type : number
-        format: number
-        example: 2.20
-        description: |
-          Price of virtual currency
-
-  AppEditAutoWithdrawRequest :
+  
+  AppeditAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
@@ -3430,7 +3512,6 @@ definitions:
           maxWithdrawAmountPerTransaction :
             type: number
 
-
   AppServicesRequest : 
     type: object
     required:
@@ -3450,6 +3531,39 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
+
+  editAddonBalanceRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - balance
+      - currency
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      balance :
+        type : number
+        format: number
+        example: 1
+        description: |
+          Balance Initial
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          ID Currency
 
   EditEdgeJackpotRequest : 
     type: object

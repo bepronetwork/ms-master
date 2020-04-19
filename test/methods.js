@@ -40,7 +40,7 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
-    async addJackpot(params, bearerToken, payload) {
+    async addAddonJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/jackpot/add')
         .set("authorization", "Bearer " + bearerToken)
@@ -56,7 +56,15 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async addAutoWithdraw(params, bearerToken, payload) {
+    async addAddonBalance(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/balance/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async addAddonAutoWithdraw(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/autoWithdraw/add')
         .set("authorization", "Bearer " + bearerToken)
@@ -64,9 +72,17 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async editAutoWithdraw(params, bearerToken, payload) {
+    async editAddonAutoWithdraw(params, bearerToken, payload) {
         return request(global.server)
-        .post('/api/app/autoWithdraw/editAutoWithdraw')
+        .post('/api/app/autoWithdraw/editAddonAutoWithdraw')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonBalance(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/balance/edit')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

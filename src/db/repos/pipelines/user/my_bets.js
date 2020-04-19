@@ -57,7 +57,8 @@ const pipeline_my_bets = (_id, { dates, currency, game, offset, size }) =>
             'betAmount': '$bet.betAmount', 
             'timestamp': '$bet.timestamp', 
             'isWon': '$bet.isWon', 
-            'winAmount': '$bet.winAmount', 
+            'winAmount': '$bet.winAmount',
+            'currency': '$bet.currency',
             'game': '$game._id'
         }
     },

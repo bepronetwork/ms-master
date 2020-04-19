@@ -1,3 +1,4 @@
+import { currencies_object } from "../Structures";
 
 let self;
 
@@ -13,17 +14,7 @@ let self;
 let outputs = {
     getEcosystemData: (object) => {
         return {
-            "currencies": object.currencies ? object.currencies.map(currency =>{
-                return({
-                    "_id": currency._id,
-                    "image": currency.image,
-                    "ticker": currency.ticker,
-                    "decimals": currency.decimals,
-                    "name": currency.name,
-                    "address": currency.address,
-                    "virtual" : currency.virtual
-                })
-            }) : object.currencies,
+            ...currencies_object(object),
             "blockchains": object.blockchains ? object.blockchains.map(blockchain =>{
                 return({
                     "_id": blockchain._id,

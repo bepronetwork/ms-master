@@ -34,8 +34,10 @@ import LoadingGif from "./loadingGif";
 import AddOn from "./addOn";
 import Jackpot from "./jackpot";
 import AutoWithdraw from "./autoWithdraw";
+import Balance from "./balance";
 
 export {
+    Balance,
     AutoWithdraw,
     AddOn,
     Jackpot,

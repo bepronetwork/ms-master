@@ -1,4 +1,4 @@
-
+import { permission_object, security_object } from "../Structures";
 let self;
 
 
@@ -16,10 +16,10 @@ let outputs = {
             "_id": object._id,
             "username": object.username,
             "name": object.name,
-            "security": object.security,
+            ...security_object(object),
             "email": object.email,
             "registered": object.registered,
-            "permission": object.permission,
+            ...permission_object(object),
             "__v": object.__v
         }
     },

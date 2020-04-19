@@ -28,6 +28,8 @@ import Mailer from './services/mailer';
 import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
+import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
+
 let error = new ErrorManager();
 
 
@@ -250,6 +252,11 @@ const processActions = {
         let app = await AppRepository.prototype.findAppById(params.app);
         if (!app) { throwError('APP_NOT_EXISTENT') }
 
+        let balanceInitial = null;
+        if(app.addOn != null) {
+            balanceInitial = app.addOn.balance;
+        }
+
         if (params.user_external_id) {
             // User is Extern (Only Widget Clients)
             user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
@@ -284,6 +291,7 @@ const processActions = {
             app_id: app.id,
             external_user: params.user_external_id ? true : false,
             external_id: params.user_external_id,
+            balanceInitial,
             url
         }
         return normalized;
@@ -506,14 +514,15 @@ const progressActions = {
     },
     __register: async (params) => {
         try {
-            const { affiliate, app } = params;
+            const { affiliate, app, balanceInitial } = params;
 
             /* Register of Available Wallets on App */
             params.wallet = await Promise.all(app.wallet.map(async w => {
                 return (await (new Wallet({
-                    currency: w.currency
+                    currency : w.currency,
+                    playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
                 })).register())._doc._id;
-            }))
+            }));
 
             let user = await self.save(params);
 
