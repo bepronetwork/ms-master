@@ -28,6 +28,7 @@ let outputs = {
                     "playBalance": affiliateWallet.playBalance,
                     "max_deposit": affiliateWallet.max_deposit,
                     "max_withdraw": affiliateWallet.max_withdraw,
+                    "min_withdraw": affiliateWallet.min_withdraw,
                     "depositAddresses": affiliateWallet.depositAddresses ? affiliateWallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : affiliateWallet.depositAddresses,
                     "link_url": affiliateWallet.link_url,
                     "currency": {
@@ -77,6 +78,7 @@ let outputs = {
                         "playBalance": wallet.playBalance,
                         "max_deposit": wallet.max_deposit,
                         "max_withdraw": wallet.max_withdraw,
+                        "min_withdraw": wallet.min_withdraw,
                         "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(depositAddress_id => { return ({_id: depositAddress_id }) } ) : wallet.depositAddresses,
                         "link_url": wallet.link_url,
                         "currency": {
