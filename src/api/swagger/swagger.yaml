@@ -1943,7 +1943,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /app/autoWithdraw/editAddonAutoWithdraw:
+  /app/autoWithdraw/editAutoWithdraw:
     x-swagger-router-controller: app
     post:
       tags:
@@ -1961,7 +1961,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppeditAddonAutoWithdrawRequest'
+            $ref: '#/definitions/AppEditAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -3403,7 +3403,7 @@ definitions:
         description: |
           Admin ID
   
-  AppeditAddonAutoWithdrawRequest : 
+  AppEditAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
