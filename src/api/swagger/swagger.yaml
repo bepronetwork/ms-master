@@ -726,7 +726,38 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"            
+            $ref: "#/definitions/ErrorResponse"
+
+  /wallet/virtualCurrency/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit virtual currency
+      operationId: editVirtualCurrency
+      description: Edit virtual currency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditVirtualCurrencyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/create:
     x-swagger-router-controller: app
     post:
@@ -2561,7 +2592,45 @@ definitions:
         type : string
         format: name
         example: "0xhi834ty2034thg"
-  AppGameEditEdge : 
+
+  EditVirtualCurrencyRequest :
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      image :
+        type : string
+        format: name
+        example: "https://test/0xhi834ty2034thg.jpg"
+        description: |
+          Logo currency
+      price :
+        type : number
+        format: number
+        example: 2.20
+        description: |
+          Price of virtual currency
+
+  AppGameEditEdge :
     type: object
     required:
       - app

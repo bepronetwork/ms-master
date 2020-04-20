@@ -1,6 +1,6 @@
 
 import {
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Balance
+    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -112,6 +112,18 @@ async function addGame(req, res) {
     }
 }
 
+async function editVirtualCurrency (req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await MiddlewareSingleton.log({ type: "admin", req });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.editVirtualCurrency();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
 // JSON WebToken Security Functions
 async function addAddonBalance (req, res) {
     try{
@@ -653,5 +665,6 @@ export {
     editEdgeJackpot,
     appGetUsersBets,
     addAddonBalance,
-    editAddonBalance
+    editAddonBalance,
+    editVirtualCurrency
 };
