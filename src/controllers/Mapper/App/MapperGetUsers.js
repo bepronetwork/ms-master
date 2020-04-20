@@ -66,6 +66,7 @@ let outputs = {
                             "playBalance": wallet.playBalance,
                             "max_deposit": wallet.max_deposit,
                             "max_withdraw": wallet.max_withdraw,
+                            "min_withdraw": wallet.min_withdraw,
                             "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => deposit_address_id) : wallet.depositAddresses,
                             "link_url": wallet.link_url,
                             "currency": !wallet.currency ? {} : {

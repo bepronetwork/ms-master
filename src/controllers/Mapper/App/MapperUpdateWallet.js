@@ -19,6 +19,7 @@ let outputs = {
                 "playBalance": object.wallet.playBalance,
                 "max_deposit": object.wallet.max_deposit,
                 "max_withdraw": object.wallet.max_withdraw,
+                "min_withdraw": wallet.wallet.min_withdraw,
                 "depositAddresses": !object.wallet.depositAddresses ? [] : object.wallet.depositAddresses.map(deposit_address_id => deposit_address_id),
                 "link_url": object.wallet.link_url,
                 "_id": object.wallet._id,

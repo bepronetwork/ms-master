@@ -11,6 +11,7 @@ WalletSchema.prototype.schema = {
     currency                    : { type : mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true },
     max_deposit                 : { type: Number, default: 1},
     max_withdraw                : { type: Number, default: 1},
+    min_withdraw                : { type: Number, default: 0.000001},
     bank_address                : { type: String},
     bitgo_id                    : { type: String},
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
