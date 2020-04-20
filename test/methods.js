@@ -66,7 +66,7 @@ module.exports = {
     },
     async editAddonAutoWithdraw(params, bearerToken, payload) {
         return request(global.server)
-        .post('/api/app/autoWithdraw/editAddonAutoWithdraw')
+        .post('/api/app/autoWithdraw/editAutoWithdraw')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
