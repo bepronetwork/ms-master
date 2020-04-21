@@ -79,6 +79,23 @@ class App extends ModelComponent {
     }
 
     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async getLogs() {
+        try {
+            let app = await this.process('GetLogs');
+            return app;
+            /* If app is virtual - add virtual currency*/
+            // return MapperRegisterSingleton.output('Register', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
    * @param {String} 
    * @return {bool || Exception}  
    */
@@ -88,6 +105,19 @@ class App extends ModelComponent {
         try {
             let app = await this.process('Get');
             return MapperGetSingleton.output('Get', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+    async editRestrictedCountries() {
+        try {
+            let app = await this.process('EditRestrictedCountries');
+            return app;
         } catch (err) {
             throw err;
         }
@@ -214,7 +244,7 @@ class App extends ModelComponent {
 
     async addAddonBalance() {
         try {
-            let balance = await this.process('addAddonBalance');
+            let balance = await this.process('AddAddonBalance');
             return balance;
         } catch (err) {
             throw err;

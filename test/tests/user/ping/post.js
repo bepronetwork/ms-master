@@ -24,12 +24,12 @@ context(`Log post Ping`, async () =>  {
     });
 
     it('should Post Log - admin', mochaAsync(async () => {
-        var res = await pingPost({type: "admin"}, admin.bearerToken, {id : admin.id});
+        var res = await pingPost({type: "admin", app: app.id}, admin.bearerToken, {id : admin.id});
         expect(res.data.status).to.equals(200);
     }));
 
     it('should Post Log - user', mochaAsync(async () => {
-        var res = await pingPost({type: "user"}, user.bearerToken, {id : user.id});
+        var res = await pingPost({type: "user", app: app.id}, user.bearerToken, {id : user.id});
         expect(res.data.status).to.equals(200);
     }));
 
@@ -39,7 +39,7 @@ context(`Log post Ping`, async () =>  {
     // }));
 
     it('should Post Log - global', mochaAsync(async () => {
-        var res = await pingPost({type: "global"}, {}, {});
+        var res = await pingPost({type: "global", app: app.id}, {}, {});
         expect(res.data.status).to.equals(200);
     }));
 

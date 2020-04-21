@@ -788,6 +788,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/restrictedCountries/edit :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Restricted Countries
+      operationId: editRestrictedCountries
+      description: Edit Restricted Countries
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditRestrictedCountriesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/summary:
     x-swagger-router-controller: app
     post:
@@ -1507,6 +1539,49 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AdminGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /logs/get:
+    x-swagger-router-controller: app
+    get:
+      tags:
+      - app
+      summary: Get Data Logs
+      operationId: getLogs
+      description: Get Data Logs
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetLogsRequest'
+        - in: query
+          name: offset
+          type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return
+        - in: query
+          name: filter
+          type: string
+          description: Type Filter
       responses:
         "200":
           description: Success
@@ -3066,6 +3141,26 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+  
+  GetLogsRequest:
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin id
+
   AdminGetRequest:
     type: object
     required:
@@ -3124,6 +3219,34 @@ definitions:
         example: "Admin Id"
         description: |
           Admin Id
+
+  EditRestrictedCountriesRequest :
+    type: object
+    required:
+      - countries
+      - admin
+      - app
+    properties:
+      countries:
+        type : array
+        items:
+          type : string
+          example: "br"
+          description: |
+            code of country
+      admin:
+        type : string
+        format: name
+        example: "x0s23qweqwe234234"
+        description: |
+          Admin ID
+      app:
+        type : string
+        format: name
+        example: "x0s23qweqwe234234"
+        description: |
+          App ID
+
   GameGetRequest:
     type: object
     required:
@@ -3156,7 +3279,7 @@ definitions:
               type: string
             data:
               type: string
-  AppPopularNumbersRequest : 
+  AppPopularNumbersRequest:
     type: object
     required:
       - app
@@ -3752,3 +3875,8 @@ definitions:
         minLength: 1
         description: |
           Type Auth
+      app:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          APP ID

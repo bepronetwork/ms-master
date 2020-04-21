@@ -201,6 +201,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editRestrictedCountries(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/restrictedCountries/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getAdminByApp(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/admin/app/get')

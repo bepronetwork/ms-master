@@ -50,7 +50,7 @@ class AppRepository extends MongoComponent{
     addGame(app_id, game){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findOneAndUpdate(
-                { _id: app_id, games : {$nin : [game._id] } }, 
+                { _id: app_id, games : {$nin : [game._id] } },
                 { $push: { "games" : game } },
                 { 'new': true })
                 .exec( (err, item) => {
@@ -61,8 +61,22 @@ class AppRepository extends MongoComponent{
         });
     }
 
-
-
+    setCountries(_id, countries){
+        return new Promise( async (resolve,reject) => {
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                {
+                    $set : {
+                        countries
+                    }
+                }
+            )
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
 
     async addTypography(_id, typography){
         return new Promise( async (resolve,reject) => {

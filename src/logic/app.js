@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -84,6 +84,20 @@ const processActions = {
         }
 		return normalized;
     },
+    __getLogs : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let offset  = (params.offset == undefined) ? 0 : params.offset;
+            let limit   = (params.limit == undefined) ? 0 : params.limit;
+
+            let res = await LogRepository.prototype.findFilter(app._id, parseInt(offset), parseInt(limit));
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    },
     __deployApp : async (params) => {
         let app = await AppRepository.prototype.findAppById(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
@@ -130,15 +144,28 @@ const processActions = {
         });
 		return res;
     },
+    __editRestrictedCountries : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+
+            if (typeof params.countries != 'array') {
+                throw {code:'', message:''}; //TODO create a error in errorManager
+            }
+
+            return params;
+        } catch(err) {
+            throw err;
+        }
+    },
     __addCurrencyWallet : async (params) => {
-        
         var { currency_id, app, passphrase } = params;
 
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
-            currency, 
+            currency,
             passphrase,
             app : app
         }
@@ -578,6 +605,9 @@ const progressActions = {
     __appGetUsersBets : async (params) => {
         return params;
     },
+    __getLogs : async (params) => {
+        return params;
+    },
     __deployApp : async (params) => {
 
         const { _id, name } = params.app;
@@ -609,6 +639,14 @@ const progressActions = {
     __getTransactions : async (params) => {
         let res = params;
 		return res;
+    },
+    __editRestrictedCountries : async (params) => {
+        try {
+            const {app, countries} = params;
+            AppRepository.prototype.setCountries(app, countries);
+        } catch(err) {
+            throw err;
+        }
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
@@ -1210,8 +1248,11 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.process.__getUsers(params); break;
                 };
-                case 'addAddonBalance' : {
+                case 'AddAddonBalance' : {
 					return await library.process.__addAddonBalance(params); break;
+                };
+                case 'GetLogs' : {
+					return await library.process.__getLogs(params); break;
                 };
 			}
 		}catch(error){
@@ -1340,8 +1381,11 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.progress.__getUsers(params); break;
                 };
-                case 'addAddonBalance' : {
+                case 'AddAddonBalance' : {
 					return await library.progress.__addAddonBalance(params); break;
+                };
+                case 'GetLogs' : {
+					return await library.progress.__getLogs(params); break;
                 };
 			}
 		}catch(error){
