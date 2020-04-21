@@ -20,8 +20,8 @@ import { MapperGetUsersSingleton } from "./MapperGetUsers";
 import { MapperRegisterSingleton } from "./MapperRegister";
 import { MapperSummarySingleton } from "./MapperSummary";
 import { MapperUpdateWalletSingleton } from "./MapperUpdateWallet";
-import { MapperAddAutoWithdrawSingleton } from "./MapperAddAutoWithdraw";
-import { MapperEditAutoWithdrawSingleton } from "./MapperEditAutoWithdraw";
+import { MapperaddAddonAutoWithdrawSingleton } from "./MapperAddAutoWithdraw";
+import { MappereditAddonAutoWithdrawSingleton } from "./MapperEditAutoWithdraw";
 
 export {
     MapperAddCurrencyWalletSingleton,
@@ -46,6 +46,6 @@ export {
     MapperRegisterSingleton,
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton
 }

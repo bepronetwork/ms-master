@@ -7,7 +7,7 @@ import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, 
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -19,6 +19,7 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
+import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
 let error = new ErrorManager();
 
@@ -73,11 +74,13 @@ const processActions = {
 		return normalized;
     },
     __get : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app     = await AppRepository.prototype.findAppById(params.app);
+        let addOns  = await AddOnsEcoRepository.prototype.getAll();
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
 		let normalized = {
-            ...app
+            ...app,
+            storeAddOn: addOns
         }
 		return normalized;
     },
@@ -166,7 +169,7 @@ const processActions = {
         }
 		return res;
     },
-    __addJackpot : async (params) => {
+    __addAddonJackpot : async (params) => {
         try {
             let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -193,7 +196,7 @@ const processActions = {
             throw err;
         }
     },
-    __addAutoWithdraw : async (params) => {
+    __addAddonAutoWithdraw : async (params) => {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
 
@@ -219,7 +222,29 @@ const processActions = {
         }
 		return res;
     },
-    __editAutoWithdraw : async (params) => {
+    __addAddonBalance : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+            let initialBalanceList = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency        : c._id,
+                    initialBalance  : 0,
+                }
+            }));
+            let res = {
+                app,
+                initialBalanceList
+            }
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __editAddonAutoWithdraw : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
@@ -575,7 +600,6 @@ const progressActions = {
                 key : PUSHER_APP_KEY
             }
         }
-        
 		return params;
     },
     __getGames : async (params) => {
@@ -713,21 +737,28 @@ const progressActions = {
 
 		return params;
     },
-    __addJackpot : async (params) => {
+    __addAddonJackpot : async (params) => {
         const { app, limits, gameEcosystem } = params;
         let jackpot = new Jackpot({app, limits, resultSpace: gameEcosystem.resultSpace});
         const jackpotResult = await jackpot.register();
-        await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
+        await addOnRepository.prototype.addAddonJackpot(app.addOn, jackpotResult._id);
 		return jackpotResult;
     },
-    __addAutoWithdraw : async (params) => {
+    __addAddonAutoWithdraw : async (params) => {
         const { app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction } = params;
         let autoWithdraw = new AutoWithdraw({app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction});
         const autoWithdrawResult = await autoWithdraw.register();
-        await addOnRepository.prototype.addAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
+        await addOnRepository.prototype.addAddonAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
 		return autoWithdrawResult;
     },
-    __editAutoWithdraw : async (params) => {
+    __addAddonBalance : async (params) => {
+        const { app, initialBalanceList } = params;
+        let balance = new Balance({initialBalanceList});
+        const balanceResult = await balance.register();
+        await addOnRepository.prototype.addAddonBalance(app.addOn, balanceResult._doc._id);
+		return balanceResult;
+    },
+    __editAddonAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
         let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
@@ -1010,6 +1041,9 @@ const progressActions = {
         await LoadingGifRepository.prototype.findByIdAndUpdate(app.customization.loadingGif._id, {
             id : loadingGifURL
         })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         // Save info on Customization Part
         return params;
     },
@@ -1104,14 +1138,14 @@ class AppLogic extends LogicComponent{
                 case 'AddGame' : {
 					return await library.process.__addGame(params); break;
                 };
-                case 'AddJackpot' : {
-                    return await library.process.__addJackpot(params); break;
+                case 'addAddonJackpot' : {
+                    return await library.process.__addAddonJackpot(params); break;
                 };
-                case 'AddAutoWithdraw' : {
-                    return await library.process.__addAutoWithdraw(params); break;
+                case 'addAddonAutoWithdraw' : {
+                    return await library.process.__addAddonAutoWithdraw(params); break;
                 };
-                case 'EditAutoWithdraw' : {
-                    return await library.process.__editAutoWithdraw(params); break;
+                case 'editAddonAutoWithdraw' : {
+                    return await library.process.__editAddonAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
@@ -1176,8 +1210,10 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.process.__getUsers(params); break;
                 };
+                case 'addAddonBalance' : {
+					return await library.process.__addAddonBalance(params); break;
+                };
 			}
-			
 		}catch(error){
 			throw error
 		}
@@ -1214,14 +1250,14 @@ class AppLogic extends LogicComponent{
                 case 'AddGame' : {
 					return await library.progress.__addGame(params); break;
                 };
-                case 'AddJackpot' : {
-					return await library.progress.__addJackpot(params); break;
+                case 'addAddonJackpot' : {
+					return await library.progress.__addAddonJackpot(params); break;
                 };
-                case 'AddAutoWithdraw' : {
-                    return await library.progress.__addAutoWithdraw(params); break;
+                case 'addAddonAutoWithdraw' : {
+                    return await library.progress.__addAddonAutoWithdraw(params); break;
                 };
-                case 'EditAutoWithdraw' : {
-                    return await library.progress.__editAutoWithdraw(params); break;
+                case 'editAddonAutoWithdraw' : {
+                    return await library.progress.__editAddonAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;
@@ -1304,7 +1340,9 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.progress.__getUsers(params); break;
                 };
-                
+                case 'addAddonBalance' : {
+					return await library.progress.__addAddonBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error;

@@ -37,8 +37,10 @@ import AddOnLogic from "./addOn";
 import JackpotLogic from "./jackpot";
 import PermissionLogic from "./permission";
 import AutoWithdrawLogic from "./autoWithdraw";
+import BalanceLogic from "./balance";
 
 export {
+    BalanceLogic,
     JackpotLogic,
     AddOnLogic,
     TokenLogic,

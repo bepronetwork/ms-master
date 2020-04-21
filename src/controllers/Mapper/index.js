@@ -47,8 +47,8 @@ import {
     MapperRegisterSingleton,
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton
 } from "./App";
 
 import {
@@ -106,6 +106,6 @@ export {
     MapperBetSingleton,
     MapperSetMaxBetSingleton,
     MapperUpdateMaxDepositSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton
 }

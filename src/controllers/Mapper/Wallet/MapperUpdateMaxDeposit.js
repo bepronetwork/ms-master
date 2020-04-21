@@ -23,6 +23,7 @@ let outputs = {
             "playBalance": object.playBalance,
             "max_deposit": object.max_deposit,
             "max_withdraw": object.max_withdraw,
+            "min_withdraw": object.min_withdraw,
             "link_url": object.link_url,
             "currency": object.currency,
             "bitgo_id": object.bitgo_id,
