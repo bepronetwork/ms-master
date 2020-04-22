@@ -3,7 +3,8 @@ import {
     authAdmin,
     getAppAuth,
     pingPost,
-    editRestrictedCountries
+    editRestrictedCountries,
+    registerUser
 } from '../../../methods';
 import faker from 'faker';
 
