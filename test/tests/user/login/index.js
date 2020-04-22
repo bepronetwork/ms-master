@@ -94,7 +94,7 @@ context('Login & Register', async () => {
         global.test.user = res.data.message;
 
         res = await authUser({
-            app  : app.app,
+            app  : app.id,
             user : user.id
         }, user.bearerToken, { id : user.id});
 
@@ -109,7 +109,7 @@ context('Login & Register', async () => {
         global.test.user = res.data.message;
 
         res = await authUser({
-            app  : app.app,
+            app  : app.id,
             user : user.id
         }, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA", { id : user.id});
 
