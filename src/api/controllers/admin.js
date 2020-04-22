@@ -17,35 +17,39 @@ import SecuritySingleton from '../helpers/security';
 
 async function registAdmin (req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.register();
+        await MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function getAdminAll(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "admin", req});
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
         let params = req.body;
-		let admin = new Admin(params);
+        let admin = new Admin(params);
         let data = await admin.getAdminAll();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 async function loginAdmin(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login();
+        await MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -53,12 +57,13 @@ async function loginAdmin(req, res) {
 async function setAdmin2FA(req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.set2FA();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -66,12 +71,13 @@ async function setAdmin2FA(req, res) {
 async function editAdminType(req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.editAdminType();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -79,12 +85,13 @@ async function editAdminType(req, res) {
 
 async function loginAdmin2FA(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.login2FA();
+        await MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -94,12 +101,13 @@ async function loginAdmin2FA(req, res) {
 async function authAdmin (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
         let data = await admin.auth();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -107,12 +115,13 @@ async function authAdmin (req, res) {
 async function addAdmin (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let admin = new Admin(params);
 		let data = await admin.addAdmin();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }

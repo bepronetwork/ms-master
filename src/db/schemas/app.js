@@ -35,12 +35,12 @@ AppSchema.prototype.schema =  {
     web_url             : { type : String },
     addOn               : { type: mongoose.Schema.Types.ObjectId, ref: 'AddOn'},
     virtual             : { type : Boolean, default : false, required : true },
-    licenseID           : { type : String }
+    licenseID           : { type : String },
+    restrictedCountries : [{ type: String}]
 }
 
 
 AppSchema.prototype.model = db.model(AppSchema.prototype.name, new db.Schema(AppSchema.prototype.schema));
-      
 export {
     AppSchema
 }

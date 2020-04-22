@@ -201,6 +201,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editRestrictedCountries(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/restrictedCountries/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getAdminByApp(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/admin/app/get')
@@ -430,6 +438,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getLogs(params, query, bearerToken, payload) {
+        return request(global.server)
+        .get(`/api/logs/get?offset=${query.offset}&limit=${query.limit}&filter=${query.filter}`)
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editGameBackgroundImage(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editBackgroundImage')
@@ -636,7 +652,6 @@ module.exports = {
             };
             
         }catch(err){
-            console.log(err)
             return false;
         }
     },

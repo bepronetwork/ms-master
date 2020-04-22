@@ -17,11 +17,12 @@ async function setMaxDeposit(req, res) {
     try{
         let params = req.body;
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-        await MiddlewareSingleton.log({type: "admin", req});
 		let wallet = new Wallet(params);
         let data = await wallet.setMaxDeposit();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
