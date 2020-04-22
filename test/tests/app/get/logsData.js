@@ -2,7 +2,8 @@ import {
     getUserAuth,
     authAdmin,
     getAppAuth,
-    pingPost
+    pingPost,
+    getLogs
 } from '../../../methods';
 
 import chai from 'chai';
@@ -22,8 +23,22 @@ context(`Logs Data`, async () =>  {
         user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
     });
 
-    it('should Post Log - admin', mochaAsync(async () => {
-        var res = await pingPost({type: "admin", app: app.id}, admin.bearerToken, {id : admin.id});
+    it('should get Log - admin', mochaAsync(async () => {
+        var res = await getLogs({type: "admin", app: app.id}, {offset:0,limit:10,filter:'ADMIN'}, admin.bearerToken, {id : admin.id});
+        console.log(res.data.message);
+        expect(res.data.message.list.length).to.not.equals(0);
+        expect(res.data.status).to.equals(200);
+    }));
+
+    it('should get Log - user', mochaAsync(async () => {
+        var res = await getLogs({type: "admin", app: app.id}, {offset:0,limit:10,filter:'USER'}, admin.bearerToken, {id : admin.id});
+        expect(res.data.message.list.length).to.not.equals(0);
+        expect(res.data.status).to.equals(200);
+    }));
+
+    it('should get Log - Restricted Countries', mochaAsync(async () => {
+        var res = await getLogs({type: "admin", app: app.id}, {offset:0,limit:10,filter:'UNAUTHORIZED_COUNTRY'}, admin.bearerToken, {id : admin.id});
+        expect(res.data.message.list.length).to.not.equals(0);
         expect(res.data.status).to.equals(200);
     }));
 });
