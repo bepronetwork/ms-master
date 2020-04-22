@@ -27,7 +27,8 @@ import {
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
-    MappereditAddonAutoWithdrawSingleton
+    MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetUsersBetsSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -127,7 +128,7 @@ class App extends ModelComponent {
     async appGetUsersBets() {
         try {
             let app = await this.process('AppGetUsersBets');
-            return app;
+            return MapperAppGetUsersBetsSingleton.output('AppGetUsersBets', app);
         } catch (err) {
             throw err;
         }

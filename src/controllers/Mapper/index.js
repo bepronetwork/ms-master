@@ -50,7 +50,8 @@ import {
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
-    MappereditAddonAutoWithdrawSingleton
+    MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetUsersBetsSingleton
 } from "./App";
 
 import {
@@ -113,5 +114,6 @@ export {
     MappereditAddonAutoWithdrawSingleton,
     MapperGetBetsSingleton,
     MapperUserGetBetsSingleton,
-    MapperEditVirtualCurrencySingleton
+    MapperEditVirtualCurrencySingleton,
+    MapperAppGetUsersBetsSingleton
 }
