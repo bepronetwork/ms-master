@@ -6,7 +6,8 @@ import {
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
-    MapperGetBetsSingleton
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton
 } from "./user";
 
 import {
@@ -109,5 +110,6 @@ export {
     MapperUpdateMaxDepositSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
-    MapperGetBetsSingleton
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton
 }

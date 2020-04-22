@@ -9,7 +9,8 @@ import {
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
-    MapperGetBetsSingleton
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton
 } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
@@ -123,7 +124,7 @@ class User extends ModelComponent {
     async userGetBets() {
         try {
             let res = await this.process('UserGetBets');
-            return res;
+            return MapperUserGetBetsSingleton.output('UserGetBets', res);
         } catch (err) {
             throw err;
         }

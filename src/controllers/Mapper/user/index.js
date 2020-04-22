@@ -6,6 +6,7 @@ import { MapperSet2faUserSingleton } from "./MapperSet2FAUser";
 import { MapperCreateApiTokenUserSingleton } from "./MapperCreateApiToken";
 import { MapperGetDepositAddressUserSingleton } from "./MapperGetDepositAddress";
 import { MapperGetBetsSingleton } from "./MapperGetBets";
+import { MapperUserGetBetsSingleton } from "./MapperUserGetBets";
 
 export{
     MapperRegisterUserSingleton,
@@ -15,5 +16,6 @@ export{
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
-    MapperGetBetsSingleton
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton
 }
