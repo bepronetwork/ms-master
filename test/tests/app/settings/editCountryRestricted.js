@@ -5,12 +5,16 @@ import {
     pingPost,
     editRestrictedCountries
 } from '../../../methods';
+import faker from 'faker';
 
 import chai from 'chai';
 
 import { mochaAsync } from '../../../utils';
 
 const expect = chai.expect;
+
+import models from '../../../models';
+const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
 
 context(`Logs Data`, async () =>  {
     var admin, app, user, game;
@@ -29,8 +33,11 @@ context(`Logs Data`, async () =>  {
     }));
 
     it('should try to auth with country not allowed LH(localhost)', mochaAsync(async () => {
-        const user = (await getUserAuth({user : ''}, '', {id : ''}));
-        expect(user.data.status).to.equals(59);
+        let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
+            username: '678im67im' + Random(10000, 23409234235463456)
+        }));
+        var res = await registerUser(userPostData);
+        expect(res.data.status).to.equals(59);
     }));
 
     it('should edit restricted countries to ["BR","PT"] test', mochaAsync(async () => {
