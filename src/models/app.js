@@ -116,6 +116,7 @@ class App extends ModelComponent {
     async editRestrictedCountries() {
         try {
             let app = await this.process('EditRestrictedCountries');
+            // output Boolean
             return app;
         } catch (err) {
             throw err;

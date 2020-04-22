@@ -640,7 +640,7 @@ const progressActions = {
         try {
             const {app, countries} = params;
             await AppRepository.prototype.setCountries(app, countries);
-            return params;
+            return true;
         } catch(err) {
             throw err;
         }
