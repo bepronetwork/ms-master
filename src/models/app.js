@@ -27,7 +27,8 @@ import {
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
-    MappereditAddonAutoWithdrawSingleton
+    MappereditAddonAutoWithdrawSingleton,
+    MapperGetLogsSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -87,9 +88,7 @@ class App extends ModelComponent {
     async getLogs() {
         try {
             let app = await this.process('GetLogs');
-            return app;
-            /* If app is virtual - add virtual currency*/
-            // return MapperRegisterSingleton.output('Register', app);
+            return MapperGetLogsSingleton.output('GetLogs', app);
         } catch (err) {
             throw err;
         }
@@ -117,6 +116,7 @@ class App extends ModelComponent {
     async editRestrictedCountries() {
         try {
             let app = await this.process('EditRestrictedCountries');
+            // output Boolean
             return app;
         } catch (err) {
             throw err;

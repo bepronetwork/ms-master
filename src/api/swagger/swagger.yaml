@@ -3728,12 +3728,18 @@ definitions:
     type: object
     required:
       - user
+      - app
     properties:
       user:
         type : string
         example: "Aweruithwe4837592837"
         description: |
           User Id
+      app:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          App Id
   GetGamesFromAppRequest : 
     type: object
     required:

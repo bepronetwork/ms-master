@@ -11,10 +11,11 @@ import { mochaAsync } from '../../../utils';
 const expect = chai.expect;
 
 context(`Get`, async () =>  {
-    var user, pusher;
+    var user, pusher, app;
 
     before( async () =>  {
-        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        app     = global.test.app;
+        user    = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
 
         pusher = new Pusher(process.env.PUSHER_APP_KEY, 
         { 
