@@ -44,7 +44,7 @@ context(`Log post Ping`, async () =>  {
     }));
 
     it('should Post Log - Empty', mochaAsync(async () => {
-        var res = await pingPost({type: "error"}, {}, {});
+        var res = await pingPost({type: "error", app: app.id}, {}, {});
         expect(res.data.status).to.not.equals(200);
         expect(res.data.status).to.equals(404);
     }));

@@ -10,7 +10,7 @@ async function pingPost(req, res) {
         let data = { message : 'Ping with Succcess'}
         MiddlewareSingleton.respond(res, req, data);
     } catch (error) {
-        await MiddlewareSingleton.log({type: req.body.type, req, code: err.code});
+        await MiddlewareSingleton.log({type: req.body.type, req, code: error.code});
         MiddlewareSingleton.respondError(res, error);
     }
 }
