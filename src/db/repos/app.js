@@ -473,7 +473,7 @@ class AppRepository extends MongoComponent{
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
-                resolve(item);
+                resolve({item, type});
             });
         });
     }

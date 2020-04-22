@@ -51,7 +51,16 @@ import {
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
-    MapperAppGetUsersBetsSingleton
+    MapperAppGetUsersBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton
 } from "./App";
 
 import {
@@ -115,5 +124,14 @@ export {
     MapperGetBetsSingleton,
     MapperUserGetBetsSingleton,
     MapperEditVirtualCurrencySingleton,
-    MapperAppGetUsersBetsSingleton
+    MapperAppGetUsersBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton
 }
