@@ -61,17 +61,18 @@ class AppRepository extends MongoComponent{
         });
     }
 
-    setCountries(_id, countries){
+    setCountries(_id, restrictedCountries){
         return new Promise( async (resolve,reject) => {
-            await AppRepository.prototype.schema.model.findOneAndUpdate(
+            AppRepository.prototype.schema.model.findOneAndUpdate(
                 {_id},
                 {
                     $set : {
-                        countries
+                        restrictedCountries
                     }
                 }
             )
             .exec( (err, item) => {
+                console.log(err);
                 if(err){reject(err)}
                 resolve(item);
             })

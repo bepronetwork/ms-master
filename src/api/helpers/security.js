@@ -29,7 +29,6 @@ class Security{
         let geo = null;
         try {
             geo = geoip.lookup(ip);
-            console.log(geo.country);
             return geo.country;
         }catch(err){
             return 'LH';

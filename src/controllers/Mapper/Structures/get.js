@@ -82,6 +82,7 @@ const get_object = (object) => {
             "url": object.typography.url
         } : object.typography,
         "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
+        "restrictedCountries":object.restrictedCountries ? object.restrictedCountries : [],
         "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
         "isWithdrawing": object.isWithdrawing,
         "name": object.name,

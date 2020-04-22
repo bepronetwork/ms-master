@@ -67,7 +67,8 @@ const processActions = {
 			metadataJSON        : JSON.parse(params.metadataJSON),
 			listAdmins          : [admin._id],
 			licensesId          : [], // TO DO
-			countriesAvailable  : [], // TO DO
+            countriesAvailable  : [], // TO DO
+            restrictedCountries : [],
             isVerified          : false,
             typography
 		}
@@ -148,11 +149,6 @@ const processActions = {
         try {
             let app = await AppRepository.prototype.findAppById(params.app);
             if (!app){ throwError('APP_NOT_EXISTENT') }
-
-            if (typeof params.countries != 'array') {
-                throw {code:'', message:''}; //TODO create a error in errorManager
-            }
-
             return params;
         } catch(err) {
             throw err;
@@ -643,7 +639,8 @@ const progressActions = {
     __editRestrictedCountries : async (params) => {
         try {
             const {app, countries} = params;
-            AppRepository.prototype.setCountries(app, countries);
+            await AppRepository.prototype.setCountries(app, countries);
+            return params;
         } catch(err) {
             throw err;
         }
@@ -1254,6 +1251,9 @@ class AppLogic extends LogicComponent{
                 case 'GetLogs' : {
 					return await library.process.__getLogs(params); break;
                 };
+                case 'EditRestrictedCountries' : {
+					return await library.process.__editRestrictedCountries(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1387,6 +1387,9 @@ class AppLogic extends LogicComponent{
                 case 'GetLogs' : {
 					return await library.progress.__getLogs(params); break;
                 };
+                case 'EditRestrictedCountries': {
+                    return await library.progress.__editRestrictedCountries(params); break;
+                }
 			}
 		}catch(error){
 			throw error;
