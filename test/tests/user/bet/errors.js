@@ -35,7 +35,7 @@ context(`Errors ex : ${currencyTicker.toUpperCase()}`, async () =>  {
         app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         game = app.games.find( game => game.metaName == metaName);
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(currencyTicker).toLowerCase())).currency;
-        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
     });
 
     it('shoudn´t be able to bet - lacks payload', mochaAsync(async () => {
