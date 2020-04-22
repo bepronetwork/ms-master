@@ -113,6 +113,7 @@ class User extends ModelComponent {
     }
 
     async summary() {
+        //Tentar Mapper
         try {
             let res = await this.process('Summary');
             return res;

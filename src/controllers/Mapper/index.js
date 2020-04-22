@@ -62,7 +62,8 @@ import {
 } from "./Game";
 
 import {
-    MapperUpdateMaxDepositSingleton
+    MapperUpdateMaxDepositSingleton,
+    MapperEditVirtualCurrencySingleton
 } from "./Wallet";
 
 export {
@@ -111,5 +112,6 @@ export {
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
     MapperGetBetsSingleton,
-    MapperUserGetBetsSingleton
+    MapperUserGetBetsSingleton,
+    MapperEditVirtualCurrencySingleton
 }
