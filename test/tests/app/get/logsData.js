@@ -16,12 +16,13 @@ context(`Logs Data`, async () =>  {
     var admin, app, user, game;
 
     before( async () =>  {
-        admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
-        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        admin   = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
+        app     = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
     it('should get Log - admin', mochaAsync(async () => {
         var res = await getLogs({app: app.id, admin: admin.id}, {offset:0,limit:10,filter:'ADMIN'}, admin.security.bearerToken, {id : admin.id});
+        console.log(app);
         console.log("1 ", res);
         console.log("2 ", res.data);
         console.log(res.data.message);
