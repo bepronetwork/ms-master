@@ -11,7 +11,7 @@ import { mochaAsync } from '../../../utils';
 
 const expect = chai.expect;
 
-context(`Log post Ping`, async () =>  {
+context(`Logs Data`, async () =>  {
     var admin, app, user, game;
 
     before( async () =>  {

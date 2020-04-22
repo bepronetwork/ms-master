@@ -129,11 +129,8 @@ class Middleware{
     }
 
     async log(json) {
-        console.log("Test");
         const {type, req, code} = json;
         try {
-            console.log(req.headers);
-
             let id = {};
             try {
                 id= JSON.parse(req.headers['payload']);

@@ -25,14 +25,24 @@ class Security{
         return false;
     };
 
+    getCountry(ip) {
+        let geo = null;
+        try {
+            geo = geoip.lookup(ip);
+            return geo.country;
+        }catch(err){
+            return 'LH';
+        }
+    }
+
     verifyByCountry = async ({req}) => {
         try {
-            const countries = (await AppRepository.prototype.findAppById(req.body['app'])).restrictedCountries;
+            let countries = (await AppRepository.prototype.findAppById(req.body['app'])).restrictedCountries;
+            countries = countries == null ? [] : countries;
 
             const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
-            const geo = geoip.lookup(ipFull[ipFull.length-1]);
 
-            if( countries.includes(geo.country!=null ? geo.country : 'LH')  ) {
+            if( countries.includes(this.getCountry(ipFull[ipFull.length-1])) ) {
                 throwError('UNAUTHORIZED_COUNTRY');
             }
         } catch(err) {

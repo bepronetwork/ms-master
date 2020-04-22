@@ -39,7 +39,7 @@ const progressActions = {
 		try{
 
 			let Log = await self.save(params);
-			console.log(Log);
+			// console.log(Log);
 			return {
 				...Log,
 				type : 'log'
