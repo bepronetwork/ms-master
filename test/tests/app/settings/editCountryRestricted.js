@@ -28,7 +28,6 @@ context(`Logs Data`, async () =>  {
     });
 
     it('should edit restricted countries to LH(localhost) test', mochaAsync(async () => {
-        console.log(app.id);
         const res = await editRestrictedCountries({app: app.id, admin: admin.id, countries: ['LH']}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equals(200);
     }));
