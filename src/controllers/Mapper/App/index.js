@@ -32,6 +32,7 @@ import { MapperGetLastBetsSingleton } from "./MapperGetLastBets";
 import { MapperGetBiggetsBetWinnersSingleton } from "./MapperBiggestBetWinners";
 import { MapperGetBiggetsUserWinnersSingleton } from "./MapperBiggestUserWinners";
 import { MapperGetPopularNumbersSingleton } from "./MapperPopularNumbers";
+import { MapperGetLogsSingleton } from "./MapperGetLogs";
 
 export {
     MapperAddCurrencyWalletSingleton,
@@ -67,5 +68,6 @@ export {
     MapperGetLastBetsSingleton,
     MapperGetBiggetsBetWinnersSingleton,
     MapperGetBiggetsUserWinnersSingleton,
-    MapperGetPopularNumbersSingleton
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 }

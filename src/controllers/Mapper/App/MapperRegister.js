@@ -28,6 +28,7 @@ let outputs = {
             "withdraws": !object.withdraws ? [] : object.withdraws.map(withdraw_id => withdraw_id),
             "typography": object.typography ? { name: object.typography.name, url: object.typography.url} : object.typography,
             "countriesAvailable": !object.countriesAvailable ? [] : object.countriesAvailable.map(country_available_id => country_available_id),
+            "restrictedCountries": !object.restrictedCountries ? [] : object.restrictedCountries,
             "licensesId": !object.licensesId ? [] : object.licensesId.map(license_id => license_id),
             "isWithdrawing": object.isWithdrawing,
             "name": object.name,

@@ -60,7 +60,8 @@ import {
     MapperGetLastBetsSingleton,
     MapperGetBiggetsBetWinnersSingleton,
     MapperGetBiggetsUserWinnersSingleton,
-    MapperGetPopularNumbersSingleton
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 } from "./App";
 
 import {
@@ -133,5 +134,6 @@ export {
     MapperGetLastBetsSingleton,
     MapperGetBiggetsBetWinnersSingleton,
     MapperGetBiggetsUserWinnersSingleton,
-    MapperGetPopularNumbersSingleton
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 }

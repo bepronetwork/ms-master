@@ -36,7 +36,8 @@ import {
     MapperGetLastBetsSingleton,
     MapperGetBiggetsBetWinnersSingleton,
     MapperGetBiggetsUserWinnersSingleton,
-    MapperGetPopularNumbersSingleton
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -88,6 +89,21 @@ class App extends ModelComponent {
     }
 
     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async getLogs() {
+        try {
+            let app = await this.process('GetLogs');
+            return MapperGetLogsSingleton.output('GetLogs', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
    * @param {String} 
    * @return {bool || Exception}  
    */
@@ -97,6 +113,20 @@ class App extends ModelComponent {
         try {
             let app = await this.process('Get');
             return MapperGetSingleton.output('Get', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+    async editRestrictedCountries() {
+        try {
+            let app = await this.process('EditRestrictedCountries');
+            // output Boolean
+            return app;
         } catch (err) {
             throw err;
         }
@@ -230,7 +260,7 @@ class App extends ModelComponent {
     async addAddonBalance() {
         // Output = Boolean
         try {
-            let balance = await this.process('addAddonBalance');
+            let balance = await this.process('AddAddonBalance');
             return balance;
         } catch (err) {
             throw err;
