@@ -297,9 +297,14 @@ const processActions = {
         return normalized;
     },
     __summary: async (params) => {
-        let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user, params.opts);
         let normalized = {
-            ...res
+            type: new String(params.type).toLowerCase().trim(),
+            user: new String(params.user).trim(),
+            opts: {
+                dates: fromPeriodicityToDates({ periodicity: params.periodicity }),
+                currency: params.currency
+                // Add more here if needed
+            }
         }
         return normalized;
     },
@@ -560,14 +565,9 @@ const progressActions = {
         }
     },
     __summary: async (params) => {
+        let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user, params.opts);
         let normalized = {
-            type: new String(params.type).toLowerCase().trim(),
-            user: new String(params.app).trim(),
-            opts: {
-                dates: fromPeriodicityToDates({ periodicity: params.periodicity }),
-                currency: params.currency
-                // Add more here if needed
-            }
+            ...res
         }
         return normalized;
     },

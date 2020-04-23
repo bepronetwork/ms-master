@@ -5,7 +5,9 @@ import {
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
-    MapperGetDepositAddressUserSingleton
+    MapperGetDepositAddressUserSingleton,
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton
 } from "./user";
 
 import {
@@ -49,6 +51,16 @@ import {
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetUsersBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton
 } from "./App";
 
@@ -61,7 +73,8 @@ import {
 } from "./Game";
 
 import {
-    MapperUpdateMaxDepositSingleton
+    MapperUpdateMaxDepositSingleton,
+    MapperEditVirtualCurrencySingleton
 } from "./Wallet";
 
 export {
@@ -109,5 +122,18 @@ export {
     MapperUpdateMaxDepositSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton,
+    MapperEditVirtualCurrencySingleton,
+    MapperAppGetUsersBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton
 }

@@ -20,7 +20,26 @@ let outputs = {
             "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
-            ...wallet_object(object),
+            "wallet": object.wallet ? object.wallet.map(wallet => {
+                return ({
+                    "_id": wallet._id,
+                    "playBalance": wallet.playBalance,
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => deposit_address_id) : wallet.depositAddresses,
+                    "link_url": wallet.link_url,
+                    "currency": !wallet.currency ? {} : {
+                        "_id": wallet.currency._id,
+                        "image": wallet.currency.image,
+                        "ticker": wallet.currency.ticker,
+                        "decimals": wallet.currency.decimals,
+                        "name": wallet.currency.name,
+                        "address": wallet.currency.address,
+                        "virtual": wallet.currency.virtual,
+                    },
+                    "price": wallet.price,
+                    "bitgo_id": wallet.bitgo_id,
+                    "bank_address": wallet.bank_address
+                })
+            }) : object.wallet,
             "affiliateWallet": object.affiliate.wallet ? object.affiliate.wallet.map(affiliateWallet => {
                 return ({
                     "_id": affiliateWallet._id,
