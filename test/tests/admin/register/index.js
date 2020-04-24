@@ -4,7 +4,8 @@ import {
     authAdmin,
     loginAdmin2FA,
     setAdmin2FA,
-    getAppUsersBets
+    getAppUsersBets,
+    getUserBetsByPipeline
 } from '../../../methods';
 
 import chai from 'chai';
