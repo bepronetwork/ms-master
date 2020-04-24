@@ -309,22 +309,10 @@ const processActions = {
         return normalized;
     },
     __userGetBets: async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.bet){
-            params.bet = null
-        }
-        if(!params.game){
-            params.game = null
-        }
         let bets = await UsersRepository.prototype.getUserBets({
             _id: params.user,
             offset: params.offset,
-            size: params.size,
-            currency: params.currency,
-            bet: params.bet,
-            game: params.game
+            size: params.size
         });
         return bets;
     },

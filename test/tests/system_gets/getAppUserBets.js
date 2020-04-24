@@ -10,7 +10,6 @@ const expect = chai.expect;
 context('App Data Filters Bets', async () =>  {
     var admin, app, user;
 
-
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;

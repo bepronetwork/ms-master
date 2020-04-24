@@ -216,7 +216,7 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppUserBets({_id, offset, size}){
+    getAppBets({_id, offset, size}){
         try{
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model.find({app : _id})

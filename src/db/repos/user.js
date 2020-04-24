@@ -13,6 +13,7 @@ import {
 import { populate_user } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
+import { BetRepository } from "./";
 /**
  * Accounts database interaction class.
  *
@@ -86,15 +87,18 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    getUserBets({_id, currency, bet, game, offset, size}){
+    getUserBets({_id, offset, size}){
         try{
             return new Promise( (resolve, reject) => {
-                UsersRepository.prototype.schema.model
-                .aggregate(pipeline_user_bets_by_currency(_id,{ currency, bet, game, offset, size }))
-                .exec( (err, data) => {
-                    if(err) { reject(err)}
-                    resolve(data.slice(0, size));
-                });
+                BetRepository.prototype.schema.model.find({user :_id})
+                .sort({timestamp: -1})
+                .skip(offset == undefined ? 0 : offset)
+                .limit((size > 200 || !size) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+                .exec( async (err, item) => {
+                    const totalCount = await BetRepository.prototype.schema.model.find({user :_id}).count();
+                    if(err){reject(err)}
+                    resolve({list: item, totalCount });
+                })
             });
         }catch(err){
             throw err;
