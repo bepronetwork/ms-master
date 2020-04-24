@@ -3,7 +3,8 @@ import {
     loginAdmin,
     authAdmin,
     loginAdmin2FA,
-    setAdmin2FA
+    setAdmin2FA,
+    getAppUsersBets
 } from '../../../methods';
 
 import chai from 'chai';
