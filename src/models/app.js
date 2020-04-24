@@ -24,10 +24,20 @@ import {
     MapperGetGamesSingleton,
     MapperGetUsersSingleton,
     MapperRegisterSingleton,
-    MapperSummarySingleton,
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
-    MappereditAddonAutoWithdrawSingleton
+    MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetUsersBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -79,6 +89,21 @@ class App extends ModelComponent {
     }
 
     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async getLogs() {
+        try {
+            let app = await this.process('GetLogs');
+            return MapperGetLogsSingleton.output('GetLogs', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
    * @param {String} 
    * @return {bool || Exception}  
    */
@@ -88,6 +113,20 @@ class App extends ModelComponent {
         try {
             let app = await this.process('Get');
             return MapperGetSingleton.output('Get', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+    async editRestrictedCountries() {
+        try {
+            let app = await this.process('EditRestrictedCountries');
+            // output Boolean
+            return app;
         } catch (err) {
             throw err;
         }
@@ -117,8 +156,14 @@ class App extends ModelComponent {
     async summary() {
         try {
             let app = await this.process('Summary');
-            // return MapperSummarySingleton.output('Summary', app);
-            return app;
+            switch (app.type){
+                case 'users' : return MapperSummaryUsersSingleton.output('SummaryUsers', app);
+                case 'games' : return MapperSummaryGamesSingleton.output('SummaryGames', app);
+                case 'revenue' : return MapperSummaryRevenueSingleton.output('SummaryRevenue', app);
+                case 'bets' : return MapperSummaryBetsSingleton.output('SummaryBets', app);
+                case 'wallet' : return MapperSummaryWalletSingleton.output('SummaryWallet', app);
+                default : return app;    
+            }
         } catch (err) {
             throw err;
         }
@@ -127,7 +172,7 @@ class App extends ModelComponent {
     async appGetUsersBets() {
         try {
             let app = await this.process('AppGetUsersBets');
-            return app;
+            return MapperAppGetUsersBetsSingleton.output('AppGetUsersBets', app);
         } catch (err) {
             throw err;
         }
@@ -157,7 +202,6 @@ class App extends ModelComponent {
         try {
             let app = await this.process('GetGames');
             return MapperGetGamesSingleton.output('GetGames', app);
-            // return app;
         } catch (err) {
             throw err;
         }
@@ -199,6 +243,7 @@ class App extends ModelComponent {
     */
 
     async addAddonJackpot() {
+        // Output = Boolean
         try {
             let app = await this.process('addAddonJackpot');
             return app;
@@ -213,8 +258,9 @@ class App extends ModelComponent {
     */
 
     async addAddonBalance() {
+        // Output = Boolean
         try {
-            let balance = await this.process('addAddonBalance');
+            let balance = await this.process('AddAddonBalance');
             return balance;
         } catch (err) {
             throw err;
@@ -284,10 +330,9 @@ class App extends ModelComponent {
    */
 
     async getLastBets() {
-        // Output = []
         try {
             let app = await this.process('GetLastBets');
-            return app;
+            return MapperGetLastBetsSingleton.output('GetLastBets', app);
         } catch (err) {
             throw err;
         }
@@ -300,10 +345,9 @@ class App extends ModelComponent {
    */
 
     async getBiggestBetWinners() {
-        // Output = []
         try {
             let app = await this.process('GetBiggestBetWinners');
-            return app;
+            return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
         } catch (err) {
             throw err;
         }
@@ -315,10 +359,9 @@ class App extends ModelComponent {
   */
 
     async getBiggestUserWinners() {
-        // Output = []
         try {
             let app = await this.process('GetBiggestUserWinners');
-            return app;
+            return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
         } catch (err) {
             throw err;
         }
@@ -330,10 +373,9 @@ class App extends ModelComponent {
   */
 
     async getPopularNumbers() {
-        // Output = []
         try {
             let app = await this.process('GetPopularNumbers');
-            return app;
+            return MapperGetPopularNumbersSingleton.output('GetPopularNumbers', app);
         } catch (err) {
             throw err;
         }
@@ -542,7 +584,6 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditLoadingGif');
             return MapperEditLoadingGifSingleton.output('EditLoadingGif', app);
-            // return app;
         } catch (err) {
             throw err;
         }

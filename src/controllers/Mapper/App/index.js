@@ -22,6 +22,17 @@ import { MapperSummarySingleton } from "./MapperSummary";
 import { MapperUpdateWalletSingleton } from "./MapperUpdateWallet";
 import { MapperaddAddonAutoWithdrawSingleton } from "./MapperAddAutoWithdraw";
 import { MappereditAddonAutoWithdrawSingleton } from "./MapperEditAutoWithdraw";
+import { MapperAppGetUsersBetsSingleton } from "./MapperAppGetUsersBets";
+import { MapperSummaryBetsSingleton } from "./MapperSummaryBets";
+import { MapperSummaryGamesSingleton } from "./MapperSummaryGames";
+import { MapperSummaryRevenueSingleton } from "./MapperSummaryRevenue";
+import { MapperSummaryUsersSingleton } from "./MapperSummaryUsers";
+import { MapperSummaryWalletSingleton } from "./MapperSummaryWallet";
+import { MapperGetLastBetsSingleton } from "./MapperGetLastBets";
+import { MapperGetBiggetsBetWinnersSingleton } from "./MapperBiggestBetWinners";
+import { MapperGetBiggetsUserWinnersSingleton } from "./MapperBiggestUserWinners";
+import { MapperGetPopularNumbersSingleton } from "./MapperPopularNumbers";
+import { MapperGetLogsSingleton } from "./MapperGetLogs";
 
 export {
     MapperAddCurrencyWalletSingleton,
@@ -47,5 +58,16 @@ export {
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
-    MappereditAddonAutoWithdrawSingleton
+    MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetUsersBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 }

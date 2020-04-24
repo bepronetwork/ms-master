@@ -17,22 +17,24 @@ import MiddlewareSingleton from '../helpers/middleware';
 
 async function getEcosystemData(req, res) {
     try {
-        await MiddlewareSingleton.log({type: "global", req});
         let ecosystem = new Ecosystem();
         let data = await ecosystem.getEcosystemData();
+        await MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function getCasinoGames(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let ecosystem = new Ecosystem();
         let data = await ecosystem.getCasinoGames();
+        await MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }

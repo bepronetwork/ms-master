@@ -2,6 +2,13 @@ const fromPeriodicityToDates = ({periodicity='monthly'}) =>{
     var ret = {};
 
     switch(new String(periodicity).toLowerCase().trim()){
+        case 'daily' : {
+            ret = {
+                from : getLastDaily(),
+                to : new Date() // Today
+            };
+            break;
+        };
         case 'weekly' : {
             ret = {
                 from : getLastWeek(),
@@ -27,6 +34,11 @@ const fromPeriodicityToDates = ({periodicity='monthly'}) =>{
     }
 
     return ret;
+}
+
+function getLastDaily() {
+    var today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
 }
 
 function getLastWeek() {

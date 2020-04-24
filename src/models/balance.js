@@ -26,6 +26,7 @@ class Balance extends ModelComponent{
         }
     }
     async editAddonBalance(){
+        // Output = Boolean
         try{
             return await this.process('editAddonBalance');
         }catch(err){
