@@ -270,18 +270,10 @@ const processActions = {
         }
     },
     __getLastBets : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getLastBets({
+        let res = await AppRepository.prototype.getAppBets({
             _id : params.app,
             size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+            offset: params.offset
         });
 		return res;
     },
