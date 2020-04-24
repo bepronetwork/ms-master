@@ -27,7 +27,7 @@ import {
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
-    MapperAppGetUsersBetsSingleton,
+    MapperAppGetBetsSingleton,
     MapperSummaryBetsSingleton,
     MapperSummaryGamesSingleton,
     MapperSummaryRevenueSingleton,
@@ -172,8 +172,7 @@ class App extends ModelComponent {
     async appGetUsersBets() {
         try {
             let app = await this.process('AppGetUsersBets');
-            // return MapperAppGetUsersBetsSingleton.output('AppGetUsersBets', app);
-            return app
+            return MapperAppGetBetsSingleton.output('AppGetBets', app);
         } catch (err) {
             throw err;
         }

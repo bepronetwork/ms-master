@@ -124,8 +124,7 @@ class User extends ModelComponent {
     async userGetBets() {
         try {
             let res = await this.process('UserGetBets');
-            // return MapperUserGetBetsSingleton.output('UserGetBets', res);
-            return res;
+            return MapperUserGetBetsSingleton.output('UserGetBets', res);
         } catch (err) {
             throw err;
         }
