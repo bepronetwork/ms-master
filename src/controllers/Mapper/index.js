@@ -65,7 +65,8 @@ import {
 } from "./App";
 
 import {
-    MapperBetSingleton
+    MapperBetSingleton,
+    MapperGetBetSingleton
 } from "./Bet";
 
 import {
@@ -78,6 +79,7 @@ import {
 } from "./Wallet";
 
 export {
+    MapperGetBetSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
     MapperAuthUserSingleton,

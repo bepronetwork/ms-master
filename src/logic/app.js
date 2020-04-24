@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -144,6 +144,16 @@ const processActions = {
             game: params.game
         });
 		return res;
+    },
+    __getBetInfo : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+            let bet = await BetRepository.prototype.findBetById(params.bet);
+            return bet;
+        } catch(err) {
+            throw err;
+        }
     },
     __editRestrictedCountries : async (params) => {
         try {
@@ -635,6 +645,13 @@ const progressActions = {
     __getTransactions : async (params) => {
         let res = params;
 		return res;
+    },
+    __getBetInfo : async (params) => {
+        try {
+            return params;
+        } catch(err) {
+            throw err;
+        }
     },
     __editRestrictedCountries : async (params) => {
         try {
@@ -1254,6 +1271,9 @@ class AppLogic extends LogicComponent{
                 case 'EditRestrictedCountries' : {
 					return await library.process.__editRestrictedCountries(params); break;
                 };
+                case 'GetBetInfo' : {
+					return await library.process.__getBetInfo(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1389,6 +1409,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditRestrictedCountries': {
                     return await library.progress.__editRestrictedCountries(params); break;
+                }
+                case 'GetBetInfo': {
+                    return await library.progress.__getBetInfo(params); break;
                 }
 			}
 		}catch(error){
