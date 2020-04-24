@@ -107,38 +107,8 @@ context('App Data', async () =>  {
             size : 30
         };
         let res = await getAppLastBets(postData);
-        GETLastBetsShouldAllow(res.data, expect);
-    }));
-
-    it('GET last Bets - should allow - By Currency', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            currency : currency._id
-        };
-        let res = await getAppLastBets(postData);
-        GETLastBetsShouldAllow(res.data, expect);
-    }));
-
-    it('GET last Bets - should allow - By Games', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            game : app.games[0]._id
-        };
-        let res = await getAppLastBets(postData);
-        GETLastBetsShouldAllow(res.data, expect);
-    }));
-
-    it('GET last Bets - should allow - By Currency and Games', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            currency : currency._id,
-            game : app.games[0]._id
-        };
-        let res = await getAppLastBets(postData);
-        GETLastBetsShouldAllow(res.data, expect);
+        expect(res.data.status).to.not.null;
+        expect(res.data.status).to.equal(200);
     }));
 
     it('GET Biggest Bet Winners - should allow', mochaAsync(async () => {
