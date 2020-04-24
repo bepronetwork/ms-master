@@ -222,7 +222,7 @@ class AppRepository extends MongoComponent{
                 BetRepository.prototype.schema.model.find({app : _id})
                 .sort({timestamp: -1})
                 .skip(offset == undefined ? 0 : offset)
-                .limit(size > 200 ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+                .limit((size > 200 || !size) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
                 .populate([
                     'currency',
                     'user',
