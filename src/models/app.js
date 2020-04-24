@@ -172,7 +172,8 @@ class App extends ModelComponent {
     async appGetUsersBets() {
         try {
             let app = await this.process('AppGetUsersBets');
-            return MapperAppGetUsersBetsSingleton.output('AppGetUsersBets', app);
+            // return MapperAppGetUsersBetsSingleton.output('AppGetUsersBets', app);
+            return app
         } catch (err) {
             throw err;
         }

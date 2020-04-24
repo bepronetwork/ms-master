@@ -16,6 +16,7 @@ import {
 
 import { populate_app_all, populate_app_affiliates } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
+import { BetRepository } from "./";
 
 
 let foreignKeys = ['wallet', 'users', 'games'];
@@ -216,15 +217,24 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppUserBets({_id, currency, user, bet, game, offset, size}){
+    getAppUserBets({_id, offset, size}){
         try{
             return new Promise( (resolve, reject) => {
-                AppRepository.prototype.schema.model
-                .aggregate(pipeline_app_users_bets_by_currency(_id, {currency, user, bet, game, offset, size}))
-                .exec( (err, data) => {
-                    if(err) { reject(err)}
-                    resolve(data.slice(0, size));
-                });
+                BetRepository.prototype.schema.model.find({app : _id})
+                .sort({timestamp: -1})
+                .skip(offset)
+                .limit(size)
+                .populate([
+                    'currency',
+                    'user',
+                    'game',
+                    'app'
+                ])
+                .exec( async (err, item) => {
+                    const size = await BetRepository.prototype.schema.model.find({app : _id}).count();
+                    if(err){reject(err)}
+                    resolve({list: item, size });
+                })
             });
         }catch(err){
             throw err;
