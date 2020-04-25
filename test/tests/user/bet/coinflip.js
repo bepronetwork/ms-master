@@ -84,7 +84,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
     it(`${metaName} - ${key} - Get Data Bet - Simple Bet (Tails)`, mochaAsync(async () => {
         const res = await getBetInfo({app: app.id, bet});
-        console.log(res);
         expect(res.data.status).to.equal(200);
     }));
 
