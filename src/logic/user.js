@@ -312,7 +312,10 @@ const processActions = {
         let bets = await UsersRepository.prototype.getUserBets({
             _id: params.user,
             offset: params.offset,
-            size: params.size
+            size: params.size,
+            bet: {_id : params.bet},
+            currency: {currency : params.currency},
+            game: {game : params.game}
         });
         return bets;
     },

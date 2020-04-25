@@ -87,10 +87,15 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    getUserBets({_id, offset, size}){
+    getUserBets({_id, offset, size, bet = {}, currency = {}, game = {}}){
         try{
             return new Promise( (resolve, reject) => {
-                BetRepository.prototype.schema.model.find({user :_id})
+                BetRepository.prototype.schema.model.find({
+                    user : _id,
+                    ...bet,
+                    ...game,
+                    ...currency
+                })
                 .sort({timestamp: -1})
                 .skip(offset == undefined ? 0 : offset)
                 .limit((size > 200 || !size) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum

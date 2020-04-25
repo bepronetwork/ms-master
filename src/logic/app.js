@@ -125,7 +125,11 @@ const processActions = {
         let res = await AppRepository.prototype.getAppBets({
             _id : params.app,
             offset: params.offset,
-            size : params.size
+            size : params.size,
+            user: {user : params.user},
+            bet: {_id : params.bet},
+            currency: {currency : params.currency},
+            game: {game : params.game}
         });
 		return res;
     },
@@ -283,7 +287,11 @@ const processActions = {
         let res = await AppRepository.prototype.getAppBets({
             _id : params.app,
             size : params.size,
-            offset: params.offset
+            offset: params.offset,
+            user: {user : params.user},
+            bet: {_id : params.bet},
+            currency: {currency : params.currency},
+            game: {game : params.game}
         });
 		return res;
     },
