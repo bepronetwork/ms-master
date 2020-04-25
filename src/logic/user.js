@@ -313,9 +313,9 @@ const processActions = {
             _id: params.user,
             offset: params.offset,
             size: params.size,
-            bet: {_id : params.bet},
-            currency: {currency : params.currency},
-            game: {game : params.game}
+            bet: params.bet == undefined ? {} : {_id : params.bet},
+            currency: params.currency == undefined ? {} : {currency : params.currency},
+            game: params.game == undefined ? {} : {game : params.game}
         });
         return bets;
     },

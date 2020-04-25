@@ -160,6 +160,7 @@ context('Register', async () => {
     it('should get All App Bets', mochaAsync(async () => {
         let res = await getAppUsersBets({"app": "5e48d6a928c1af0021c366d6", "admin": "5e48d69228c1af0021c366c2", "size": 4000}, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU0OGQ2OTIyOGMxYWYwMDIxYzM2NmMyIiwidGltZSI6MTU4OTIzNTk4NzEzOSwiaWF0IjoxNTg2NjQzOTg3fQ.oo_fjK3BaD98Gl6xQFgw3zeyQL9GnIQhPInq_MFUDs_yMsNaDYYvmjAwvf3n21w1DOhHAA8FcVk76blWrixKjw", {"id" : "5e48d69228c1af0021c366c2"});
         detectValidationErrors(res);
+        console.log(res.data.message.list.length)
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
