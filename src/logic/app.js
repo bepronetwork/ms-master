@@ -289,7 +289,6 @@ const processActions = {
             size : params.size,
             offset: params.offset,
             user: {user : params.user},
-            bet: {_id : params.bet},
             currency: {currency : params.currency},
             game: {game : params.game}
         });
