@@ -58,7 +58,7 @@ module.exports = {
     },
     async getBetInfo(params) {
         return request(global.server)
-        .post('/app/bet/get')
+        .post('/api/app/bet/get')
         .send(params)
         .then(res => detectServerError(res))
     },
