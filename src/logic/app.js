@@ -347,9 +347,9 @@ const processActions = {
     },
     __getTransactions : async (params) => {
         let {
-            app, filters
+            app, filters, size, offset
         } = params;
-        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters);
+        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters, size, offset);
 		return res;
     },
     __getGames : async (params) => {

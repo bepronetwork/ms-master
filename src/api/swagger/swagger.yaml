@@ -3279,6 +3279,13 @@ definitions:
               type: string
             data:
               type: string
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
   AppPopularNumbersRequest:
     type: object
     required:
