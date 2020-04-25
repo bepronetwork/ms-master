@@ -228,7 +228,7 @@ class AppRepository extends MongoComponent{
                 })
                 .sort({timestamp: -1})
                 .skip(offset == undefined ? 0 : offset)
-                .limit((size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+                .limit(size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
                 .exec( async (err, item) => {
                     const totalCount = await BetRepository.prototype.schema.model.find({app : _id}).count();
                     if(err){reject(err)}
