@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { byUserId } from "./filters";
 import { pipeline_offset, pipeline_size } from '../filters';
 
-const pipeline_transactions_app = (_id, filters, { offset, size }) =>
+const pipeline_transactions_app = (_id, filters=[], { offset, size }) =>
     [
         //Stage 0
         {
