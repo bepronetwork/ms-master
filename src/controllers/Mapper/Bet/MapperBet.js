@@ -1,4 +1,6 @@
 import { app_object } from "../Structures/app";
+import { bets_object } from "../Structures/bets";
+import { security_object } from "../Structures/security";
 
 let self;
 
@@ -21,39 +23,36 @@ let outputs = {
                 })
             }),
             "isResolved": object.isResolved,
-            "currency": object.currency ? object.currency.map(currency => {
-                return ({
-                    "_id": currency._id,
-                    "image": currency.image,
-                    "ticker": currency.ticker,
-                    "decimals": currency.decimals,
-                    "name": currency.name,
-                    "address": currency.address,
-                    "virtual": currency.virtual
-                })
-            }) : object.currency,
+            "currency": object.currency ? {
+                    "_id": object.currency._id,
+                    "image": object.currency.image,
+                    "ticker": object.currency.ticker,
+                    "decimals": object.currency.decimals,
+                    "name": object.currency.name,
+                    "address": object.currency.address,
+                    "virtual": object.currency.virtual
+            } : object.currency,
             "user": {
-                ...bets_object(object),
-                "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
-                "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
-                "wallet": object.wallet ? object.wallet.map(wallet_id => { return ({_id: wallet_id }) } ) : object.wallet,
-                "isWithdrawing": object.isWithdrawing,
-                "email_confirmed": object.email_confirmed,
-                "_id": object._id,
-                "username": object.username,
-                "full_name": object.full_name,
-                "affiliate": object.affiliate,
-                "name": object.name,
-                "register_timestamp": object.register_timestamp,
-                "nationality": object.nationality,
-                "age": object.age,
-                ...security_object(object),
-                "email": object.email,
-                "app_id": object.app_id,
-                "external_user": object.external_user,
-                "external_id": object.external_id,
-                "__v": object.__v,
-                "affiliateLink": object.affiliateLink
+                "bets": object.user.bets,
+                "deposits": object.user.deposits ? object.user.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.user.deposits,
+                "withdraws": object.user.withdraws ? object.user.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.user.withdraws,
+                "wallet": object.user.wallet ? object.user.wallet.map(wallet_id => { return ({_id: wallet_id }) } ) : object.user.wallet,
+                "isWithdrawing": object.user.isWithdrawing,
+                "email_confirmed": object.user.email_confirmed,
+                "_id": object.user._id,
+                "username": object.user.username,
+                "full_name": object.user.full_name,
+                "affiliate": object.user.affiliate,
+                "name": object.user.name,
+                "register_timestamp": object.user.register_timestamp,
+                "nationality": object.user.nationality,
+                "age": object.user.age,
+                "email": object.user.email,
+                "app_id": object.user.app_id,
+                "external_user": object.user.external_user,
+                "external_id": object.user.external_id,
+                "__v": object.user.__v,
+                "affiliateLink": object.user.affiliateLink
             },
             ...app_object(object.app),
             "outcomeResultSpace": !object.outcomeResultSpace ? {} : {
