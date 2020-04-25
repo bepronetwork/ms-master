@@ -37,7 +37,8 @@ import {
     MapperGetBiggetsBetWinnersSingleton,
     MapperGetBiggetsUserWinnersSingleton,
     MapperGetPopularNumbersSingleton,
-    MapperGetLogsSingleton
+    MapperGetLogsSingleton,
+    MapperGetBetSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -108,6 +109,19 @@ class App extends ModelComponent {
    * @return {bool || Exception}  
    */
 
+    async getBetInfo() {
+        try {
+            let app = await this.process('GetBetInfo');
+            return MapperGetBetSingleton.output('GetBetInfo', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+   /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
     async get() {
         try {
