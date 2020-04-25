@@ -1,3 +1,4 @@
+import { app_object } from "../Structures/app";
 
 let self;
 
@@ -20,9 +21,41 @@ let outputs = {
                 })
             }),
             "isResolved": object.isResolved,
-            "currency": object.currency,
-            "user": object.user,
-            "app": object.app,
+            "currency": object.currency ? object.currency.map(currency => {
+                return ({
+                    "_id": currency._id,
+                    "image": currency.image,
+                    "ticker": currency.ticker,
+                    "decimals": currency.decimals,
+                    "name": currency.name,
+                    "address": currency.address,
+                    "virtual": currency.virtual
+                })
+            }) : object.currency,
+            "user": {
+                ...bets_object(object),
+                "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
+                "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
+                "wallet": object.wallet ? object.wallet.map(wallet_id => { return ({_id: wallet_id }) } ) : object.wallet,
+                "isWithdrawing": object.isWithdrawing,
+                "email_confirmed": object.email_confirmed,
+                "_id": object._id,
+                "username": object.username,
+                "full_name": object.full_name,
+                "affiliate": object.affiliate,
+                "name": object.name,
+                "register_timestamp": object.register_timestamp,
+                "nationality": object.nationality,
+                "age": object.age,
+                ...security_object(object),
+                "email": object.email,
+                "app_id": object.app_id,
+                "external_user": object.external_user,
+                "external_id": object.external_id,
+                "__v": object.__v,
+                "affiliateLink": object.affiliateLink
+            },
+            ...app_object(object.app),
             "outcomeResultSpace": !object.outcomeResultSpace ? {} : {
                 "key": object.outcomeResultSpace.key,
                 "start": object.outcomeResultSpace.start,
