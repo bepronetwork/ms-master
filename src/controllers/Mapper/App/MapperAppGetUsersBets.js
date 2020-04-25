@@ -1,3 +1,4 @@
+import { bets_object } from "../Structures";
 let self;
 
 
@@ -22,7 +23,10 @@ let outputs = {
                     }),
                     "isResolved": list.isResolved,
                     "currency": list.currency,
-                    "user": list.user,
+                    "user": !list.user ? {} : {
+                        "_id": list.user._id,
+                        "username": list.user.username,
+                    },
                     "app": list.app,
                     "outcomeResultSpace": !list.outcomeResultSpace ? {} : {
                         "key": list.outcomeResultSpace.key,
