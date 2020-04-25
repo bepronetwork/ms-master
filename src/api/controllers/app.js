@@ -74,6 +74,19 @@ async function getApp(req, res) {
     }
 }
 
+async function getBetInfo(req, res) {
+    try {
+        // await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getBetInfo();
+        await MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
 
 async function getGames(req, res) {
     try {
@@ -749,5 +762,6 @@ export {
     editAddonBalance,
     editVirtualCurrency,
     editRestrictedCountries,
-    getLogs
+    getLogs,
+    getBetInfo
 };

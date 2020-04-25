@@ -22,7 +22,7 @@ import { MapperSummarySingleton } from "./MapperSummary";
 import { MapperUpdateWalletSingleton } from "./MapperUpdateWallet";
 import { MapperaddAddonAutoWithdrawSingleton } from "./MapperAddAutoWithdraw";
 import { MappereditAddonAutoWithdrawSingleton } from "./MapperEditAutoWithdraw";
-import { MapperAppGetUsersBetsSingleton } from "./MapperAppGetUsersBets";
+import { MapperAppGetBetsSingleton } from "./MapperAppGetUsersBets";
 import { MapperSummaryBetsSingleton } from "./MapperSummaryBets";
 import { MapperSummaryGamesSingleton } from "./MapperSummaryGames";
 import { MapperSummaryRevenueSingleton } from "./MapperSummaryRevenue";
@@ -59,7 +59,7 @@ export {
     MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
-    MapperAppGetUsersBetsSingleton,
+    MapperAppGetBetsSingleton,
     MapperSummaryBetsSingleton,
     MapperSummaryGamesSingleton,
     MapperSummaryRevenueSingleton,

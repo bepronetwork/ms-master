@@ -9,13 +9,13 @@ import {
     pipeline_get_by_external_id,
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
-    pipeline_app_users_bets_by_currency,
     pipeline_popular_numbers,
     pipeline_biggest_user_winners
 } from './pipelines/app';
 
 import { populate_app_all, populate_app_affiliates } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
+import { BetRepository } from "./";
 
 
 let foreignKeys = ['wallet', 'users', 'games'];
@@ -216,15 +216,24 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppUserBets({_id, currency, user, bet, game, offset, size}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}}){
         try{
             return new Promise( (resolve, reject) => {
-                AppRepository.prototype.schema.model
-                .aggregate(pipeline_app_users_bets_by_currency(_id, {currency, user, bet, game, offset, size}))
-                .exec( (err, data) => {
-                    if(err) { reject(err)}
-                    resolve(data.slice(0, size));
-                });
+                BetRepository.prototype.schema.model.find({
+                    app : _id,
+                    ...user,
+                    ...bet,
+                    ...game,
+                    ...currency
+                })
+                .sort({timestamp: -1})
+                .skip(offset == undefined ? 0 : offset)
+                .limit((size > 200 || !size) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+                .exec( async (err, item) => {
+                    const totalCount = await BetRepository.prototype.schema.model.find({app : _id}).count();
+                    if(err){reject(err)}
+                    resolve({list: item, totalCount });
+                })
             });
         }catch(err){
             throw err;

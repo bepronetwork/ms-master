@@ -3,7 +3,9 @@ import {
     loginAdmin,
     authAdmin,
     loginAdmin2FA,
-    setAdmin2FA
+    setAdmin2FA,
+    getAppUsersBets,
+    getUserBetsByPipeline
 } from '../../../methods';
 
 import chai from 'chai';
@@ -153,5 +155,18 @@ context('Register', async () => {
         var res = await loginAdmin(BOILERPLATES.admins.WRONG_PASS_LOGIN_USER);
         detectValidationErrors(res);
         shouldntLoginTheAdmin(res.data, expect);
+    }));
+
+    it('should get All App Bets', mochaAsync(async () => {
+        let res = await getAppUsersBets({"app": "5e48d6a928c1af0021c366d6", "admin": "5e48d69228c1af0021c366c2"}, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU0OGQ2OTIyOGMxYWYwMDIxYzM2NmMyIiwidGltZSI6MTU4OTIzNTk4NzEzOSwiaWF0IjoxNTg2NjQzOTg3fQ.oo_fjK3BaD98Gl6xQFgw3zeyQL9GnIQhPInq_MFUDs_yMsNaDYYvmjAwvf3n21w1DOhHAA8FcVk76blWrixKjw", {"id" : "5e48d69228c1af0021c366c2"});
+        detectValidationErrors(res);
+        expect(res.data.status).to.not.null;
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should Get User Bets', mochaAsync(async () => {
+        let res = await getUserBetsByPipeline({"user": "5e5bfd189517230021a8c99a"}, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU1YmZkMTg5NTE3MjMwMDIxYThjOTlhIiwidGltZSI6MTU4ODg2MjIxMzUwOCwiaWF0IjoxNTg2MjcwMjEzfQ.ctt_9Mh00ymId6h7xhJ1jyvMZ7vnufeiZ1nv7OXhKbS15SNIXK5CHn2dLcfGumJTdsakOFMJXzn4XqHQfgfUyQ", {"id" : "5e5bfd189517230021a8c99a"});
+        expect(res.data.status).to.not.null;
+        expect(res.data.status).to.equal(200);
     }));
 })

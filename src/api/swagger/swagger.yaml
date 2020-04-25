@@ -1625,7 +1625,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/user/get : 
+  /app/user/get:
     x-swagger-router-controller: user
     post:
       tags:
@@ -1655,6 +1655,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/bet/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get all Bet Info
+      operationId: getBetInfo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: bet
+          description: Bet Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetBetInfoRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/users:
     x-swagger-router-controller: app
     post:
@@ -2402,7 +2433,24 @@ definitions:
         minLength: 1
         description: |
           App Id
-  UserInfoGetRequest : 
+
+  GetBetInfoRequest:
+    type: object
+    required:
+      - bet
+      - app
+    properties:
+      bet:
+        type : string
+        example: "43256291237846817623"
+        description: |
+          Unique identifier of the bet, ID
+      app:
+        type : string
+        example: "43256291237846817623"
+        description: |
+          Unique identifier of the app, ID
+  UserInfoGetRequest :
     type: object
     required:
       - user
@@ -3279,6 +3327,13 @@ definitions:
               type: string
             data:
               type: string
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
   AppPopularNumbersRequest:
     type: object
     required:

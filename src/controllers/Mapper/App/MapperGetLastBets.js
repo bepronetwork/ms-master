@@ -12,18 +12,41 @@ let self;
 
 let outputs = {
     getLastBets: (object) => {
-        return object.map(object => {
-            return ({
-                "_id": object._id,
-                "currency": object.currency,
-                "betAmount": object.betAmount,
-                "timestamp": object.timestamp,
-                "isWon": object.isWon,
-                "winAmount": object.winAmount,
-                "username": object.username,
-                "game": object.game
-            })
-        })
+        return {
+            "list": !object.list ? [] : object.list.map(list => {
+                return ({
+                    "_id": list._id,
+                    "result": !list.result ? [] : list.result.map(result_id => {
+                        return ({
+                            "_id": result_id,
+                        })
+                    }),
+                    "isResolved": list.isResolved,
+                    "currency": list.currency,
+                    "user": list.user,
+                    "app": list.app,
+                    "outcomeResultSpace": !list.outcomeResultSpace ? {} : {
+                        "key": list.outcomeResultSpace.key,
+                        "start": list.outcomeResultSpace.start,
+                        "end": list.outcomeResultSpace.end,
+                        "probability": list.outcomeResultSpace.probability,
+                        "index": list.outcomeResultSpace.index,
+                    },
+                    "isWon": list.isWon,
+                    "game": list.game,
+                    "winAmount": list.winAmount,
+                    "betAmount": list.betAmount,
+                    "fee": list.fee,
+                    "timestamp": list.timestamp,
+                    "nonce": list.nonce,
+                    "clientSeed": list.clientSeed,
+                    "serverHashedSeed": list.serverHashedSeed,
+                    "serverSeed": list.serverSeed,
+                    "__v": list.__v,
+                })
+            }),
+            "totalCount": object.totalCount
+        }
     }
 }
 
