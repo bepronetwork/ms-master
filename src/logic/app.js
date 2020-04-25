@@ -126,10 +126,10 @@ const processActions = {
             _id : params.app,
             offset: params.offset,
             size : params.size,
-            user: {user : params.user},
-            bet: {_id : params.bet},
-            currency: {currency : params.currency},
-            game: {game : params.game}
+            user: params.user == undefined ? {} : {user : params.user},
+            bet: params.bet == undefined ? {} : {_id : params.bet},
+            currency: params.currency == undefined ? {} : {currency : params.currency},
+            game: params.game == undefined ? {} : {game : params.game}
         });
 		return res;
     },
@@ -288,9 +288,9 @@ const processActions = {
             _id : params.app,
             size : params.size,
             offset: params.offset,
-            user: {user : params.user},
-            currency: {currency : params.currency},
-            game: {game : params.game}
+            user: params.user == undefined ? {} : {user : params.user},
+            currency: params.currency == undefined ? {} : {currency : params.currency},
+            game: params.game == undefined ? {} : {game : params.game}
         });
 		return res;
     },
