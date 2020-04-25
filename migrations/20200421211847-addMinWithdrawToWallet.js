@@ -21,24 +21,27 @@ class Progress {
 
 module.exports = {
   async up(db, client) {
-
-    let wallets = await db.collection('wallets').find().toArray();
-    let processIndex = wallets.length;
-    let processObj = new Progress(processIndex, "ADD_MIN_WITHDRAW_FIELD_TO_WALLET");
-    for (let wallet of wallets) {
-      console.log(wallet)
-      processObj.setProcess(processIndex);
-      processIndex--;
-      if (wallet.min_withdraw == (null || undefined)) {
-        await db.collection('wallets').updateOne(
-          { _id: wallet._id },
-          { $set: { "min_withdraw": 0.000001 } }
-        )
+    let index = -1;
+    while(true) {
+      index++;
+      let wallets = await db.collection('wallets').find().skip(1000*index).limit(1000).toArray();
+      if(wallets.length === 0){
+        break;
       }
-
-
+      let processIndex = wallets.length;
+      let processObj = new Progress(processIndex, "ADD_MIN_WITHDRAW_FIELD_TO_WALLET");
+      for (let wallet of wallets) {
+        processObj.setProcess(processIndex);
+        processIndex--;
+        if (wallet.min_withdraw == (null || undefined)) {
+          await db.collection('wallets').updateOne(
+            { _id: wallet._id },
+            { $set: { "min_withdraw": 0.000001 } }
+          )
+        }
+      }
+      processObj.destroyProgress();
     }
-    processObj.destroyProgress();
   },
 
   async down(db, client) {
