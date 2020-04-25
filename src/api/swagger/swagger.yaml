@@ -1660,7 +1660,6 @@ paths:
     x-swagger-router-controller: app
     post:
       tags:
-      - bet
       - app
       summary: Get all Bet Info
       operationId: getBetInfo
