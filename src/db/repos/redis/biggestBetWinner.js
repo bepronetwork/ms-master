@@ -36,7 +36,7 @@ class BiggestBetWinnerRepository extends MongoComponent{
                 })
                 .exec( async (err, item) => {
                     if(err){reject(err)}
-                    resolve({list: item, totalCount });
+                    resolve(item);
                 })
             });
         }catch(err){
