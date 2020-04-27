@@ -346,8 +346,7 @@ class App extends ModelComponent {
     async getLastBets() {
         try {
             let app = await this.process('GetLastBets');
-            return app
-            // return MapperGetLastBetsSingleton.output('GetLastBets', app);
+            return MapperGetLastBetsSingleton.output('GetLastBets', app);
         } catch (err) {
             throw err;
         }
@@ -362,8 +361,7 @@ class App extends ModelComponent {
     async getBiggestBetWinners() {
         try {
             let app = await this.process('GetBiggestBetWinners');
-            return app
-            // return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+            return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
         } catch (err) {
             throw err;
         }
@@ -377,8 +375,7 @@ class App extends ModelComponent {
     async getBiggestUserWinners() {
         try {
             let app = await this.process('GetBiggestUserWinners');
-            return app
-            // return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+            return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
         } catch (err) {
             throw err;
         }

@@ -12,41 +12,42 @@ let self;
 
 let outputs = {
     getLastBets: (object) => {
-        return {
-            "list": !object.list ? [] : object.list.map(list => {
-                return ({
-                    "_id": list._id,
-                    "result": !list.result ? [] : list.result.map(result_id => {
-                        return ({
-                            "_id": result_id,
-                        })
-                    }),
-                    "isResolved": list.isResolved,
-                    "currency": list.currency,
-                    "user": list.user,
-                    "app": list.app,
-                    "outcomeResultSpace": !list.outcomeResultSpace ? {} : {
-                        "key": list.outcomeResultSpace.key,
-                        "start": list.outcomeResultSpace.start,
-                        "end": list.outcomeResultSpace.end,
-                        "probability": list.outcomeResultSpace.probability,
-                        "index": list.outcomeResultSpace.index,
-                    },
-                    "isWon": list.isWon,
-                    "game": list.game,
-                    "winAmount": list.winAmount,
-                    "betAmount": list.betAmount,
-                    "fee": list.fee,
-                    "timestamp": list.timestamp,
-                    "nonce": list.nonce,
-                    "clientSeed": list.clientSeed,
-                    "serverHashedSeed": list.serverHashedSeed,
-                    "serverSeed": list.serverSeed,
-                    "__v": list.__v,
-                })
-            }),
-            "totalCount": object.totalCount
-        }
+        return object.map(object => {
+            return ({
+                "_id": object._id,
+                "app": object.app,
+                "timestamp": object.timestamp,
+                "lastBets": !object.lastBets ? [] : object.lastBets.map(lastBets => {
+                    return ({
+                        "_id": lastBets._id,
+                        "bet": {
+                            "_id": lastBets.bet._id,
+                            "betAmount": lastBets.bet.betAmount,
+                            "winAmount": lastBets.bet.winAmount,
+                            "isWon": lastBets.bet.isWon,
+                            "timestamp": lastBets.bet.timestamp,
+                        },
+                        "currency": {
+                            "_id": lastBets.currency._id,
+                            "image": lastBets.currency.image,
+                            "ticker": lastBets.currency.ticker,
+                            "name": lastBets.currency.name,
+                        },
+                        "game": {
+                            "_id": lastBets.game._id,
+                            "name": lastBets.game.name,
+                            "image_url": lastBets.game.image_url,
+                            "metaName": lastBets.game.metaName,
+                        },
+                        "user": {
+                            "_id": lastBets.user._id,
+                            "username": lastBets.user.username,
+                        }
+                    })
+                }),
+                "__v": object.__v,
+            })
+        })
     }
 }
 
