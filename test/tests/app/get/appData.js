@@ -103,9 +103,8 @@ context('App Data', async () =>  {
 
     it('GET last Bets - should allow', mochaAsync(async () => {
         let postData = {
-            app : app.id,
-            size : 30
-        };
+            app : app.id,        
+            };
         let res = await getAppLastBets(postData);
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
@@ -113,80 +112,16 @@ context('App Data', async () =>  {
 
     it('GET Biggest Bet Winners - should allow', mochaAsync(async () => {
         let postData = {
-            app : app.id,
-            size : 30
-        };
-        let res = await getAppBiggestBetWinners(postData);
-        GETBiggestBetWinnersShouldAllow(res.data, expect);
-    }))
-
-    it('GET Biggest Bet Winners - should allow - By Currency', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            currency : currency._id
-        };
-        let res = await getAppBiggestBetWinners(postData);
-        GETBiggestBetWinnersShouldAllow(res.data, expect);
-    }))
-    
-    it('GET Biggest Bet Winners - should allow - By Games', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            game : app.games[0]._id
-        };
-        let res = await getAppBiggestBetWinners(postData);
-        GETBiggestBetWinnersShouldAllow(res.data, expect);
-    }))
-
-    it('GET Biggest Bet Winners - should allow - By Currency and Games', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            currency : currency._id,
-            game : app.games[0]._id
-        };
+            app : app.id,        
+            };
         let res = await getAppBiggestBetWinners(postData);
         GETBiggestBetWinnersShouldAllow(res.data, expect);
     }))
 
     it('GET Biggest User Winners - should allow', mochaAsync(async () => {
         let postData = {
-            app : app.id,
-            size : 30
-        };
-        let res = await getAppBiggestUserWinners(postData);
-        GETBiggestUserWinnersShouldAllow(res.data, expect);
-    }))
-
-    it('GET Biggest User Winners - should allow - By Currency', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            currency : currency._id
-        };
-        let res = await getAppBiggestUserWinners(postData);
-        GETBiggestUserWinnersShouldAllow(res.data, expect);
-    }))
-
-    it('GET Biggest User Winners - should allow - By Game', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            game : app.games[0]._id
-        };
-        let res = await getAppBiggestUserWinners(postData);
-        GETBiggestUserWinnersShouldAllow(res.data, expect);
-    }))
-
-    it('GET Biggest User Winners - should allow - By Currency and Game', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            size : 30,
-            currency : currency._id,
-            game : app.games[0]._id
-        };
+            app : app.id,        
+            };
         let res = await getAppBiggestUserWinners(postData);
         GETBiggestUserWinnersShouldAllow(res.data, expect);
     }))

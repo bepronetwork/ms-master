@@ -21,6 +21,7 @@ import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
 let error = new ErrorManager();
 
 
@@ -284,45 +285,20 @@ const processActions = {
         }
     },
     __getLastBets : async (params) => {
-        let res = await AppRepository.prototype.getAppBets({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            user: params.user == undefined ? {} : {user : params.user},
-            currency: params.currency == undefined ? {} : {currency : params.currency},
-            game: params.game == undefined ? {} : {game : params.game}
+        let res = await LastBetsRepository.prototype.getLastBets({
+            _id : params.app
         });
 		return res;
     },
     __getBiggestBetWinners : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getBiggestBetWinners({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+        let res = await BiggestBetWinnerRepository.prototype.getBiggetsBetWinner({
+            _id : params.app
         });
 		return res;
     },
     __getBiggestUserWinners : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getBiggestUserWinners({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+        let res = await BiggestUserWinnerRepository.prototype.getBiggetsUserWinner({
+            _id : params.app
         });
 		return res;
     },

@@ -3361,25 +3361,6 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      size :
-        type : number
-        example : 50
-        description: |
-          size
-      offset :
-        type : number
-      currency :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34"
-        description: |
-          Currency ID
-      game :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          Game ID
   AppUserDepositAddressRequest : 
     type: object
     required:
@@ -3416,25 +3397,6 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      size :
-        type : number
-        example : 50
-        description: |
-          size
-      offset :
-        type : number
-      currency :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          Currency ID
-      game :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          Game ID
   AppUsersRequest : 
     type: object
     required:

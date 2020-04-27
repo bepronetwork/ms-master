@@ -15,13 +15,37 @@ let outputs = {
         return object.map(object => {
             return ({
                 "_id": object._id,
-                "currency": object.currency,
-                "betAmount": object.betAmount,
+                "app": object.app,
                 "timestamp": object.timestamp,
-                "isWon": object.isWon,
-                "winAmount": object.winAmount,
-                "username": object.username,
-                "game": object.game
+                "biggestBetWinner": !object.biggestBetWinner ? [] : object.biggestBetWinner.map(biggestBetWinner => {
+                    return ({
+                        "_id": biggestBetWinner._id,
+                        "bet": {
+                            "_id": biggestBetWinner.bet._id,
+                            "betAmount": biggestBetWinner.bet.betAmount,
+                            "winAmount": biggestBetWinner.bet.winAmount,
+                            "isWon": biggestBetWinner.bet.isWon,
+                            "timestamp": biggestBetWinner.bet.timestamp,
+                        },
+                        "currency": {
+                            "_id": biggestBetWinner.currency._id,
+                            "image": biggestBetWinner.currency.image,
+                            "ticker": biggestBetWinner.currency.ticker,
+                            "name": biggestBetWinner.currency.name,
+                        },
+                        "game": {
+                            "_id": biggestBetWinner.game._id,
+                            "name": biggestBetWinner.game.name,
+                            "image_url": biggestBetWinner.game.image_url,
+                            "metaName": biggestBetWinner.game.metaName,
+                        },
+                        "user": {
+                            "_id": biggestBetWinner.user._id,
+                            "username": biggestBetWinner.user.username,
+                        }
+                    })
+                }),
+                "__v": object.__v,
             })
         })
     }

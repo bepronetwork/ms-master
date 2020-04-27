@@ -6,9 +6,7 @@ import {
     pipeline_financial_stats, 
     pipeline_user_wallet,
     pipeline_all_users_balance,
-    pipeline_my_bets,
-    pipeline_user_bets_all,
-    pipeline_user_bets_by_currency
+    pipeline_my_bets
 } from './pipelines/user';
 import { populate_user } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
