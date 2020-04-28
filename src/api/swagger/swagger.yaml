@@ -3361,6 +3361,12 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
+      game :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Game ID
   AppUserDepositAddressRequest : 
     type: object
     required:
