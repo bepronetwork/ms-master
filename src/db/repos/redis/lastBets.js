@@ -28,7 +28,7 @@ class LastBetsRepository extends MongoComponent{
         return this.schema.model(LastBets)
     }
 
-    getLastBets({_id, game = {} }){
+    getLastBets({_id, game }){
         try{
             return new Promise( (resolve, reject) => {
                 LastBetsRepository.prototype.schema.model.find({
