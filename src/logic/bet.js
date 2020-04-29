@@ -8,6 +8,8 @@ import { BetResultSpace } from '../models';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getAffiliatesReturn } from './utils/affiliates';
 import MathSingleton from './utils/math';
+import PerfomanceMonitor from '../helpers/performance';
+const PerformanceBet = new PerfomanceMonitor({id : 'Bet'});
 
 let error = new ErrorManager();
 
@@ -79,12 +81,19 @@ const betResolvingActions = {
   
 const processActions = {
     __auto : async (params) => {
+        console.log("here")
         try{
+
             let { currency, percentage } = params;
             percentage = MathSingleton.toFloatPositiveNDecimal(percentage).value;
-
+            PerformanceBet.start({id : 'findGameById'});
             let game = await GamesRepository.prototype.findGameById(params.game);
+            PerformanceBet.end({id : 'findGameById'});
+            PerformanceBet.start({id : 'findUserById'});
             let user = await UsersRepository.prototype.findUserById(params.user);
+            PerformanceBet.end({id : 'findUserById'});
+
+            PerformanceBet.start({id : 'others 1'});
             let app = user.app_id;
             if(game){var maxBetValue = game.maxBet; }
 
@@ -227,13 +236,18 @@ const processActions = {
   
 const progressActions = {
     __auto : async (params) => {
+        PerformanceBet.end({id : 'others 1'});
+
         const { isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet } = params;
         /* Save all ResultSpaces */
+        PerformanceBet.start({id : 'BetResultSpace Save'});
+
         let dependentObjects = Object.keys(result).map( async key => 
             await (new BetResultSpace(result[key])).register()
         );
 
         let betResultSpacesIds = await Promise.all(dependentObjects);
+        PerformanceBet.end({id : 'BetResultSpace Save'});
         // Generate new Params Setup
 
         params = {
@@ -241,24 +255,37 @@ const progressActions = {
             result : betResultSpacesIds,
             isResolved : true
         }
+        PerformanceBet.start({id : 'Bet Save'});
         /* Save Bet */
         let bet = await self.save(params);
+        PerformanceBet.end({id : 'Bet Save'});
+
+        PerformanceBet.start({id : 'updatePlayBalance User'});
 		/* Update PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
+        PerformanceBet.end({id : 'updatePlayBalance User'});
+        PerformanceBet.start({id : 'updatePlayBalance App'});
         /* Update App PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
+        PerformanceBet.end({id : 'updatePlayBalance App'});
+
         /* Update Balance of Affiliates */
+        PerformanceBet.start({id : 'updatePlayBalance Affiliates'});
+
         if(isUserAffiliated){
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
                 return await WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
             })
             await Promise.all(userAffiliatedWalletsPromises);
         }
-        
+        PerformanceBet.end({id : 'updatePlayBalance Affiliates'});
+
+        PerformanceBet.start({id : 'AddBet'});
 		/* Add Bet to User Profile */
 		await UsersRepository.prototype.addBet(params.user, bet);
 		/* Add Bet to Event Profile */
         await GamesRepository.prototype.addBet(params.game, bet);
+        PerformanceBet.end({id : 'AddBet'});
 
         let res = {
             bet,
