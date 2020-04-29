@@ -287,7 +287,7 @@ const processActions = {
     __getLastBets : async (params) => {
         let res = await LastBetsRepository.prototype.getLastBets({
             _id : params.app,
-            game: params.game == undefined ? {game : null} : {game : String(params.game).toString()}
+            game: params.game == undefined ? {game: null} : {game: params.game}
         });
 		return res;
     },

@@ -12,42 +12,40 @@ let self;
 
 let outputs = {
     getBiggetsBetWinners: (object) => {
-        return object.map(object => {
-            return ({
-                "_id": object._id,
-                "app": object.app,
-                "timestamp": object.timestamp,
-                "biggestBetWinner": !object.biggestBetWinner ? [] : object.biggestBetWinner.map(biggestBetWinner => {
-                    return ({
-                        "_id": biggestBetWinner._id,
-                        "bet": {
-                            "_id": biggestBetWinner.bet._id,
-                            "betAmount": biggestBetWinner.bet.betAmount,
-                            "winAmount": biggestBetWinner.bet.winAmount,
-                            "isWon": biggestBetWinner.bet.isWon,
-                            "timestamp": biggestBetWinner.bet.timestamp,
-                        },
-                        "currency": {
-                            "_id": biggestBetWinner.currency._id,
-                            "image": biggestBetWinner.currency.image,
-                            "ticker": biggestBetWinner.currency.ticker,
-                            "name": biggestBetWinner.currency.name,
-                        },
-                        "game": {
-                            "_id": biggestBetWinner.game._id,
-                            "name": biggestBetWinner.game.name,
-                            "image_url": biggestBetWinner.game.image_url,
-                            "metaName": biggestBetWinner.game.metaName,
-                        },
-                        "user": {
-                            "_id": biggestBetWinner.user._id,
-                            "username": biggestBetWinner.user.username,
-                        }
-                    })
-                }),
-                "__v": object.__v,
-            })
-        })
+        return object[0] == undefined ? {} : {
+            "_id": object[0]._id,
+            "app": object[0].app,
+            "timestamp": object[0].timestamp,
+            "biggestBetWinner": !object[0].biggestBetWinner ? [] : object[0].biggestBetWinner.map(biggestBetWinner => {
+                return ({
+                    "_id": biggestBetWinner._id,
+                    "bet": {
+                        "_id": biggestBetWinner.bet._id,
+                        "betAmount": biggestBetWinner.bet.betAmount,
+                        "winAmount": biggestBetWinner.bet.winAmount,
+                        "isWon": biggestBetWinner.bet.isWon,
+                        "timestamp": biggestBetWinner.bet.timestamp,
+                    },
+                    "currency": {
+                        "_id": biggestBetWinner.currency._id,
+                        "image": biggestBetWinner.currency.image,
+                        "ticker": biggestBetWinner.currency.ticker,
+                        "name": biggestBetWinner.currency.name,
+                    },
+                    "game": {
+                        "_id": biggestBetWinner.game._id,
+                        "name": biggestBetWinner.game.name,
+                        "image_url": biggestBetWinner.game.image_url,
+                        "metaName": biggestBetWinner.game.metaName,
+                    },
+                    "user": {
+                        "_id": biggestBetWinner.user._id,
+                        "username": biggestBetWinner.user.username,
+                    }
+                })
+            }),
+            "__v": object[0].__v,
+        }
     }
 }
 
