@@ -12,7 +12,7 @@ let self;
 
 let outputs = {
     getLastBets: (object) => {
-        return  object[0] == undefined ? [] : {
+        return  object[0] == undefined ? {} : {
             "_id": object[0]._id,
             "app": object[0].app,
             "timestamp": object[0].timestamp,
