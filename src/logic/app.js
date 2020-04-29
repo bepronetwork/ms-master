@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -21,6 +21,7 @@ import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
 let error = new ErrorManager();
 
 
@@ -122,28 +123,26 @@ const processActions = {
        return normalized;
     },
     __appGetUsersBets : async (params) => {
-        if(!params.user){
-            params.user = null
-        }
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.bet){
-            params.bet = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getAppUserBets({
+        let res = await AppRepository.prototype.getAppBets({
             _id : params.app,
             offset: params.offset,
             size : params.size,
-            currency: params.currency,
-            user: params.user,
-            bet: params.bet,
-            game: params.game
+            user: params.user == undefined ? {} : {user : params.user},
+            bet: params.bet == undefined ? {} : {_id : params.bet},
+            currency: params.currency == undefined ? {} : {currency : params.currency},
+            game: params.game == undefined ? {} : {game : params.game}
         });
 		return res;
+    },
+    __getBetInfo : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+            let bet = await BetRepository.prototype.findBetById(params.bet);
+            return bet;
+        } catch(err) {
+            throw err;
+        }
     },
     __editRestrictedCountries : async (params) => {
         try {
@@ -286,50 +285,21 @@ const processActions = {
         }
     },
     __getLastBets : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getLastBets({
+        let res = await LastBetsRepository.prototype.getLastBets({
             _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+            game: params.game == undefined ? {game: null} : {game: params.game}
         });
 		return res;
     },
     __getBiggestBetWinners : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getBiggestBetWinners({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+        let res = await BiggestBetWinnerRepository.prototype.getBiggetsBetWinner({
+            _id : params.app
         });
 		return res;
     },
     __getBiggestUserWinners : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getBiggestUserWinners({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+        let res = await BiggestUserWinnerRepository.prototype.getBiggetsUserWinner({
+            _id : params.app
         });
 		return res;
     },
@@ -371,9 +341,9 @@ const processActions = {
     },
     __getTransactions : async (params) => {
         let {
-            app, filters
+            app, filters, size, offset
         } = params;
-        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters);
+        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters, size, offset);
 		return res;
     },
     __getGames : async (params) => {
@@ -635,6 +605,13 @@ const progressActions = {
     __getTransactions : async (params) => {
         let res = params;
 		return res;
+    },
+    __getBetInfo : async (params) => {
+        try {
+            return params;
+        } catch(err) {
+            throw err;
+        }
     },
     __editRestrictedCountries : async (params) => {
         try {
@@ -1254,6 +1231,9 @@ class AppLogic extends LogicComponent{
                 case 'EditRestrictedCountries' : {
 					return await library.process.__editRestrictedCountries(params); break;
                 };
+                case 'GetBetInfo' : {
+					return await library.process.__getBetInfo(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1389,6 +1369,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditRestrictedCountries': {
                     return await library.progress.__editRestrictedCountries(params); break;
+                }
+                case 'GetBetInfo': {
+                    return await library.progress.__getBetInfo(params); break;
                 }
 			}
 		}catch(error){

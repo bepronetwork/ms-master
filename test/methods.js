@@ -56,6 +56,12 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getBetInfo(params) {
+        return request(global.server)
+        .post('/api/app/bet/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAddonBalance(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/balance/add')
