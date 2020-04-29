@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository, AppRepository, JackpotRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
 import CasinoLogicSingleton from './utils/casino';
@@ -22,6 +22,21 @@ let __private = {};
 
 // TO DO : Create Different Type of Resolving Actions for Casino
 const betResolvingActions = {
+    valueToJackpot : async (app_id, resultGame) => {
+		try {
+            let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(app_id);
+			if(app.addOn.jackpot==undefined){
+				return 0;
+			}
+
+			let valueSumSpace = resultGame.reduce( (acc, result) => {
+				return acc + parseFloat(result.value);
+			}, 0);
+			return (valueSumSpace * app.addOn.jackpot.edge * 0.01);
+		}catch(err){
+			return 0;
+		}
+	},
     auto : (params) => {
 		var hmca_hash, outcome, isWon, outcomeResultSpace;
 
@@ -84,14 +99,18 @@ const processActions = {
         console.log("here")
         try{
 
-            let { currency, percentage } = params;
-            percentage = MathSingleton.toFloatPositiveNDecimal(percentage).value;
+            let { currency } = params;
             PerformanceBet.start({id : 'findGameById'});
             let game = await GamesRepository.prototype.findGameById(params.game);
             PerformanceBet.end({id : 'findGameById'});
             PerformanceBet.start({id : 'findUserById'});
             let user = await UsersRepository.prototype.findUserById(params.user);
             PerformanceBet.end({id : 'findUserById'});
+
+            PerformanceBet.start({id : 'findUserWithJackpotPopulated'});
+            let percentage = await betResolvingActions.valueToJackpot(user.app_id, params.result);
+            percentage = MathSingleton.toFloatPositiveNDecimal(percentage).value;
+            PerformanceBet.end({id : 'findUserWithJackpotPopulated'});
 
             PerformanceBet.start({id : 'others 1'});
             let app = user.app_id;
