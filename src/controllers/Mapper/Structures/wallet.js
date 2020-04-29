@@ -4,6 +4,7 @@ const wallet_object = (object) => {
         "wallet": object.wallet ? object.wallet.map(wallet => {
             return ({
                 "_id": wallet._id,
+                "image" :wallet.image,
                 "playBalance": wallet.playBalance,
                 "max_deposit": wallet.max_deposit,
                 "max_withdraw": wallet.max_withdraw,
