@@ -21,17 +21,17 @@ context(`Logs Data`, async () =>  {
     });
 
     it('should get Log - admin', mochaAsync(async () => {
-        var res = await getLogs({app: app.id, admin: admin.id}, {offset:0,limit:10,filter:'ADMIN'}, admin.security.bearerToken, {id : admin.id});
+        var res = await getLogs({app: app.id, admin: admin.id, offset:0,limit:10,filter:'ADMIN'}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equals(200);
     }));
 
     it('should get Log - user', mochaAsync(async () => {
-        var res = await getLogs({app: app.id, admin: admin.id}, {offset:0,limit:10,filter:'USER'}, admin.security.bearerToken, {id : admin.id});
+        var res = await getLogs({app: app.id, admin: admin.id, offset:0,limit:10,filter:'USER'}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equals(200);
     }));
 
     it('should get Log - Restricted Countries', mochaAsync(async () => {
-        var res = await getLogs({app: app.id, admin: admin.id}, {offset:0,limit:10,filter:'UNAUTHORIZED_COUNTRY'}, admin.security.bearerToken, {id : admin.id});
+        var res = await getLogs({app: app.id, admin: admin.id, offset:0,limit:10,filter:'UNAUTHORIZED_COUNTRY'}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equals(200);
     }));
 });

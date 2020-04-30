@@ -444,9 +444,9 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async getLogs(params, query, bearerToken, payload) {
+    async getLogs(params, bearerToken, payload) {
         return request(global.server)
-        .get(`/api/logs/get?offset=${query.offset}&limit=${query.limit}&filter=${query.filter}`)
+        .post('/api/logs/get')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

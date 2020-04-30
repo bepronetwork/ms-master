@@ -1553,7 +1553,7 @@ paths:
 
   /logs/get:
     x-swagger-router-controller: app
-    get:
+    post:
       tags:
       - app
       summary: Get Data Logs
@@ -1570,18 +1570,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/GetLogsRequest'
-        - in: query
-          name: offset
-          type: integer
-          description: The number of items to skip before starting to collect the result set
-        - in: query
-          name: limit
-          type: integer
-          description: The numbers of items to return
-        - in: query
-          name: filter
-          type: string
-          description: Type Filter
       responses:
         "200":
           description: Success
@@ -3208,7 +3196,22 @@ definitions:
         example: "wertwertwertwert"
         description: |
           Admin id
-
+      filter:
+        type: string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Filter To Log
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of response
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of response
   AdminGetRequest:
     type: object
     required:

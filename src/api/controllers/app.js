@@ -716,10 +716,7 @@ async function getLogs(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         let body  = req.body;
-        let query = req.query;
-
-        console.log(query);
-        let app = new App({...body, ...query});
+        let app = new App(body);
         let data = await app.getLogs();
         await MiddlewareSingleton.log({ type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
