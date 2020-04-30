@@ -8,6 +8,7 @@ LastBetsSchema.prototype.name = 'LastBets';
 
 LastBetsSchema.prototype.schema = {
     app         : { type : mongoose.Schema.Types.ObjectId, ref: 'App', required : true },
+    game        : { type : mongoose.Schema.Types.ObjectId, ref: 'Games', required : true },
     timestamp   : { type : Date, required : true},
     lastBets    : [{
         bet         : {

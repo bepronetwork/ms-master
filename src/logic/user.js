@@ -636,6 +636,7 @@ const progressActions = {
             }
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
+            
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,

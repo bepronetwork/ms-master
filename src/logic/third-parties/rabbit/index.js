@@ -25,14 +25,14 @@ class workerQueue {
     }
 
     sendToQueue(queue, message){
-        return new Promise((resolve) =>{
+        return new Promise((resolve, reject) =>{
             this.__connect()
             .then(channel => this.__createQueue(channel, queue))
             .then(channel => {
                 channel.sendToQueue( queue, Buffer.from(JSON.stringify(message)) );
                 resolve(true);
             })
-            .catch(err => console.log(err))
+            .catch(err => reject(err))
         });
     }
 }

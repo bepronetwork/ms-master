@@ -46,6 +46,7 @@ let outputs = {
                 "serverSeed": object.bet.serverSeed,
                 "__v": object.bet.__v,
             },
+            "valueToJackpot": object.percentage,
             "user_in_app": object.user_in_app,
             "isUserWithdrawingAPI": object.isUserWithdrawingAPI,
             "isAppWithdrawingAPI": object.isAppWithdrawingAPI,

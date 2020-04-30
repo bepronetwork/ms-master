@@ -13,7 +13,7 @@ import {
     pipeline_biggest_user_winners
 } from './pipelines/app';
 
-import { populate_app_all, populate_app_affiliates } from './populates';
+import { populate_app_all, populate_app_affiliates, populate_jackpot } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -290,7 +290,20 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
-
+    findAppByIdWithJackpotPopulated(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id)
+                .populate(populate_jackpot)
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
     findAppByIdNotPopulated(_id){ 
         try{
             return new Promise( (resolve, reject) => {

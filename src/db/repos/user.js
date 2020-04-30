@@ -92,7 +92,8 @@ class UsersRepository extends MongoComponent{
                     user : _id,
                     ...bet,
                     ...game,
-                    ...currency
+                    ...currency,
+                    isJackpot : false
                 })
                 .sort({timestamp: -1})
                 .skip(offset == undefined ? 0 : offset)

@@ -28,11 +28,12 @@ class LastBetsRepository extends MongoComponent{
         return this.schema.model(LastBets)
     }
 
-    getLastBets({_id}){
+    getLastBets({_id, game }){
         try{
             return new Promise( (resolve, reject) => {
                 LastBetsRepository.prototype.schema.model.find({
                     app : _id,
+                    ...game
                 })
                 .exec( async (err, item) => {
                     if(err){reject(err)}
