@@ -342,7 +342,7 @@ const processActions = {
         let {
             app, filters, size, offset
         } = params;
-        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters, size, offset);
+        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters, size == undefined ? 200 : size, offset == undefined ? 0 : offset);
 		return res;
     },
     __getGames : async (params) => {

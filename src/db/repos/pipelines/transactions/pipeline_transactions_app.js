@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { byUserId } from "./filters";
-import { pipeline_offset, pipeline_size } from '../filters';
+import { pipeline_size, pipeline_offset } from "../filters";
 
-const pipeline_transactions_app = (_id, filters=[], { offset, size }) =>
+const pipeline_transactions_app = (_id, filters, size, offset) =>
     [
         //Stage 0
         {
@@ -57,8 +57,8 @@ const pipeline_transactions_app = (_id, filters=[], { offset, size }) =>
                 }
             }
         },
-        ...pipeline_offset({ offset }),
-        ...pipeline_size({ size })
+        ...pipeline_offset({offset}),
+        ...pipeline_size({size})
     ].filter(el => el != null);
 
 export default pipeline_transactions_app;

@@ -10,7 +10,7 @@ const pipeline_size = ({ size }) => {
     };
     return [
         {
-            '$limit': size
+            '$limit': size > 200 ? 200 : size
         }
     ];
 }
