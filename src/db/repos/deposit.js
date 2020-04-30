@@ -42,9 +42,9 @@ class DepositRepository extends MongoComponent{
         });
     }
 
-    getTransactionsByApp({ app, filters=[], offset, size }){
+    getTransactionsByApp(app, filters=[], size, offset){
         try{
-            let pipeline =  pipeline_transactions_app({ app, filters, offset, size });
+            let pipeline =  pipeline_transactions_app(app, filters, size, offset);
             return new Promise( (resolve, reject) => {
                 DepositRepository.prototype.schema.model
                 .aggregate(pipeline)
