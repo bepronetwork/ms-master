@@ -21,7 +21,8 @@ let outputs = {
                     "creatorId"     : list.creatorId,
                     "creatorType"   : list.creatorType,
                     "createdAt"     : list.createdAt,
-                    "updatedAt"     : list.updatedAt
+                    "updatedAt"     : list.updatedAt,
+                    "code"          : list.code ? list.code : 200
                 }
             }),
             "size": object.size
