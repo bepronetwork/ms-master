@@ -53,7 +53,6 @@ class LogRepository extends MongoComponent{
                 break;
             }
         }
-        console.log(limit);
         return new Promise( (resolve,reject) => {
             LogRepository.prototype.schema.model.find(
                 {
