@@ -1,6 +1,6 @@
 import {BetLogic} from '../logic';
 import ModelComponent from './modelComponent';
-import {BetsRepository} from '../db/repos';
+import {BetsRepository, UsersRepository} from '../db/repos';
 import { isCasino } from '../logic/markets/betSystems';
 import { MapperBetSingleton } from "../controllers/Mapper";
 
@@ -22,10 +22,19 @@ class Bet extends ModelComponent{
     }
 
     async register(){
+        const { user } = this.self.params;
+
         try{
+            await UsersRepository.prototype.changeWithdrawPosition(user, true);
             let res = await this.process('Auto');
+            await UserRepository.prototype.changeWithdrawPosition(user, false);
             return MapperBetSingleton.output('Bet', res);
         }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not betting/withdrawing atm */
+                /* Open Mutex */
+                await UserRepository.prototype.changeWithdrawPosition(user, false);
+            }
             throw err;
         }
     }

@@ -9,6 +9,7 @@ import { throwError } from '../controllers/Errors/ErrorManager';
 import { getAffiliatesReturn } from './utils/affiliates';
 import MathSingleton from './utils/math';
 import PerfomanceMonitor from '../helpers/performance';
+
 const PerformanceBet = new PerfomanceMonitor({id : 'Bet'});
 
 let error = new ErrorManager();
