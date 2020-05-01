@@ -26,11 +26,15 @@ class Security{
     };
 
     getCountry(ip) {
+        console.log(ip);
         let geo = null;
         try {
             geo = geoip.lookup(ip);
+            console.log("Geo: ", geo);
+            console.log("Geo: country", geo.country);
             return geo.country;
         }catch(err){
+            console.log("LH");
             return 'LH';
         }
     }
@@ -39,8 +43,10 @@ class Security{
         try {
             let countries = (await AppRepository.prototype.findAppById(req.body['app'])).restrictedCountries;
             countries = countries == null ? [] : countries;
+            console.log("Countries blocked: ", countries);
 
             const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
+            console.log("ip full", ipFull);
 
             if( countries.includes(this.getCountry(ipFull[ipFull.length-1])) ) {
                 throwError('UNAUTHORIZED_COUNTRY');
