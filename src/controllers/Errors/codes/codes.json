@@ -57,7 +57,7 @@
     },
     "014" : {
         "key"      : "WITHDRAW_MODE_IN_API",
-        "message"   : "Withdraw mode is already IN for the API"
+        "message"   : "Withdraw/Bet Mode is already in"
     },
     "015" : {
         "key"      : "WITHDRAW_MODE_IN_SMART_CONTRACT",
@@ -234,5 +234,9 @@
     "058" : {
         "key" : "IS_VIRTUAL_WALLET",
         "message"   : "The action can´t be taken since this is a social casino"
+    },
+    "059" : {
+        "key" : "UNAUTHORIZED_COUNTRY",
+        "message"   : "Unauthorized Country"
     }
 }

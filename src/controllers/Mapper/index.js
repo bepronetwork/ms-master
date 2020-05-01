@@ -5,7 +5,9 @@ import {
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
     MapperCreateApiTokenUserSingleton,
-    MapperGetDepositAddressUserSingleton
+    MapperGetDepositAddressUserSingleton,
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton
 } from "./user";
 
 import {
@@ -47,12 +49,24 @@ import {
     MapperRegisterSingleton,
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 } from "./App";
 
 import {
-    MapperBetSingleton
+    MapperBetSingleton,
+    MapperGetBetSingleton
 } from "./Bet";
 
 import {
@@ -60,10 +74,12 @@ import {
 } from "./Game";
 
 import {
-    MapperUpdateMaxDepositSingleton
+    MapperUpdateMaxDepositSingleton,
+    MapperEditVirtualCurrencySingleton
 } from "./Wallet";
 
 export {
+    MapperGetBetSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
     MapperAuthUserSingleton,
@@ -106,6 +122,20 @@ export {
     MapperBetSingleton,
     MapperSetMaxBetSingleton,
     MapperUpdateMaxDepositSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton,
+    MapperGetBetsSingleton,
+    MapperUserGetBetsSingleton,
+    MapperEditVirtualCurrencySingleton,
+    MapperAppGetBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 }

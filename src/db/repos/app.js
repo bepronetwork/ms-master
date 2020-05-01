@@ -9,13 +9,13 @@ import {
     pipeline_get_by_external_id,
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
-    pipeline_app_users_bets_by_currency,
     pipeline_popular_numbers,
     pipeline_biggest_user_winners
 } from './pipelines/app';
 
-import { populate_app_all, populate_app_affiliates } from './populates';
+import { populate_app_all, populate_app_affiliates, populate_jackpot } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
+import { BetRepository } from "./";
 
 
 let foreignKeys = ['wallet', 'users', 'games'];
@@ -50,7 +50,7 @@ class AppRepository extends MongoComponent{
     addGame(app_id, game){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findOneAndUpdate(
-                { _id: app_id, games : {$nin : [game._id] } }, 
+                { _id: app_id, games : {$nin : [game._id] } },
                 { $push: { "games" : game } },
                 { 'new': true })
                 .exec( (err, item) => {
@@ -61,8 +61,23 @@ class AppRepository extends MongoComponent{
         });
     }
 
-
-
+    setCountries(_id, restrictedCountries){
+        return new Promise( async (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                {
+                    $set : {
+                        restrictedCountries
+                    }
+                }
+            )
+            .exec( (err, item) => {
+                console.log(err);
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
 
     async addTypography(_id, typography){
         return new Promise( async (resolve,reject) => {
@@ -201,15 +216,27 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppUserBets({_id, currency, user, bet, game, offset, size}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}}){
         try{
             return new Promise( (resolve, reject) => {
-                AppRepository.prototype.schema.model
-                .aggregate(pipeline_app_users_bets_by_currency(_id, {currency, user, bet, game, offset, size}))
-                .exec( (err, data) => {
-                    if(err) { reject(err)}
-                    resolve(data.slice(0, size));
-                });
+                BetRepository.prototype.schema.model.find({
+                    app : _id,
+                    ...user,
+                    ...bet,
+                    ...game,
+                    ...currency
+                })
+                .sort({timestamp: -1})
+                .populate([
+                    'user'
+                ])
+                .skip(offset == undefined ? 0 : offset)
+                .limit((size > 200 || !size) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+                .exec( async (err, item) => {
+                    const totalCount = await BetRepository.prototype.schema.model.find({app : _id}).count();
+                    if(err){reject(err)}
+                    resolve({list: item, totalCount });
+                })
             });
         }catch(err){
             throw err;
@@ -263,7 +290,20 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
-
+    findAppByIdWithJackpotPopulated(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id)
+                .populate(populate_jackpot)
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
     findAppByIdNotPopulated(_id){ 
         try{
             return new Promise( (resolve, reject) => {
@@ -473,7 +513,7 @@ class AppRepository extends MongoComponent{
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
-                resolve(item);
+                resolve({item, type});
             });
         });
     }

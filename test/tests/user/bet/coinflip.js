@@ -4,7 +4,8 @@ import {
     placeBet,
     authAdmin,
     getAppAuth,
-    setMaxBet
+    setMaxBet,
+    getBetInfo
 } from '../../../methods';
 
 import chai from 'chai';
@@ -28,7 +29,7 @@ const limitTableBetAmount = {
 const metaName = 'coinflip_simple';
 
 Object.keys(currenciesBetAmount).forEach( async key => {
-    var app, walletApp, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency;
+    var app, walletApp, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency, bet;
 
     before( async () =>  {
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
@@ -51,11 +52,11 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     it(`${metaName} - ${key} - should allow bet for the User - Simple Bet (Tails)`, mochaAsync(async () => {
 
 
-        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         var currencyWallet = (user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
         await provideFunds({wallet : currencyWallet._id, amount : ethDepositAmount});
-        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
 
         const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         let postData = {  
@@ -69,17 +70,25 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }]
         };
 
+        global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
-        user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
+        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        bet = res.data.message.bet._id;
         global.test.user.bets.push(res.data.message.bet._id)
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
         expect(await digestBetResult({newBalance : userPosBetCurrencyWallet.playBalance, res : res, previousBalance : userPreBetCurrencyWallet.playBalance}), true);
     }));
 
+
+    it(`${metaName} - ${key} - Get Data Bet - Simple Bet (Tails)`, mochaAsync(async () => {
+        const res = await getBetInfo({app: app.id, bet});
+        expect(res.data.status).to.equal(200);
+    }));
+
     it( `${metaName} - ${key} - should allow bet for the User - Simple Bet (Heads)`, mochaAsync(async () => {
-        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
         let postData = { 
@@ -92,8 +101,9 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: 1, value: betAmount
             }]
         };
+        global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
-        user = (await getUserAuth({user : user.id}, user.bearerToken, {id : user.id})).data.message;
+        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
 
         const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
@@ -103,7 +113,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     }));
     
     it(`${metaName} - ${key} - shouldn´t allow Bet - Limit Table Passed`, mochaAsync(async () => {
-        user = (await getUserAuth({user : global.test.user.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         /* 1 - Change app Table Limit */
         let postData = {
             app : app.id,
@@ -125,7 +135,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: 0, value: betAmount
             }]
         };
-
         res = await placeBet(postData, user.bearerToken, {id : user.id});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(29);

@@ -46,6 +46,7 @@ let outputs = {
                 "serverSeed": object.bet.serverSeed,
                 "__v": object.bet.__v,
             },
+            "valueToJackpot": object.percentage,
             "user_in_app": object.user_in_app,
             "isUserWithdrawingAPI": object.isUserWithdrawingAPI,
             "isAppWithdrawingAPI": object.isAppWithdrawingAPI,
@@ -63,6 +64,7 @@ let outputs = {
                 "playBalance": object.appWallet.playBalance,
                 "max_deposit": object.appWallet.max_deposit,
                 "max_withdraw": object.appWallet.max_withdraw,
+                "min_withdraw": object.appWallet.min_withdraw,
                 "depositAddresses": object.appWallet.depositAddresses ? object.appWallet.depositAddresses.map(depositAddress_id => {
                     return({
                         "_id": depositAddress_id
@@ -87,6 +89,7 @@ let outputs = {
                 "playBalance": object.wallet.playBalance,
                 "max_deposit": object.wallet.max_deposit,
                 "max_withdraw": object.wallet.max_withdraw,
+                "min_withdraw": object.wallet.min_withdraw,
                 "depositAddresses": object.wallet.depositAddresses ? object.wallet.depositAddresses.map(deposit_address => {
                     return ({
                         "_id": deposit_address._id,

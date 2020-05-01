@@ -1,3 +1,4 @@
+import { app_object, permission_object, security_object } from "../Structures";
 
 let self;
 
@@ -21,25 +22,11 @@ let outputs = {
             "verifiedAccount": object.verifiedAccount,
             "id": object._id,
             "name": object.name,
-            "security": {
-                "id"                    : object.security._id,
-                "2fa_set"               : object.security['2fa_set'],
-                "email_verified"        : object.security['email_verified'],
-                "bearerToken"           : object.security['bearerToken'],
-            },
+            ...security_object(object),
             "email": object.email,
-            "app": {
-                "id": object.app._id
-            },
+            ...app_object(object),
             "registered": object.registered,
-            "permission": {
-                "_id": object.permission._id,
-                "super_admin": object.permission.super_admin,
-                "customization": object.permission.customization,
-                "withdraw": object.permission.withdraw,
-                "user_withdraw": object.permission.user_withdraw,
-                "financials": object.permission.financials
-            },
+            ...permission_object(object),
             "__v": object.__v
         }
     },

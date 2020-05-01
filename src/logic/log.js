@@ -38,7 +38,8 @@ const progressActions = {
 	__register : async (params) => {
 		try{
 
-            let Log = await self.save(params);
+			let Log = await self.save(params);
+			// console.log(Log);
 			return {
 				...Log,
 				type : 'log'

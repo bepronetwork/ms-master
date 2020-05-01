@@ -1,3 +1,4 @@
+import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
 
 let self;
 
@@ -15,8 +16,9 @@ let outputs = {
         return {
             "id": object._id,
             "isValid": object.isValid,
-            "virtual"   : object.virtual,
-            "licenseID"  : object.licenseID,
+            "storeAddOn": object.storeAddOn,
+            "virtual": object.virtual,
+            "licenseID": object.licenseID,
             "games": object.games ? object.games.map(game => {
                 return ({
                     "_id": game._id,
@@ -33,11 +35,6 @@ let outputs = {
                             "_id": result_id
                         })
                     }) : game.result,
-                    "bets": game.bets ? game.bets.map(bet_id => {
-                        return ({
-                            "_id": bet_id
-                        })
-                    }) : game.bets,
                     "isClosed": game.isClosed,
                     "maxBet": game.maxBet,
                     "background_url": game.background_url,
@@ -70,11 +67,15 @@ let outputs = {
                     "virtual": currency.virtual
                 })
             }) : object.currencies,
+            "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
+                    "min_withdraw": wallet.min_withdraw,
+                    "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => deposit_address_id) : wallet.depositAddresses,
+                    "link_url": wallet.link_url,
                     "currency": !wallet.currency ? {} : {
                         "_id": wallet.currency._id,
                         "image": wallet.currency.image,
@@ -82,17 +83,18 @@ let outputs = {
                         "decimals": wallet.currency.decimals,
                         "name": wallet.currency.name,
                         "address": wallet.currency.address,
-                        "virtual" : wallet.currency.virtual
+                        "virtual": wallet.currency.virtual,
                     },
-                    "price" : wallet.price
+                    "price": wallet.price
                 })
             }) : object.wallet,
             "typography": object.typography ? {
-                "_id"   : object.typography._id,
-                "name"  : object.typography.name,
-                "url"   : object.typography.url
+                "_id": object.typography._id,
+                "name": object.typography.name,
+                "url": object.typography.url
             } : object.typography,
             "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
+            "restrictedCountries": object.restrictedCountries ? object.restrictedCountries : [],
             "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
             "isWithdrawing": object.isWithdrawing,
             "name": object.name,
@@ -180,6 +182,17 @@ let outputs = {
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
+                },
+                "mailSender": !object.integrations.mailSender ? {} : {
+                    "_id": object.integrations.mailSender._id,
+                    "apiKey": object.integrations.mailSender.apiKey,
+                    "templateIds": !object.integrations.mailSender.templateIds ? [] : object.integrations.mailSender.templateIds.map(template => {
+                        return ({
+                            "template_id": template.template_id,
+                            "functionName": template.functionName,
+                            "contactlist_Id": template.contactlist_Id
+                        })
+                    }),
                 },
                 "pusher": !object.integrations.pusher ? {} : {
                     "key": object.integrations.pusher.key

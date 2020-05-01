@@ -30,7 +30,6 @@ context(`Virtual Currency - ${ticker} `, async () => {
     });
 
     it('should update wallet with deposit to Virtual Currency', mochaAsync(async () => {
-
         /* Register User */
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456)

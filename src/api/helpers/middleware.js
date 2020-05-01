@@ -2,7 +2,9 @@ import { PUBLIC_KEY, PRIVATE_KEY } from '../../config';
 import Log from '../../models/log';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { writeFile } from './file';
+import {Security as SecurityCrypt} from "../../controllers/Security";
 
+const geoip = require("geoip-lite");
 const jwt   = require('jsonwebtoken');
 // use 'utf8' to get string instead of byte array  (512 bit key)
 var privateKEY  = new String("-----BEGIN RSA PRIVATE KEY-----\n" + PRIVATE_KEY + "\n-----END RSA PRIVATE KEY-----").trim();
@@ -107,23 +109,48 @@ class Middleware{
         }
     }
 
-    async log(json) {
-        const {type, req} = json;
+    convertToJson(req, jackpotBet) {
+        return JSON.stringify({
+            req : {
+                body : {...req.body, jackpotBet},
+                hash:  SecurityCrypt.prototype.encryptData( SecurityCrypt.prototype.generateHash( JSON.stringify( {...req.body, jackpotBet} ).trim() ) )
+            }
+        });
+    }
+
+    getCountry(ip) {
+        let geo = null;
         try {
-            // return true;
-            const id = JSON.parse(req.headers['payload']);
+            geo = geoip.lookup(ip);
+            return geo.country;
+        }catch(err){
+            return 'LH';
+        }
+    }
+
+    async log(json) {
+        const {type, req, code} = json;
+        try {
+            let id = {};
+            try {
+                id= JSON.parse(req.headers['payload']);
+            }catch(err){}
 
             if(type!="admin" && type!="user" && type!="app" && type!="global") {
                 throw {code: 404, message: "type not defined"};
             }
 
+            const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
+            const country =  this.getCountry(ipFull[ipFull.length-1]);
+
             const data = {
-                ip          : req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+                ip          : ipFull[ipFull.length-1],
                 process     : req.swagger.operation.definition.operationId,
-                countryCode : req.ipInfo.error ? "LH" : req.ipInfo.country,
+                countryCode : country,
                 route       : req.swagger.operation.pathToDefinition[1],
                 creatorId   : id.id == undefined ? null : id.id,
-                creatorType : type
+                creatorType : type,
+                code        : code == undefined ? 404 : code
             };
             const log = new Log(data);
             await log.register();
