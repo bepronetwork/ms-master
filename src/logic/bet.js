@@ -97,7 +97,6 @@ const betResolvingActions = {
   
 const processActions = {
     __auto : async (params) => {
-        console.log("here")
         try{
 
             let { currency } = params;
@@ -294,18 +293,17 @@ const progressActions = {
 
         if(isUserAffiliated){
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
-                return await WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
+                return WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
             })
-            await Promise.all(userAffiliatedWalletsPromises);
+            //Promise.all(userAffiliatedWalletsPromises); // Async because not needed to be synced - no security issue
         }
         PerformanceBet.end({id : 'updatePlayBalance Affiliates'});
 
-        PerformanceBet.start({id : 'AddBet'});
+        
 		/* Add Bet to User Profile */
-		await UsersRepository.prototype.addBet(params.user, bet);
+		UsersRepository.prototype.addBet(params.user, bet); // Async because not needed to be synced - no security issue
 		/* Add Bet to Event Profile */
-        await GamesRepository.prototype.addBet(params.game, bet);
-        PerformanceBet.end({id : 'AddBet'});
+        GamesRepository.prototype.addBet(params.game, bet); // Async because not needed to be synced - no security issue
 
         let res = {
             bet,

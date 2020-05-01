@@ -27,13 +27,13 @@ class Bet extends ModelComponent{
         try{
             await UsersRepository.prototype.changeWithdrawPosition(user, true);
             let res = await this.process('Auto');
-            await UsersRepository.prototype.changeWithdrawPosition(user, false);
+            UsersRepository.prototype.changeWithdrawPosition(user, false);
             return MapperBetSingleton.output('Bet', res);
         }catch(err){
             if(parseInt(err.code) != 14){
                 /* If not betting/withdrawing atm */
                 /* Open Mutex */
-                await UsersRepository.prototype.changeWithdrawPosition(user, false);
+                UsersRepository.prototype.changeWithdrawPosition(user, false);
             }
             throw err;
         }
