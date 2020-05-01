@@ -135,6 +135,7 @@ async function authUser (req, res) {
         await MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        console.log(err.code);
         await MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}

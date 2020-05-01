@@ -56,8 +56,8 @@ class LogRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             LogRepository.prototype.schema.model.find(
                 {
-                    ...filterObject, // filter
-                    creatorId // Always with app id
+                    creatorId, // Always with app id
+                    ...filterObject // filter
                 }
             )
             .skip(offset)

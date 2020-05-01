@@ -94,7 +94,7 @@ const processActions = {
             let offset  = (params.offset == undefined) ? 0 : params.offset;
             let limit   = (params.limit == undefined) ? 0 : params.limit;
 
-            let res = await LogRepository.prototype.findFilter(app._id, parseInt(offset), parseInt(limit));
+            let res = await LogRepository.prototype.findFilter(app._id, parseInt(offset), parseInt(limit), params.filter);
             return res;
         } catch(err) {
             throw err;
