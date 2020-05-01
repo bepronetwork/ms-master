@@ -1,2 +1,2 @@
 /* Start App */
-require('./src/app');
+require('./workers');
