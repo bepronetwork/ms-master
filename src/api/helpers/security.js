@@ -25,11 +25,13 @@ class Security{
         return false;
     };
 
-    getCountry(ip) {
-        console.log(ip);
+    getCountry(ips) {
+        console.log("ips: ", ips);
         let geo = null;
         try {
-            geo = geoip.lookup(ip);
+            geo = geoip.lookup(ips[ips.length - 1]);
+            geo = (geo == null) ? geoip.lookup(ips[ips.length - 2]) : geo;
+
             console.log("Geo: ", geo);
             console.log("Geo: country", geo.country);
             return geo.country;
@@ -48,7 +50,7 @@ class Security{
             const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
             console.log("ip full", ipFull);
 
-            if( countries.includes(this.getCountry(ipFull[ipFull.length-1])) ) {
+            if( countries.includes(this.getCountry(ipFull)) ) {
                 throwError('UNAUTHORIZED_COUNTRY');
             }
         } catch(err) {
