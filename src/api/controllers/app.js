@@ -284,12 +284,6 @@ async function createBet (req, res) {
         perf.end({id : 'securitySingleton'});
         let params = req.body;
 
-        // // check how much is needed for the jackpot
-        // let jackpot = new Jackpot(params);
-        // perf.start({id : 'Jackpot percentage'});
-        // let percentage = await jackpot.percentage();
-        // perf.end({id : 'Jackpot percentage'});
-
         // place a bet on the game
         let bet = new Bet(params);
         perf.start({id : 'Total Bet'});
