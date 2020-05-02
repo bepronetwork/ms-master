@@ -18,6 +18,8 @@ context(`Jackpot`, async () =>  {
         app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
+    // Jackpot tests have to be inside the jackpot structure
+    /*
     it('should pot of jackpot OK', mochaAsync(async () => {
         console.log("Waiting for 30 seconds for pot accumulate...");
         await delay(30000);
@@ -25,4 +27,5 @@ context(`Jackpot`, async () =>  {
         // TODO change to all currencies. ([0] is ETH)
         expect(global.test.pot).to.equal(appResultAll.addOn.jackpot.limits[0].pot);
     }));
+    */
 });

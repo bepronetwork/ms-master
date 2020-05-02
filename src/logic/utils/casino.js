@@ -216,7 +216,8 @@ class CasinoLogic{
             }
 
             return {
-                possibleWinAmount : parseFloat(maxWin),
+                fee : parseFloat(parseFloat(Math.abs(totalBetAmount))*houseEdge/100),
+                maxWinAmount : parseFloat(maxWin),
                 winAmount : parseFloat(winAmount),
                 totalBetAmount : parseFloat(totalBetAmount),
                 isWon
@@ -358,7 +359,7 @@ class CasinoLogic{
                 }
             }
             return {
-                possibleWinAmount : winAmount, 
+                maxWinAmount : winAmount, 
                 fee : parseFloat(parseFloat(Math.abs(totalBetAmount))*houseEdge/100),
                 totalBetAmount : parseFloat(totalBetAmount)
             }

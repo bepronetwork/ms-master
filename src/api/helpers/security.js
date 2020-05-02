@@ -42,7 +42,6 @@ class Security{
             countries = countries == null ? [] : countries;
 
             const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
-            console.log("IP : ", ipFull);
 
             if( countries.includes(this.getCountry(ipFull)) ) {
                 throwError('UNAUTHORIZED_COUNTRY');

@@ -23,17 +23,14 @@ let __private = {};
 
 // TO DO : Create Different Type of Resolving Actions for Casino
 const betResolvingActions = {
-    valueToJackpot : async (app_id, resultGame) => {
+    getValueOfjackpot : async (app_id, totalBetAmount) => {
 		try {
             let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(app_id);
 			if(app.addOn.jackpot==undefined){
 				return 0;
-			}
-
-			let valueSumSpace = resultGame.reduce( (acc, result) => {
-				return acc + parseFloat(result.value);
-			}, 0);
-			return (valueSumSpace * app.addOn.jackpot.edge * 0.01);
+			}else{
+                return parseFloat(totalBetAmount*app.addOn.jackpot.edge/100)
+            }
 		}catch(err){
 			return 0;
 		}
@@ -50,7 +47,7 @@ const betResolvingActions = {
 		 
 		outcomeResultSpace 	= CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace)
 
-        var { winAmount, isWon, totalBetAmount } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
+        var { winAmount, isWon, totalBetAmount, fee } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
             totalBetAmount : params.betAmount,
@@ -59,7 +56,7 @@ const betResolvingActions = {
             game : params.gameMetaName
         });
         
-        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
+        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash, fee };
     },
     oracled : (params) => {
         let hmca_hash, outcome, isWon, outcomeResultSpace;
@@ -73,16 +70,16 @@ const betResolvingActions = {
 		outcomeResultSpace 	= params.outcome;
 		isWon 	       		= CasinoLogicSingleton.isWon(outcomeResultSpace, params.result);
 
-        var { winAmount : possibleWinAmount } =  CasinoLogicSingleton.calculateMaxWinAmount({
+        var { winAmount : maxWinAmount } =  CasinoLogicSingleton.calculateMaxWinAmount({
             userResultSpace : params.result, 
 			resultSpace : params.resultSpace,
             houseEdge : params.edge,
             gameMetaName : params.gameMetaName
         });
 
-        let winAmount = isWon ? possibleWinAmount : 0;
+        let winAmount = isWon ? maxWinAmount : 0;
         
-        return {...params, winAmount, outcomeResultSpace, isWon, possibleWinAmount, outcome, hmca_hash};
+        return {...params, winAmount, outcomeResultSpace, isWon, maxWinAmount, outcome, hmca_hash};
 
     }
 }
@@ -108,7 +105,6 @@ const processActions = {
             PerformanceBet.end({id : 'findUserById'});
 
             PerformanceBet.start({id : 'findUserWithJackpotPopulated'});
-            let percentage = await betResolvingActions.valueToJackpot(user.app_id, params.result);
             PerformanceBet.end({id : 'findUserWithJackpotPopulated'});
 
             PerformanceBet.start({id : 'others 1'});
@@ -144,26 +140,29 @@ const processActions = {
             let isAppWithdrawingAPI = app.isWithdrawing;
 
             /* Get Possible Win Balance for Bet */ 
-            let { totalBetAmount, possibleWinAmount, fee } = CasinoLogicSingleton.calculateMaxWinAmount({
+            let { totalBetAmount, maxWinAmount } = CasinoLogicSingleton.calculateMaxWinAmount({
                 userResultSpace : resultBetted,
                 resultSpace : game.resultSpace,
                 houseEdge : game.edge,
                 game : game.metaName
             }); 
-            totalBetAmount = totalBetAmount;
+
+            let jackpotAmount = await betResolvingActions.getValueOfjackpot(user.app_id, totalBetAmount);
+            totalBetAmount = totalBetAmount - Math.abs(jackpotAmount);
+
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
 
             /* Get Bet Result */
-            let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
+            let { isWon,  winAmount, outcomeResultSpace, fee } = betResolvingActions.auto({
                 serverSeed : serverSeed,
                 clientSeed : clientSeed,
                 nonce : params.nonce,
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : totalBetAmount - percentage,
+                betAmount : totalBetAmount,
                 edge : game.edge
             });
 
@@ -187,15 +186,14 @@ const processActions = {
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = Math.abs(totalBetAmount - totalAffiliateReturn - percentage);
+                app_delta = Math.abs(totalBetAmount - totalAffiliateReturn);
             }
 
-            var possibleWinBalance = possibleWinAmount + userBalance;
 
             const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
-                percentage,
+                jackpotAmount,
                 user_in_app,
                 isUserWithdrawingAPI,
                 isAppWithdrawingAPI,
@@ -216,8 +214,7 @@ const processActions = {
                 betSystem                       :   game.betSystem,
                 appPlayBalance		:   appPlayBalance, 
                 playBalance         :   userBalance,
-                possibleWinAmount,
-                possibleWinBalance,
+                maxWinAmount,
                 winAmount,
                 betAmount           :   totalBetAmount,
                 fee,
@@ -294,7 +291,7 @@ const progressActions = {
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
                 return WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
             })
-            //Promise.all(userAffiliatedWalletsPromises); // Async because not needed to be synced - no security issue
+            Promise.all(userAffiliatedWalletsPromises); // Async because not needed to be synced - no security issue
         }
         PerformanceBet.end({id : 'updatePlayBalance Affiliates'});
 
