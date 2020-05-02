@@ -124,7 +124,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         }else if(res[0].data.status == 14){
             expect(res[1].data.status).to.equal(200);
         }else{
-            expect(true).to.equal(true);
+            expect(true).to.equal(false);
         }
 
     }));
