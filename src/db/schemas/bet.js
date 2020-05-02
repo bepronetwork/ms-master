@@ -14,6 +14,7 @@ BetSchema.prototype.schema = {
     betAmount           : { type : Number, required: true},
     address             : { type : String, require : true},
     fee                 : { type : Number, required: true},
+    jackpotAmount       : { type : Number, required: false},
     result              : [{ type : mongoose.Schema.Types.ObjectId, ref: 'BetResultSpace', required : true }],
     currency            : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true},      
     /* Security Data */
