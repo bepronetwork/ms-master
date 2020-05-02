@@ -82,7 +82,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
 
         postDataDefault = {
-            game: game._id,
             user: user.id,
             app: app.id,
             currency : currency._id,
@@ -98,6 +97,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
         let postData = {  
             ...postDataDefault,
+            game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
@@ -123,6 +123,39 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         })
     }));
 
+    it(`${key} - normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'wheel_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: betAmount/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = true, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
 
     it(`${key} - normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
 
@@ -132,6 +165,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
         let postData = {  
             ...postDataDefault,
+            game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
@@ -165,6 +199,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
         let postData = {  
             ...postDataDefault,
+            game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
