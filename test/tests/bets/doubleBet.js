@@ -89,7 +89,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         }
     });
 
-    it(`${key} - normal bet for the User - Wheel Classic double`, mochaAsync(async () => {
+    it(`${key} - Double Bets - Wheel Classic double`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
@@ -119,13 +119,9 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             placeBet(postData_1, user.bearerToken, {id : user.id})
         ]);
 
-        console.log(res);
-        console.log(res[0]);
-        console.log(res[1]);
-
         if(res[0].data.status == 200) {
-            expect(res[1].data.status).to.equal(19);
-        }else if(res[0].data.status == 19){
+            expect(res[1].data.status).to.equal(14);
+        }else if(res[0].data.status == 14){
             expect(res[1].data.status).to.equal(200);
         }else{
             expect(true).to.equal(true);
@@ -133,114 +129,42 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
     }));
 
-    // it(`${key} - normal bet for the User - Wheel Variation double`, mochaAsync(async () => {
+    it(`${key} - Double Bets - Wheel Variation double`, mochaAsync(async () => {
 
-    //     await beforeBetFunction({
-    //         metaName : 'wheel_variation_1'
-    //     })
+        await beforeBetFunction({
+            metaName : 'wheel_variation_1'
+        })
 
-    //     let postData = {
-    //         ...postDataDefault,
-    //         game: game._id,
-    //         result: game.resultSpace.map( (r, i) => {return {
-    //             place: i, value: betAmount/(game.resultSpace.length)
-    //         }})
-    //     };
+        let postData = {
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: betAmount/(game.resultSpace.length)
+            }})
+        };
 
+        await beforeBetFunction({
+            metaName : 'wheel_variation_1'
+        })
+        let postData_1 = {
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: betAmount/(game.resultSpace.length)
+            }})
+        };
 
-    // }));
+        const res = await Promise.all([
+            placeBet(postData, user.bearerToken, {id : user.id}),
+            placeBet(postData_1, user.bearerToken, {id : user.id})
+        ]);
+
+        if(res[0].data.status == 200) {
+            expect(res[1].data.status).to.equal(14);
+        }else if(res[0].data.status == 14){
+            expect(res[1].data.status).to.equal(200);
+        }else{
+            expect(true).to.equal(false);
+        }
+    }));
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import {
-//     getUserAuth,
-//     placeBet,
-//     authAdmin,
-//     getAppAuth,
-// } from '../../../methods';
-
-// import chai from 'chai';
-// import { mochaAsync } from '../../../utils';
-// import { getRandom } from '../../../utils/math';
-// const expect = chai.expect;
-
-//  const currenciesBetAmount = {
-//     // add other currencies here
-//     'eth' : 0.001
-// }
-
-// const metaName = 'coinflip_simple';
-
-// Object.keys(currenciesBetAmount).forEach( async key => {
-//     var app, walletApp, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency, bet;
-
-//     before( async () =>  {
-//         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
-//         app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-//         game = app.games.find( game => game.metaName == metaName);
-//         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
-//         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
-//     });
-
-//     it( `${key} - shouldnt allow 2 bets for the User at same time`, mochaAsync(async () => {
-//         user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
-
-//         let postData = {
-//             game: game._id,
-//             user: user.id,
-//             currency : currency._id,
-//             app: app.id,
-//             nonce: getRandom(123,2384723),
-//             result: [{
-//                 place: 1, value: betAmount
-//             }]
-//         };
-
-//         let postData_1 = {
-//             game: game._id,
-//             user: user.id,
-//             currency : currency._id,
-//             app: app.id,
-//             nonce: getRandom(123,2384723),
-//             result: [{
-//                 place: 1, value: betAmount
-//             }]
-//         };
-//         console.log("betAmount:", betAmount)
-//         console.log("JackpotValue: ",global.test.jackpotEdge * betAmount)
-//         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
-//         let index = 0;
-//         placeBet(postData, user.bearerToken, {id : user.id}).then(a =>{
-//             if(index==0){
-//                 expect(a.data.status).to.equal(200);
-//             }else{
-//                 expect(a.data.status).to.equal(14);
-//             }
-//             index++;
-//         });
-//         placeBet(postData_1, user.bearerToken, {id : user.id}).then(b =>{
-//             if(index==0){
-//                 expect(b.data.status).to.equal(200);
-//             }
-//             else{
-//                 expect(b.data.status).to.equal(14);
-//             }
-//             index++;
-//         });
-//     }));
-// });
