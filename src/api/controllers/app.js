@@ -279,16 +279,12 @@ async function editEdgeJackpot (req, res) {
 async function createBet (req, res) {
     try {
         let perf = new PerfomanceMonitor({id : 'createBet'});
-        perf.start({id : 'securitySingleton'});
         await SecuritySingleton.verify({type : 'user', req});
-        perf.end({id : 'securitySingleton'});
         let params = req.body;
 
         // place a bet on the game
         let bet = new Bet(params);
-        perf.start({id : 'Total Bet'});
         let data = await bet.register();
-        perf.end({id : 'Total Bet'});
         try{
             // Check if percentage to jackpot is > 0, and if yes, then call jackpot queue
             if(data.valueToJackpot > 0) {

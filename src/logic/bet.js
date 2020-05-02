@@ -27,12 +27,21 @@ const betResolvingActions = {
 		try {
             let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(app_id);
 			if(app.addOn.jackpot==undefined){
-				return 0;
+				return {
+                    jackpotAmount : 0,
+                    jackpotPercentage : 0
+                };
 			}else{
-                return parseFloat(totalBetAmount*app.addOn.jackpot.edge/100)
+                return {
+                    jackpotAmount : parseFloat(totalBetAmount*app.addOn.jackpot.edge/100),
+                    jackpotPercentage : app.addOn.jackpot.edge/100
+                }
             }
 		}catch(err){
-			return 0;
+			return {
+                jackpotAmount : 0,
+                jackpotPercentage : 0
+            };
 		}
 	},
     auto : (params) => {
@@ -97,17 +106,9 @@ const processActions = {
         try{
 
             let { currency } = params;
-            PerformanceBet.start({id : 'findGameById'});
             let game = await GamesRepository.prototype.findGameById(params.game);
-            PerformanceBet.end({id : 'findGameById'});
-            PerformanceBet.start({id : 'findUserById'});
             let user = await UsersRepository.prototype.findUserById(params.user);
-            PerformanceBet.end({id : 'findUserById'});
 
-            PerformanceBet.start({id : 'findUserWithJackpotPopulated'});
-            PerformanceBet.end({id : 'findUserWithJackpotPopulated'});
-
-            PerformanceBet.start({id : 'others 1'});
             let app = user.app_id;
             if(game){var maxBetValue = game.maxBet; }
 
@@ -147,8 +148,6 @@ const processActions = {
                 game : game.metaName
             }); 
 
-            let jackpotAmount = await betResolvingActions.getValueOfjackpot(user.app_id, totalBetAmount);
-            totalBetAmount = totalBetAmount - Math.abs(jackpotAmount);
 
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
@@ -165,28 +164,37 @@ const processActions = {
                 betAmount : totalBetAmount,
                 edge : game.edge
             });
+            
+            /* Remove Fee from Math */
+            let betAmount = totalBetAmount - Math.abs(fee);
+
+            let { jackpotAmount, jackpotPercentage } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
+            /* Remove Jackpot from Math */
+            betAmount = betAmount - Math.abs(jackpotAmount);
+
+            console.log("Jackpot Amount", winAmount, jackpotAmount, totalBetAmount, betAmount, fee, jackpotPercentage);
 
             if(isWon){
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
+                const delta = Math.abs(winAmount) - Math.abs(betAmount);
                 user_delta = delta;
                 app_delta = -delta;
             }else{
                 /* User Lost Bet */
-                user_delta = -Math.abs(totalBetAmount);
+                user_delta = -Math.abs(betAmount);
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
                         currency : currency,
-                        lostAmount : totalBetAmount
+                        lostAmount : betAmount
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = Math.abs(totalBetAmount - totalAffiliateReturn);
+                app_delta = Math.abs(betAmount - totalAffiliateReturn);
             }
 
 
@@ -196,6 +204,7 @@ const processActions = {
                 jackpotAmount,
                 user_in_app,
                 isUserWithdrawingAPI,
+                totalBetAmount,
                 isAppWithdrawingAPI,
                 user_delta,
                 app_delta,
@@ -216,7 +225,7 @@ const processActions = {
                 playBalance         :   userBalance,
                 maxWinAmount,
                 winAmount,
-                betAmount           :   totalBetAmount,
+                betAmount           :   betAmount,
                 fee,
                 result         		:   resultBetted,			   
                 timestamp           :   new Date(),
@@ -251,18 +260,15 @@ const processActions = {
   
 const progressActions = {
     __auto : async (params) => {
-        PerformanceBet.end({id : 'others 1'});
 
         const { isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet } = params;
         /* Save all ResultSpaces */
-        PerformanceBet.start({id : 'BetResultSpace Save'});
 
         let dependentObjects = Object.keys(result).map( async key => 
             await (new BetResultSpace(result[key])).register()
         );
 
         let betResultSpacesIds = await Promise.all(dependentObjects);
-        PerformanceBet.end({id : 'BetResultSpace Save'});
         // Generate new Params Setup
 
         params = {
@@ -270,30 +276,21 @@ const progressActions = {
             result : betResultSpacesIds,
             isResolved : true
         }
-        PerformanceBet.start({id : 'Bet Save'});
         /* Save Bet */
         let bet = await self.save(params);
-        PerformanceBet.end({id : 'Bet Save'});
 
-        PerformanceBet.start({id : 'updatePlayBalance User'});
 		/* Update PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
-        PerformanceBet.end({id : 'updatePlayBalance User'});
-        PerformanceBet.start({id : 'updatePlayBalance App'});
         /* Update App PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
-        PerformanceBet.end({id : 'updatePlayBalance App'});
 
         /* Update Balance of Affiliates */
-        PerformanceBet.start({id : 'updatePlayBalance Affiliates'});
-
         if(isUserAffiliated){
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
                 return WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
             })
             Promise.all(userAffiliatedWalletsPromises); // Async because not needed to be synced - no security issue
         }
-        PerformanceBet.end({id : 'updatePlayBalance Affiliates'});
 
 		/* Add Bet to User Profile */
 		UsersRepository.prototype.addBet(params.user, bet); // Async because not needed to be synced - no security issue
