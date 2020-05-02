@@ -2,8 +2,7 @@ import {
     getUserAuth,
     placeBet,
     authAdmin,
-    getAppAuth,
-    getBetInfo
+    getAppAuth
 } from '../../methods';
 
 import chai from 'chai';
@@ -12,7 +11,6 @@ import { getRandom } from '../../utils/math';
 import { digestBetResult } from '../../utils/bet';
 
 const expect = chai.expect;
-const ethDepositAmount = 0.1;
 
  const currenciesBetAmount = {
     // add other currencies here
@@ -33,280 +31,163 @@ const constant = {
     }
 }
 
-const ticker = 'eth';
-
 Object.keys(currenciesBetAmount).forEach( async key => {
-    var app, walletApp, user, admin, betAmount, game, ticker = key, currency, bet;
+    var app, walletApp, user, admin, betAmount, game, ticker = key,postDataDefault, currency, bet;
 
+    const insideBetFunction = async ({postData}) => {
+        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
+        app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
+        var userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        var res = await placeBet(postData, user.bearerToken, {id : user.id});
+        var isWon = res.data.message.isWon;
+        return { 
+            isWon, res, userPreBetCurrencyWallet, appPreBetCurrencyWallet
+        }
+    }
+
+    const afterBetFunction = async ({res, appPreBetCurrencyWallet, userPreBetCurrencyWallet}) => {
+        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
+        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+
+        expect(await digestBetResult({
+            edge : game.edge, 
+            res : res, 
+            newBalance : userPosBetCurrencyWallet.playBalance, 
+            previousBalance : userPreBetCurrencyWallet.playBalance,
+            newBalanceApp : appPosBetCurrencyWallet.playBalance,
+            previousBalanceApp : appPreBetCurrencyWallet.playBalance
+        }), true);
+    }
+
+    const beforeBetFunction = async ({metaName}) => {
+        game = app.games.find( game => game.metaName == metaName);
+        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
+        return {
+            game, user
+        }
+    }
+
+    
     before( async () =>  {
         betAmount = 0.001;
         admin = (await authAdmin({ admin : constant.admin.id }, constant.admin.bearerToken, { id : constant.admin.id})).data.message;
         app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
+
+        postDataDefault = {
+            game: game._id,
+            user: user.id,
+            app: app.id,
+            currency : currency._id,
+            nonce: getRandom(123,2384723),
+        }
     });
   
     it(`${key} - normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
-        const metaName = 'wheel_simple';
-        game = app.games.find( game => game.metaName == metaName);
 
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        await beforeBetFunction({
+            metaName : 'wheel_simple'
+        })
 
         let postData = {  
-            game: game._id,
-            user: user.id,
-            app: app.id,
-            currency : currency._id,
-            nonce: getRandom(123,2384723),
+            ...postDataDefault,
             result: game.resultSpace.map( (r, i) => {return {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
-        let isWon = false, res;
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
         
-        while(!isWon){
-            res = await placeBet(postData, user.bearerToken, {id : user.id});
-            isWon = res.data.message.isWon;
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
         }
 
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge, 
-            newBalance : userPosBetCurrencyWallet.playBalance, 
-            res : res, 
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
     }));
 
-    it(`${key} - normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
-        const metaName = 'wheel_simple';
-        game = app.games.find( game => game.metaName == metaName);
 
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
+    it(`${key} - normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
 
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        await beforeBetFunction({
+            metaName : 'wheel_variation_1'
+        })
 
         let postData = {  
-            game: game._id,
-            user: user.id,
-            app: app.id,
-            currency : currency._id,
-            nonce: getRandom(123,2384723),
+            ...postDataDefault,
             result: game.resultSpace.map( (r, i) => {return {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
-        let isWon = true, res;
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
         
-        while(isWon){
-            res = await placeBet(postData, user.bearerToken, {id : user.id});
-            isWon = res.data.message.isWon;
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
         }
 
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge, 
-            newBalance : userPosBetCurrencyWallet.playBalance, 
-            res : res, 
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
     }));
 
-    it(`${key} - normal bet for the User - Plinko (Win)`, mochaAsync(async () => {
-        const metaName = 'plinko_variation_1';
-        game = app.games.find( game => game.metaName == metaName);
+    it(`${key} - normal bet for the User - Wheel Variation (Lost)`, mochaAsync(async () => {
 
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        await beforeBetFunction({
+            metaName : 'wheel_variation_1'
+        })
 
         let postData = {  
-            game: game._id,
-            user: user.id,
-            app: app.id,
-            currency : currency._id,
-            nonce: getRandom(123,2384723),
+            ...postDataDefault,
             result: game.resultSpace.map( (r, i) => {return {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
-        let isWon = false, res;
+
+        let __isWon = true, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
         
-        while(!isWon){
-            res = await placeBet(postData, user.bearerToken, {id : user.id});
-            isWon = res.data.message.isWon;
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
         }
 
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge, 
-            newBalance : userPosBetCurrencyWallet.playBalance, 
-            res : res, 
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
     }));
 
-    it(`${key} - normal bet for the User - Plinko (Lost)`, mochaAsync(async () => {
-        const metaName = 'plinko_variation_1';
-        game = app.games.find( game => game.metaName == metaName);
-
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        let postData = {  
-            game: game._id,
-            user: user.id,
-            app: app.id,
-            currency : currency._id,
-            nonce: getRandom(123,2384723),
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-        let isWon = true, res;
-        
-        while(isWon){
-            res = await placeBet(postData, user.bearerToken, {id : user.id});
-            isWon = res.data.message.isWon;
-        }
-
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge, 
-            newBalance : userPosBetCurrencyWallet.playBalance, 
-            res : res, 
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
-    }));
-
-    it(`${key} - normal bet for the User - Wheel Neo (Win)`, mochaAsync(async () => {
-        const metaName = 'wheel_variation_1';
-        game = app.games.find( game => game.metaName == metaName);
-
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        let postData = {  
-            game: game._id,
-            user: user.id,
-            app: app.id,
-            currency : currency._id,
-            nonce: getRandom(123,2384723),
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-        let isWon = false, res;
-        
-        while(!isWon){
-            res = await placeBet(postData, user.bearerToken, {id : user.id});
-            isWon = res.data.message.isWon;
-        }
-
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge, 
-            newBalance : userPosBetCurrencyWallet.playBalance, 
-            res : res, 
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
-    }));
-
-    it(`${key} - normal bet for the User - Wheel (Lost)`, mochaAsync(async () => {
-        const metaName = 'wheel_variation_1';
-        game = app.games.find( game => game.metaName == metaName);
-
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        let postData = {  
-            game: game._id,
-            user: user.id,
-            app: app.id,
-            currency : currency._id,
-            nonce: getRandom(123,2384723),
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-        let isWon = true, res;
-        
-        while(isWon){
-            res = await placeBet(postData, user.bearerToken, {id : user.id});
-            isWon = res.data.message.isWon;
-        }
-
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge, 
-            newBalance : userPosBetCurrencyWallet.playBalance, 
-            res : res, 
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
-    }));
 });
