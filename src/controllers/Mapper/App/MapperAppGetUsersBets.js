@@ -35,6 +35,7 @@ let outputs = {
                         "probability": list.outcomeResultSpace.probability,
                         "index": list.outcomeResultSpace.index,
                     },
+                    "isJackpot": !list.isJackpot ? false : list.isJackpot,
                     "isWon": list.isWon,
                     "game": list.game,
                     "winAmount": list.winAmount,
