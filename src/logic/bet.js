@@ -182,12 +182,12 @@ const processActions = {
 
             if(isWon && (winAmount > 0)){
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(totalAmountWithFee);
+                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
                 user_delta = delta;
                 app_delta = -delta;
             }else{
                 /* User Lost Bet */
-                user_delta = -Math.abs(totalAmountWithFee); /* With Fee */
+                user_delta = -Math.abs(totalBetAmount); /* With Fee + Jackpot */
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
@@ -200,7 +200,7 @@ const processActions = {
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = Math.abs(totalAmountWithFee - totalAffiliateReturn); /* Without Fee */
+                app_delta = Math.abs(totalBetAmount - totalAffiliateReturn); /* Without Fee */
             }
 
 
