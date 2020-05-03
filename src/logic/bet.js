@@ -155,6 +155,8 @@ const processActions = {
 
             /* Remove Fee from Math */
             let betAmount = totalBetAmount - Math.abs(fee);
+            let { jackpotAmount, jackpotPercentage } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
+            betAmount = betAmount - Math.abs(jackpotAmount);  /* total amount amount - jackpot amount - fee amount */
 
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
@@ -169,10 +171,8 @@ const processActions = {
             });
         
 
-            let { jackpotAmount, jackpotPercentage } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
             /* Remove Jackpot from Math */
             var totalAmountWithFee = totalBetAmount - Math.abs(jackpotAmount); /* total amount - jackpot amount */
-            betAmount = betAmount - Math.abs(jackpotAmount);  /* total amount amount - jackpot amount - fee amount */
 
             if(isWon && (winAmount > 0)){
                 /* User Won Bet */
