@@ -137,7 +137,7 @@ class CasinoLogic{
                         // Won
                         isWon = true;
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
                     }
                     break;
                 };
@@ -154,7 +154,7 @@ class CasinoLogic{
                         // Won
                         isWon = true;
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
                     }
                     break;
                 };
@@ -171,7 +171,7 @@ class CasinoLogic{
                         // Won
                         isWon = true;
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
                     }
                     break;
                 };
@@ -187,7 +187,7 @@ class CasinoLogic{
                         maxWin = parseFloat(totalBetAmount)/parseFloat(probability);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
                     }   
                     break;
                 };
@@ -206,7 +206,7 @@ class CasinoLogic{
                         maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
                     }  
                     break;
                 };
