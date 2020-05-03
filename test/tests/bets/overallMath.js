@@ -41,6 +41,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         var isWon = res.data.message.isWon;
+        console.log("Bet is ", isWon ? "won" : "false");
         return { 
             isWon, res, userPreBetCurrencyWallet, appPreBetCurrencyWallet
         }
@@ -141,7 +142,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         let __isWon = true, __res;
         var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
         
-        while(!__isWon){
+        while(__isWon){
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -192,10 +193,10 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         })
     }));
 
-    it(`${key} - normal bet for the User - Wheel Variation (Lost)`, mochaAsync(async () => {
+    it(`${key} - normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
 
         await beforeBetFunction({
-            metaName : 'wheel_variation_1'
+            metaName : 'plinko_variation_1'
         })
 
         let postData = {  
@@ -206,7 +207,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }})
         };
 
-        let __isWon = true, __res;
+        let __isWon = false, __res;
         var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
         
         while(!__isWon){
@@ -225,5 +226,6 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             res : __res
         })
     }));
+
 
 });

@@ -13,14 +13,13 @@ export async function digestBetResult({newBalance, res, previousBalance, edge, p
         expect(Numbers.toFormatBet(totalBetAmount)).to.be.equal(Numbers.toFormatBet(betAmount + jackpotAmount + fee ))
         /* Verify if WinAmount is ight Value is right */
         expect(winAmount).to.be.greaterThan(0)
-        // Confirm delta is positive
-        expect(user_delta).to.be.greaterThan(0);
         // Confirm New User Balance is equal to previous plus delta
         expect(Numbers.toFormatBet(newBalance)).to.be.equal(Numbers.toFormatBet(previousBalance+user_delta));
 
     }else{
         // Confirm delta is negative
-        expect(Numbers.toFormatBet(user_delta)).to.be.equal(Numbers.toFormatBet(-betAmount));
+        expect(Numbers.toFormatBet(user_delta)).to.be.lessThan(0)
+        expect(Numbers.toFormatBet(user_delta)).to.be.equal(Numbers.toFormatBet(-(betAmount + fee)));
         // Confirm Win Amount is 0
         expect(winAmount).to.be.equal(0);
     }

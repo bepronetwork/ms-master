@@ -27,7 +27,32 @@ const limitTableBetAmount = {
 const metaName = 'linear_dice_simple';
 
 Object.keys(currenciesBetAmount).forEach( async key => {
-    var app, walletApp, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency;
+    var app, walletApp, user, admin, betAmount = currenciesBetAmount[key], game, ticker = key, currency, appPreBetCurrencyWallet, userPreBetCurrencyWallet;
+    const afterBetFunction = async ({res}) => {
+        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
+        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+
+        expect(await digestBetResult({
+            edge : game.edge, 
+            res : res, 
+            newBalance : userPosBetCurrencyWallet.playBalance, 
+            previousBalance : userPreBetCurrencyWallet.playBalance,
+            newBalanceApp : appPosBetCurrencyWallet.playBalance,
+            previousBalanceApp : appPreBetCurrencyWallet.playBalance
+        }), true);
+    }
+
+    const beforeBetFunction = async () => {
+        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
+        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+    }
 
     before( async () =>  {
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
@@ -48,8 +73,8 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     }));
   
     it(`${metaName} - ${key} - should allow bet for the User - Simple Bet (Tails)`, mochaAsync(async () => {
-        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+ 
+        await beforeBetFunction();
 
         let postData = {  
             game: game._id,
@@ -65,19 +90,15 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
 
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
-        expect(await digestBetResult({newBalance : userPosBetCurrencyWallet.playBalance, res : res, previousBalance : userPreBetCurrencyWallet.playBalance}), true);
+        await afterBetFunction({res});
     }));
 
 
     it( `${metaName} - ${key} - should allow bet for the User - Simple Bet (Heads)`, mochaAsync(async () => {
-        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
-
-        const userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        await beforeBetFunction();
 
         let postData = { 
             game: game._id,
@@ -93,14 +114,11 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
 
-        var res = await placeBet(postData, user.bearerToken, {id : user.id});
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
+        var res = await placeBet(postData, user.bearerToken, {id : user.id});        
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
-        expect(await digestBetResult({newBalance : userPosBetCurrencyWallet.playBalance, res : res, previousBalance : userPreBetCurrencyWallet.playBalance}), true);
+
+        await afterBetFunction({res});
     }));
 
     it(`${metaName} - ${key} - shouldn´t allow Bet - Limit Table Passed`, mochaAsync(async () => {
