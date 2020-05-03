@@ -48,8 +48,8 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     }
 
     const beforeBetFunction = async () => {
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
     }
@@ -63,6 +63,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     });
 
     it('it should Set Maximum Bet - Linear Dice', mochaAsync(async () => {
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         let postData = {
             app : admin.app.id,
             game : game._id,
@@ -108,8 +109,8 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             nonce: getRandom(123,2384723),
             result: [
                 {place: 0, value: betAmount/3},
-                {place: 40, value: betAmount/3},
-                {place: 12, value: betAmount/3},
+                {place: 1, value: betAmount/3},
+                {place: 2, value: betAmount/3},
             ]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );

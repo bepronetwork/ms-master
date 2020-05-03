@@ -320,20 +320,6 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    createAPIToken(user_id, bearerToken){
-        return new Promise( (resolve,reject) => {
-            UsersRepository.prototype.schema.model.findByIdAndUpdate(
-                user_id, 
-                { $set: { "bearerToken" : new String(bearerToken) } },
-                { 'new': true })
-                .exec( (err, item) => {
-                    if(err){reject(err)}
-                    resolve(item);
-                }
-            )
-        });
-    }
-
     async findUserByAddress({address, app}){
         try{
             return new Promise( (resolve, reject) => {

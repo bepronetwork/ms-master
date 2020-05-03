@@ -4,7 +4,6 @@ import {
     MapperAuthUserSingleton,
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
-    MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetBetsSingleton,
     MapperUserGetBetsSingleton
@@ -85,7 +84,6 @@ export {
     MapperAuthUserSingleton,
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
-    MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetCasinoGamesSingleton,
     MapperGetEcosystemDataSingleton,

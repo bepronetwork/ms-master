@@ -129,7 +129,7 @@ const processActions = {
             let appPlayBalance = appWallet.playBalance;
             let userBalance = userWallet.playBalance;
 
-            let resultBetted = CasinoLogicSingleton.normalizeBet(params.result);
+            let resultBetted = CasinoLogicSingleton.normalizeBet(params.result, game.resultSpace);
             var serverSeed = CryptographySingleton.generateSeed();
             var clientSeed = CryptographySingleton.generateSeed();
             const { affiliateLink } = user;

@@ -7,7 +7,6 @@ import {
     MapperAuthUserSingleton,
     Mapperlogin2faUserSingleton,
     MapperSet2faUserSingleton,
-    MapperCreateApiTokenUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetBetsSingleton,
     MapperUserGetBetsSingleton
@@ -165,22 +164,6 @@ class User extends ModelComponent {
         try {
             let res = await this.process('UpdateWallet');
             return res;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-
-    /**
-    * @param {String} 
-    * @return {bool || Exception}  
-    */
-
-    async createAPIToken() {
-        try {
-            let res = await this.process('CreateAPIToken');
-            let mapper = MapperCreateApiTokenUserSingleton.output('CreateApiTokenUser', res);
-            return mapper.bearerToken;
         } catch (err) {
             throw err;
         }

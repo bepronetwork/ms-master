@@ -48,21 +48,22 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     }
 
     const beforeBetFunction = async () => {
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
     }
 
     before( async () =>  {
-        admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
-        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id })).data.message;
+        app = (await getAppAuth({ app : admin.app.id, admin: admin.id }, admin.security.bearerToken, { id : admin.id })).data.message;
         game = app.games.find( game => game.metaName == metaName);
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
     });
 
     it('it should Set Maximum Bet - European Roulette', mochaAsync(async () => {
+        user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         let postData = {
             app : admin.app.id,
             game : game._id,

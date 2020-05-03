@@ -398,13 +398,6 @@ const processActions = {
             throw err;
         }
     },
-    __createApiToken: async (params) => {
-        let normalized = {
-            ...params,
-            bearerToken: MiddlewareSingleton.sign(params.id)
-        }
-        return normalized;
-    },
     __getBets: async (params) => {
         if(!params.currency){
             params.currency = null
@@ -657,10 +650,6 @@ const progressActions = {
             throw err;
         }
     },
-    __createApiToken: async (params) => {
-        let res = await UsersRepository.prototype.createAPIToken(params.id, params.bearerToken);
-        return res;
-    },
     __getBets: async (params) => {
         return params;
     },
@@ -744,9 +733,6 @@ class UserLogic extends LogicComponent {
                 case 'UpdateWallet': {
                     return await library.process.__updateWallet(params);
                 };
-                case 'CreateAPIToken': {
-                    return await library.process.__createApiToken(params); break;
-                };
                 case 'GetBets': {
                     return await library.process.__getBets(params); break;
                 };
@@ -817,9 +803,6 @@ class UserLogic extends LogicComponent {
                 };
                 case 'UpdateWallet': {
                     return await library.progress.__updateWallet(params);
-                };
-                case 'CreateAPIToken': {
-                    return await library.progress.__createApiToken(params); break;
                 };
                 case 'GetBets': {
                     return await library.progress.__getBets(params); break;

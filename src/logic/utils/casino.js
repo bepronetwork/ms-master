@@ -71,11 +71,14 @@ class CasinoLogic{
     }
 
 
-    normalizeBet(userResultSpace){
+    normalizeBet(userResultSpace, resultSpace){
         try{
-            // TO DO : Check Errors in the Inputs (Positive, Negative, )
+            var placesFilled = [];
             /* Remove Duplicated Values from Odd Calculation */
             return userResultSpace.reduce( (array , item) => {
+                if(placesFilled.findIndex( p => p == item.place) > -1){ throwError('BAD_BET')};
+                placesFilled.push(item.place);
+                if((item.place < 0) || (item.place >= resultSpace.length)){ throwError('BAD_BET')}
                 if (findWithAttr(array, 'place', item.place) < 0 ){
                     if(typeof item.value != 'number'){throwError('BAD_BET')}
                     if(item.value <= 0){ throwError('BAD_BET')}
@@ -340,14 +343,14 @@ class CasinoLogic{
                     break;
                 };
                 case 'coinflip_simple' : {
+                    if(userResultSpace.length != 1){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
-                    let probability = userResultSpace.reduce( (acc, result) => {
+                    let probability = userResultSpace.reduce( (acc, result, index) => {
                         if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+resultSpace[result.place].probability;
                     }, 0);
                     let odd = parseFloat(this.probabilityToOdd(probability));
                     // ERROR : More than 1 
-                    if(userResultSpace.length != 1){ throw throwError('BAD_BET')}
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
@@ -360,20 +363,21 @@ class CasinoLogic{
                     break;
                 };
                 case 'linear_dice_simple' : {
-                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let probability = userResultSpace.reduce( (acc, result) => {
                         if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+resultSpace[result.place].probability;
                     }, 0);
                     let odd = parseFloat(this.probabilityToOdd(probability));
-                    var previousValue;
+                    var previousValue, previousPlace;
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item, index) => {
                         if(item.place != index){ throwError('BAD_BET')};
                         if(typeof item.value != 'number'){ throwError('BAD_BET')};
                         if(item.value <= 0){ throw throwError('BAD_BET')};
                         if(previousValue && (item.value != previousValue)){ throw throwError('BAD_BET')};
+                        if(previousPlace && (item.place != (previousPlace + 1))){ throw throwError('BAD_BET')};
                         previousValue = item.value;
+                        previousPlace = item.place;
                         return acc+item.value;
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
