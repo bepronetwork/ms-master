@@ -169,7 +169,7 @@ const processActions = {
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : betAmount,
+                betAmount : totalBetAmount,
                 jackpotAmount,
                 edge : game.edge
             });
