@@ -795,8 +795,8 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
-                    /* Verify if possibleWinAmount is less or equal than 0 */
-                    if(bet.possibleWinAmount < 0){
+                    /* Verify if maxWinAmount is less or equal than 0 */
+                    if(bet.maxWinAmount < 0){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
@@ -810,7 +810,7 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INSUFFICIENT_FUNDS));
                     }
                     // Verify App (Syntax Error)
-                    if(bet.appPlayBalance < bet.possibleWinAmount){
+                    if(bet.appPlayBalance < bet.maxWinAmount){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INSUFFICIENT_LIQUIDITY));
                     }
                     // Verify User is in App
@@ -821,7 +821,7 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                     }
                     // Table Limit Suprassed
-                    if(parseFloat(bet.possibleWinAmount) > parseFloat(bet.tableLimit)){
+                    if(parseFloat(bet.maxWinAmount) > parseFloat(bet.tableLimit)){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.TABLE_LIMIT_SUPRASSED));
                     }
                     /* Verify if Affiliate Return is higher than total Bet Amount Lost Amount */
@@ -830,7 +830,7 @@ class ErrorManager {
                     }
 
                     /* Verify if when Bet is Lost the total Affiliate Return + App Cut equals User Lost */
-                    if(!bet.isWon && ( parseFloat(bet.totalAffiliateReturn + bet.app_delta + bet.percentage).toFixed(6) != parseFloat(Math.abs(bet.user_delta)).toFixed(6)) ){
+                    if(!bet.isWon && ( parseFloat(bet.totalAffiliateReturn + bet.app_delta).toFixed(6) != parseFloat(Math.abs(bet.user_delta)).toFixed(6)) ){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.AFFILIATE_RETURN_NOT_VALID));
                     }
                     break;

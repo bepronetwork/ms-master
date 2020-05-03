@@ -46,7 +46,8 @@ let outputs = {
                 "serverSeed": object.bet.serverSeed,
                 "__v": object.bet.__v,
             },
-            "valueToJackpot": object.percentage,
+            "totalBetAmount"  : object.totalBetAmount,
+            "jackpotAmount" : object.bet.jackpotAmount,
             "user_in_app": object.user_in_app,
             "isUserWithdrawingAPI": object.isUserWithdrawingAPI,
             "isAppWithdrawingAPI": object.isAppWithdrawingAPI,
@@ -59,29 +60,6 @@ let outputs = {
                 })
             }),
             "totalAffiliateReturn": object.totalAffiliateReturn,
-            "appWallet": !object.appWallet ? {} : {
-                "_id": object.appWallet._id,
-                "playBalance": object.appWallet.playBalance,
-                "max_deposit": object.appWallet.max_deposit,
-                "max_withdraw": object.appWallet.max_withdraw,
-                "min_withdraw": object.appWallet.min_withdraw,
-                "depositAddresses": object.appWallet.depositAddresses ? object.appWallet.depositAddresses.map(depositAddress_id => {
-                    return({
-                        "_id": depositAddress_id
-                    })
-                }) : object.appWallet.depositAddresses,
-                "link_url": object.appWallet.link_url,
-                "currency": {
-                    "_id": object.appWallet.currency._id,
-                    "image": object.appWallet.currency.image,
-                    "ticker": object.appWallet.currency.ticker,
-                    "decimals": object.appWallet.currency.decimals,
-                    "name": object.appWallet.currency.name,
-                    "address": object.appWallet.currency.address
-                },
-                "bitgo_id": object.appWallet.bitgo_id,
-                "bank_address": object.appWallet.bank_address
-            },
             "currency": object.currency,
             "tableLimit": object.tableLimit,
             "wallet": !object.wallet ? {} : {
@@ -120,7 +98,6 @@ let outputs = {
             "isWon": object.isWon,
             "game": object.game,
             "betSystem": object.betSystem,
-            "appPlayBalance": object.appPlayBalance,
             "playBalance": object.playBalance,
             "possibleWinAmount": object.possibleWinAmount,
             "possibleWinBalance": object.possibleWinBalance,

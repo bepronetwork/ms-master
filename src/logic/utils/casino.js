@@ -71,11 +71,14 @@ class CasinoLogic{
     }
 
 
-    normalizeBet(userResultSpace){
+    normalizeBet(userResultSpace, resultSpace){
         try{
-            // TO DO : Check Errors in the Inputs (Positive, Negative, )
+            var placesFilled = [];
             /* Remove Duplicated Values from Odd Calculation */
             return userResultSpace.reduce( (array , item) => {
+                if(placesFilled.findIndex( p => p == item.place) > -1){ throwError('BAD_BET')};
+                placesFilled.push(item.place);
+                if((item.place < 0) || (item.place >= resultSpace.length)){ throwError('BAD_BET')}
                 if (findWithAttr(array, 'place', item.place) < 0 ){
                     if(typeof item.value != 'number'){throwError('BAD_BET')}
                     if(item.value <= 0){ throwError('BAD_BET')}
@@ -99,24 +102,25 @@ class CasinoLogic{
      * @param {Int} houseEdge 
      */
 
-    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount}){
+    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount, jackpotAmount, fee}){
         try{
-            var winAmount, totalBetAmount, isWon, maxWin;
+            var winAmount, isWon, maxWin;
 
             switch(game){
                 case 'european_roulette_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.key));
+                   
                     if(!el){
                         // Lost
                         isWon = false;
                         winAmount = 0
                     }else{
+                        // Win
                         isWon = true;
+                        /* Default Logic */
                         let probability = resultSpace[el.place].probability;
                         maxWin = parseFloat(el.value)/parseFloat(probability);
-                        /* Default Logic */
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin - fee - jackpotAmount);
                     }   
                     break;
                 };
@@ -132,8 +136,7 @@ class CasinoLogic{
                     }else{
                         // Won
                         isWon = true;
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin);
                     }
                     break;
                 };
@@ -149,8 +152,7 @@ class CasinoLogic{
                     }else{
                         // Won
                         isWon = true;
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin);
                     }
                     break;
                 };
@@ -166,57 +168,54 @@ class CasinoLogic{
                     }else{
                         // Won
                         isWon = true;
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin);
+
                     }
                     break;
                 };
                 case 'coinflip_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.index));
+                 
                     if(!el){
                         // Lost
                         winAmount = 0
                         isWon = false;
                     }else{
                         isWon = true;
-                        let probability = resultSpace[el.place].probability;
-                        maxWin = parseFloat(el.value)/parseFloat(probability);
                         /* Default Logic */
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        let probability = resultSpace[el.place].probability;
+                        maxWin = parseFloat(totalBetAmount)/parseFloat(probability);
+                        winAmount = parseFloat(maxWin);
                     }   
                     break;
                 };
                 case 'linear_dice_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.index));
+
                     if(!el){
                         // Lost
                         isWon = false;
                         winAmount = 0
                     }else{
                         isWon = true;
+                        /* Default Logic */
                         let probability = userResultSpace.reduce( (acc, result) => {
                             return acc+resultSpace[result.place].probability;
                         }, 0);
                         let odd = parseFloat(this.probabilityToOdd(probability));
-                        totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                            if(item.value <= 0){ throw throwError('BAD_BET')}
-                            return acc+item.value;
-                        }, 0))
                         maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
-                        /* Default Logic */
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        winAmount = parseFloat(maxWin);
                     }  
                     break;
                 };
                 default : { 
-                    throw new Error('Game Not Fully Integrated')
+                    throw new Error('Game Not Integrated')
                 }
             }
 
             return {
-                possibleWinAmount : parseFloat(maxWin),
+                fee : parseFloat(parseFloat(Math.abs(totalBetAmount))*houseEdge/100),
+                maxWinAmount : parseFloat(maxWin),
                 winAmount : parseFloat(winAmount),
                 totalBetAmount : parseFloat(totalBetAmount),
                 isWon
@@ -242,6 +241,7 @@ class CasinoLogic{
                 case 'european_roulette_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin, probability, place, value } = userResultSpace.reduce( (object, result) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         let probability = resultSpace[result.place].probability;
                         let maxWin = parseFloat(result.value)/parseFloat(probability);
                         if(maxWin > object.maxWin){
@@ -260,8 +260,11 @@ class CasinoLogic{
                     break;
                 };
                 case 'wheel_simple' : {
+                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
-                    let { maxWin } = userResultSpace.reduce( (object, result) => {
+                    let { maxWin } = userResultSpace.reduce( (object, result, index) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
+                        if(result.place != index){ throwError('BAD_BET')};
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
                         if(maxWin > object.maxWin){
@@ -270,9 +273,12 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, place : 0, value : 0});
+                    var previousValue;
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
+                        if(previousValue && (item.value != previousValue)){ throw throwError('BAD_BET')};
+                        previousValue = item.value;
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
@@ -280,8 +286,11 @@ class CasinoLogic{
                     break;
                 };
                 case 'wheel_variation_1' : {
+                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
-                    let { maxWin } = userResultSpace.reduce( (object, result) => {
+                    let { maxWin } = userResultSpace.reduce( (object, result, index) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
+                        if(result.place != index){ throwError('BAD_BET')};
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
                         if(maxWin > object.maxWin){
@@ -290,9 +299,12 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, place : 0, value : 0});
+                    var previousValue;
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
-                        if(item.value <= 0){ throw throwError('BAD_BET')}
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')};
+                        if(item.value <= 0){ throw throwError('BAD_BET')};
+                        if(previousValue && (item.value != previousValue)){ throw throwError('BAD_BET')};
+                        previousValue = item.value;
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
@@ -300,8 +312,11 @@ class CasinoLogic{
                     break;
                 };
                 case 'plinko_variation_1' : {
+                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
-                    let { maxWin } = userResultSpace.reduce( (object, result) => {
+                    let { maxWin } = userResultSpace.reduce( (object, result, index) => {
+                        if(result.place != index){ throwError('BAD_BET')};
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
                         if(maxWin > object.maxWin){
@@ -310,9 +325,12 @@ class CasinoLogic{
                             return object;
                         }
                     }, {maxWin : 0, place : 0, value : 0});
+                    var previousValue;
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
-                        if(item.value <= 0){ throw throwError('BAD_BET')}
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')};
+                        if(item.value <= 0){ throw throwError('BAD_BET')};
+                        if(previousValue && (item.value != previousValue)){ throw throwError('BAD_BET')};
+                        previousValue = item.value;
                         return acc+item.value;
                     }, 0))
                     let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
@@ -320,16 +338,18 @@ class CasinoLogic{
                     break;
                 };
                 case 'coinflip_simple' : {
+                    if(userResultSpace.length != 1){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
-                    let probability = userResultSpace.reduce( (acc, result) => {
+                    let probability = userResultSpace.reduce( (acc, result, index) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+resultSpace[result.place].probability;
                     }, 0);
                     let odd = parseFloat(this.probabilityToOdd(probability));
                     // ERROR : More than 1 
-                    if(userResultSpace.length != 1){ throw throwError('BAD_BET')}
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
+                        if((item.place < 0) || (item.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+item.value;
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
@@ -340,12 +360,19 @@ class CasinoLogic{
                 case 'linear_dice_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let probability = userResultSpace.reduce( (acc, result) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+resultSpace[result.place].probability;
                     }, 0);
                     let odd = parseFloat(this.probabilityToOdd(probability));
-                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                        if(typeof item.value != 'number'){ throwError('BAD_BET')}
-                        if(item.value <= 0){ throw throwError('BAD_BET')}
+                    var previousValue, previousPlace;
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item, index) => {
+                        if(item.place != index){ throwError('BAD_BET')};
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')};
+                        if(item.value <= 0){ throw throwError('BAD_BET')};
+                        if(previousValue && (item.value != previousValue)){ throw throwError('BAD_BET')};
+                        if(previousPlace && (item.place != (previousPlace + 1))){ throw throwError('BAD_BET')};
+                        previousValue = item.value;
+                        previousPlace = item.place;
                         return acc+item.value;
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
@@ -354,11 +381,11 @@ class CasinoLogic{
                     break;
                 };
                 default : { 
-                    throw new Error('Game Not Fully Integrated')
+                    throw new Error('Game Not Integrated')
                 }
             }
             return {
-                possibleWinAmount : winAmount, 
+                maxWinAmount : winAmount, 
                 fee : parseFloat(parseFloat(Math.abs(totalBetAmount))*houseEdge/100),
                 totalBetAmount : parseFloat(totalBetAmount)
             }

@@ -22,10 +22,10 @@ async function registUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.register();
-        await MiddlewareSingleton.log({type: "global", req, code: 200});
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -36,10 +36,10 @@ async function resendEmail (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.resendEmail();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -50,10 +50,10 @@ async function loginUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.login();
-        await MiddlewareSingleton.log({type: "global", req, code: 200});
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -63,10 +63,10 @@ async function setPassword(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.setPassword();
-        await MiddlewareSingleton.log({type: "global", req, code: 200});
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -76,10 +76,10 @@ async function confirmEmail(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.confirmEmail();
-        await MiddlewareSingleton.log({type: "global", req, code: 200});
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -89,10 +89,10 @@ async function resetPassword(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.resetPassword();
-        await MiddlewareSingleton.log({type: "global", req, code: 200});
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -103,10 +103,10 @@ async function setUser2FA(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.set2FA();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -117,10 +117,10 @@ async function loginUser2FA(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.login2FA();
-        await MiddlewareSingleton.log({type: "global", req, code: 200});
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -132,11 +132,10 @@ async function authUser (req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.auth();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        console.log(err.code);
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -147,10 +146,10 @@ async function getUserInfo (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getInfo();
-        await MiddlewareSingleton.log({type: "admin", req, code: 200});
+        MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -161,10 +160,10 @@ async function userGetBets (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.userGetBets();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -175,10 +174,10 @@ async function userSummary (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.summary();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -189,10 +188,10 @@ async function getBets (req, res) {
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getBets();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -202,10 +201,10 @@ async function getDepositAddress(req, res) {
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
-        await MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        await MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
