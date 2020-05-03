@@ -102,13 +102,15 @@ class CasinoLogic{
      * @param {Int} houseEdge 
      */
 
-    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount, jackpotAmount}){
+    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount, jackpotAmount, fee}){
         try{
             var winAmount, isWon, maxWin;
 
             switch(game){
                 case 'european_roulette_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.key));
+                    let probability = resultSpace[el.place].probability;
+                    maxWin = parseFloat(el.value)/parseFloat(probability);
                     if(!el){
                         // Lost
                         isWon = false;
@@ -116,11 +118,8 @@ class CasinoLogic{
                     }else{
                         // Win
                         isWon = true;
-                        let probability = resultSpace[el.place].probability;
-                        maxWin = parseFloat(el.value)/parseFloat(probability);
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
                         /* Default Logic */
-                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
+                        winAmount = parseFloat(maxWin - fee - jackpotAmount);
                     }   
                     break;
                 };
@@ -136,8 +135,7 @@ class CasinoLogic{
                     }else{
                         // Won
                         isWon = true;
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
+                        winAmount = parseFloat(maxWin);
                     }
                     break;
                 };
@@ -153,8 +151,7 @@ class CasinoLogic{
                     }else{
                         // Won
                         isWon = true;
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
+                        winAmount = parseFloat(maxWin);
                     }
                     break;
                 };
@@ -170,45 +167,42 @@ class CasinoLogic{
                     }else{
                         // Won
                         isWon = true;
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
+                        winAmount = parseFloat(maxWin);
+
                     }
                     break;
                 };
                 case 'coinflip_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.index));
+                    let probability = resultSpace[el.place].probability;
+                    maxWin = parseFloat(totalBetAmount)/parseFloat(probability);
                     if(!el){
                         // Lost
                         winAmount = 0
                         isWon = false;
                     }else{
                         isWon = true;
-                        let probability = resultSpace[el.place].probability;
-                        maxWin = parseFloat(totalBetAmount)/parseFloat(probability);
                         /* Default Logic */
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        
-                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
-                        console.log("maxWin", winAmount, maxWin, houseEdgeBalance, jackpotAmount)
+                        winAmount = parseFloat(maxWin);
                     }   
                     break;
                 };
                 case 'linear_dice_simple' : {
                     var el = userResultSpace.find( object => parseInt(object.place) == parseInt(outcomeResultSpace.index));
+                    let probability = userResultSpace.reduce( (acc, result) => {
+                        return acc+resultSpace[result.place].probability;
+                    }, 0);
+                    let odd = parseFloat(this.probabilityToOdd(probability));
+                    maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
+
                     if(!el){
                         // Lost
                         isWon = false;
                         winAmount = 0
                     }else{
                         isWon = true;
-                        let probability = userResultSpace.reduce( (acc, result) => {
-                            return acc+resultSpace[result.place].probability;
-                        }, 0);
-                        let odd = parseFloat(this.probabilityToOdd(probability));
-                        maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         /* Default Logic */
-                        let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
+                        winAmount = parseFloat(maxWin);
                     }  
                     break;
                 };

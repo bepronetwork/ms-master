@@ -55,9 +55,10 @@ const betResolvingActions = {
 		outcome = CryptographySingleton.hexToInt(hmca_hash) 
 		 
 		outcomeResultSpace 	= CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace)
-        var { winAmount, isWon, totalBetAmount, fee } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
+        var { winAmount, isWon, totalBetAmount } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
+            fee : params.fee,
             jackpotAmount : params.jackpotAmount,
             totalBetAmount : params.betAmount,
             outcomeResultSpace : outcomeResultSpace,
@@ -68,7 +69,7 @@ const betResolvingActions = {
         console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount, params.jackpotAmount)
 
         
-        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash, fee };
+        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
     },
     oracled : (params) => {
         let hmca_hash, outcome, isWon, outcomeResultSpace;
@@ -166,10 +167,11 @@ const processActions = {
                 serverSeed : serverSeed,
                 clientSeed : clientSeed,
                 nonce : params.nonce,
+                fee : fee,
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : totalBetAmount,
+                betAmount : betAmount,
                 jackpotAmount,
                 edge : game.edge
             });
