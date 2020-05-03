@@ -32,8 +32,8 @@ const constant = {
 }
 const betAmount = 0.001;
 
-context('Double bet - Prevention', async () => {
-    var app, walletApp, user, admin, betAmount, game, ticker = key,postDataDefault, currency, bet;
+context('Double bet - Exploit', async () => {
+    var app, walletApp, user, admin, game, ticker = 'eth',postDataDefault, currency, bet;
     
 
     const beforeBetFunction = async ({metaName}) => {
@@ -59,7 +59,7 @@ context('Double bet - Prevention', async () => {
         }
     });
 
-    it(`it should allow only 1 bet at a time`, mochaAsync(async () => {
+    it(`it should allow double bet at the same time`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
@@ -73,8 +73,13 @@ context('Double bet - Prevention', async () => {
             }})
         };
 
-
         var done = 0,not_done = 0;
+        let res = await Promise.all([
+            placeBet(postData, user.bearerToken, {id : user.id}),
+            placeBet(postData, user.bearerToken, {id : user.id}),
+            placeBet(postData, user.bearerToken, {id : user.id}),
+            placeBet(postData, user.bearerToken, {id : user.id})
+        ]);
 
         res.map( r => {
             if(r.data.status == 200){

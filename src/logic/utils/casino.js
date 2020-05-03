@@ -243,6 +243,7 @@ class CasinoLogic{
                 case 'european_roulette_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin, probability, place, value } = userResultSpace.reduce( (object, result) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         let probability = resultSpace[result.place].probability;
                         let maxWin = parseFloat(result.value)/parseFloat(probability);
                         if(maxWin > object.maxWin){
@@ -264,6 +265,7 @@ class CasinoLogic{
                     if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin } = userResultSpace.reduce( (object, result, index) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         if(result.place != index){ throwError('BAD_BET')};
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
@@ -289,6 +291,7 @@ class CasinoLogic{
                     if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin } = userResultSpace.reduce( (object, result, index) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         if(result.place != index){ throwError('BAD_BET')};
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
@@ -315,6 +318,7 @@ class CasinoLogic{
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin } = userResultSpace.reduce( (object, result, index) => {
                         if(result.place != index){ throwError('BAD_BET')};
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         let multiplier = resultSpace[result.place].multiplier;
                         let maxWin = parseFloat(result.value)*parseFloat(multiplier);
                         if(maxWin > object.maxWin){
@@ -338,6 +342,7 @@ class CasinoLogic{
                 case 'coinflip_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let probability = userResultSpace.reduce( (acc, result) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+resultSpace[result.place].probability;
                     }, 0);
                     let odd = parseFloat(this.probabilityToOdd(probability));
@@ -346,6 +351,7 @@ class CasinoLogic{
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')}
                         if(item.value <= 0){ throw throwError('BAD_BET')}
+                        if((item.place < 0) || (item.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+item.value;
                     }, 0))
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
@@ -357,6 +363,7 @@ class CasinoLogic{
                     if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let probability = userResultSpace.reduce( (acc, result) => {
+                        if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         return acc+resultSpace[result.place].probability;
                     }, 0);
                     let odd = parseFloat(this.probabilityToOdd(probability));

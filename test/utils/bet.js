@@ -5,7 +5,6 @@ const expect = chai.expect;
 
 export async function digestBetResult({newBalance, res, previousBalance, edge, previousBalanceApp, newBalanceApp}){
     const { winAmount, betAmount, fee, isWon, outcomeResultSpace, result, user_delta, app_delta, jackpotAmount, totalBetAmount } = res.data.message;
-    console.log(winAmount, isWon, user_delta, newBalance, previousBalance)
     if(isWon){
         /* Verify if Fee is right */
         expect(Numbers.toFormatBet(fee)).to.be.equal(Numbers.toFormatBet(totalBetAmount*(edge/100)))

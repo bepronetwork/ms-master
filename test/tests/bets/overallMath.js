@@ -31,8 +31,8 @@ const constant = {
     }
 }
 
-Object.keys(currenciesBetAmount).forEach( async key => {
-    var app, walletApp, user, admin, betAmount, game, ticker = key,postDataDefault, currency, bet;
+context('Bets (Overall Math)', async () => {
+    var app, walletApp, user, admin, betAmount, game, ticker = 'eth',postDataDefault, currency, bet;
 
     const insideBetFunction = async ({postData}) => {
         user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
@@ -41,7 +41,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         var isWon = res.data.message.isWon;
-        console.log("Bet is ", isWon ? "won" : "false");
+        console.log("Bet is", isWon ? "won" : "false");
         return { 
             isWon, res, userPreBetCurrencyWallet, appPreBetCurrencyWallet
         }
@@ -91,7 +91,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         }
     });
   
-    it(`${key} - normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
+    it(`it should do a normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
@@ -125,7 +125,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         })
     }));
 
-    it(`${key} - normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
+    it(`it should do a normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
@@ -159,7 +159,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         })
     }));
 
-    it(`${key} - normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
+    it(`it should do a normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_variation_1'
@@ -193,7 +193,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         })
     }));
 
-    it(`${key} - normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
+    it(`it should do a normal bet for the User - Plinko (Win)`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'plinko_variation_1'

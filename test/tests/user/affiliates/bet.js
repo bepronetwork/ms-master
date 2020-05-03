@@ -170,7 +170,6 @@ context('Bet', async () => {
         /* Verify Affiliate Balance on User 4,5 */
         expect(getCurrencyWallet({wallet : user_4_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal((betAmount - jackpotAmount - fee)*user_4_percentageOnLoss);
         expect(getCurrencyWallet({wallet : user_5_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
-
         /* Get Info for App After Bet */
         const app_data_after = (await getApp({app, admin})).data.message;
         const affiliateReturns = (betAmount - jackpotAmount - fee)*(user_4_percentageOnLoss);
@@ -219,7 +218,7 @@ context('Bet', async () => {
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
             wasWon = message.isWon;
-            jackpotAmount = messsage.jackpotAmount;
+            jackpotAmount = message.jackpotAmount;
             fee = message.fee;
         }
 
