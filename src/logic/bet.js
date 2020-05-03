@@ -33,7 +33,7 @@ const betResolvingActions = {
                 };
 			}else{
                 return {
-                    jackpotAmount : parseFloat(totalBetAmount*app.addOn.jackpot.edge/100),
+                    jackpotAmount : Math.abs(parseFloat(totalBetAmount*app.addOn.jackpot.edge/100)),
                     jackpotPercentage : app.addOn.jackpot.edge/100
                 }
             }
@@ -58,13 +58,14 @@ const betResolvingActions = {
         var { winAmount, isWon, totalBetAmount, fee } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
+            jackpotAmount : params.jackpotAmount,
             totalBetAmount : params.betAmount,
             outcomeResultSpace : outcomeResultSpace,
             houseEdge : params.edge,
             game : params.gameMetaName
         });
 
-        console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount)
+        console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount, params.jackpotAmount)
 
         
         return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash, fee };
@@ -157,8 +158,9 @@ const processActions = {
 
             /* Remove Fee from Math */
             let betAmount = totalBetAmount - Math.abs(fee);
-            let { jackpotAmount, jackpotPercentage } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
-            betAmount = betAmount - Math.abs(jackpotAmount);  /* total amount amount - jackpot amount - fee amount */
+            let { jackpotAmount } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
+            betAmount = betAmount - jackpotAmount;  /* total amount amount - jackpot amount - fee amount */
+
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
                 serverSeed : serverSeed,
@@ -168,6 +170,7 @@ const processActions = {
                 result : resultBetted,
                 gameMetaName : game.metaName,
                 betAmount : betAmount,
+                jackpotAmount,
                 edge : game.edge
             });
         

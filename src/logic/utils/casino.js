@@ -102,9 +102,9 @@ class CasinoLogic{
      * @param {Int} houseEdge 
      */
 
-    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount}){
+    calculateWinAmountWithOutcome({userResultSpace, resultSpace, houseEdge, outcomeResultSpace, game, totalBetAmount, jackpotAmount}){
         try{
-            var winAmount, totalBetAmount, isWon, maxWin;
+            var winAmount, isWon, maxWin;
 
             switch(game){
                 case 'european_roulette_simple' : {
@@ -114,12 +114,13 @@ class CasinoLogic{
                         isWon = false;
                         winAmount = 0
                     }else{
+                        // Win
                         isWon = true;
                         let probability = resultSpace[el.place].probability;
                         maxWin = parseFloat(el.value)/parseFloat(probability);
-                        /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        winAmount = parseFloat(maxWin - houseEdgeBalance);
+                        /* Default Logic */
+                        winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
                     }   
                     break;
                 };
@@ -183,7 +184,7 @@ class CasinoLogic{
                     }else{
                         isWon = true;
                         let probability = resultSpace[el.place].probability;
-                        maxWin = parseFloat(el.value)/parseFloat(probability);
+                        maxWin = parseFloat(totalBetAmount)/parseFloat(probability);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
                         winAmount = parseFloat(maxWin - houseEdgeBalance);
@@ -202,10 +203,6 @@ class CasinoLogic{
                             return acc+resultSpace[result.place].probability;
                         }, 0);
                         let odd = parseFloat(this.probabilityToOdd(probability));
-                        totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
-                            if(item.value <= 0){ throw throwError('BAD_BET')}
-                            return acc+item.value;
-                        }, 0))
                         maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
