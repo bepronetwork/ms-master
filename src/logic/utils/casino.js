@@ -187,9 +187,9 @@ class CasinoLogic{
                         maxWin = parseFloat(totalBetAmount)/parseFloat(probability);
                         /* Default Logic */
                         let houseEdgeBalance = this.getRealOdd(maxWin, houseEdge);
-                        console.log("maxWin", winAmount, maxWin, houseEdgeBalance, jackpotAmount)
-
+                        
                         winAmount = parseFloat(maxWin - houseEdgeBalance - jackpotAmount);
+                        console.log("maxWin", winAmount, maxWin, houseEdgeBalance, jackpotAmount)
                     }   
                     break;
                 };
