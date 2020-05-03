@@ -55,7 +55,6 @@ const betResolvingActions = {
 		outcome = CryptographySingleton.hexToInt(hmca_hash) 
 		 
 		outcomeResultSpace 	= CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace)
-
         var { winAmount, isWon, totalBetAmount, fee } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
@@ -64,6 +63,9 @@ const betResolvingActions = {
             houseEdge : params.edge,
             game : params.gameMetaName
         });
+
+        console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount)
+
         
         return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash, fee };
     },
@@ -157,7 +159,6 @@ const processActions = {
             let betAmount = totalBetAmount - Math.abs(fee);
             let { jackpotAmount, jackpotPercentage } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
             betAmount = betAmount - Math.abs(jackpotAmount);  /* total amount amount - jackpot amount - fee amount */
-
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
                 serverSeed : serverSeed,
