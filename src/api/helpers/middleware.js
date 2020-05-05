@@ -17,7 +17,7 @@ class Middleware{
         try{
             //expires in 30 days
             let token = jwt.sign({ id : 'Auth/' + payload, time: (new Date(((new Date()).getTime() + 30 * 24 * 60 * 60 * 1000))).getTime() }, privateKEY, { algorithm: 'RS256' });
-            console.log(token)
+            console.log("Token:: ",token)
             return token;
         }catch(err){
             throw err;
