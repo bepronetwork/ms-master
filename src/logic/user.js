@@ -189,7 +189,7 @@ const processActions = {
             secret: secret2FA,
             token: params['2fa_token']
         });
-        let bearerToken = MiddlewareSingleton.sign(user._id);
+        let newBearerToken = MiddlewareSingleton.sign(user._id);
 
         var app = user.app_id;
         var user_in_app = (app._id == params.app);
@@ -198,7 +198,7 @@ const processActions = {
         let normalized = {
             has2FASet,
             secret2FA,
-            bearerToken,
+            newBearerToken,
             user_in_app,
             user,
             isVerifiedToken2FA,
@@ -465,10 +465,10 @@ const progressActions = {
         return {...params, bearerToken: params.newBearerToken};
     },
     __login2FA: async (params) => {
-        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.newBearerToken);
         /* Send Login Email ASYNC - so that it is not dependent on user login */
         new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
-        return params;
+        return {...params, bearerToken: params.newBearerToken};
     },
     __auth: async (params) => {
         return params;
