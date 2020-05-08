@@ -115,7 +115,7 @@ class ErrorManager {
                     break;
                 };
 
-                case '__getDepositAddress' : {
+                case 'GetDepositAddress' : {
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
@@ -123,6 +123,10 @@ class ErrorManager {
                     // Verify User is in App
                     if(object.app_wallet.currency.virtual){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_VIRTUAL_WALLET));
+                    }
+                    // Ethereum Wallet for Virtual Currencies not allowed, costs money
+                    if(new String(object.app_wallet.currency.ticker).toLowerCase() == 'eth'){
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_ETHEREUM_WALLET));
                     }
                 }
             }

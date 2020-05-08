@@ -560,20 +560,23 @@ const progressActions = {
     },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user } = params;
-        var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-        // See if address is already provided
-        let bitgo_id = user_wallet.depositAddresses[0] ? user_wallet.depositAddresses[0].bitgo_id : null;
-        let address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
 
-        if (!bitgo_id) {
-            //Request to Bitgo to create Address not Existent
-            let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, bitgo_id: address.id })).register())._doc;
-            // Add Deposit Address to User Deposit Addresses
-            await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
-        } else {
-            //Request to Bitgo to create Address Existent
+        let addresses = user_wallet.depositAddresses;
+        let address = addresses.find( a => a.address);
+        if(!address){
+            var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+            // See if address is already provided
+            let bitgo_id = user_wallet.depositAddresses[0] ? user_wallet.depositAddresses[0].bitgo_id : null;
+            address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
+            if(address.address){
+                // Bitgo has created the address
+                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, bitgo_id: address.id })).register())._doc;
+                // Add Deposit Address to User Deposit Addresses
+                await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
+            }
+        }else{
+            // System already has an address
         }
-
         if (address.address) {
             //Address Existent
             return {
