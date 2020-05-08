@@ -324,7 +324,7 @@ const processActions = {
         if (!user) { throwError('USER_NOT_EXISTENT') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         const user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-        console.log("app_wallet" , object.app_wallet.currency.ticker)
+        console.log("app_wallet" , app_wallet.currency.ticker)
         return {
             app_wallet,
             user,
