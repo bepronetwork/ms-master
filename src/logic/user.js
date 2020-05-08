@@ -574,13 +574,12 @@ const progressActions = {
             }
             console.log("bitgo_id 1", bitgo_id)
             let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
-            if(!bitgo_id || (bitgo_address.address && bitgo_id)){
+            address = bitgo_address
+            if((!bitgo_id) || bitgo_address.address){
                 // Bitgo has created the address
                 let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
                 // Add Deposit Address to User Deposit Addresses
                 await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
-            }else{
-                address = bitgo_address
             }
         }else{
             // System already has an address
