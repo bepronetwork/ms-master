@@ -328,7 +328,7 @@ const processActions = {
         if (!user) { throwError('USER_NOT_EXISTENT') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         const user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-        console.log("app_wallet" , app_wallet.currency.ticker)
+
         return {
             app_wallet,
             user,
@@ -563,13 +563,11 @@ const progressActions = {
 
         let addresses = user_wallet.depositAddresses;
         let address = addresses.find( a => a.address);
-        console.log("address", address)
         if(!address){
             var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
             // See if address is already provided
             let bitgo_id = user_wallet.depositAddresses[0] ? user_wallet.depositAddresses[0].bitgo_id : null;
             address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
-            console.log("address address 1", address.address)
             if(address.address){
                 // Bitgo has created the address
                 let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, bitgo_id: address.id })).register())._doc;
@@ -579,8 +577,6 @@ const progressActions = {
         }else{
             // System already has an address
         }
-        console.log("address address 2", address.address)
-
         if (address.address) {
             //Address Existent
             return {
