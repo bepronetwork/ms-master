@@ -1,16 +1,18 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { GamesRepository, UsersRepository, WalletsRepository } from '../db/repos';
+import { GamesRepository, UsersRepository, WalletsRepository, AppRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { CryptographySingleton } from '../controllers/Helpers';
 import CasinoLogicSingleton from './utils/casino';
 import { BetResultSpace } from '../models';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getAffiliatesReturn } from './utils/affiliates';
+// import MathSingleton from './utils/math';
+import PerfomanceMonitor from '../helpers/performance';
 
- 
+const PerformanceBet = new PerfomanceMonitor({id : 'Bet'});
+
 let error = new ErrorManager();
-
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars
@@ -19,9 +21,29 @@ let modules;
 
 let __private = {};
 
-
 // TO DO : Create Different Type of Resolving Actions for Casino
 const betResolvingActions = {
+    getValueOfjackpot : async (app_id, totalBetAmount) => {
+		try {
+            let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(app_id);
+			if(app.addOn.jackpot==undefined){
+				return {
+                    jackpotAmount : 0,
+                    jackpotPercentage : 0
+                };
+			}else{
+                return {
+                    jackpotAmount : Math.abs(parseFloat(totalBetAmount*app.addOn.jackpot.edge/100)),
+                    jackpotPercentage : app.addOn.jackpot.edge/100
+                }
+            }
+		}catch(err){
+			return {
+                jackpotAmount : 0,
+                jackpotPercentage : 0
+            };
+		}
+	},
     auto : (params) => {
 		var hmca_hash, outcome, isWon, outcomeResultSpace;
 
@@ -33,15 +55,19 @@ const betResolvingActions = {
 		outcome = CryptographySingleton.hexToInt(hmca_hash) 
 		 
 		outcomeResultSpace 	= CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace)
-
         var { winAmount, isWon, totalBetAmount } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
+            fee : params.fee,
+            jackpotAmount : params.jackpotAmount,
             totalBetAmount : params.betAmount,
             outcomeResultSpace : outcomeResultSpace,
             houseEdge : params.edge,
             game : params.gameMetaName
         });
+
+        console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount, params.jackpotAmount)
+
         
         return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
     },
@@ -57,16 +83,16 @@ const betResolvingActions = {
 		outcomeResultSpace 	= params.outcome;
 		isWon 	       		= CasinoLogicSingleton.isWon(outcomeResultSpace, params.result);
 
-        var { winAmount : possibleWinAmount } =  CasinoLogicSingleton.calculateMaxWinAmount({
+        var { winAmount : maxWinAmount } =  CasinoLogicSingleton.calculateMaxWinAmount({
             userResultSpace : params.result, 
 			resultSpace : params.resultSpace,
             houseEdge : params.edge,
             gameMetaName : params.gameMetaName
         });
 
-        let winAmount = isWon ? possibleWinAmount : 0;
+        let winAmount = isWon ? maxWinAmount : 0;
         
-        return {...params, winAmount, outcomeResultSpace, isWon, possibleWinAmount, outcome, hmca_hash};
+        return {...params, winAmount, outcomeResultSpace, isWon, maxWinAmount, outcome, hmca_hash};
 
     }
 }
@@ -82,20 +108,20 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            const { currency } = params;
 
+            let { currency } = params;
             let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
+
             let app = user.app_id;
-            if(game){var maxBetValue = game.maxBet}
-            
+            if(game){var maxBetValue = game.maxBet; }
 
             /* No Mapping Error Verification */
             if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
             if(!game){throwError('GAME_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
             if(maxBetValue){if(maxBetValue === undefined || maxBetValue === null){throwError('MAX_BET_NOT_EXISTENT')}}
-            
+
             var affiliateReturns = [], totalAffiliateReturn = 0;
             var user_delta, app_delta;
             var user_in_app = (app._id == params.app);
@@ -104,10 +130,10 @@ const processActions = {
             const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
-            let appPlayBalance = parseFloat(appWallet.playBalance);
-            let userBalance = parseFloat(userWallet.playBalance);
+            let appPlayBalance = appWallet.playBalance;
+            let userBalance = userWallet.playBalance;
 
-            let resultBetted = CasinoLogicSingleton.normalizeBet(params.result);
+            let resultBetted = CasinoLogicSingleton.normalizeBet(params.result, game.resultSpace);
             var serverSeed = CryptographySingleton.generateSeed();
             var clientSeed = CryptographySingleton.generateSeed();
             const { affiliateLink } = user;
@@ -116,61 +142,75 @@ const processActions = {
             /* Verify if Withdrawing Mode is ON - User */
             let isUserWithdrawingAPI = user.isWithdrawing;
             /* Verify if Withdrawing Mode is ON - App */
-            let isAppWithdrawingAPI = app.isWithdrawing;
+            let isAppWithdrawingAPI = app.isWithdrawing; 
 
             /* Get Possible Win Balance for Bet */ 
-            let { totalBetAmount, possibleWinAmount, fee } = CasinoLogicSingleton.calculateMaxWinAmount({
+            let { totalBetAmount, maxWinAmount, fee } = CasinoLogicSingleton.calculateMaxWinAmount({
                 userResultSpace : resultBetted,
                 resultSpace : game.resultSpace,
                 houseEdge : game.edge,
                 game : game.metaName
             }); 
+
+
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
+
+            /* Remove Fee from Math */
+            let betAmount = totalBetAmount - Math.abs(fee);
+            let { jackpotAmount } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
+            betAmount = betAmount - jackpotAmount;  /* total amount amount - jackpot amount - fee amount */
 
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
                 serverSeed : serverSeed,
                 clientSeed : clientSeed,
                 nonce : params.nonce,
+                fee : fee,
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : totalBetAmount,
+                betAmount : betAmount,
+                jackpotAmount,
                 edge : game.edge
             });
+        
 
-            if(isWon){
+            /* Remove Jackpot from Math */
+            var totalAmountWithFee = totalBetAmount - Math.abs(jackpotAmount); /* total amount - jackpot amount */
+
+            if(isWon && (winAmount > 0)){
                 /* User Won Bet */
                 const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
-                user_delta = parseFloat(delta);
-                app_delta = parseFloat(-delta);
+                user_delta = delta;
+                app_delta = -delta;
             }else{
                 /* User Lost Bet */
-                user_delta = parseFloat(-Math.abs(totalBetAmount));
+                user_delta = -Math.abs(totalBetAmount); /* With Fee + Jackpot */
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
                         currency : currency,
-                        lostAmount : totalBetAmount
+                        lostAmount : betAmount /* Without Fee & jackpot */
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = parseFloat(Math.abs(totalBetAmount - totalAffiliateReturn));
+                app_delta = Math.abs(totalBetAmount - totalAffiliateReturn); /* Without Fee */
             }
 
-            var possibleWinBalance = parseFloat(possibleWinAmount + userBalance);
 
             const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
+                jackpotAmount,
                 user_in_app,
                 isUserWithdrawingAPI,
+                totalBetAmount,
                 isAppWithdrawingAPI,
                 user_delta,
                 app_delta,
@@ -189,10 +229,9 @@ const processActions = {
                 betSystem                       :   game.betSystem,
                 appPlayBalance		:   appPlayBalance, 
                 playBalance         :   userBalance,
-                possibleWinAmount,
-                possibleWinBalance,
+                maxWinAmount,
                 winAmount,
-                betAmount           :   totalBetAmount,
+                betAmount           :   betAmount,
                 fee,
                 result         		:   resultBetted,			   
                 timestamp           :   new Date(),
@@ -227,8 +266,10 @@ const processActions = {
   
 const progressActions = {
     __auto : async (params) => {
+
         const { isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet } = params;
         /* Save all ResultSpaces */
+
         let dependentObjects = Object.keys(result).map( async key => 
             await (new BetResultSpace(result[key])).register()
         );
@@ -243,22 +284,24 @@ const progressActions = {
         }
         /* Save Bet */
         let bet = await self.save(params);
+
 		/* Update PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
         /* Update App PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
+
         /* Update Balance of Affiliates */
         if(isUserAffiliated){
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
-                return await WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
+                return WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
             })
-            await Promise.all(userAffiliatedWalletsPromises);
+            Promise.all(userAffiliatedWalletsPromises); // Async because not needed to be synced - no security issue
         }
-        
+
 		/* Add Bet to User Profile */
-		await UsersRepository.prototype.addBet(params.user, bet);
+		UsersRepository.prototype.addBet(params.user, bet); // Async because not needed to be synced - no security issue
 		/* Add Bet to Event Profile */
-        await GamesRepository.prototype.addBet(params.game, bet);
+        GamesRepository.prototype.addBet(params.game, bet); // Async because not needed to be synced - no security issue
 
         let res = {
             bet,

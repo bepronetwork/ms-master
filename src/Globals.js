@@ -90,6 +90,11 @@ class Globals{
         this.ecosystem_db.set('useFindAndModify', false);
         await this.ecosystem_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.ecosystem, { useNewUrlParser: true, useUnifiedTopology: true});
         this.ecosystem_db.Promise = bluebird;
+        // Redis DB
+        this.redis_db = new Mongoose();
+        this.redis_db.set('useFindAndModify', false);
+        await this.redis_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.redis, { useNewUrlParser: true, useUnifiedTopology: true});
+        this.redis_db.Promise = bluebird;
         // Main DB
         this.default = new Mongoose();
         this.default.Promise = bluebird;

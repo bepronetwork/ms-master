@@ -156,7 +156,7 @@ context('Normal', async () =>  {
         expect(res.data.status).to.not.be.null;
         expect(res.data.status).to.equal(200);
     }));
-    
+
     it('should Edit Type of Admin', mochaAsync(async () => {
         let res = await editAdminType({
             admin			: admin.id,

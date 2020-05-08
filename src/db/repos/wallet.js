@@ -41,6 +41,38 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updatePriceCurrencyVirtual({wallet, price, currency}) {
+        return new Promise((resolve, reject)=>{
+            WalletsRepository.prototype.schema.model.updateOne(
+                {_id: wallet, "price.currency": currency},
+                { $set: {
+                    "price.$.amount" : parseFloat(price).toFixed(6)
+                } },
+                {'new' : true}
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateLogoCurrencyVirtual({wallet, imageURL}) {
+        return new Promise((resolve, reject)=>{
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(
+                wallet,
+                { $set: {
+                    "image" : imageURL
+                } },
+                {'new' : true}
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updateMaxDeposit(wallet_id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {

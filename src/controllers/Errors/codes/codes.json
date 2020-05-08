@@ -57,7 +57,7 @@
     },
     "014" : {
         "key"      : "WITHDRAW_MODE_IN_API",
-        "message"   : "Withdraw mode is already IN for the API"
+        "message"   : "Withdraw/Bet Mode is already in"
     },
     "015" : {
         "key"      : "WITHDRAW_MODE_IN_SMART_CONTRACT",
@@ -236,6 +236,10 @@
         "message"   : "The action can´t be taken since this is a social casino"
     },
     "059" : {
+        "key" : "UNAUTHORIZED_COUNTRY",
+        "message"   : "Unauthorized Country"
+    },
+    "060" : {
         "key" : "IS_ETHEREUM_WALLET",
         "message"   : "Ethereum Deposits are not available"
     }

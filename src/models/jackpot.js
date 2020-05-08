@@ -22,6 +22,7 @@ class Jackpot extends ModelComponent{
     }
 
     async editEdgeJackpot(){
+        //Output = Boolean
         try{
             return await this.process('EditEdgeJackpot');
         }catch(err){

@@ -1,6 +1,6 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
-import { addJackpot, editEdgeJackpot} from '../../../methods';
+import { addAddonJackpot, editEdgeJackpot} from '../../../methods';
 const expect = chai.expect;
 
 context('Jackpot', async () => {
@@ -12,7 +12,7 @@ context('Jackpot', async () => {
     });
 
     it('should add Jackpot', mochaAsync(async () => {
-        let res = await addJackpot({app: app.id, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
+        let res = await addAddonJackpot({app: app.id, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
@@ -26,9 +26,11 @@ context('Jackpot', async () => {
     }));
 
     it('should modify edge jackpot to 1', mochaAsync(async () => {
-        let res = await editEdgeJackpot({ edge: 1, app: app.id, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
+        const edgeToJackpot = 1;
+        const res = await editEdgeJackpot({ edge: edgeToJackpot, app: app.id, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status} = res.data;
+        global.test.jackpotEdge = edgeToJackpot*0.01;
         expect(status).to.be.equal(200);
     }));
 });

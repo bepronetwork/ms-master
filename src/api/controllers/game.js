@@ -8,12 +8,13 @@ import MiddlewareSingleton from '../helpers/middleware';
 async function editGameTableLimit (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameTableLimit();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -21,12 +22,13 @@ async function editGameTableLimit (req, res) {
 async function editGameEdge(req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameEdge();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -34,12 +36,13 @@ async function editGameEdge(req, res) {
 async function editGameImage(req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameImage();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -47,12 +50,13 @@ async function editGameImage(req, res) {
 async function editGameBackgroundImage(req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "customization"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let app = new App(params);
         let data = await app.editGameBackgroundImage();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }

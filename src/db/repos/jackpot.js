@@ -48,7 +48,7 @@ class JackpotRepository extends MongoComponent{
     editEdgeJackpot(_id, edge) {
         return new Promise( (resolve, reject) => {
             JackpotRepository.prototype.schema.model.findByIdAndUpdate(
-                _id,
+                {_id},
                 {
                     $set: { edge }
                 }

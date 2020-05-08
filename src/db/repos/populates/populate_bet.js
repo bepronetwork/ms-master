@@ -27,7 +27,7 @@ let populate_bet = [
             }
         ]
     },
-    {   
+    {
         path : 'game',
         model : 'Game',
         select : { '__v': 0},
@@ -39,11 +39,11 @@ let populate_bet = [
             }
         ]
     },
-    {   
+    {
         path : 'result',
         model : 'BetResultSpace',
         select : { '__v': 0}
     }
-] 
+]
 
 export default populate_bet;

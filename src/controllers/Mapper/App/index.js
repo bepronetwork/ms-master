@@ -20,8 +20,19 @@ import { MapperGetUsersSingleton } from "./MapperGetUsers";
 import { MapperRegisterSingleton } from "./MapperRegister";
 import { MapperSummarySingleton } from "./MapperSummary";
 import { MapperUpdateWalletSingleton } from "./MapperUpdateWallet";
-import { MapperAddAutoWithdrawSingleton } from "./MapperAddAutoWithdraw";
-import { MapperEditAutoWithdrawSingleton } from "./MapperEditAutoWithdraw";
+import { MapperaddAddonAutoWithdrawSingleton } from "./MapperAddAutoWithdraw";
+import { MappereditAddonAutoWithdrawSingleton } from "./MapperEditAutoWithdraw";
+import { MapperAppGetBetsSingleton } from "./MapperAppGetUsersBets";
+import { MapperSummaryBetsSingleton } from "./MapperSummaryBets";
+import { MapperSummaryGamesSingleton } from "./MapperSummaryGames";
+import { MapperSummaryRevenueSingleton } from "./MapperSummaryRevenue";
+import { MapperSummaryUsersSingleton } from "./MapperSummaryUsers";
+import { MapperSummaryWalletSingleton } from "./MapperSummaryWallet";
+import { MapperGetLastBetsSingleton } from "./MapperGetLastBets";
+import { MapperGetBiggetsBetWinnersSingleton } from "./MapperBiggestBetWinners";
+import { MapperGetBiggetsUserWinnersSingleton } from "./MapperBiggestUserWinners";
+import { MapperGetPopularNumbersSingleton } from "./MapperPopularNumbers";
+import { MapperGetLogsSingleton } from "./MapperGetLogs";
 
 export {
     MapperAddCurrencyWalletSingleton,
@@ -46,6 +57,17 @@ export {
     MapperRegisterSingleton,
     MapperSummarySingleton,
     MapperUpdateWalletSingleton,
-    MapperAddAutoWithdrawSingleton,
-    MapperEditAutoWithdrawSingleton
+    MapperaddAddonAutoWithdrawSingleton,
+    MappereditAddonAutoWithdrawSingleton,
+    MapperAppGetBetsSingleton,
+    MapperSummaryBetsSingleton,
+    MapperSummaryGamesSingleton,
+    MapperSummaryRevenueSingleton,
+    MapperSummaryUsersSingleton,
+    MapperSummaryWalletSingleton,
+    MapperGetLastBetsSingleton,
+    MapperGetBiggetsBetWinnersSingleton,
+    MapperGetBiggetsUserWinnersSingleton,
+    MapperGetPopularNumbersSingleton,
+    MapperGetLogsSingleton
 }

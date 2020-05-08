@@ -1,3 +1,4 @@
+import { result_space_object, wallets_object, bets_object, result_object } from "../Structures";
 
 let self;
 
@@ -15,24 +16,9 @@ let outputs = {
         return object.map(object => {
             return ({
                 "_id": object._id,
-                "resultSpace": !object.resultSpace ? [] : object.resultSpace.map(result_space => {
-                    return ({
-                        "_id": result_space._id,
-                        "formType": result_space.formType,
-                        "probability": result_space.probability,
-                        "multiplier": result_space.multiplier,
-                    })
-                }),
-                "result": object.result ? object.result.map(result_id => {
-                    return({
-                        "_id": result_id
-                    })
-                }) : object.result,
-                "bets": object.bets ? object.bets.map(bet_id => {
-                    return({
-                        "_id": bet_id
-                    })
-                }) : object.bets,
+                ...result_space_object(object),
+                ...result_object(object),
+                ...bets_object(object),
                 "isClosed": object.isClosed,
                 "maxBet": object.maxBet,
                 "background_url": object.background_url,
@@ -45,13 +31,7 @@ let outputs = {
                 "metaName": object.metaName,
                 "rules": object.rules,
                 "description": object.description,
-                "wallets": object.wallets ? object.wallets.map(wallet => {
-                    return ({
-                        "_id": wallet._id,
-                        "wallet": wallet.wallet,
-                        "tableLimit": wallet.tableLimit,
-                    })
-                }) : object.wallets
+                ...wallets_object(object),
             })
         })
     },

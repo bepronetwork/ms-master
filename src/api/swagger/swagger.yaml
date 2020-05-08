@@ -726,7 +726,38 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"            
+            $ref: "#/definitions/ErrorResponse"
+
+  /wallet/virtualCurrency/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit virtual currency
+      operationId: editVirtualCurrency
+      description: Edit virtual currency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditVirtualCurrencyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/create:
     x-swagger-router-controller: app
     post:
@@ -757,6 +788,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/restrictedCountries/edit :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Restricted Countries
+      operationId: editRestrictedCountries
+      description: Edit Restricted Countries
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditRestrictedCountriesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/summary:
     x-swagger-router-controller: app
     post:
@@ -1488,6 +1551,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /logs/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Data Logs
+      operationId: getLogs
+      description: Get Data Logs
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetLogsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
 
   /app/transactions:
     x-swagger-router-controller: app
@@ -1519,7 +1613,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/user/get : 
+  /app/user/get:
     x-swagger-router-controller: user
     post:
       tags:
@@ -1549,6 +1643,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/bet/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get all Bet Info
+      operationId: getBetInfo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: bet
+          description: Bet Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetBetInfoRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/users:
     x-swagger-router-controller: app
     post:
@@ -1794,7 +1919,7 @@ paths:
       tags:
       - app
       summary: Edit Table Limit
-      operationId: addJackpot
+      operationId: addAddonJackpot
       description: add Jackpot
       consumes:
         - application/json
@@ -1806,7 +1931,38 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppAddJackpotRequest'
+            $ref: '#/definitions/AddAddonJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/balance/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Balance
+      operationId: addAddonBalance
+      description: Add Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonBalanceRequest'
       responses:
         "200":
           description: Success
@@ -1850,13 +2006,44 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/balance/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit balance initial
+      operationId: editAddonBalance
+      description: Edit Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/editAddonBalanceRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/autoWithdraw/add:
     x-swagger-router-controller: app
     post:
       tags:
       - app
       summary: Add Automatic Withdraw
-      operationId: addAutoWithdraw
+      operationId: addAddonAutoWithdraw
       description: add Auto Withdraw
       consumes:
         - application/json
@@ -1868,7 +2055,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppAddAutoWithdrawRequest'
+            $ref: '#/definitions/AddAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -1887,7 +2074,7 @@ paths:
       tags:
       - app
       summary: Edit If is Automatic Withdraw
-      operationId: editAutoWithdraw
+      operationId: editAddonAutoWithdraw
       description: Edit If is Automatic Withdraw
       consumes:
         - application/json
@@ -1899,7 +2086,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppEditAutoWithdrawRequest'
+            $ref: '#/definitions/AppEditAddonAutoWithdrawRequest'
       responses:
         "200":
           description: Success
@@ -2234,7 +2421,24 @@ definitions:
         minLength: 1
         description: |
           App Id
-  UserInfoGetRequest : 
+
+  GetBetInfoRequest:
+    type: object
+    required:
+      - bet
+      - app
+    properties:
+      bet:
+        type : string
+        example: "43256291237846817623"
+        description: |
+          Unique identifier of the bet, ID
+      app:
+        type : string
+        example: "43256291237846817623"
+        description: |
+          Unique identifier of the app, ID
+  UserInfoGetRequest :
     type: object
     required:
       - user
@@ -2499,7 +2703,45 @@ definitions:
         type : string
         format: name
         example: "0xhi834ty2034thg"
-  AppGameEditEdge : 
+
+  EditVirtualCurrencyRequest :
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      image :
+        type : string
+        format: name
+        example: "https://test/0xhi834ty2034thg.jpg"
+        description: |
+          Logo currency
+      price :
+        type : number
+        format: number
+        example: 2.20
+        description: |
+          Price of virtual currency
+
+  AppGameEditEdge :
     type: object
     required:
       - app
@@ -2935,6 +3177,41 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+  
+  GetLogsRequest:
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin id
+      filter:
+        type: string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Filter To Log
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of response
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of response
   AdminGetRequest:
     type: object
     required:
@@ -2993,6 +3270,34 @@ definitions:
         example: "Admin Id"
         description: |
           Admin Id
+
+  EditRestrictedCountriesRequest :
+    type: object
+    required:
+      - countries
+      - admin
+      - app
+    properties:
+      countries:
+        type : array
+        items:
+          type : string
+          example: "br"
+          description: |
+            code of country
+      admin:
+        type : string
+        format: name
+        example: "x0s23qweqwe234234"
+        description: |
+          Admin ID
+      app:
+        type : string
+        format: name
+        example: "x0s23qweqwe234234"
+        description: |
+          App ID
+
   GameGetRequest:
     type: object
     required:
@@ -3025,7 +3330,14 @@ definitions:
               type: string
             data:
               type: string
-  AppPopularNumbersRequest : 
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
+  AppPopularNumbersRequest:
     type: object
     required:
       - app
@@ -3052,19 +3364,6 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      size :
-        type : number
-        example : 50
-        description: |
-          size
-      offset :
-        type : number
-      currency :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34"
-        description: |
-          Currency ID
       game :
         type : string
         format : name
@@ -3107,25 +3406,6 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      size :
-        type : number
-        example : 50
-        description: |
-          size
-      offset :
-        type : number
-      currency :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          Currency ID
-      game :
-        type : string
-        format : name
-        example : "5cuedgq7e6t334t34" 
-        description: |
-          Game ID
   AppUsersRequest : 
     type: object
     required:
@@ -3284,7 +3564,7 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
-  AppAddJackpotRequest : 
+  AddAddonJackpotRequest : 
     type: object
     required:
       - app
@@ -3303,7 +3583,26 @@ definitions:
         description: |
           Admin ID
 
-  AppAddAutoWithdrawRequest : 
+  AddAddonBalanceRequest :
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+
+  AddAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
@@ -3322,7 +3621,7 @@ definitions:
         description: |
           Admin ID
   
-  AppEditAutoWithdrawRequest : 
+  AppEditAddonAutoWithdrawRequest : 
     type: object
     required:
       - app
@@ -3382,6 +3681,39 @@ definitions:
         description: |
          Services ID
 
+  editAddonBalanceRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - balance
+      - currency
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      balance :
+        type : number
+        format: number
+        example: 1
+        description: |
+          Balance Initial
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          ID Currency
+
   EditEdgeJackpotRequest : 
     type: object
     required:
@@ -3422,12 +3754,18 @@ definitions:
     type: object
     required:
       - user
+      - app
     properties:
       user:
         type : string
         example: "Aweruithwe4837592837"
         description: |
           User Id
+      app:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          App Id
   GetGamesFromAppRequest : 
     type: object
     required:
@@ -3569,3 +3907,8 @@ definitions:
         minLength: 1
         description: |
           Type Auth
+      app:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          APP ID
