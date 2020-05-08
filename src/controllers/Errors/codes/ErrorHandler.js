@@ -72,7 +72,8 @@ ErrorHandler.prototype.KEYS =  {
     'USERNAME_OR_EMAIL_NOT_EXISTS'          : "055",
     'JACKPOT_NOT_EXIST_IN_APP'              : "056",
     'NOT_A_VIRTUAL_CASINO'                  : "057",
-    'IS_VIRTUAL_WALLET'                     : "058"
+    'IS_VIRTUAL_WALLET'                     : "058",
+    'IS_ETHEREUM_WALLET'                    : "059"
 };
 
   /***************************
