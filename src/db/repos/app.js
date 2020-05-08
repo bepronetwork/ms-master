@@ -281,7 +281,6 @@ class AppRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
                 .populate(populate_type)
-                .lean()
                 .exec( (err, App) => {
                     if(err) { reject(err)}
                     resolve(App);
