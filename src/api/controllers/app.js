@@ -351,7 +351,7 @@ async function resolveGame (req, res) {
 // JSON WebToken Security Functions
 async function summary(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
         let params = req.body;
         let app = new App(params);
         let data = await app.summary();
