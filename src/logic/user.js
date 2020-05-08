@@ -567,7 +567,10 @@ const progressActions = {
         if(!address){
             var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
             // See if address is already provided
-            let bitgo_id = user_wallet.depositAddresses[0] ? user_wallet.depositAddresses[0].bitgo_id : null;
+            let bitgo_id;
+            if(addresses.length > 0){
+                bitgo_id = addresses.find( a => a.bitgo_id).bitgo_id;
+            }
             address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
             if(address.address){
                 // Bitgo has created the address
