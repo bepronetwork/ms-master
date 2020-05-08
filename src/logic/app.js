@@ -22,8 +22,9 @@ import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
 import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
+import PerfomanceMonitor from '../helpers/performance';
 let error = new ErrorManager();
-
+let perf = new PerfomanceMonitor({id : 'app'});
 
 
 // Private fields
@@ -76,8 +77,10 @@ const processActions = {
 		return normalized;
     },
     __get : async (params) => {
+        perf.start({id :'get_app_perf'});
         let app     = await AppRepository.prototype.findAppById(params.app);
         let addOns  = await AddOnsEcoRepository.prototype.getAll();
+        perf.end({id :'get_app_perf'});
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
 		let normalized = {
