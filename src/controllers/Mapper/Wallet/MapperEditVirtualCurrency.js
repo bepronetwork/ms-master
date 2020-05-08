@@ -19,6 +19,7 @@ let outputs = {
             "app": object.app,
             "admin": object.admin,
             "min_withdraw": object.min_withdraw,
+            "affiliate_min_withdraw": object.affiliate_min_withdraw,
             "wallet": object.wallet,
             "image": object.image
         }
