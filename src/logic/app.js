@@ -79,8 +79,10 @@ const processActions = {
     __get : async (params) => {
         perf.start({id :'get_app_perf'});
         let app     = await AppRepository.prototype.findAppById(params.app);
-        let addOns  = await AddOnsEcoRepository.prototype.getAll();
         perf.end({id :'get_app_perf'});
+        perf.start({id :'add_ons'});
+        let addOns  = await AddOnsEcoRepository.prototype.getAll();
+        perf.end({id :'add_ons'});
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
 		let normalized = {
