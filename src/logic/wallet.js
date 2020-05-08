@@ -4,6 +4,7 @@ import LogicComponent from './logicComponent';
 import { WalletsRepository, UsersRepository, AppRepository, CurrencyRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { setLinkUrl } from '../helpers/linkUrl';
+import { GoogleStorageSingleton } from './third-parties';
 let error = new ErrorManager();
 
 
@@ -39,7 +40,7 @@ const processActions = {
         }
 
 		let normalized = {
-            playBalance : 0, // Test Balance
+            playBalance : (params.playBalance == undefined) ? 0 : params.playBalance, // Test Balance
             currency : params.currency,
             bitgo_id : params.bitgo_id,
             price    : params.price ? params.price.map( p => { return {
@@ -52,6 +53,28 @@ const processActions = {
 			link_url : link_url
 		}
 		return normalized;
+	},
+	__editVirtualCurrency : async (params) => {
+		try{
+			const app = await AppRepository.prototype.findAppById(params.app);
+			if(!app){throwError('APP_NOT_EXISTENT')}
+			const wallet = (app.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == "gold"));
+			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
+			let currency;
+			if(params.currency) {
+				currency = wallet.price.find( p => {
+					return (new String(p.currency).toString() == new String(params.currency).toString())
+				});
+				if(!currency){throwError('CURRENCY_NOT_EXISTENT')};
+			}
+			return {
+				...params,
+				wallet 	: wallet._id,
+				image 	: params.image == undefined ? '' : params.image // if img null then convert to string
+			};
+		}catch(err){
+			throw err;
+		}
 	},
 	__confirmDeposit : async (params) => {
 		try{
@@ -113,6 +136,23 @@ const progressActions = {
 		}catch(err){
 			throw err;
 		}
+	},
+	__editVirtualCurrency : async (params) => {
+		let { wallet, price , image, currency } = params;
+		let imageURL;
+		image
+        if(image.includes("https")){
+            /* If it is a link already */
+            imageURL = image;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+			imageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : image});
+		}
+		if(price!=undefined && price!=null && price >= 0){
+			await WalletsRepository.prototype.updatePriceCurrencyVirtual({wallet, price, currency});
+		}
+		await WalletsRepository.prototype.updateLogoCurrencyVirtual({wallet, imageURL});
+        return params;
 	},
 	__confirmDeposit : async (params) => {
         // 1 - Confirm Deposit in Serve
@@ -190,6 +230,9 @@ class WalletLogic extends LogicComponent {
 				case 'UpdateMaxDeposit' : {
 					return await library.process.__updateMaxDeposit(params);
 				}
+				case 'EditVirtualCurrency' : {
+					return await library.process.__editVirtualCurrency(params);
+				}
 			}
 		}catch(report){
 			throw `Failed to validate Wallet schema: Wallet \n See Stack Trace : ${report}`;
@@ -225,6 +268,9 @@ class WalletLogic extends LogicComponent {
 				}
 				case 'UpdateMaxDeposit' : {
 					return await library.progress.__updateMaxDeposit(params);
+				}
+				case 'EditVirtualCurrency' : {
+					return await library.progress.__editVirtualCurrency(params);
 				}
 			}
 		}catch(report){

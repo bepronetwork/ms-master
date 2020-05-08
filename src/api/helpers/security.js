@@ -1,5 +1,7 @@
 import MiddlewareSingleton from "./middleware";
-import { AdminsRepository, PermissionRepository } from "../../db/repos";
+import { AdminsRepository, PermissionRepository, AppRepository } from "../../db/repos";
+import { throwError } from "../../controllers/Errors/ErrorManager";
+const geoip = require("geoip-lite");
 
 class Security{
 
@@ -22,6 +24,32 @@ class Security{
         }
         return false;
     };
+
+    getCountry(ips) {
+        let geo = null;
+        try {
+            geo = geoip.lookup(ips[ips.length - 1]);
+            geo = (geo == null) ? geoip.lookup(ips[ips.length - 2]) : geo;
+            return geo.country;
+        }catch(err){
+            return 'LH';
+        }
+    }
+
+    verifyByCountry = async ({req}) => {
+        try {
+            let countries = (await AppRepository.prototype.findAppById(req.body['app'])).restrictedCountries;
+            countries = countries == null ? [] : countries;
+
+            const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
+
+            if( countries.includes(this.getCountry(ipFull)) ) {
+                throwError('UNAUTHORIZED_COUNTRY');
+            }
+        } catch(err) {
+            throw err;
+        }
+    }
 
     verify = async ({type, req, permissions=[]}) => {
         try{
@@ -50,7 +78,7 @@ class Security{
             } else {
                 throw {
                     code : 304,
-                    messsage : 'Forbidden Access'
+                    message : 'Forbidden Access'
                 }
             }
         }

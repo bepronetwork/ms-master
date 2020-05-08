@@ -53,6 +53,7 @@ let outputs = {
                 "pusher" : object.integrations.pusher
             },
             "countriesAvailable"    : object.countriesAvailable,
+            "restrictedCountries"   : object.restrictedCountries,
             "games"                 : object.games ? object.games.map( game => {
                 return {
                     _id : game._id,
@@ -102,6 +103,7 @@ let outputs = {
             "platformTokenAddress"  : object.platformTokenAddress,
             "licensesId"            : object.licensesId,
             "countriesAvailable"    : object.countriesAvailable,
+            "restrictedCountries"   : object.restrictedCountries,
             "games"                 : object.games,
             "affiliateSetup"        : object.affiliateSetup,
             "wallet"                : object.wallet

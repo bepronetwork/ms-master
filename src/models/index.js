@@ -34,8 +34,16 @@ import LoadingGif from "./loadingGif";
 import AddOn from "./addOn";
 import Jackpot from "./jackpot";
 import AutoWithdraw from "./autoWithdraw";
+import Balance from "./balance";
+import BiggestBetWinner from "./biggestBetWinner";
+import BiggestUserWinner from "./biggestUserWinner";
+import LastBets from "./lastBets";
 
 export {
+    LastBets,
+    BiggestUserWinner,
+    BiggestBetWinner,
+    Balance,
     AutoWithdraw,
     AddOn,
     Jackpot,

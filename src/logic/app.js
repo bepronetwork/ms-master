@@ -3,11 +3,11 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -19,7 +19,9 @@ import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
+import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
 let error = new ErrorManager();
 
 
@@ -66,20 +68,37 @@ const processActions = {
 			metadataJSON        : JSON.parse(params.metadataJSON),
 			listAdmins          : [admin._id],
 			licensesId          : [], // TO DO
-			countriesAvailable  : [], // TO DO
+            countriesAvailable  : [], // TO DO
+            restrictedCountries : [],
             isVerified          : false,
             typography
 		}
 		return normalized;
     },
     __get : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app     = await AppRepository.prototype.findAppById(params.app);
+        let addOns  = await AddOnsEcoRepository.prototype.getAll();
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
 		let normalized = {
-            ...app
+            ...app,
+            storeAddOn: addOns
         }
 		return normalized;
+    },
+    __getLogs : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let offset  = (params.offset == undefined) ? 0 : params.offset;
+            let limit   = (params.limit == undefined) ? 0 : params.limit;
+
+            let res = await LogRepository.prototype.findFilter(app._id, parseInt(offset), parseInt(limit), params.filter);
+            return res;
+        } catch(err) {
+            throw err;
+        }
     },
     __deployApp : async (params) => {
         let app = await AppRepository.prototype.findAppById(params.app);
@@ -104,38 +123,44 @@ const processActions = {
        return normalized;
     },
     __appGetUsersBets : async (params) => {
-        if(!params.user){
-            params.user = null
-        }
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.bet){
-            params.bet = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getAppUserBets({
+        let res = await AppRepository.prototype.getAppBets({
             _id : params.app,
             offset: params.offset,
             size : params.size,
-            currency: params.currency,
-            user: params.user,
-            bet: params.bet,
-            game: params.game
+            user: params.user == undefined ? {} : {user : params.user},
+            bet: params.bet == undefined ? {} : {_id : params.bet},
+            currency: params.currency == undefined ? {} : {currency : params.currency},
+            game: params.game == undefined ? {} : {game : params.game}
         });
 		return res;
     },
+    __getBetInfo : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+            let bet = await BetRepository.prototype.findBetById(params.bet);
+            return bet;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __editRestrictedCountries : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+            return params;
+        } catch(err) {
+            throw err;
+        }
+    },
     __addCurrencyWallet : async (params) => {
-        
         var { currency_id, app, passphrase } = params;
 
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
-            currency, 
+            currency,
             passphrase,
             app : app
         }
@@ -166,7 +191,7 @@ const processActions = {
         }
 		return res;
     },
-    __addJackpot : async (params) => {
+    __addAddonJackpot : async (params) => {
         try {
             let gameEcosystem = await GamesEcoRepository.prototype.findGameByMetaName("jackpot_auto");
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -193,7 +218,7 @@ const processActions = {
             throw err;
         }
     },
-    __addAutoWithdraw : async (params) => {
+    __addAddonAutoWithdraw : async (params) => {
         let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
 
@@ -219,7 +244,29 @@ const processActions = {
         }
 		return res;
     },
-    __editAutoWithdraw : async (params) => {
+    __addAddonBalance : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+            let initialBalanceList = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency        : c._id,
+                    initialBalance  : 0,
+                }
+            }));
+            let res = {
+                app,
+                initialBalanceList
+            }
+            return res;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __editAddonAutoWithdraw : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
@@ -238,50 +285,21 @@ const processActions = {
         }
     },
     __getLastBets : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getLastBets({
+        let res = await LastBetsRepository.prototype.getLastBets({
             _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+            game: params.game == undefined ? {game: null} : {game: params.game}
         });
 		return res;
     },
     __getBiggestBetWinners : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getBiggestBetWinners({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+        let res = await BiggestBetWinnerRepository.prototype.getBiggetsBetWinner({
+            _id : params.app
         });
 		return res;
     },
     __getBiggestUserWinners : async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
-        let res = await AppRepository.prototype.getBiggestUserWinners({
-            _id : params.app,
-            size : params.size,
-            offset: params.offset,
-            currency : params.currency,
-            game : params.game
+        let res = await BiggestUserWinnerRepository.prototype.getBiggetsUserWinner({
+            _id : params.app
         });
 		return res;
     },
@@ -323,9 +341,9 @@ const processActions = {
     },
     __getTransactions : async (params) => {
         let {
-            app, filters
+            app, filters, size, offset
         } = params;
-        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters);
+        let res = await DepositRepository.prototype.getTransactionsByApp(app, filters, size == undefined ? 200 : size, offset == undefined ? 0 : offset);
 		return res;
     },
     __getGames : async (params) => {
@@ -553,6 +571,9 @@ const progressActions = {
     __appGetUsersBets : async (params) => {
         return params;
     },
+    __getLogs : async (params) => {
+        return params;
+    },
     __deployApp : async (params) => {
 
         const { _id, name } = params.app;
@@ -575,7 +596,6 @@ const progressActions = {
                 key : PUSHER_APP_KEY
             }
         }
-        
 		return params;
     },
     __getGames : async (params) => {
@@ -585,6 +605,22 @@ const progressActions = {
     __getTransactions : async (params) => {
         let res = params;
 		return res;
+    },
+    __getBetInfo : async (params) => {
+        try {
+            return params;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __editRestrictedCountries : async (params) => {
+        try {
+            const {app, countries} = params;
+            await AppRepository.prototype.setCountries(app, countries);
+            return true;
+        } catch(err) {
+            throw err;
+        }
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
@@ -713,21 +749,28 @@ const progressActions = {
 
 		return params;
     },
-    __addJackpot : async (params) => {
+    __addAddonJackpot : async (params) => {
         const { app, limits, gameEcosystem } = params;
         let jackpot = new Jackpot({app, limits, resultSpace: gameEcosystem.resultSpace});
         const jackpotResult = await jackpot.register();
-        await addOnRepository.prototype.addJackpot(app.addOn, jackpotResult._id);
+        await addOnRepository.prototype.addAddonJackpot(app.addOn, jackpotResult._id);
 		return jackpotResult;
     },
-    __addAutoWithdraw : async (params) => {
+    __addAddonAutoWithdraw : async (params) => {
         const { app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction } = params;
         let autoWithdraw = new AutoWithdraw({app, maxWithdrawAmountCumulative, maxWithdrawAmountPerTransaction});
         const autoWithdrawResult = await autoWithdraw.register();
-        await addOnRepository.prototype.addAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
+        await addOnRepository.prototype.addAddonAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
 		return autoWithdrawResult;
     },
-    __editAutoWithdraw : async (params) => {
+    __addAddonBalance : async (params) => {
+        const { app, initialBalanceList } = params;
+        let balance = new Balance({initialBalanceList});
+        const balanceResult = await balance.register();
+        await addOnRepository.prototype.addAddonBalance(app.addOn, balanceResult._doc._id);
+		return balanceResult;
+    },
+    __editAddonAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
         let res = await AutoWithdrawRepository.prototype.findById(autoWithdraw._id);
@@ -1010,6 +1053,9 @@ const progressActions = {
         await LoadingGifRepository.prototype.findByIdAndUpdate(app.customization.loadingGif._id, {
             id : loadingGifURL
         })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         // Save info on Customization Part
         return params;
     },
@@ -1104,14 +1150,14 @@ class AppLogic extends LogicComponent{
                 case 'AddGame' : {
 					return await library.process.__addGame(params); break;
                 };
-                case 'AddJackpot' : {
-                    return await library.process.__addJackpot(params); break;
+                case 'addAddonJackpot' : {
+                    return await library.process.__addAddonJackpot(params); break;
                 };
-                case 'AddAutoWithdraw' : {
-                    return await library.process.__addAutoWithdraw(params); break;
+                case 'addAddonAutoWithdraw' : {
+                    return await library.process.__addAddonAutoWithdraw(params); break;
                 };
-                case 'EditAutoWithdraw' : {
-                    return await library.process.__editAutoWithdraw(params); break;
+                case 'editAddonAutoWithdraw' : {
+                    return await library.process.__editAddonAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.process.__updateWallet(params); break;
@@ -1176,8 +1222,19 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.process.__getUsers(params); break;
                 };
+                case 'AddAddonBalance' : {
+					return await library.process.__addAddonBalance(params); break;
+                };
+                case 'GetLogs' : {
+					return await library.process.__getLogs(params); break;
+                };
+                case 'EditRestrictedCountries' : {
+					return await library.process.__editRestrictedCountries(params); break;
+                };
+                case 'GetBetInfo' : {
+					return await library.process.__getBetInfo(params); break;
+                };
 			}
-			
 		}catch(error){
 			throw error
 		}
@@ -1214,14 +1271,14 @@ class AppLogic extends LogicComponent{
                 case 'AddGame' : {
 					return await library.progress.__addGame(params); break;
                 };
-                case 'AddJackpot' : {
-					return await library.progress.__addJackpot(params); break;
+                case 'addAddonJackpot' : {
+					return await library.progress.__addAddonJackpot(params); break;
                 };
-                case 'AddAutoWithdraw' : {
-                    return await library.progress.__addAutoWithdraw(params); break;
+                case 'addAddonAutoWithdraw' : {
+                    return await library.progress.__addAddonAutoWithdraw(params); break;
                 };
-                case 'EditAutoWithdraw' : {
-                    return await library.progress.__editAutoWithdraw(params); break;
+                case 'editAddonAutoWithdraw' : {
+                    return await library.progress.__editAddonAutoWithdraw(params); break;
                 };
                 case 'UpdateWallet' : {
 					return await library.progress.__updateWallet(params); break;
@@ -1304,7 +1361,18 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.progress.__getUsers(params); break;
                 };
-                
+                case 'AddAddonBalance' : {
+					return await library.progress.__addAddonBalance(params); break;
+                };
+                case 'GetLogs' : {
+					return await library.progress.__getLogs(params); break;
+                };
+                case 'EditRestrictedCountries': {
+                    return await library.progress.__editRestrictedCountries(params); break;
+                }
+                case 'GetBetInfo': {
+                    return await library.progress.__getBetInfo(params); break;
+                }
 			}
 		}catch(error){
 			throw error;

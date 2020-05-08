@@ -28,6 +28,8 @@ import Mailer from './services/mailer';
 import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
+import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
+
 let error = new ErrorManager();
 
 
@@ -96,7 +98,7 @@ const processActions = {
         if (!user.security) { throwError() };
 
         let has2FASet = user.security['2fa_set'];
-        let bearerToken = MiddlewareSingleton.sign(user._id);
+        let newBearerToken = MiddlewareSingleton.sign(user._id);
         var app = user.app_id;
 
         app = await AppRepository.prototype.findAppById(user.app_id);
@@ -109,7 +111,7 @@ const processActions = {
                 app_id: user.app_id,
                 user_id: user._id,
                 has2FASet,
-                bearerToken,
+                newBearerToken,
                 user_in_app,
                 username: username,
                 user : user,
@@ -187,7 +189,7 @@ const processActions = {
             secret: secret2FA,
             token: params['2fa_token']
         });
-        let bearerToken = MiddlewareSingleton.sign(user._id);
+        let newBearerToken = MiddlewareSingleton.sign(user._id);
 
         var app = user.app_id;
         var user_in_app = (app._id == params.app);
@@ -196,7 +198,7 @@ const processActions = {
         let normalized = {
             has2FASet,
             secret2FA,
-            bearerToken,
+            newBearerToken,
             user_in_app,
             user,
             isVerifiedToken2FA,
@@ -250,6 +252,11 @@ const processActions = {
         let app = await AppRepository.prototype.findAppById(params.app);
         if (!app) { throwError('APP_NOT_EXISTENT') }
 
+        let balanceInitial = null;
+        if(app.addOn != null) {
+            balanceInitial = app.addOn.balance;
+        }
+
         if (params.user_external_id) {
             // User is Extern (Only Widget Clients)
             user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
@@ -284,34 +291,31 @@ const processActions = {
             app_id: app.id,
             external_user: params.user_external_id ? true : false,
             external_id: params.user_external_id,
+            balanceInitial,
             url
         }
         return normalized;
     },
     __summary: async (params) => {
-        let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user, params.opts);
         let normalized = {
-            ...res
+            type: new String(params.type).toLowerCase().trim(),
+            user: new String(params.user).trim(),
+            opts: {
+                dates: fromPeriodicityToDates({ periodicity: params.periodicity }),
+                currency: params.currency
+                // Add more here if needed
+            }
         }
         return normalized;
     },
     __userGetBets: async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.bet){
-            params.bet = null
-        }
-        if(!params.game){
-            params.game = null
-        }
         let bets = await UsersRepository.prototype.getUserBets({
             _id: params.user,
             offset: params.offset,
             size: params.size,
-            currency: params.currency,
-            bet: params.bet,
-            game: params.game
+            bet: params.bet == undefined ? {} : {_id : params.bet},
+            currency: params.currency == undefined ? {} : {currency : params.currency},
+            game: params.game == undefined ? {} : {game : params.game}
         });
         return bets;
     },
@@ -394,13 +398,6 @@ const processActions = {
             throw err;
         }
     },
-    __createApiToken: async (params) => {
-        let normalized = {
-            ...params,
-            bearerToken: MiddlewareSingleton.sign(params.id)
-        }
-        return normalized;
-    },
     __getBets: async (params) => {
         if(!params.currency){
             params.currency = null
@@ -462,16 +459,16 @@ const progressActions = {
         return {};
     },
     __login: async (params) => {
-        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.newBearerToken);
         /* Send Login Email ASYNC - so that it is not dependent on user login */
         new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
-        return params;
+        return {...params, bearerToken: params.newBearerToken};
     },
     __login2FA: async (params) => {
-        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.newBearerToken);
         /* Send Login Email ASYNC - so that it is not dependent on user login */
         new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
-        return params;
+        return {...params, bearerToken: params.newBearerToken};
     },
     __auth: async (params) => {
         return params;
@@ -506,14 +503,15 @@ const progressActions = {
     },
     __register: async (params) => {
         try {
-            const { affiliate, app } = params;
+            const { affiliate, app, balanceInitial } = params;
 
             /* Register of Available Wallets on App */
             params.wallet = await Promise.all(app.wallet.map(async w => {
                 return (await (new Wallet({
-                    currency: w.currency
+                    currency : w.currency,
+                    playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
                 })).register())._doc._id;
-            }))
+            }));
 
             let user = await self.save(params);
 
@@ -551,14 +549,9 @@ const progressActions = {
         }
     },
     __summary: async (params) => {
+        let res = await UsersRepository.prototype.getSummaryStats(params.type, params.user, params.opts);
         let normalized = {
-            type: new String(params.type).toLowerCase().trim(),
-            user: new String(params.app).trim(),
-            opts: {
-                dates: fromPeriodicityToDates({ periodicity: params.periodicity }),
-                currency: params.currency
-                // Add more here if needed
-            }
+            ...res
         }
         return normalized;
     },
@@ -639,6 +632,7 @@ const progressActions = {
             }
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
+            
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
@@ -658,10 +652,6 @@ const progressActions = {
         } catch (err) {
             throw err;
         }
-    },
-    __createApiToken: async (params) => {
-        let res = await UsersRepository.prototype.createAPIToken(params.id, params.bearerToken);
-        return res;
     },
     __getBets: async (params) => {
         return params;
@@ -746,9 +736,6 @@ class UserLogic extends LogicComponent {
                 case 'UpdateWallet': {
                     return await library.process.__updateWallet(params);
                 };
-                case 'CreateAPIToken': {
-                    return await library.process.__createApiToken(params); break;
-                };
                 case 'GetBets': {
                     return await library.process.__getBets(params); break;
                 };
@@ -819,9 +806,6 @@ class UserLogic extends LogicComponent {
                 };
                 case 'UpdateWallet': {
                     return await library.progress.__updateWallet(params);
-                };
-                case 'CreateAPIToken': {
-                    return await library.progress.__createApiToken(params); break;
                 };
                 case 'GetBets': {
                     return await library.progress.__getBets(params); break;

@@ -18,12 +18,14 @@ import PusherSingleton from '../../logic/third-parties/pusher';
 
 async function registUser (req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
+        await SecuritySingleton.verifyByCountry({req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.register();
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -31,60 +33,66 @@ async function registUser (req, res) {
 async function resendEmail (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.resendEmail();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function loginUser (req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
+        await SecuritySingleton.verifyByCountry({req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.login();
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function setPassword(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.setPassword();
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function confirmEmail(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.confirmEmail();
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function resetPassword(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.resetPassword();
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -92,24 +100,27 @@ async function resetPassword(req, res) {
 async function setUser2FA(req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.set2FA();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function loginUser2FA(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "global", req});
+        await SecuritySingleton.verifyByCountry({req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.login2FA();
+        MiddlewareSingleton.log({type: "global", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "global", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -117,12 +128,14 @@ async function loginUser2FA(req, res) {
 async function authUser (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
+        await SecuritySingleton.verifyByCountry({req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.auth();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -130,12 +143,13 @@ async function authUser (req, res) {
 async function getUserInfo (req, res) {
     try{
         await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin", "financials"]});
-        await MiddlewareSingleton.log({type: "admin", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getInfo();
+        MiddlewareSingleton.log({type: "admin", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -143,12 +157,13 @@ async function getUserInfo (req, res) {
 async function userGetBets (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.userGetBets();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -156,12 +171,13 @@ async function userGetBets (req, res) {
 async function userSummary (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.summary();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
@@ -169,30 +185,32 @@ async function userSummary (req, res) {
 async function getBets (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
-        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
 		let data = await user.getBets();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function getDepositAddress(req, res) {
     try{
-        await MiddlewareSingleton.log({type: "user", req});
         let params = req.body;
 		let user = new User(params);
         let data = await user.getDepositAddress();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
         MiddlewareSingleton.respondError(res, err);
 	}
 }
 
 async function pusherNotificationsAuth(req, res) {
-    try{        
+    try{
         let params = req.body;
 
         let data = PusherSingleton.authenticate({

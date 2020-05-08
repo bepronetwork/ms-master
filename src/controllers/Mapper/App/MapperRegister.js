@@ -1,3 +1,4 @@
+import { currencies_object } from "../Structures";
 
 let self;
 
@@ -19,17 +20,7 @@ let outputs = {
             "listAdmins": !object.listAdmins ? [] : object.listAdmins.map(list_admin_id => list_admin_id),
             "services": !object.services ? [] : object.services.map(service_id => service_id),
             "virtual":  object.virtual,
-            "currencies": !object.currencies ? [] : object.currencies.map(currency => {
-                return ({
-                    "_id": currency._id,
-                    "image": currency.image,
-                    "ticker": currency.ticker,
-                    "decimals": currency.decimals,
-                    "name": currency.name,
-                    "address": currency.address,
-                    "virtual": currency.virtual
-                })
-            }),
+            ...currencies_object(object),
             "users": !object.users ? [] : object.users.map(user_id => user_id),
             "external_users": !object.external_users ? [] : object.external_users.map(external_user_id => external_user_id),
             "wallet": !object.wallet ? [] : object.wallet.map(wallet_id => wallet_id),
@@ -37,6 +28,7 @@ let outputs = {
             "withdraws": !object.withdraws ? [] : object.withdraws.map(withdraw_id => withdraw_id),
             "typography": object.typography ? { name: object.typography.name, url: object.typography.url} : object.typography,
             "countriesAvailable": !object.countriesAvailable ? [] : object.countriesAvailable.map(country_available_id => country_available_id),
+            "restrictedCountries": !object.restrictedCountries ? [] : object.restrictedCountries,
             "licensesId": !object.licensesId ? [] : object.licensesId.map(license_id => license_id),
             "isWithdrawing": object.isWithdrawing,
             "name": object.name,

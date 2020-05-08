@@ -37,8 +37,16 @@ import AddOnLogic from "./addOn";
 import JackpotLogic from "./jackpot";
 import PermissionLogic from "./permission";
 import AutoWithdrawLogic from "./autoWithdraw";
+import BalanceLogic from "./balance";
+import BiggestBetWinnerLogic from "./biggestBetWinner";
+import BiggestUserWinnerLogic from "./biggestUserWinner";
+import LastBetsLogic from "./lastBets";
 
 export {
+    LastBetsLogic,
+    BiggestUserWinnerLogic,
+    BiggestBetWinnerLogic,
+    BalanceLogic,
     JackpotLogic,
     AddOnLogic,
     TokenLogic,
