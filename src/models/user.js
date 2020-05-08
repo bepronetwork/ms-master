@@ -153,16 +153,9 @@ class User extends ModelComponent {
         const { id } = this.self.params;
 
         try {
-            await UsersRepository.prototype.changeWithdrawPosition(id, true);
             let res = await this.process('GetDepositAddress');
-            UsersRepository.prototype.changeWithdrawPosition(id, false);
             return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
         } catch (err) {
-            if(parseInt(err.code) != 14){
-                /* If not betting/withdrawing atm */
-                /* Open Mutex */
-                UsersRepository.prototype.changeWithdrawPosition(id, false);
-            }
             throw err;
         }
     }
