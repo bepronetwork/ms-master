@@ -125,7 +125,7 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_VIRTUAL_WALLET));
                     }
                     // Ethereum Wallet for Virtual Currencies not allowed, costs money
-                    if(new String(object.app_wallet.currency.ticker).toLowerCase() == 'eth'){
+                    if((new String(object.app_wallet.currency.ticker).toLowerCase() == 'eth') && objest.app.virtual){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_ETHEREUM_WALLET));
                     }
                 }

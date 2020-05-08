@@ -332,6 +332,7 @@ const processActions = {
         return {
             app_wallet,
             user,
+            app,
             user_wallet
         };
 
