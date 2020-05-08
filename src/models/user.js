@@ -150,6 +150,8 @@ class User extends ModelComponent {
     }
 
     async getDepositAddress() {
+        const { id } = this.self.params;
+
         try {
             let res = await this.process('GetDepositAddress');
             return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
