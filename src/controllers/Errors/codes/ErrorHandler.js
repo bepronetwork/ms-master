@@ -73,7 +73,8 @@ ErrorHandler.prototype.KEYS =  {
     'JACKPOT_NOT_EXIST_IN_APP'              : "056",
     'NOT_A_VIRTUAL_CASINO'                  : "057",
     'IS_VIRTUAL_WALLET'                     : "058",
-    'UNAUTHORIZED_COUNTRY'                  : "059"
+    'UNAUTHORIZED_COUNTRY'                  : "059",
+    'IS_ETHEREUM_WALLET'                    : "060"
 };
 
 /***************************

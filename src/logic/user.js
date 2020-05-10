@@ -98,7 +98,7 @@ const processActions = {
         if (!user.security) { throwError() };
 
         let has2FASet = user.security['2fa_set'];
-        let bearerToken = MiddlewareSingleton.sign(user._id);
+        let newBearerToken = MiddlewareSingleton.sign(user._id);
         var app = user.app_id;
 
         app = await AppRepository.prototype.findAppById(user.app_id);
@@ -111,7 +111,7 @@ const processActions = {
                 app_id: user.app_id,
                 user_id: user._id,
                 has2FASet,
-                bearerToken,
+                newBearerToken,
                 user_in_app,
                 username: username,
                 user : user,
@@ -189,7 +189,7 @@ const processActions = {
             secret: secret2FA,
             token: params['2fa_token']
         });
-        let bearerToken = MiddlewareSingleton.sign(user._id);
+        let newBearerToken = MiddlewareSingleton.sign(user._id);
 
         var app = user.app_id;
         var user_in_app = (app._id == params.app);
@@ -198,7 +198,7 @@ const processActions = {
         let normalized = {
             has2FASet,
             secret2FA,
-            bearerToken,
+            newBearerToken,
             user_in_app,
             user,
             isVerifiedToken2FA,
@@ -332,6 +332,7 @@ const processActions = {
         return {
             app_wallet,
             user,
+            app,
             user_wallet
         };
 
@@ -459,16 +460,16 @@ const progressActions = {
         return {};
     },
     __login: async (params) => {
-        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.newBearerToken);
         /* Send Login Email ASYNC - so that it is not dependent on user login */
         new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
-        return params;
+        return {...params, bearerToken: params.newBearerToken};
     },
     __login2FA: async (params) => {
-        await SecurityRepository.prototype.setBearerToken(params.security_id, params.bearerToken);
+        await SecurityRepository.prototype.setBearerToken(params.security_id, params.newBearerToken);
         /* Send Login Email ASYNC - so that it is not dependent on user login */
         new Mailer().sendEmail({app_id : params.app_id, user : params.user, action : 'USER_LOGIN'});
-        return params;
+        return {...params, bearerToken: params.newBearerToken};
     },
     __auth: async (params) => {
         return params;
@@ -560,18 +561,26 @@ const progressActions = {
     },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user } = params;
-        var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-        // See if address is already provided
-        let bitgo_id = user_wallet.depositAddresses[0] ? user_wallet.depositAddresses[0].bitgo_id : null;
-        let address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
 
-        if (!bitgo_id) {
-            //Request to Bitgo to create Address not Existent
-            let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, bitgo_id: address.id })).register())._doc;
-            // Add Deposit Address to User Deposit Addresses
-            await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
-        } else {
-            //Request to Bitgo to create Address Existent
+        let addresses = user_wallet.depositAddresses;
+        let address = addresses.find( a => a.address);
+        if(!address){
+            var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+            // See if address is already provided
+            let bitgo_id;
+            if(addresses.length > 0){
+                bitgo_id = addresses.find( a => a.bitgo_id).bitgo_id;
+            }
+            let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
+            address = bitgo_address;
+            if((!bitgo_id) || bitgo_address.address){
+                // Bitgo has created the address
+                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                // Add Deposit Address to User Deposit Addresses
+                await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
+            }
+        }else{
+            // System already has an address
         }
 
         if (address.address) {
