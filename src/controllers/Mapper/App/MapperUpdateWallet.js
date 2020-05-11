@@ -20,6 +20,7 @@ let outputs = {
                 "max_deposit": object.wallet.max_deposit,
                 "max_withdraw": object.wallet.max_withdraw,
                 "min_withdraw": object.wallet.min_withdraw,
+                "affiliate_min_withdraw": object.wallet.affiliate_min_withdraw,
                 "depositAddresses": !object.wallet.depositAddresses ? [] : object.wallet.depositAddresses.map(deposit_address_id => deposit_address_id),
                 "link_url": object.wallet.link_url,
                 "_id": object.wallet._id,
