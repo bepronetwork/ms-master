@@ -287,8 +287,8 @@ async function createBet (req, res) {
         let data = await bet.register();
         try{
             // Check if percentage to jackpot is > 0, and if yes, then call jackpot queue
-            if(data.valueToJackpot > 0) {
-                workerQueueSingleton.sendToQueue("betJackpot", MiddlewareSingleton.convertToJson(req, data.valueToJackpot));
+            if(data.jackpotAmount > 0) {
+                workerQueueSingleton.sendToQueue("betJackpot", MiddlewareSingleton.convertToJson(req, data.jackpotAmount));
             }
         }catch(err){
             console.log("Problem Connecting to Jackpot MS");

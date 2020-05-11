@@ -238,5 +238,9 @@
     "059" : {
         "key" : "UNAUTHORIZED_COUNTRY",
         "message"   : "Unauthorized Country"
+    },
+    "060" : {
+        "key" : "IS_ETHEREUM_WALLET",
+        "message"   : "Ethereum Deposits are not available"
     }
 }

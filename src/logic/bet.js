@@ -33,7 +33,7 @@ const betResolvingActions = {
                 };
 			}else{
                 return {
-                    jackpotAmount : parseFloat(totalBetAmount*app.addOn.jackpot.edge/100),
+                    jackpotAmount : Math.abs(parseFloat(totalBetAmount*app.addOn.jackpot.edge/100)),
                     jackpotPercentage : app.addOn.jackpot.edge/100
                 }
             }
@@ -55,17 +55,21 @@ const betResolvingActions = {
 		outcome = CryptographySingleton.hexToInt(hmca_hash) 
 		 
 		outcomeResultSpace 	= CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace)
-
-        var { winAmount, isWon, totalBetAmount, fee } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
+        var { winAmount, isWon, totalBetAmount } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
+            fee : params.fee,
+            jackpotAmount : params.jackpotAmount,
             totalBetAmount : params.betAmount,
             outcomeResultSpace : outcomeResultSpace,
             houseEdge : params.edge,
             game : params.gameMetaName
         });
+
+        console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount, params.jackpotAmount)
+
         
-        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash, fee };
+        return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
     },
     oracled : (params) => {
         let hmca_hash, outcome, isWon, outcomeResultSpace;
@@ -129,7 +133,7 @@ const processActions = {
             let appPlayBalance = appWallet.playBalance;
             let userBalance = userWallet.playBalance;
 
-            let resultBetted = CasinoLogicSingleton.normalizeBet(params.result);
+            let resultBetted = CasinoLogicSingleton.normalizeBet(params.result, game.resultSpace);
             var serverSeed = CryptographySingleton.generateSeed();
             var clientSeed = CryptographySingleton.generateSeed();
             const { affiliateLink } = user;
@@ -138,10 +142,10 @@ const processActions = {
             /* Verify if Withdrawing Mode is ON - User */
             let isUserWithdrawingAPI = user.isWithdrawing;
             /* Verify if Withdrawing Mode is ON - App */
-            let isAppWithdrawingAPI = app.isWithdrawing;
+            let isAppWithdrawingAPI = app.isWithdrawing; 
 
             /* Get Possible Win Balance for Bet */ 
-            let { totalBetAmount, maxWinAmount } = CasinoLogicSingleton.calculateMaxWinAmount({
+            let { totalBetAmount, maxWinAmount, fee } = CasinoLogicSingleton.calculateMaxWinAmount({
                 userResultSpace : resultBetted,
                 resultSpace : game.resultSpace,
                 houseEdge : game.edge,
@@ -153,48 +157,50 @@ const processActions = {
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
 
+            /* Remove Fee from Math */
+            let betAmount = totalBetAmount - Math.abs(fee);
+            let { jackpotAmount } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
+            betAmount = betAmount - jackpotAmount;  /* total amount amount - jackpot amount - fee amount */
+
             /* Get Bet Result */
-            let { isWon,  winAmount, outcomeResultSpace, fee } = betResolvingActions.auto({
+            let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
                 serverSeed : serverSeed,
                 clientSeed : clientSeed,
                 nonce : params.nonce,
+                fee : fee,
                 resultSpace : game.resultSpace,
                 result : resultBetted,
                 gameMetaName : game.metaName,
-                betAmount : totalBetAmount,
+                betAmount : betAmount,
+                jackpotAmount,
                 edge : game.edge
             });
-            
-            /* Remove Fee from Math */
-            let betAmount = totalBetAmount - Math.abs(fee);
+        
 
-            let { jackpotAmount, jackpotPercentage } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
             /* Remove Jackpot from Math */
-            betAmount = betAmount - Math.abs(jackpotAmount);
+            var totalAmountWithFee = totalBetAmount - Math.abs(jackpotAmount); /* total amount - jackpot amount */
 
-            console.log("Jackpot Amount", winAmount, jackpotAmount, totalBetAmount, betAmount, fee, jackpotPercentage);
-
-            if(isWon){
+            if(isWon && (winAmount > 0)){
                 /* User Won Bet */
-                const delta = Math.abs(winAmount) - Math.abs(betAmount);
+                const delta = Math.abs(winAmount) - Math.abs(totalBetAmount);
                 user_delta = delta;
                 app_delta = -delta;
             }else{
                 /* User Lost Bet */
-                user_delta = -Math.abs(betAmount);
+                user_delta = -Math.abs(totalBetAmount); /* With Fee + Jackpot */
                 if(isUserAffiliated){
                     /* Get Amounts and Affiliate Cuts */
                     var affiliateReturnResponse = getAffiliatesReturn({
                         affiliateLink : affiliateLink,
                         currency : currency,
-                        lostAmount : betAmount
+                        lostAmount : betAmount /* Without Fee & jackpot */
                     })
                     /* Map */
                     affiliateReturns = affiliateReturnResponse.affiliateReturns;
                     totalAffiliateReturn = affiliateReturnResponse.totalAffiliateReturn;
                 }
                 /* Set App Cut without Affiliate Return */
-                app_delta = Math.abs(betAmount - totalAffiliateReturn);
+                app_delta = Math.abs(totalBetAmount - totalAffiliateReturn); /* Without Fee */
             }
 
 

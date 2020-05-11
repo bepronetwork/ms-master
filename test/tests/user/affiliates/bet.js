@@ -17,7 +17,7 @@ const inputs = {
 
 
 context('Bet', async () => {
-    var app, user_1, user_2, user_3, user_4, user_5, currencyWallet, currency, game, admin;
+    var app, user_1, user_2, user_3, user_4, user_5, currencyWallet, currency, game, admin, jackpotAmount, fee;
 
 
     before( async () =>  {
@@ -81,6 +81,8 @@ context('Bet', async () => {
 
             const { message } = bet_res.data;
             wasWon = message.isWon;
+            jackpotAmount = message.jackpotAmount;
+            fee = message.fee;
         }
         const { status } = bet_res.data;
         /* Confirm Bet was valid */
@@ -97,17 +99,18 @@ context('Bet', async () => {
         var { percentageOnLoss : user_2_percentageOnLoss } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_2_after_info.affiliateInfo._id).affiliateStructure;
 
         /* Verify Affiliate Balance on User 1,2,3 */
-        expect(getCurrencyWallet({wallet : user_1_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(betAmount*user_1_percentageOnLoss);
-        expect(getCurrencyWallet({wallet : user_2_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(betAmount*user_2_percentageOnLoss);
+        expect(getCurrencyWallet({wallet : user_1_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal((betAmount - jackpotAmount - fee)*user_1_percentageOnLoss);
+        expect(getCurrencyWallet({wallet : user_2_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal((betAmount - jackpotAmount - fee)*user_2_percentageOnLoss);
         expect(getCurrencyWallet({wallet : user_3_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
 
         /* Get Info for App After Bet */
         const app_data_after = (await getApp({app, admin})).data.message;
         /* Verify balance on App */
-        const affiliateReturns = betAmount*(user_2_percentageOnLoss+user_1_percentageOnLoss);
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns - (betAmount*global.test.jackpotEdge)).toFixed(6));
+        const affiliateReturns = (betAmount - jackpotAmount - fee)*(user_2_percentageOnLoss+user_1_percentageOnLoss);
+        console.log(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance, getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance, betAmount, affiliateReturns, jackpotAmount, fee)
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns-jackpotAmount).toFixed(6));
         /* Verify Balance on User 3 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
+        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-(betAmount-jackpotAmount)).toFixed(6));
 
     }));
 
@@ -149,6 +152,8 @@ context('Bet', async () => {
             bet_res = await bet({user : user_5, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
             wasWon = message.isWon;
+            jackpotAmount = message.jackpotAmount;
+            fee = message.fee;
         }
 
         const { status, message } = bet_res.data;
@@ -164,17 +169,16 @@ context('Bet', async () => {
         var { percentageOnLoss : user_4_percentageOnLoss } = user_5.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_4_after_info.affiliateInfo._id).affiliateStructure;
         
         /* Verify Affiliate Balance on User 4,5 */
-        expect(getCurrencyWallet({wallet : user_4_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(betAmount*user_4_percentageOnLoss);
+        expect(getCurrencyWallet({wallet : user_4_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal((betAmount - jackpotAmount - fee)*user_4_percentageOnLoss);
         expect(getCurrencyWallet({wallet : user_5_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
-
         /* Get Info for App After Bet */
         const app_data_after = (await getApp({app, admin})).data.message;
-        const affiliateReturns = betAmount*(user_4_percentageOnLoss);
+        const affiliateReturns = (betAmount - jackpotAmount - fee)*(user_4_percentageOnLoss);
 
         /* Verify balance on App */
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns - (betAmount*global.test.jackpotEdge)).toFixed(6));
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns-jackpotAmount).toFixed(6));
         /* Verify Balance on User 5 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
+        expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-(betAmount - jackpotAmount)).toFixed(6));
 
     }));
 
@@ -215,6 +219,8 @@ context('Bet', async () => {
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
             wasWon = message.isWon;
+            jackpotAmount = message.jackpotAmount;
+            fee = message.fee;
         }
 
         const { status, message } = bet_res.data;
@@ -234,7 +240,7 @@ context('Bet', async () => {
         /* Expect the percentage on loss to be equal to new change */
         expect(user_2_percentageOnLoss).to.equal(structures.find(s => s.level == 1).percentageOnLoss);
         /* Verify Affiliate Balance on User 1,2,3 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_2_after_info.affiliateInfo.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : user_2_before_info.affiliateInfo.wallet, ticker}).playBalance+betAmount*user_2_percentageOnLoss));
+        expect(parseFloat(getCurrencyWallet({wallet : user_2_after_info.affiliateInfo.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : user_2_before_info.affiliateInfo.wallet, ticker}).playBalance+(betAmount - jackpotAmount - fee)*user_2_percentageOnLoss));
         expect(user_1_isActive).to.equal(false);
 
         /* Confirm User 1 has the affiliate balance equal to before */
@@ -242,14 +248,15 @@ context('Bet', async () => {
         expect(getCurrencyWallet({wallet : user_3_after_info.affiliateInfo.wallet, ticker}).playBalance).to.equal(0);
 
         /* Get Info for App After Bet */
-        const app_data_after = (await getApp({app, admin})).data.message;
-
+        const app_data_after = (await getApp({app, admin})).data.message;         
         /* Verify balance on App */
-        const affiliateReturns = betAmount*(user_2_percentageOnLoss);
-        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns - (betAmount*global.test.jackpotEdge)));
+        const affiliateReturns = (betAmount - jackpotAmount - fee)*(user_2_percentageOnLoss);
+        /* Verify balance on App */
+        expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmount-affiliateReturns-jackpotAmount).toFixed(6));
+        /* Verify Balance on User 5 */
+        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-(betAmount - jackpotAmount)).toFixed(6));
+    
 
-        /* Verify Balance on User 3 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-betAmount).toFixed(6));
     }));
 
 });

@@ -47,6 +47,7 @@ class BitGoClass {
         label = new String(label).toLowerCase().toString();
         //Check if Deposit Address Exists
         if(!id){
+            console.log("Creating address for : ", label)
             return await wallet.createAddress({label});
         }else{
             return await wallet.getAddress({id});
