@@ -214,6 +214,8 @@ const test = async () => {
                 await beforeTests();
                 await delay(5*1000);                    
                 let res = await getEcosystemCasinoGames();
+                console.log("RESS:::: ",res.data.message)
+                console.log()
                 global.test.ECOSYSTEM_GAMES = res.data.message;
                 
                 await runTests();
