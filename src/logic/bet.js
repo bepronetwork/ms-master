@@ -161,7 +161,6 @@ const processActions = {
             let betAmount = totalBetAmount - Math.abs(fee);
             let { jackpotAmount } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
             betAmount = betAmount - jackpotAmount;  /* total amount amount - jackpot amount - fee amount */
-
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({
                 serverSeed : serverSeed,
@@ -283,7 +282,10 @@ const progressActions = {
             isResolved : true
         }
         /* Save Bet */
-        let bet = await self.save(params);
+        let bet = await self.save({
+            ...params,
+            betAmount : params.totalBetAmount,
+        });
 
 		/* Update PlayBalance */
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
@@ -306,7 +308,8 @@ const progressActions = {
         let res = {
             bet,
             ...params
-        }
+        };
+
 		return res;
 	},
 	__register : async (params) => {
