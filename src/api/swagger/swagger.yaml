@@ -1000,6 +1000,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/theme : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit App Theme Customization
+      operationId: editTheme
+      description: Edit App Theme Customization
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationTheme'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/topBar : 
     x-swagger-router-controller: app
     post:
@@ -2964,6 +2994,22 @@ definitions:
               type: string
             name :
               type: string
+  AppCustomizationTheme : 
+    type: object
+    required:
+      - app
+      - theme
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      theme:
+        type : string
+        format: name
+        example: "dark"
   AppCustomizationTopBar : 
     type: object
     required:
