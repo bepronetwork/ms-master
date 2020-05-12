@@ -604,7 +604,7 @@ module.exports = {
         return request(global.server)
         .get('/api/ecosystem/games/casino')
         .send(params)
-        .then(res => {console.log(res); detectServerError(res)})
+        .then(res => detectServerError(res))
     },
     async addGame(params, bearerToken, payload){
         return request(global.server)
