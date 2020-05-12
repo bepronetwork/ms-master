@@ -189,10 +189,7 @@ const get_object = (object) => {
         "description": object.description,
         "hosting_id": object.hosting_id,
         "web_url": object.web_url,
-        "addOn": !object.addOn ? {} : {
-            autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
-            balance       : !object.addOn.balance       ? null : object.addOn.balance
-        },
+        "addOn": object.addOn,
         "__v": object.__v,
     }
 }
