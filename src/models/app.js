@@ -38,7 +38,8 @@ import {
     MapperGetBiggetsUserWinnersSingleton,
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
-    MapperGetBetSingleton
+    MapperGetBetSingleton,
+    MapperEditThemeSingleton
 } from '../controllers/Mapper';
 
 class App extends ModelComponent {
@@ -498,6 +499,20 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditMailSenderIntegration');
             return MapperEditMailSenderIntegrationSingleton.output('EditMailSenderIntegration', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTheme() {
+        try {
+            let app = await this.process('EditTheme');
+            return MapperEditThemeSingleton.output('EditTheme', app);
         } catch (err) {
             throw err;
         }

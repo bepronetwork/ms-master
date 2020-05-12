@@ -8,4 +8,5 @@ context('Customization', async () => {
     require('./addTopIcon');
     require('./addTypography');
     require('./addLoadingGif');
+    require('./editTheme')
 });

@@ -134,6 +134,22 @@ class CustomizationRepository extends MongoComponent{
         });
     }
 
+    setTheme(_id, theme){
+        return new Promise( (resolve,reject) => {
+            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $set: { 
+                    "theme" : theme,
+                } },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 }
 
 CustomizationRepository.prototype.schema = new CustomizationSchema();

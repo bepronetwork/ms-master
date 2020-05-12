@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -462,6 +462,16 @@ const processActions = {
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
+    },
+    __editTheme : async (params) => {
+        let { app, theme } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        if((theme != "dark") && (theme != "light")){ throwError('WRONG_THEME') }
+        return {
+            ...params,
+            app
+        };
     },
     __editTopBar : async (params) => {
         let { app } = params;
@@ -937,6 +947,11 @@ const progressActions = {
         }
         return params;
     },
+    __editTheme  : async (params) => {
+        let { app, theme } = params;
+        let themeResult = await CustomizationRepository.prototype.setTheme(app.customization._id, theme);
+        return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
+    },
     __editTopBar  : async (params) => {
         let { app, backgroundColor, textColor, text, isActive } = params;
         const { topBar } = app.customization;
@@ -1187,7 +1202,10 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameBackgroundImage': {
 					return await library.process.__editGameBackgroundImage(params); break;
-				};
+                };
+                case 'EditTheme' : {
+                    return await library.process.__editTheme(params); break;
+                };
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
@@ -1326,6 +1344,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;
+                };
+                case 'EditTheme' : {
+                    return await library.progress.__editTheme(params); break;
                 };
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;

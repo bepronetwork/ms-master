@@ -502,6 +502,20 @@ async function editMailSenderIntegration(req, res) {
     }
 }
 
+async function editTheme(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editTheme();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function editTopBar(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
@@ -717,6 +731,7 @@ async function getLogs(req, res) {
 
 
 export {
+    editTheme,
     createApp,
     editTopBar,
     createAffiliateCustom,
