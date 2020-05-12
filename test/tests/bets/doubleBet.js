@@ -83,6 +83,7 @@ context('Double bet - Exploit', async () => {
             placeBet(postData, user.bearerToken, {id : user.id}),
             placeBet(postData, user.bearerToken, {id : user.id})
         ]);
+        console.log(res);
 
         res.map( r => {
             if(r.data.status == 200){
