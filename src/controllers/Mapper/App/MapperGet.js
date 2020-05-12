@@ -203,7 +203,10 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
-            "addOn": object.addOn,
+            "addOn": object.addOn ? {} : {
+                autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
+                balance       : !object.addOn.balance       ? null : object.addOn.balance
+            },
             "__v": object.__v,
         }
     },
