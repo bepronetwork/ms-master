@@ -755,10 +755,8 @@ function getPayloadString(payloadObject){
 
 function detectServerError(res){
     if(res.body && !_.isEmpty(res.body)){
-        console.log(1)
         // Nothing
     }else{
-        console.log(2)
         //Error on Server that does not show on testing since mocha hides server logs sometimes 
         console.log(res.error);
     }

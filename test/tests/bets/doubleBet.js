@@ -36,6 +36,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
 
     const insideBetFunction = async ({postData}) => {
         user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
+        console.log("user:: ", user)
         app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
         var userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
@@ -113,8 +114,8 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
-        console.log(user.bearerToken)
-        console.log(user.id)
+        console.log("user.bearerToken:: ",user.bearerToken)
+        console.log("user.id:: ",user.id)
         const res = await Promise.all([
             placeBet(postData, user.bearerToken, {id : user.id}),
             placeBet(postData_1, user.bearerToken, {id : user.id})
