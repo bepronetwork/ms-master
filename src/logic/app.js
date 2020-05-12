@@ -467,7 +467,7 @@ const processActions = {
         let { app, theme } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
-        if(theme != ('dark' || 'light')){ throwError('WRONG_THEME') }
+        if((theme != "dark") && (theme != "light")){ throwError('WRONG_THEME') }
         return {
             ...params,
             app
