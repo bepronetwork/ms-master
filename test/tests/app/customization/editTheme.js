@@ -12,10 +12,25 @@ context('Edit Theme', async () => {
     });
 
 
-    it('should be able to edit app Theme', mochaAsync(async () => {
+    it('should be able to edit app Theme - light', mochaAsync(async () => {
 
         const postData = {
             theme: "light",
+            app: app.id
+        };
+
+        let res = await editThemeApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
+
+        expect(detectValidationErrors(res)).to.be.equal(false);
+
+        const { status } = res.data;
+        expect(status).to.be.equal(200);
+    }));
+
+    it('should be able to edit app Theme - dark', mochaAsync(async () => {
+
+        const postData = {
+            theme: "dark",
             app: app.id
         };
 
