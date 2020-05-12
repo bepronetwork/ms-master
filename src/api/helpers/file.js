@@ -1,6 +1,9 @@
 import fs from 'fs';
 import { IS_LOCAL_DEV, IS_TEST } from '../../config';
 
+console.log(IS_LOCAL_DEV)
+console.log(IS_TEST)
+
 const FOLDER_NAME = 'test/outputs';
 
 export const writeFile = ({functionName, content}) => {
