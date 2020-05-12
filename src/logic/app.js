@@ -961,6 +961,9 @@ const progressActions = {
             text,
             isActive
         })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         return params;
     },
     __editBanners : async (params) => {
