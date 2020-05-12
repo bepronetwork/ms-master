@@ -113,13 +113,14 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
-
+        console.log(user.bearerToken)
+        console.log(user.id)
         const res = await Promise.all([
             placeBet(postData, user.bearerToken, {id : user.id}),
             placeBet(postData_1, user.bearerToken, {id : user.id})
         ]);
 
-        console.log(res);
+        console.log(res[0]);
 
         if(res[0].data.status == 200) {
             expect(res[1].data.status).to.equal(14);
