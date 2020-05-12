@@ -2,6 +2,7 @@ import {
     getUserAuth,
     placeBet,
     authAdmin,
+    loginUser,
     getAppAuth
 } from '../../methods';
 
@@ -17,7 +18,7 @@ const expect = chai.expect;
     'eth' : 0.001
 }
 
-const constant = {
+var constant = {
     admin : {
         id : '5e49621025bc260021571580',
         bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU0OTYyMTAyNWJjMjYwMDIxNTcxNTgwIiwidGltZSI6MTU5MTAxMjU4MDI4OSwiaWF0IjoxNTg4NDIwNTgwfQ.OHfSmvrpWdXPAYQ9zkVxBca_t8BWLeWoqoLMx_CJIJpdscCAfgXEFCxXUWDRPlS8oOg3BH6dG99j6AnAXVFq_g'
@@ -27,44 +28,16 @@ const constant = {
     },
     user : {
         id : '5e776d2726c551002172ecd9',
+        username : 'jeremy',
+        password : 'test123',
         bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU3NzZkMjcyNmM1NTEwMDIxNzJlY2Q5IiwidGltZSI6MTU4ODg4MTI0NDgyNCwiaWF0IjoxNTg2Mjg5MjQ0fQ.BlqROIKMl-NaI_57ylFAsShhH86lzTWS7zDLF6nYlOELf2yYPAB2_-brBKyrUrmUizQ9z6GgUJHWEJN1RJFQ-A'
     }
 }
+const betAmount = 0.001;
 
-Object.keys(currenciesBetAmount).forEach( async key => {
-    var app, walletApp, user, admin, betAmount, game, ticker = key,postDataDefault, currency, bet;
-
-    const insideBetFunction = async ({postData}) => {
-        user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-        app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
-        var userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        var res = await placeBet(postData, user.bearerToken, {id : user.id});
-        var isWon = res.data.message.isWon;
-        return {
-            isWon, res, userPreBetCurrencyWallet, appPreBetCurrencyWallet
-        }
-    }
-
-    const afterBetFunction = async ({res, appPreBetCurrencyWallet, userPreBetCurrencyWallet}) => {
-        user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
-        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
-        const userPosBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        const appPosBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-
-        expect(await digestBetResult({
-            edge : game.edge,
-            res : res,
-            newBalance : userPosBetCurrencyWallet.playBalance,
-            previousBalance : userPreBetCurrencyWallet.playBalance,
-            newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
-        }), true);
-    }
-
+context('Double bet - Exploit', async () => {
+    var app, walletApp, user, admin, game, ticker = 'eth',postDataDefault, currency, bet;
+    
     const beforeBetFunction = async ({metaName}) => {
         game = app.games.find( game => game.metaName == metaName);
         user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
@@ -74,10 +47,9 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     }
 
     before( async () =>  {
-        betAmount = 0.001;
         admin = (await authAdmin({ admin : constant.admin.id }, constant.admin.bearerToken, { id : constant.admin.id})).data.message;
+        constant.user.bearerToken = (await loginUser({username : constant.user.username, password : constant.user.password, app : constant.app.id})).data.message.bearerToken;
         user = (await getUserAuth({user : constant.user.id, app: constant.app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
-        console.log("user:: ", user)
         app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
@@ -90,13 +62,13 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         }
     });
 
-    it(`${key} - Double Bets - Wheel Classic double`, mochaAsync(async () => {
+    it(`it should allow double bet at the same time`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
         })
 
-        let postData = {
+        let postData = {  
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
@@ -104,71 +76,27 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             }})
         };
 
-        await beforeBetFunction({
-            metaName : 'wheel_simple'
-        })
-        let postData_1 = {
-            ...postDataDefault,
-            game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-        console.log("user.bearerToken:: ",user.bearerToken)
-        console.log("user.id:: ",user.id)
-        const res = await Promise.all([
+        var done = 0,not_done = 0;
+        let res = await Promise.all([
             placeBet(postData, user.bearerToken, {id : user.id}),
-            placeBet(postData_1, user.bearerToken, {id : user.id})
+            placeBet(postData, user.bearerToken, {id : user.id}),
+            placeBet(postData, user.bearerToken, {id : user.id}),
+            placeBet(postData, user.bearerToken, {id : user.id})
         ]);
 
-        console.log(res[0]);
-
-        if(res[0].data.status == 200) {
-            expect(res[1].data.status).to.equal(14);
-        }else if(res[0].data.status == 14){
-            expect(res[1].data.status).to.equal(200);
-        }else{
-            expect(true).to.equal(false);
-        }
-
+        res.map( r => {
+            if(r.data.status == 200){
+                done+=1;
+            }
+            if(r.data.status == 14){
+                not_done+=1;
+            }
+        })
+        expect(done).to.equal(1);
+        expect(not_done).to.equal(3);
     }));
 
-    it(`${key} - Double Bets - Wheel Variation double`, mochaAsync(async () => {
-
-        await beforeBetFunction({
-            metaName : 'wheel_variation_1'
-        })
-
-        let postData = {
-            ...postDataDefault,
-            game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-
-        await beforeBetFunction({
-            metaName : 'wheel_variation_1'
-        })
-        let postData_1 = {
-            ...postDataDefault,
-            game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-
-        const res = await Promise.all([
-            placeBet(postData, user.bearerToken, {id : user.id}),
-            placeBet(postData_1, user.bearerToken, {id : user.id})
-        ]);
-
-        if(res[0].data.status == 200) {
-            expect(res[1].data.status).to.equal(14);
-        }else if(res[0].data.status == 14){
-            expect(res[1].data.status).to.equal(200);
-        }else{
-            expect(true).to.equal(false);
-        }
-    }));
+  
+    
 });
+
