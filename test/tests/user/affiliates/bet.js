@@ -78,6 +78,7 @@ context('Bet', async () => {
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
             /* Verify that was Lost */
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
+            console.log("bet_res", bet_res);
             detectValidationErrors(bet_res);
 
             const { message } = bet_res.data;

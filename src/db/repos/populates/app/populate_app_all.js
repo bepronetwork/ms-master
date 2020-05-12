@@ -14,23 +14,7 @@ let populate_app_all = [
         model : 'AddOn',
         select : { '__v': 0},
         populate : [
-            {
-                path : 'jackpot',
-                model : 'Jackpot',
-                select : { '__v': 0},
-                populate : [
-                    {
-                        path : 'resultSpace',
-                        model : 'ResultSpace',
-                        select : { '__v': 0}
-                    },
-                    {
-                        path : 'bets',
-                        model : 'Bet',
-                        select : {'__v' : 0}
-                    }
-                ]
-            },{
+           {
                 path: 'autoWithdraw',
                 model: 'AutoWithdraw',
                 select : { '__v': 0}

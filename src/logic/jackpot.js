@@ -63,7 +63,7 @@ const processActions = {
 
 	__editEdgeJackpot : async (params) => {
 		try {
-			let app = await AppRepository.prototype.findAppById(params.app);
+			let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(params.app);
 			if(!app){throwError('APP_NOT_EXISTENT')}
 			if(app.addOn.jackpot==undefined || app.addOn.jackpot==null) {throwError('JACKPOT_NOT_EXIST_IN_APP')}
 			let jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
@@ -84,7 +84,7 @@ const processActions = {
 	__percentage : async (params) => {
 		try {
 			let user = await UsersRepository.prototype.findUserById(params.user);
-            let app = await AppRepository.prototype.findAppById(user.app_id);
+            let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(user.app_id);
 			if(app.addOn.jackpot==undefined){
 				return {percentage: 0};
 			}
@@ -107,7 +107,7 @@ const processActions = {
 	__normalizeSpaceResult : async (params) => {
 		try {
 			let user 	= await UsersRepository.prototype.findUserById(params.user);
-			let app  	= await AppRepository.prototype.findAppById(user.app_id);
+			let app  	= await AppRepository.prototype.findAppByIdWithJackpotPopulated(user.app_id);
 			if(app.addOn.jackpot==undefined){
 				return {res: params};
 			}
@@ -138,7 +138,7 @@ const processActions = {
 
 			let game = await GamesRepository.prototype.findGameById(params.game);
             let user = await UsersRepository.prototype.findUserById(params.user);
-			let app  = await AppRepository.prototype.findAppById(user.app_id);
+			let app  = await AppRepository.prototype.findAppByIdWithJackpotPopulated(user.app_id);
 
 			/* Get balance by wallet type */
 			const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
