@@ -119,6 +119,8 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             placeBet(postData_1, user.bearerToken, {id : user.id})
         ]);
 
+        console.log(res);
+
         if(res[0].data.status == 200) {
             expect(res[1].data.status).to.equal(14);
         }else if(res[0].data.status == 14){
