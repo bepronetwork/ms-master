@@ -240,6 +240,7 @@ context('Bet', async () => {
             const { message } = bet_res.data;
             res = bet_res;
             wasWon = message.isWon;
+            console.log("was Won", wasWon);
             jackpotAmount = message.jackpotAmount;
             fee = message.fee;
             betAmountWithoutJackpotAndFee = message.betAmount;
