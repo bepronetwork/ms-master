@@ -15,6 +15,5 @@ export {
     populate_bet,
     populate_user,
     populate_admin,
-    populate_jackpot,
-    populate_app_simple
+    populate_jackpot
 }
