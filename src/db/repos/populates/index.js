@@ -5,6 +5,7 @@ import populate_app_all from './app/populate_app_all';
 import populate_app_affiliates from './app/populate_app_affiliates';
 import populate_affiliateLink from './affiliateLink/populate_affiliateLink';
 import populate_jackpot from './populate_jackpot';
+import populate_app_simple from './app/populate_app_simple';
 
 export {
     populate_affiliateLink,
@@ -13,5 +14,6 @@ export {
     populate_bet,
     populate_user,
     populate_admin,
-    populate_jackpot
+    populate_jackpot,
+    populate_app_simple
 }
