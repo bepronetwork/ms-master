@@ -78,7 +78,7 @@ const processActions = {
     },
     __get : async (params) => {
         perf.start({id :'get_app_perf'});
-        let app     = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, 'simple');
         perf.end({id :'get_app_perf'});
         perf.start({id :'add_ons'});
         let addOns  = await AddOnsEcoRepository.prototype.getAll();

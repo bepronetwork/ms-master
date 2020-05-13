@@ -284,7 +284,7 @@ const progressActions = {
         /* Save Bet */
         let bet = await self.save({
             ...params,
-            betAmount : params.totalBetAmount,
+            betAmount : params.totalBetAmount
         });
 
 		/* Update PlayBalance */

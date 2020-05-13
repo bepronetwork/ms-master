@@ -3,7 +3,7 @@ import populate_customization_all from "../customization/all";
 import populate_typography from "../typography/index";
 import populate_wallet_all from "../wallet/all";
 
-let populate_app_all = [
+let populate_app_simple = [
     {
         path : 'currencies',
         model : 'Currency',
@@ -22,11 +22,6 @@ let populate_app_all = [
                 path : 'balance',
                 model : 'Balance',
                 select : { '__v': 0}
-            },
-            {
-                path : 'jackpot',
-                model : 'Jackpot',
-                select : { '__v': 0}
             }
         ]
     },
@@ -35,11 +30,6 @@ let populate_app_all = [
         model : 'Wallet',
         select : { '__v': 0},
         populate : populate_wallet_all
-    },
-    {
-        path : 'users',
-        model : 'User',
-        select : { '__v': 0}
     },
     {   
         path : 'games',
@@ -52,16 +42,6 @@ let populate_app_all = [
                 select : { '__v': 0}
             }
         ]
-    },
-    {
-        path : 'withdraws',
-        model : 'Withdraw',
-        select : { '__v': 0}
-    },
-    {
-        path : 'deposits',
-        model : 'Deposit',
-        select : { '__v': 0}
     },
     {   
         path : 'affiliateSetup',
@@ -100,4 +80,4 @@ let populate_app_all = [
     },
 ] 
 
-export default populate_app_all;
+export default populate_app_simple;
