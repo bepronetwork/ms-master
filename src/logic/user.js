@@ -58,7 +58,7 @@ const processActions = {
         const user = await UsersRepository.prototype.findUserById(params.user);
         if (!user) { throwError('USER_NOT_EXISTENT') }
 
-        const app = await AppRepository.prototype.findAppById(user.app_id);
+        const app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(user.email);
@@ -101,7 +101,7 @@ const processActions = {
         let newBearerToken = MiddlewareSingleton.sign(user._id);
         var app = user.app_id;
 
-        app = await AppRepository.prototype.findAppById(user.app_id);
+        app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
 
         var user_in_app = (app._id == params.app);
@@ -128,7 +128,7 @@ const processActions = {
         const user = await __private.db.findUser(params.username_or_email);
         if (!user) { throwError("USERNAME_OR_EMAIL_NOT_EXISTS"); }
         
-        var app = await AppRepository.prototype.findAppById(user.app_id);
+        var app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT"); }
       
 
@@ -249,7 +249,7 @@ const processActions = {
         //Set up Password Structure
         let user, hash_password;
 
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
 
         let balanceInitial = null;
@@ -323,7 +323,7 @@ const processActions = {
         var { currency, id, app } = params;
         /* Get User Id */
         let user = await UsersRepository.prototype.findUserById(id);
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if (!user) { throwError('USER_NOT_EXISTENT') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
@@ -341,7 +341,7 @@ const processActions = {
         try {
             var { currency, id, wBT } = params;
 
-            var app = await AppRepository.prototype.findAppById(id);
+            var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
@@ -365,7 +365,7 @@ const processActions = {
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
-            let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
+            let user_in_app = (app.users.findIndex(x => (x.toString() == user._id.toString())) > -1);
 
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){

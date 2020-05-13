@@ -78,11 +78,10 @@ context('Bet', async () => {
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
             /* Verify that was Lost */
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
-            console.log("bet_res", bet_res);
             detectValidationErrors(bet_res);
 
             const { message } = bet_res.data;
-            res = message;
+            res = bet_res;
             wasWon = message.isWon;
             jackpotAmount = message.jackpotAmount;
             fee = message.fee;
@@ -115,9 +114,10 @@ context('Bet', async () => {
         expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmountWithoutJackpotAndFee-affiliateReturns+jackpotAmount+fee).toFixed(6));
         /* Verify Balance on User 3 */
         expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-(betAmountWithoutJackpotAndFee+fee+jackpotAmount)).toFixed(6));
-        
+
         await digestBetResult({
             res,
+            edge : game.edge, 
             newBalance : getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance,
             previousBalance : getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance,
             previousBalanceApp : getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance,
@@ -155,13 +155,13 @@ context('Bet', async () => {
         user_5_before_info = await getUserInfo({user : user_5, app});
         
         var wasWon = true;
-        var bet_res;
         /* Creater User Bet */
         while(wasWon){
             /* Verify that was Lost */
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
-            bet_res = await bet({user : user_5, game : game, result : BET_RESULT, app, currency});
+            var bet_res = await bet({user : user_5, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
+            res = bet_res;
             wasWon = message.isWon;
             jackpotAmount = message.jackpotAmount;
             fee = message.fee;
@@ -190,8 +190,16 @@ context('Bet', async () => {
         /* Verify balance on App */
         expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmountWithoutJackpotAndFee-affiliateReturns+jackpotAmount+fee).toFixed(6));
         /* Verify Balance on User 5 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-(betAmount - jackpotAmount)).toFixed(6));
+        expect(parseFloat(getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance-(betAmountWithoutJackpotAndFee+fee+jackpotAmount)).toFixed(6));
 
+        await digestBetResult({
+            res,
+            edge : game.edge, 
+            newBalance : getCurrencyWallet({wallet : user_5_after_info.wallet, ticker}).playBalance,
+            previousBalance : getCurrencyWallet({wallet : user_5_before_info.wallet, ticker}).playBalance,
+            previousBalanceApp : getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance,
+            newBalanceApp : getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance
+        })
     }));
 
     it('it should change the Structure and remove the return of the previous user structure & bet should succeed', mochaAsync(async () => {
@@ -230,6 +238,7 @@ context('Bet', async () => {
             /* Verify that was Lost */
             var bet_res = await bet({user : user_3, game : game, result : BET_RESULT, app, currency});
             const { message } = bet_res.data;
+            res = bet_res;
             wasWon = message.isWon;
             jackpotAmount = message.jackpotAmount;
             fee = message.fee;
@@ -267,9 +276,16 @@ context('Bet', async () => {
         /* Verify balance on App */
         expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmountWithoutJackpotAndFee-affiliateReturns+jackpotAmount+fee).toFixed(6));
         /* Verify Balance on User 5 */
-        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-(betAmount - jackpotAmount)).toFixed(6));
+        expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-(betAmountWithoutJackpotAndFee+fee+jackpotAmount)).toFixed(6));
     
-
+        await digestBetResult({
+            res,
+            edge : game.edge, 
+            newBalance : getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance,
+            previousBalance : getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance,
+            previousBalanceApp : getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance,
+            newBalanceApp : getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance
+        })
     }));
 
 });
