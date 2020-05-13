@@ -10,6 +10,7 @@ import populate_app_simple from './app/populate_app_simple';
 export {
     populate_affiliateLink,
     populate_app_affiliates,
+    populate_app_simple,
     populate_app_all,
     populate_bet,
     populate_user,

@@ -661,7 +661,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: i, value : betAmount/10000
+                place: i, value : betAmount/10
             }})
         };
 
@@ -669,7 +669,7 @@ context('Bet Errors Exploit - Prevention', async () => {
         expect(res.data.status).to.equal(200);
     }));
 
-    it(`it shound´t be able to bet, if the places are not together on european_roulette_simple`, mochaAsync(async () => {
+    it(`it shound be able to bet, if the places are not together on european_roulette_simple`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'european_roulette_simple'
@@ -679,8 +679,8 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: [{
-                place: 0, value : betAmount/10000,
-                place: 4, value : betAmount/10000
+                place: 0, value : betAmount/10,
+                place: 4, value : betAmount/10
             }]
         };
 

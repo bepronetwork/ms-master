@@ -14,7 +14,7 @@ let populate_app_simple = [
         model : 'AddOn',
         select : { '__v': 0},
         populate : [
-            {
+           {
                 path: 'autoWithdraw',
                 model: 'AutoWithdraw',
                 select : { '__v': 0}
@@ -31,11 +31,6 @@ let populate_app_simple = [
         select : { '__v': 0},
         populate : populate_wallet_all
     },
-    {
-        path : 'users',
-        model : 'User',
-        select : { '__v': 0}
-    },
     {   
         path : 'games',
         model : 'Game',
@@ -47,16 +42,6 @@ let populate_app_simple = [
                 select : { '__v': 0}
             }
         ]
-    },
-    {
-        path : 'withdraws',
-        model : 'Withdraw',
-        select : { '__v': 0}
-    },
-    {
-        path : 'deposits',
-        model : 'Deposit',
-        select : { '__v': 0}
     },
     {   
         path : 'affiliateSetup',
@@ -93,6 +78,6 @@ let populate_app_simple = [
         select : { '__v': 0 },
         populate : populate_typography
     },
-]
+] 
 
 export default populate_app_simple;
