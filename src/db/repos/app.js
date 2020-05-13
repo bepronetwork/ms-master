@@ -13,7 +13,8 @@ import {
     pipeline_biggest_user_winners
 } from './pipelines/app';
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot,populate_app_simple } from './populates';
+
+import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -276,6 +277,9 @@ class AppRepository extends MongoComponent{
     findAppById(_id, populate_type=populate_app_all){
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
+            case 'simple' : { populate_type = populate_app_simple; break; }
+        }
+        switch(populate_type){
             case 'simple' : { populate_type = populate_app_simple; break; }
         }
         try{
