@@ -91,6 +91,17 @@ const processActions = {
         }
 		return normalized;
     },
+    __getAuth : async (params) => {
+        let app = await AppRepository.prototype.findAppById(params.app);
+        let addOns  = await AddOnsEcoRepository.prototype.getAll();
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        // Get App by Appname
+		let normalized = {
+            ...app,
+            storeAddOn: addOns
+        }
+		return normalized;
+    },
     __getLogs : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppById(params.app);
@@ -600,6 +611,20 @@ const progressActions = {
         return true;
     },
     __get : async (params) => {
+        let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
+        /* Add Decrypted API Key */
+        if ((apiKeyEncrypted != null) && (apiKeyEncrypted != undefined)){
+            params._doc.integrations.mailSender.apiKey = await Security.prototype.decryptData(apiKeyEncrypted)
+        };
+        /* Add Pusher API Key */
+        if(PUSHER_APP_KEY){
+            params._doc.integrations.pusher = {
+                key : PUSHER_APP_KEY
+            }
+        }
+		return params;
+    },
+    __getAuth : async (params) => {
         let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
         /* Add Decrypted API Key */
         if ((apiKeyEncrypted != null) && (apiKeyEncrypted != undefined)){
@@ -1155,6 +1180,9 @@ class AppLogic extends LogicComponent{
                 case 'Get' : {
 					return await library.process.__get(params); break;
                 };
+                case 'GetAuth' : {
+					return await library.process.__getAuth(params); break;
+                };
                 case 'GetGames' : {
 					return await library.process.__getGames(params); break;
                 };
@@ -1317,6 +1345,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'Get' : {
 					return await library.progress.__get(params); break;
+                };
+                case 'GetAuth' : {
+					return await library.progress.__getAuth(params); break;
                 };
                 case 'GetGames' : {
 					return await library.progress.__getGames(params); break;
