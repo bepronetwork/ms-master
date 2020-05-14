@@ -309,7 +309,8 @@ const processActions = {
     },
     __getBiggestBetWinners : async (params) => {
         let res = await BiggestBetWinnerRepository.prototype.getBiggetsBetWinner({
-            _id : params.app
+            _id : params.app,
+            game: params.game == undefined ? {game: null} : {game: params.game}
         });
 		return res;
     },
