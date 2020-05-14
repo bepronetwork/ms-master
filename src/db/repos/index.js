@@ -42,8 +42,10 @@ import AutoWithdrawRepository from "./autoWithdraw";
 import AddOnsEcoRepository from "./ecosystem/addon";
 import BalanceRepository from "./balance";
 import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsRepository } from "./redis";
+import TxFeeRepository from "./txFee";
 
 export {
+    TxFeeRepository,
     BiggestBetWinnerRepository, 
     BiggestUserWinnerRepository, 
     LastBetsRepository,

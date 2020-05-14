@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository, TxFeeRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -23,6 +23,7 @@ import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
 import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
+import TxFee from '../models/txFee';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -280,6 +281,50 @@ const processActions = {
             return res;
         } catch(err) {
             throw err;
+        }
+    },
+    __addAddonTxFee : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let deposit_fee = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+        let withdraw_fee = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let res = {
+            deposit_fee,
+            withdraw_fee,
+            app
+        }
+		return res;
+    },
+    __editAddonTxFee : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError()}
+            let txFee = await TxFeeRepository.prototype.findById(addOn.txFee)
+            if(!txFee){throwError()}
+            let res = {
+                txFee,
+                currency : params.currency,
+                txFeeParams : params.txFeeParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
         }
     },
     __editAddonAutoWithdraw : async (params) => {
@@ -810,6 +855,19 @@ const progressActions = {
         await addOnRepository.prototype.addAddonBalance(app.addOn, balanceResult._doc._id);
 		return balanceResult;
     },
+    __addAddonTxFee : async (params) => {
+        const { app, deposit_fee, withdraw_fee } = params;
+        let txFee = new TxFee({app, deposit_fee, withdraw_fee});
+        const txFeeResult = await txFee.register();
+        await addOnRepository.prototype.addAddonTxFee(app.addOn, txFeeResult._doc._id);
+		return txFeeResult;
+    },
+    __editAddonTxFee : async (params) => {
+        const { txFee, currency, txFeeParams } = params
+        await TxFeeRepository.prototype.findByIdAndUpdate(txFee._id, currency, txFeeParams)
+        let res = await TxFeeRepository.prototype.findById(txFee._id);
+        return res;
+    },
     __editAddonAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
@@ -1204,6 +1262,12 @@ class AppLogic extends LogicComponent{
                 case 'addAddonAutoWithdraw' : {
                     return await library.process.__addAddonAutoWithdraw(params); break;
                 };
+                case 'AddAddonTxFee' : {
+                    return await library.process.__addAddonTxFee(params); break;
+                };
+                case 'EditAddonTxFee' : {
+                    return await library.process.__editAddonTxFee(params); break;
+                };
                 case 'editAddonAutoWithdraw' : {
                     return await library.process.__editAddonAutoWithdraw(params); break;
                 };
@@ -1327,6 +1391,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'addAddonAutoWithdraw' : {
                     return await library.progress.__addAddonAutoWithdraw(params); break;
+                };
+                case 'AddAddonTxFee' : {
+                    return await library.progress.__addAddonTxFee(params); break;
+                };
+                case 'EditAddonTxFee' : {
+                    return await library.progress.__editAddonTxFee(params); break;
                 };
                 case 'editAddonAutoWithdraw' : {
                     return await library.progress.__editAddonAutoWithdraw(params); break;
