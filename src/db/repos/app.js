@@ -279,9 +279,6 @@ class AppRepository extends MongoComponent{
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
             case 'simple' : { populate_type = populate_app_simple; break; }
         }
-        switch(populate_type){
-            case 'simple' : { populate_type = populate_app_simple; break; }
-        }
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)

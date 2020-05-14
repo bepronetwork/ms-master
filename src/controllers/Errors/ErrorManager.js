@@ -582,6 +582,16 @@ class ErrorManager {
         }
     }
 
+    txFee = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     gameImage = function (object, type){
         try{
             switch(type){

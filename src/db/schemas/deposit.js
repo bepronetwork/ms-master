@@ -24,7 +24,8 @@ DepositSchema.prototype.schema = {
     link_url                : { type: String, default : null},
     /* If Purchase */
     isPurchase              : { type: Boolean, default : false, required : true},
-    purchaseAmount          : { type: Number, default : 0}
+    purchaseAmount          : { type: Number, default : 0},
+    fee                     : { type: Number }
 }
 
 // db o only allows once per type

@@ -41,6 +41,7 @@ import {
     MapperGetBetSingleton,
     MapperEditThemeSingleton
 } from '../controllers/Mapper';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton } from '../controllers/Mapper/App';
 
 class App extends ModelComponent {
 
@@ -305,6 +306,29 @@ class App extends ModelComponent {
         try {
             let app = await this.process('editAddonAutoWithdraw');
             return MappereditAddonAutoWithdrawSingleton.output('editAddonAutoWithdraw', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async addAddonTxFee() {
+        try {
+            let app = await this.process('AddAddonTxFee');
+            return MapperaddAddonTxFeeSingleton.output('AddAddonTxFee', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAddonTxFee() {
+        try {
+            let app = await this.process('EditAddonTxFee');
+            return MapperEditAddonTxFeeSingleton.output('EditAddonTxFee', app);
         } catch (err) {
             throw err;
         }

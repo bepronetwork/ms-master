@@ -345,7 +345,11 @@ const processActions = {
             if (!app) { throwError('APP_NOT_EXISTENT') }
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
-
+            let addOn = app.addOn;
+            let fee = 0;
+            if(addOn && addOn.txFee.isTxFee){
+                fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+            }
             /* Verify if the transactionHash was created */
             const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
@@ -378,6 +382,7 @@ const processActions = {
             let res = {
                 maxDeposit: (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
                 app,
+                app_wallet,
                 user_in_app,
                 isPurchase,
                 virtualWallet,
@@ -391,7 +396,8 @@ const processActions = {
                 from: from,
                 currencyTicker: wallet.currency.ticker,
                 amount: amount,
-                isValid
+                isValid,
+                fee
             }
 
             return res;
@@ -599,9 +605,12 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            const { virtualWallet, appVirtualWallet, isPurchase, wallet, amount } = params;
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet } = params;
             var message;
-
+            
+            /* Subtracting fee from amount */
+            amount = amount - fee;
+            
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
@@ -622,6 +631,7 @@ const progressActions = {
                 address: params.from,                         // Deposit Address 
                 currency: wallet.currency._id,
                 amount: amount,
+                fee: fee
             })
 
             /* Save Deposit Data */
@@ -629,12 +639,14 @@ const progressActions = {
 
             if(isPurchase){
                 /* User Purchase - Virtual */
+                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
-                message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
+                message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${amount} ${wallet.currency.ticker}`
             }else{
                 /* User Deposit - Real */
-                await WalletsRepository.prototype.updatePlayBalance(wallet, params.amount);
-                message = `Deposited ${params.amount} ${wallet.currency.ticker} in your account`
+                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
+                await WalletsRepository.prototype.updatePlayBalance(wallet, amount);
+                message = `Deposited ${amount} ${wallet.currency.ticker} in your account`
             }
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
@@ -650,7 +662,7 @@ const progressActions = {
             /* Send Email */
             let mail = new Mailer();
             let attributes = {
-                TEXT: mail.setTextNotification('DEPOSIT', params.amount, params.wallet.currency.ticker)
+                TEXT: mail.setTextNotification('DEPOSIT', amount, params.wallet.currency.ticker)
             };
 
             mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
