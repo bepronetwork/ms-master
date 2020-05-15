@@ -32,8 +32,10 @@ import { JackpotSchema } from './addOn/jackpot';
 import { PermissionSchema } from "./permission";
 import { AutoWithdrawSchema } from "./addOn/autoWithdraw";
 import { BalanceSchema } from "./addOn/balance";
+import { TxFeeSchema } from "./addOn/txFee";
 
 export {
+    TxFeeSchema,
     BalanceSchema,
     CurrencySchema,
     UserSchema,

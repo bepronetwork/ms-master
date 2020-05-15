@@ -84,6 +84,22 @@ class AddOnRepository extends MongoComponent{
         });
     }
 
+    addAddonTxFee(addOn_id, txFee){
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn_id,
+                {
+                    $set: {txFee}
+                },
+                {'new': true}
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
 }
 
 AddOnRepository.prototype.schema = new AddOnSchema();

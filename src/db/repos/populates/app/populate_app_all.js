@@ -27,6 +27,10 @@ let populate_app_all = [
                 path : 'jackpot',
                 model : 'Jackpot',
                 select : { '__v': 0}
+            },{
+                path : 'txFee',
+                model : 'TxFee',
+                select : { '__v': 0}
             }
         ]
     },
