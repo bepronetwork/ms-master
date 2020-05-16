@@ -147,7 +147,8 @@ const processActions = {
             user: params.user == undefined ? {} : {user : params.user},
             bet: params.bet == undefined ? {} : {_id : params.bet},
             currency: params.currency == undefined ? {} : {currency : params.currency},
-            game: params.game == undefined ? {} : {game : params.game}
+            game: params.game == undefined ? {} : {game : params.game},
+            isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot}
         });
 		return res;
     },
