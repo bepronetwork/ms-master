@@ -607,9 +607,14 @@ const progressActions = {
         try {
             let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet } = params;
             var message;
-            
-            /* Subtracting fee from amount */
-            amount = amount - fee;
+
+            /* Condition to set value of deposit amount and fee */
+            if(amount <= fee){
+                fee = amount;
+                amount = 0;
+            }else{
+                amount = amount - fee;
+            }
             
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
