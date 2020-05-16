@@ -1,5 +1,3 @@
-
-
 let self;
 
 
@@ -12,22 +10,17 @@ let self;
 
 
 let outputs = {
-    editVirtualCurrency: (object) => {
+    editTheme: (object) => {
         return {
-            "currency": object.currency,
-            "price": object.price,
             "app": object.app,
-            "admin": object.admin,
-            "min_withdraw": object.min_withdraw,
-            "affiliate_min_withdraw": object.affiliate_min_withdraw,
-            "wallet": object.wallet,
-            "image": object.image
+            "customization": object.customization,
+            "theme": object.theme,
         }
     },
 }
 
 
-class MapperEditVirtualCurrency {
+class MapperEditTheme {
 
     constructor() {
         self = {
@@ -41,7 +34,7 @@ class MapperEditVirtualCurrency {
          */
 
         this.KEYS = {
-            EditVirtualCurrency: 'editVirtualCurrency'
+            EditTheme: 'editTheme'
         }
     }
 
@@ -54,8 +47,8 @@ class MapperEditVirtualCurrency {
     }
 }
 
-let MapperEditVirtualCurrencySingleton = new MapperEditVirtualCurrency();
+let MapperEditThemeSingleton = new MapperEditTheme();
 
 export {
-    MapperEditVirtualCurrencySingleton
+    MapperEditThemeSingleton
 }

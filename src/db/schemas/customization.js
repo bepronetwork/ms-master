@@ -14,6 +14,7 @@ CustomizationSchema.prototype.schema =  {
     footer      : { type : mongoose.Schema.Types.ObjectId, ref: 'Footer', required : true },
     topIcon     : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },
     loadingGif  : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
+    theme       : { type : String, default : "dark" },
 }
 
 

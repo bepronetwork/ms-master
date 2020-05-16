@@ -28,11 +28,12 @@ class BiggestBetWinnerRepository extends MongoComponent{
         return this.schema.model(BiggestBetWinner)
     }
 
-    getBiggetsBetWinner({_id}){
+    getBiggetsBetWinner({_id, game}){
         try{
             return new Promise( (resolve, reject) => {
                 BiggestBetWinnerRepository.prototype.schema.model.find({
                     app : _id,
+                    ...game
                 })
                 .exec( async (err, item) => {
                     if(err){reject(err)}

@@ -1,4 +1,4 @@
-
+import { tx_fee_object } from "../Structures";
 
 let self;
 
@@ -12,22 +12,15 @@ let self;
 
 
 let outputs = {
-    editVirtualCurrency: (object) => {
+    addAddonTxFee: (object) => {
         return {
-            "currency": object.currency,
-            "price": object.price,
-            "app": object.app,
-            "admin": object.admin,
-            "min_withdraw": object.min_withdraw,
-            "affiliate_min_withdraw": object.affiliate_min_withdraw,
-            "wallet": object.wallet,
-            "image": object.image
+            ...tx_fee_object(object)
         }
     },
 }
 
 
-class MapperEditVirtualCurrency {
+class MapperaddAddonTxFee {
 
     constructor() {
         self = {
@@ -41,7 +34,7 @@ class MapperEditVirtualCurrency {
          */
 
         this.KEYS = {
-            EditVirtualCurrency: 'editVirtualCurrency'
+            AddAddonTxFee: 'addAddonTxFee'
         }
     }
 
@@ -54,8 +47,8 @@ class MapperEditVirtualCurrency {
     }
 }
 
-let MapperEditVirtualCurrencySingleton = new MapperEditVirtualCurrency();
+let MapperaddAddonTxFeeSingleton = new MapperaddAddonTxFee();
 
 export {
-    MapperEditVirtualCurrencySingleton
+    MapperaddAddonTxFeeSingleton
 }

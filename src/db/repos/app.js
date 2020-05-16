@@ -13,7 +13,8 @@ import {
     pipeline_biggest_user_winners
 } from './pipelines/app';
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot } from './populates';
+
+import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -216,7 +217,7 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}}){
         try{
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model.find({
@@ -224,16 +225,23 @@ class AppRepository extends MongoComponent{
                     ...user,
                     ...bet,
                     ...game,
-                    ...currency
+                    ...currency,
+                    ...isJackpot
                 })
                 .sort({timestamp: -1})
                 .populate([
                     'user'
                 ])
                 .skip(offset == undefined ? 0 : offset)
-                .limit((size > 200 || !size) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+                .limit((size > 200 || !size || size <= 0) ? 200 : size) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
                 .exec( async (err, item) => {
-                    const totalCount = await BetRepository.prototype.schema.model.find({app : _id}).count();
+                    const totalCount = await BetRepository.prototype.schema.model.find({
+                        app : _id,
+                        ...user,
+                        ...bet,
+                        ...game,
+                        ...currency
+                    }).countDocuments().exec();
                     if(err){reject(err)}
                     resolve({list: item, totalCount });
                 })
@@ -276,6 +284,7 @@ class AppRepository extends MongoComponent{
     findAppById(_id, populate_type=populate_app_all){
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
+            case 'simple' : { populate_type = populate_app_simple; break; }
         }
         try{
             return new Promise( (resolve, reject) => {

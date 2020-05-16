@@ -46,7 +46,7 @@ class PermissionRepository extends MongoComponent{
                     "super_admin"  : newStructure.super_admin,
                     "customization"  : newStructure.customization,
                     "withdraw"  : newStructure.withdraw,
-                    "userWithdraw"  : newStructure.userWithdraw,
+                    "user_withdraw"  : newStructure.user_withdraw,
                     "financials"  : newStructure.financials,
                 }} 
                 )

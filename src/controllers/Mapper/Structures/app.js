@@ -112,6 +112,7 @@ const app_object = (object) => {
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
                     "min_withdraw": wallet.min_withdraw,
+                    "affiliate_min_withdraw": wallet.affiliate_min_withdraw,
                     "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => deposit_address_id) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "currency": !wallet.currency ? {} : {
@@ -163,6 +164,7 @@ const app_object = (object) => {
             },
             "customization": !object.app.customization ? {} : object.app.customization.colors == undefined ? object.app.customization._id : {
                 "_id": object.app.customization._id,
+                "theme": object.app.customization.theme,
                 "colors": object.app.customization.colors ? object.app.customization.colors.map(color => {
                     return ({
                         "_id": color._id,

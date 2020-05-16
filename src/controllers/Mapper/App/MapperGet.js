@@ -74,6 +74,7 @@ let outputs = {
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
                     "min_withdraw": wallet.min_withdraw,
+                    "affiliate_min_withdraw": wallet.affiliate_min_withdraw,
                     "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => deposit_address_id) : wallet.depositAddresses,
                     "link_url": wallet.link_url,
                     "currency": !wallet.currency ? {} : {
@@ -113,6 +114,7 @@ let outputs = {
             },
             "customization": !object.customization ? {} : {
                 "_id": object.customization._id,
+                "theme": object.customization.theme,
                 "colors": object.customization.colors ? object.customization.colors.map(color => {
                     return ({
                         "_id": color._id,
@@ -201,9 +203,10 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
-            "addOn": object.addOn ? {} : {
+            "addOn": !object.addOn ? {} : {
                 autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
-                balance       : !object.addOn.balance       ? null : object.addOn.balance
+                balance       : !object.addOn.balance       ? null : object.addOn.balance,
+                txFee         : !object.addOn.txFee       ? null : object.addOn.txFee
             },
             "__v": object.__v,
         }

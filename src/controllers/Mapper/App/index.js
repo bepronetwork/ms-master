@@ -33,8 +33,13 @@ import { MapperGetBiggetsBetWinnersSingleton } from "./MapperBiggestBetWinners";
 import { MapperGetBiggetsUserWinnersSingleton } from "./MapperBiggestUserWinners";
 import { MapperGetPopularNumbersSingleton } from "./MapperPopularNumbers";
 import { MapperGetLogsSingleton } from "./MapperGetLogs";
+import { MapperEditThemeSingleton } from "./MapperEditTheme";
+import { MapperaddAddonTxFeeSingleton } from "./MapperAddTxFee";
+import { MapperEditAddonTxFeeSingleton } from "./MapperEditTxFee";
 
 export {
+    MapperEditAddonTxFeeSingleton,
+    MapperaddAddonTxFeeSingleton,
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
     MapperEditBannersSingleton,
@@ -69,5 +74,6 @@ export {
     MapperGetBiggetsBetWinnersSingleton,
     MapperGetBiggetsUserWinnersSingleton,
     MapperGetPopularNumbersSingleton,
-    MapperGetLogsSingleton
+    MapperGetLogsSingleton,
+    MapperEditThemeSingleton
 }

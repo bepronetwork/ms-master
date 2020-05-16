@@ -61,9 +61,12 @@ class LogRepository extends MongoComponent{
                 }
             )
             .skip(offset)
-            .limit( (limit > 200 || limit==undefined || limit<=0) ? 200 : limit) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
+            .limit( (limit > 200 || !limit || limit<=0) ? 200 : limit) // If limit > 200 then limit is equal 200, because limit must be 200 maximum
             .exec( async (err, item) => {
-                const size = await LogRepository.prototype.schema.model.find({creatorId}).count();
+                const size = await LogRepository.prototype.schema.model.find({
+                    creatorId, // Always with app id
+                    ...filterObject // filter
+                }).countDocuments().exec();
                 if(err){reject(err)}
                 resolve({list: item, size });
             })

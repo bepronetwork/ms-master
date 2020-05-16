@@ -195,6 +195,22 @@ context(`Errors ex : ${currencyTicker.toUpperCase()}`, async () =>  {
         shouldntBeAbleToBetNegativeValue(res.data, expect);
     }));
 
+    it('shouldn´t be able to bet - Less than 5 decimals (0.000001)', mochaAsync(async () => {
+        let postData = {  
+            game: game._id,
+            user: user.id,
+            app: app.id,
+            currency : currency._id,
+            nonce: getRandom(123,2384723),
+            result: [{
+                place : 0, value : 0.00000002
+            }]
+        };
+        var res = await placeBet(postData, user.bearerToken, {id : user.id});
+        detectValidationErrors(res);
+        shouldntBeAbleToBetNegativeValue(res.data, expect);
+    }));
+
 });
 
     

@@ -2,6 +2,7 @@ import {
     getUserAuth,
     placeBet,
     authAdmin,
+    loginUser,
     getAppAuth
 } from '../../methods';
 
@@ -17,7 +18,7 @@ const expect = chai.expect;
     'eth' : 0.001
 }
 
-const constant = {
+var constant = {
     admin : {
         id : '5e49621025bc260021571580',
         bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU0OTYyMTAyNWJjMjYwMDIxNTcxNTgwIiwidGltZSI6MTU5MTAxMjU4MDI4OSwiaWF0IjoxNTg4NDIwNTgwfQ.OHfSmvrpWdXPAYQ9zkVxBca_t8BWLeWoqoLMx_CJIJpdscCAfgXEFCxXUWDRPlS8oOg3BH6dG99j6AnAXVFq_g'
@@ -27,6 +28,8 @@ const constant = {
     },
     user : {
         id : '5e776d2726c551002172ecd9',
+        username : 'jeremy',
+        password : 'test123',
         bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU3NzZkMjcyNmM1NTEwMDIxNzJlY2Q5IiwidGltZSI6MTU4ODg4MTI0NDgyNCwiaWF0IjoxNTg2Mjg5MjQ0fQ.BlqROIKMl-NaI_57ylFAsShhH86lzTWS7zDLF6nYlOELf2yYPAB2_-brBKyrUrmUizQ9z6GgUJHWEJN1RJFQ-A'
     }
 }
@@ -35,7 +38,6 @@ const betAmount = 0.001;
 context('Double bet - Exploit', async () => {
     var app, walletApp, user, admin, game, ticker = 'eth',postDataDefault, currency, bet;
     
-
     const beforeBetFunction = async ({metaName}) => {
         game = app.games.find( game => game.metaName == metaName);
         user = (await getUserAuth({user : constant.user.id, app: app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
@@ -46,6 +48,7 @@ context('Double bet - Exploit', async () => {
 
     before( async () =>  {
         admin = (await authAdmin({ admin : constant.admin.id }, constant.admin.bearerToken, { id : constant.admin.id})).data.message;
+        constant.user.bearerToken = (await loginUser({username : constant.user.username, password : constant.user.password, app : constant.app.id})).data.message.bearerToken;
         user = (await getUserAuth({user : constant.user.id, app: constant.app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
         app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;

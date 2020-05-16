@@ -86,6 +86,22 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addAddonTxFee(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/txFee/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonTxFee(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/txFee/editTxFee')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAddonBalance(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/balance/edit')
@@ -413,7 +429,7 @@ module.exports = {
     },
     async pingPost(params, bearerToken, payload){
         return request(global.server)
-        .post('/api/ping/post')
+        .post('/api/status/post')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
@@ -519,6 +535,14 @@ module.exports = {
     async editTypographyApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/typography')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => { return res.body})
+    },
+    async editThemeApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/theme')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

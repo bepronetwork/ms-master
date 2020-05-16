@@ -58,7 +58,7 @@ const processActions = {
         const user = await UsersRepository.prototype.findUserById(params.user);
         if (!user) { throwError('USER_NOT_EXISTENT') }
 
-        const app = await AppRepository.prototype.findAppById(user.app_id);
+        const app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(user.email);
@@ -101,7 +101,7 @@ const processActions = {
         let newBearerToken = MiddlewareSingleton.sign(user._id);
         var app = user.app_id;
 
-        app = await AppRepository.prototype.findAppById(user.app_id);
+        app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
 
         var user_in_app = (app._id == params.app);
@@ -128,7 +128,7 @@ const processActions = {
         const user = await __private.db.findUser(params.username_or_email);
         if (!user) { throwError("USERNAME_OR_EMAIL_NOT_EXISTS"); }
         
-        var app = await AppRepository.prototype.findAppById(user.app_id);
+        var app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT"); }
       
 
@@ -249,7 +249,7 @@ const processActions = {
         //Set up Password Structure
         let user, hash_password;
 
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
 
         let balanceInitial = null;
@@ -323,7 +323,7 @@ const processActions = {
         var { currency, id, app } = params;
         /* Get User Id */
         let user = await UsersRepository.prototype.findUserById(id);
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if (!user) { throwError('USER_NOT_EXISTENT') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
@@ -341,11 +341,15 @@ const processActions = {
         try {
             var { currency, id, wBT } = params;
 
-            var app = await AppRepository.prototype.findAppById(id);
+            var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
-
+            let addOn = app.addOn;
+            let fee = 0;
+            if(addOn && addOn.txFee.isTxFee){
+                fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+            }
             /* Verify if the transactionHash was created */
             const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
@@ -365,7 +369,7 @@ const processActions = {
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
-            let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
+            let user_in_app = (app.users.findIndex(x => (x.toString() == user._id.toString())) > -1);
 
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){
@@ -378,6 +382,7 @@ const processActions = {
             let res = {
                 maxDeposit: (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
                 app,
+                app_wallet,
                 user_in_app,
                 isPurchase,
                 virtualWallet,
@@ -391,7 +396,8 @@ const processActions = {
                 from: from,
                 currencyTicker: wallet.currency.ticker,
                 amount: amount,
-                isValid
+                isValid,
+                fee
             }
 
             return res;
@@ -599,9 +605,17 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            const { virtualWallet, appVirtualWallet, isPurchase, wallet, amount } = params;
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet } = params;
             var message;
 
+            /* Condition to set value of deposit amount and fee */
+            if(amount <= fee){
+                fee = amount;
+                amount = 0;
+            }else{
+                amount = amount - fee;
+            }
+            
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
@@ -622,6 +636,7 @@ const progressActions = {
                 address: params.from,                         // Deposit Address 
                 currency: wallet.currency._id,
                 amount: amount,
+                fee: fee
             })
 
             /* Save Deposit Data */
@@ -629,12 +644,14 @@ const progressActions = {
 
             if(isPurchase){
                 /* User Purchase - Virtual */
+                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
-                message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${params.amount} ${wallet.currency.ticker}`
+                message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${amount} ${wallet.currency.ticker}`
             }else{
                 /* User Deposit - Real */
-                await WalletsRepository.prototype.updatePlayBalance(wallet, params.amount);
-                message = `Deposited ${params.amount} ${wallet.currency.ticker} in your account`
+                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
+                await WalletsRepository.prototype.updatePlayBalance(wallet, amount);
+                message = `Deposited ${amount} ${wallet.currency.ticker} in your account`
             }
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
@@ -650,7 +667,7 @@ const progressActions = {
             /* Send Email */
             let mail = new Mailer();
             let attributes = {
-                TEXT: mail.setTextNotification('DEPOSIT', params.amount, params.wallet.currency.ticker)
+                TEXT: mail.setTextNotification('DEPOSIT', amount, params.wallet.currency.ticker)
             };
 
             mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});

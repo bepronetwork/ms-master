@@ -58,7 +58,8 @@ const processActions = {
             amount                  : params.amount,
             confirmations           : params.confirmations || 0,
 			maxConfirmations        : params.maxConfirmations || 0,
-			link_url                : link_url
+			link_url                : link_url,
+			fee                     : !params.fee ? 0 : params.fee
 		}
 		return normalized;
     },

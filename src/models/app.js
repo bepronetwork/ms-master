@@ -38,8 +38,10 @@ import {
     MapperGetBiggetsUserWinnersSingleton,
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
-    MapperGetBetSingleton
+    MapperGetBetSingleton,
+    MapperEditThemeSingleton
 } from '../controllers/Mapper';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton } from '../controllers/Mapper/App';
 
 class App extends ModelComponent {
 
@@ -155,7 +157,7 @@ class App extends ModelComponent {
 
     async getAuth() {
         try {
-            let app = await this.process('Get');
+            let app = await this.process('GetAuth');
             return MapperGetAuthSingleton.output('GetAuth', {...app._doc, storeAddOn : app.storeAddOn});
         } catch (err) {
             throw err;
@@ -304,6 +306,29 @@ class App extends ModelComponent {
         try {
             let app = await this.process('editAddonAutoWithdraw');
             return MappereditAddonAutoWithdrawSingleton.output('editAddonAutoWithdraw', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async addAddonTxFee() {
+        try {
+            let app = await this.process('AddAddonTxFee');
+            return MapperaddAddonTxFeeSingleton.output('AddAddonTxFee', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAddonTxFee() {
+        try {
+            let app = await this.process('EditAddonTxFee');
+            return MapperEditAddonTxFeeSingleton.output('EditAddonTxFee', app);
         } catch (err) {
             throw err;
         }
@@ -498,6 +523,20 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditMailSenderIntegration');
             return MapperEditMailSenderIntegrationSingleton.output('EditMailSenderIntegration', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTheme() {
+        try {
+            let app = await this.process('EditTheme');
+            return MapperEditThemeSingleton.output('EditTheme', app);
         } catch (err) {
             throw err;
         }

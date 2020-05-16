@@ -2,6 +2,7 @@ import {
     getUserAuth,
     placeBet,
     authAdmin,
+    loginUser,
     getAppAuth
 } from '../../methods';
 
@@ -17,7 +18,7 @@ const expect = chai.expect;
     'eth' : 0.001
 }
 
-const constant = {
+var constant = {
     admin : {
         id : '5e49621025bc260021571580',
         bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU0OTYyMTAyNWJjMjYwMDIxNTcxNTgwIiwidGltZSI6MTU5MTAxMjU4MDI4OSwiaWF0IjoxNTg4NDIwNTgwfQ.OHfSmvrpWdXPAYQ9zkVxBca_t8BWLeWoqoLMx_CJIJpdscCAfgXEFCxXUWDRPlS8oOg3BH6dG99j6AnAXVFq_g'
@@ -27,6 +28,8 @@ const constant = {
     },
     user : {
         id : '5e776d2726c551002172ecd9',
+        username : 'jeremy',
+        password : 'test123',
         bearerToken : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU3NzZkMjcyNmM1NTEwMDIxNzJlY2Q5IiwidGltZSI6MTU4ODg4MTI0NDgyNCwiaWF0IjoxNTg2Mjg5MjQ0fQ.BlqROIKMl-NaI_57ylFAsShhH86lzTWS7zDLF6nYlOELf2yYPAB2_-brBKyrUrmUizQ9z6GgUJHWEJN1RJFQ-A'
     }
 }
@@ -58,6 +61,7 @@ context('Bet Errors Exploit - Prevention', async () => {
     before( async () =>  {
         betAmount = 0.001;
         admin = (await authAdmin({ admin : constant.admin.id }, constant.admin.bearerToken, { id : constant.admin.id})).data.message;
+        constant.user.bearerToken = (await loginUser({username : constant.user.username, password : constant.user.password, app : constant.app.id})).data.message.bearerToken;
         user = (await getUserAuth({user : constant.user.id, app: constant.app.id}, constant.user.bearerToken, {id : constant.user.id})).data.message;
         app = (await getAppAuth({app : constant.app.id, admin: constant.admin.id}, constant.admin.bearerToken, {id : constant.admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
@@ -657,7 +661,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: i, value : betAmount/10000
+                place: i, value : betAmount/10
             }})
         };
 
@@ -665,7 +669,7 @@ context('Bet Errors Exploit - Prevention', async () => {
         expect(res.data.status).to.equal(200);
     }));
 
-    it(`it shound´t be able to bet, if the places are not together on european_roulette_simple`, mochaAsync(async () => {
+    it(`it shound be able to bet, if the places are not together on european_roulette_simple`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'european_roulette_simple'
@@ -675,8 +679,8 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: [{
-                place: 0, value : betAmount/10000,
-                place: 4, value : betAmount/10000
+                place: 0, value : betAmount/10,
+                place: 4, value : betAmount/10
             }]
         };
 
