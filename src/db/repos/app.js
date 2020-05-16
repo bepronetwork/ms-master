@@ -217,7 +217,7 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}}){
         try{
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model.find({
@@ -225,7 +225,8 @@ class AppRepository extends MongoComponent{
                     ...user,
                     ...bet,
                     ...game,
-                    ...currency
+                    ...currency,
+                    ...isJackpot
                 })
                 .sort({timestamp: -1})
                 .populate([

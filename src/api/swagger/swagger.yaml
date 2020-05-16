@@ -3647,6 +3647,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Game ID
+      isJackpot :
+        type : boolean
+        format: boolean
+        example: true
+        description: |
+          Is Jackpot
       size:
         type : number
         example: 15
