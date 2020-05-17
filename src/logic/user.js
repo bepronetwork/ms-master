@@ -347,7 +347,7 @@ const processActions = {
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             let addOn = app.addOn;
             let fee = 0;
-            if(addOn && addOn.txFee.isTxFee){
+            if(addOn && addOn.txFee && addOn.txFee.isTxFee){
                 fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
             }
             /* Verify if the transactionHash was created */
