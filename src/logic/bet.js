@@ -110,8 +110,12 @@ const processActions = {
         try{
 
             let { currency } = params;
+            PerformanceBet.start({id : 'findGameById'});
             let game = await GamesRepository.prototype.findGameById(params.game);
+            PerformanceBet.end({id : 'findGameById'});
+            PerformanceBet.start({id : 'findUserById'});
             let user = await UsersRepository.prototype.findUserById(params.user);
+            PerformanceBet.end({id : 'findUserById'});
 
             let app = user.app_id;
             if(game){var maxBetValue = game.maxBet; }
@@ -268,10 +272,11 @@ const progressActions = {
 
         const { isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet } = params;
         /* Save all ResultSpaces */
-
+        PerformanceBet.start({id : 'BetResultSpace.register'});
         let dependentObjects = Object.keys(result).map( async key => 
             await (new BetResultSpace(result[key])).register()
         );
+        PerformanceBet.end({id : 'BetResultSpace.register'});
 
         let betResultSpacesIds = await Promise.all(dependentObjects);
         // Generate new Params Setup
@@ -281,17 +286,23 @@ const progressActions = {
             result : betResultSpacesIds,
             isResolved : true
         }
+
         /* Save Bet */
+        PerformanceBet.start({id : 'bet.register'});
         let bet = await self.save({
             ...params,
             betAmount : params.totalBetAmount
         });
+        PerformanceBet.end({id : 'bet.register'});
 
 		/* Update PlayBalance */
+        PerformanceBet.start({id : 'wallet1'});
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
+        PerformanceBet.end({id : 'wallet1'});
         /* Update App PlayBalance */
+        PerformanceBet.start({id : 'wallet2'});
         await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
-
+        PerformanceBet.end({id : 'wallet2'});
         /* Update Balance of Affiliates */
         if(isUserAffiliated){
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
