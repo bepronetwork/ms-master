@@ -19,7 +19,7 @@
         "swagger": "swagger project edit",
         "generate-result-space": "node scripts/createResultSpace",
         "scripts": "babel-node scripts --nopresets es2015,stage-2",
-        "run-doc": "npm run md-docs && npm run generate-docs"
+        "docs": "npm run md-docs && npm run generate-docs"
     },
     "husky": {
         "hooks": {
