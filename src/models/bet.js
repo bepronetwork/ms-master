@@ -4,7 +4,7 @@ import {BetsRepository, UsersRepository} from '../db/repos';
 import { isCasino } from '../logic/markets/betSystems';
 import { MapperBetSingleton } from "../controllers/Mapper";
 import PerfomanceMonitor from '../helpers/performance';
-const PerformanceBet = new PerfomanceMonitor({id : 'Bet'});
+const PerformanceBet = new PerfomanceMonitor({id : 'bettt'});
 
 class Bet extends ModelComponent{
 
@@ -30,8 +30,8 @@ class Bet extends ModelComponent{
         try{
             await UsersRepository.prototype.changeWithdrawPosition(user, true);
             let res = await this.process('Auto');
-            UsersRepository.prototype.changeWithdrawPosition(user, false);
             PerformanceBet.end({id : 'bet_full'});
+            UsersRepository.prototype.changeWithdrawPosition(user, false);
             return MapperBetSingleton.output('Bet', res);
         }catch(err){
             if(parseInt(err.code) != 14){
