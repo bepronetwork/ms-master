@@ -10,7 +10,7 @@ import { getAffiliatesReturn } from './utils/affiliates';
 // import MathSingleton from './utils/math';
 import PerfomanceMonitor from '../helpers/performance';
 
-const PerformanceBet = new PerfomanceMonitor({id : 'Bet'});
+const PerformanceBet = new PerfomanceMonitor({id : 'Bet_1'});
 
 let error = new ErrorManager();
 
@@ -108,7 +108,6 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-
             let { currency } = params;
             PerformanceBet.start({id : 'findGameById'});
             let game = await GamesRepository.prototype.findGameById(params.game);
