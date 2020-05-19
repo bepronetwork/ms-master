@@ -12,19 +12,26 @@ let self;
 
 let outputs = {
     getPopularNumbers: (object) => {
-        return object.map(object => {
-            return ({
-                "game": object.game,
-                "numbers": !object.numbers ? [] : object.numbers.map(number => {
-                    return({
-                        "key": number.key,
-                        "index": number.index,
-                        "probability": number.probability,
-                        "resultAmount": number.resultAmount
+        return object[0] == undefined ? {} : {
+            "_id": object[0]._id,
+            "app": object[0].app,
+            "timestamp": object[0].timestamp,
+            "popularNumbers": !object[0].popularNumbers ? [] : object[0].popularNumbers.map(popularNumbers => {
+                return ({
+                    "_id": popularNumbers._id,
+                    "game": popularNumbers.game,
+                    "numbers": !popularNumbers.numbers ? [] : popularNumbers.numbers.map(number => {
+                        return ({
+                            "key": number.key,
+                            "index": number.index,
+                            "probability": number.probability,
+                            "resultAmount": number.resultAmount
+                        })
                     })
                 })
-            })
-        })
+            }),
+            "__v": object[0].__v,
+        }
     }
 }
 
