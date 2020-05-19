@@ -108,8 +108,6 @@ const betResolvingActions = {
 const processActions = {
     __auto : async (params) => {
         try{
-            PerformanceBet.start({id : 'init'});
-
             let { currency } = params;
             PerformanceBet.start({id : 'findGameById'});
             let game = await GamesRepository.prototype.findGameById(params.game);
@@ -321,7 +319,6 @@ const progressActions = {
             bet,
             ...params
         };
-        PerformanceBet.end({id : 'init'});
 
 		return res;
 	},
