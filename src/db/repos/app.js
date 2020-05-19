@@ -14,7 +14,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple } from './populates';
+import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -285,6 +285,7 @@ class AppRepository extends MongoComponent{
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
             case 'simple' : { populate_type = populate_app_simple; break; }
+            case 'wallet' : { populate_type = populate_app_wallet; break; }
         }
         try{
             return new Promise( (resolve, reject) => {

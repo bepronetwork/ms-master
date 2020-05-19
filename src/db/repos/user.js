@@ -8,7 +8,7 @@ import {
     pipeline_all_users_balance,
     pipeline_my_bets
 } from './pipelines/user';
-import { populate_user } from './populates';
+import { populate_user, populate_user_simple } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
@@ -55,11 +55,15 @@ class UsersRepository extends MongoComponent{
         });
     }
 
-    async findUserById(_id){
+    async findUserById(_id, populate_type=populate_user){
+        switch(populate_type){
+            case 'simple' : { populate_type=populate_user_simple; break; }
+        }
+
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findById(_id)
-                .populate(populate_user)
+                .populate(populate_type)
                 .exec( (err, user) => {
                     if(err) { resolve(null)}
                     resolve(user);
