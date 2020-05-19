@@ -3,6 +3,8 @@ import ModelComponent from './modelComponent';
 import {BetsRepository, UsersRepository} from '../db/repos';
 import { isCasino } from '../logic/markets/betSystems';
 import { MapperBetSingleton } from "../controllers/Mapper";
+import PerfomanceMonitor from '../helpers/performance';
+const PerformanceBet = new PerfomanceMonitor({id : 'Bet'});
 
 class Bet extends ModelComponent{
 
@@ -22,12 +24,14 @@ class Bet extends ModelComponent{
     }
 
     async register(){
-        const { user } = this.self.params;
+        PerformanceBet.start({id : 'bet_full'});
 
+        const { user } = this.self.params;
         try{
             await UsersRepository.prototype.changeWithdrawPosition(user, true);
             let res = await this.process('Auto');
             UsersRepository.prototype.changeWithdrawPosition(user, false);
+            PerformanceBet.end({id : 'bet_full'});
             return MapperBetSingleton.output('Bet', res);
         }catch(err){
             if(parseInt(err.code) != 14){
