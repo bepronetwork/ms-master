@@ -147,6 +147,10 @@ let outputs = {
                     "_id": object.customization.logo._id,
                     "id": !object.customization.logo.id ? '' : object.customization.logo.id
                 },
+                "background": !object.customization.background ? {} : {
+                    "_id": object.customization.background._id,
+                    "id": !object.customization.background.id ? '' : object.customization.background.id
+                },
                 "footer": !object.customization.footer ? {} : {
                     "_id": object.customization.footer._id,
                     "supportLinks": !object.customization.footer.supportLinks ? [] : object.customization.footer.supportLinks.map(support_link => {

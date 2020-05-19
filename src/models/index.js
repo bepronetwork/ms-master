@@ -38,6 +38,7 @@ import Balance from "./balance";
 import BiggestBetWinner from "./biggestBetWinner";
 import BiggestUserWinner from "./biggestUserWinner";
 import LastBets from "./lastBets";
+import Background from "./background";
 
 export {
     LastBets,
@@ -79,5 +80,6 @@ export {
     TopIcon,
     Token,
     MailSender,
-    LoadingGif
+    LoadingGif,
+    Background
 }

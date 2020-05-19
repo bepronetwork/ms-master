@@ -36,6 +36,7 @@ import { MapperGetLogsSingleton } from "./MapperGetLogs";
 import { MapperEditThemeSingleton } from "./MapperEditTheme";
 import { MapperaddAddonTxFeeSingleton } from "./MapperAddTxFee";
 import { MapperEditAddonTxFeeSingleton } from "./MapperEditTxFee";
+import { MapperEditBackgroundSingleton } from "./MapperEditBackground";
 
 export {
     MapperEditAddonTxFeeSingleton,
@@ -75,5 +76,6 @@ export {
     MapperGetBiggetsUserWinnersSingleton,
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
-    MapperEditThemeSingleton
+    MapperEditThemeSingleton,
+    MapperEditBackgroundSingleton
 }

@@ -492,6 +492,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editBackgroundCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/background')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editLogoCustomizationApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/customization/logo')

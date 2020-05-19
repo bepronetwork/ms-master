@@ -63,7 +63,8 @@ import {
     MapperGetLogsSingleton,
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
-    MapperaddAddonTxFeeSingleton
+    MapperaddAddonTxFeeSingleton,
+    MapperEditBackgroundSingleton
 } from "./App";
 
 import {
@@ -141,5 +142,6 @@ export {
     MapperGetLogsSingleton,
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
-    MapperaddAddonTxFeeSingleton
+    MapperaddAddonTxFeeSingleton,
+    MapperEditBackgroundSingleton
 }

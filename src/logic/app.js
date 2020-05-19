@@ -3,7 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
     GamesRepository, ChatRepository, TopBarRepository, 
     BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository, TxFeeRepository
+    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository, TxFeeRepository, BackgroundRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -549,6 +549,15 @@ const processActions = {
             app
         };
     },
+    __editBackground : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editLogo : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
@@ -1075,6 +1084,23 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editBackground: async (params) => {
+        let { app, background } = params;
+        let backgroundURL;
+        if(background.includes("https")){
+            /* If it is a link already */
+            backgroundURL = background;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            backgroundURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : background});
+        }
+
+        await BackgroundRepository.prototype.findByIdAndUpdate(app.customization.background._id, {
+            id : backgroundURL
+        })
+        // Save info on Customization Part
+        return params;
+    },
     __editLogo : async (params) => {
         let { app, logo } = params;
         let logoURL;
@@ -1354,6 +1380,9 @@ class AppLogic extends LogicComponent{
                 case 'GetBetInfo' : {
 					return await library.process.__getBetInfo(params); break;
                 };
+                case 'EditBackground' : {
+					return await library.process.__editBackground(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1504,6 +1533,9 @@ class AppLogic extends LogicComponent{
                 }
                 case 'GetBetInfo': {
                     return await library.progress.__getBetInfo(params); break;
+                }
+                case 'EditBackground': {
+                    return await library.progress.__editBackground(params); break;
                 }
 			}
 		}catch(error){

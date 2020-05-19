@@ -42,6 +42,7 @@ import BiggestBetWinnerLogic from "./biggestBetWinner";
 import BiggestUserWinnerLogic from "./biggestUserWinner";
 import LastBetsLogic from "./lastBets";
 import TxFeeLogic from "./txFee";
+import BackgroundLogic from "./background";
 
 export {
     TxFeeLogic,
@@ -87,6 +88,7 @@ export {
     MailSenderLogic,
     LoadingGifLogic,
     PermissionLogic,
-    AutoWithdrawLogic
+    AutoWithdrawLogic,
+    BackgroundLogic
 }
 
