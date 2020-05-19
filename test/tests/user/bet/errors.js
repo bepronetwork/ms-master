@@ -146,7 +146,7 @@ context(`Errors ex : ${currencyTicker.toUpperCase()}`, async () =>  {
         };
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         detectValidationErrors(res);
-        shouldntBeAbleToBetBadApp(res.data, expect);
+        expect(res.data.status).to.equal(404);
     }));
 
     it('shouldn´t be able to bet - empty result', mochaAsync(async () => {

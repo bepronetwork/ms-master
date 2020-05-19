@@ -1,4 +1,5 @@
 import { CLOUDAMQP_URL } from '../../../config';
+import { Logger } from '../../../helpers/logger';
 
 class workerQueue {
 
@@ -7,7 +8,11 @@ class workerQueue {
     }
 
     __init__() {
-        this.__connectInstance = require('amqplib').connect(CLOUDAMQP_URL).then(conn => conn.createChannel());
+        try{
+            this.__connectInstance = require('amqplib').connect(CLOUDAMQP_URL).then(conn => conn.createChannel());
+        }catch(err){
+            Logger.error(`Can´t connect with RabbiMQ Jackpot Service ${err}`)
+        }
     }
 
     __connect(){
@@ -15,25 +20,33 @@ class workerQueue {
     }
 
     __createQueue(channel, queue){
-        return new Promise((resolve, reject) => {
         try{
-            channel.assertQueue(queue, { durable: true });
-            resolve(channel);
+            return new Promise((resolve, reject) => {
+                try{
+                    channel.assertQueue(queue, { durable: true });
+                    resolve(channel);
+                }
+                catch(err){ reject(err) }
+            });
+        }catch(err){
+            Logger.error(`Can´t connect with RabbiMQ Jackpot Service ${err}`)
         }
-        catch(err){ reject(err) }
-        });
     }
 
     sendToQueue(queue, message){
-        return new Promise((resolve, reject) =>{
-            this.__connect()
-            .then(channel => this.__createQueue(channel, queue))
-            .then(channel => {
-                channel.sendToQueue( queue, Buffer.from(JSON.stringify(message)) );
-                resolve(true);
-            })
-            .catch(err => reject(err))
-        });
+        try{
+            return new Promise((resolve, reject) =>{
+                this.__connect()
+                .then(channel => this.__createQueue(channel, queue))
+                .then(channel => {
+                    channel.sendToQueue( queue, Buffer.from(JSON.stringify(message)) );
+                    resolve(true);
+                })
+                .catch(err => reject(err))
+            });
+        }catch(err){
+            Logger.error(`Can´t connect with RabbiMQ Jackpot Service ${err}`)
+        }
     }
 }
 

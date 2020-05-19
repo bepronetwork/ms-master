@@ -23,9 +23,8 @@ let __private = {};
 
 // TO DO : Create Different Type of Resolving Actions for Casino
 const betResolvingActions = {
-    getValueOfjackpot : async (app_id, totalBetAmount) => {
+    getValueOfjackpot : (app, totalBetAmount) => {
 		try {
-            let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(app_id);
 			if(app.addOn.jackpot==undefined){
 				return {
                     jackpotAmount : 0,
@@ -65,9 +64,6 @@ const betResolvingActions = {
             houseEdge : params.edge,
             game : params.gameMetaName
         });
-
-        console.log("total bet Amount", params.betAmount, totalBetAmount, winAmount, params.jackpotAmount)
-
         
         return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
     },
@@ -113,14 +109,16 @@ const processActions = {
             let game = await GamesRepository.prototype.findGameById(params.game);
             PerformanceBet.end({id : 'findGameById'});
             PerformanceBet.start({id : 'findUserById'});
-            let user = await UsersRepository.prototype.findUserById(params.user);
+            let user = await UsersRepository.prototype.findUserById(params.user, "simple");
             PerformanceBet.end({id : 'findUserById'});
+            PerformanceBet.start({id : 'findAppById'});
+            let app = await AppRepository.prototype.findAppById(params.app, "wallet");
+            PerformanceBet.end({id : 'findAppById'});
 
-            let app = user.app_id;
             if(game){var maxBetValue = game.maxBet; }
 
             /* No Mapping Error Verification */
-            if(!app || (app._id != params.app)){throwError('APP_NOT_EXISTENT')}
+            if(!app || (String(user.app_id).toString() != String(app._id).toString())){throwError('APP_NOT_EXISTENT')}
             if(!game){throwError('GAME_NOT_EXISTENT')}
             if(!user){throwError('USER_NOT_EXISTENT')}
             if(maxBetValue){if(maxBetValue === undefined || maxBetValue === null){throwError('MAX_BET_NOT_EXISTENT')}}
@@ -162,7 +160,9 @@ const processActions = {
 
             /* Remove Fee from Math */
             let betAmount = totalBetAmount - Math.abs(fee);
-            let { jackpotAmount } = await betResolvingActions.getValueOfjackpot(user.app_id, betAmount);
+
+            let { jackpotAmount } = betResolvingActions.getValueOfjackpot(app, betAmount);
+
             betAmount = betAmount - jackpotAmount;  /* total amount amount - jackpot amount - fee amount */
             /* Get Bet Result */
             let { isWon,  winAmount, outcomeResultSpace } = betResolvingActions.auto({

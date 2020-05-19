@@ -45,8 +45,11 @@ class Mailer {
             }
 
         } catch (err) {
-            Logger.error(err);
-            console.log("Full Stack Error ", err)
+            try{
+                Logger.error(`Sendinblue Error : ${err.response.body.message}`);
+            }catch(err){
+                console.log("Error Email")
+            }
         }
     }
 
