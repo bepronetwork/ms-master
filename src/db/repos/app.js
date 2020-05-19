@@ -286,6 +286,7 @@ class AppRepository extends MongoComponent{
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
             case 'simple' : { populate_type = populate_app_simple; break; }
             case 'wallet' : { populate_type = populate_app_wallet; break; }
+            case 'none' : { populate_type = []; break; }
         }
         try{
             return new Promise( (resolve, reject) => {

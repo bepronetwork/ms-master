@@ -38,7 +38,7 @@ class Security{
 
     verifyByCountry = async ({req}) => {
         try {
-            let countries = (await AppRepository.prototype.findAppById(req.body['app'], "simple")).restrictedCountries;
+            let countries = (await AppRepository.prototype.findAppById(req.body['app'], "none")).restrictedCountries;
             countries = countries == null ? [] : countries;
 
             const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
