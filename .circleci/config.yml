@@ -42,6 +42,8 @@ jobs: # a collection of steps
             echo 'export PUSHER_APP_KEY=36aa3b3b71a5005413cc' >> $BASH_ENV
             echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> $BASH_ENV
             echo 'export IS_LOCAL_DEV=false' >> $BASH_ENV
+            echo 'export LIMIT=1' >> $BASH_ENV
+            echo 'export RATE=100' >> $BASH_ENV
             source $BASH_ENV
       - run: # run tests
           name: test
