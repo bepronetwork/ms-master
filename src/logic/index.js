@@ -42,8 +42,10 @@ import BiggestBetWinnerLogic from "./biggestBetWinner";
 import BiggestUserWinnerLogic from "./biggestUserWinner";
 import LastBetsLogic from "./lastBets";
 import TxFeeLogic from "./txFee";
+import PopularNumberLogic from "./popularNumber";
 
 export {
+    PopularNumberLogic,
     TxFeeLogic,
     LastBetsLogic,
     BiggestUserWinnerLogic,

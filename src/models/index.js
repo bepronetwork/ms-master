@@ -38,8 +38,10 @@ import Balance from "./balance";
 import BiggestBetWinner from "./biggestBetWinner";
 import BiggestUserWinner from "./biggestUserWinner";
 import LastBets from "./lastBets";
+import PopularNumberLogic from "./popularNumber";
 
 export {
+    PopularNumberLogic,
     LastBets,
     BiggestUserWinner,
     BiggestBetWinner,

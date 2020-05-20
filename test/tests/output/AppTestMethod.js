@@ -770,7 +770,7 @@ module.exports = {
         expect(data.status).to.not.be.null;
         expect(data.status).to.equal(200);
         expect(data.message).to.not.be.null;
-        expect(data.message).to.be.an('array');
+        expect(data.message).to.be.an('object');
         
     },
     GETUSERSDATAShouldAllow(data,expect){

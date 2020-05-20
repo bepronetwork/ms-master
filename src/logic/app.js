@@ -21,7 +21,7 @@ import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
-import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 let error = new ErrorManager();
@@ -367,9 +367,8 @@ const processActions = {
 		return res;
     },
     __getPopularNumbers : async (params) => {
-        let res = await AppRepository.prototype.getPopularNumbers({
-            id : params.app,
-            size : params.size 
+        let res = await PopularNumberRepository.prototype.getPopularNumber({
+            id : params.app
         });
 		return res;
     },
