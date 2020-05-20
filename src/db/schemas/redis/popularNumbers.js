@@ -15,7 +15,7 @@ PopularNumberSchema.prototype.schema = {
             key           : { type : String, required: true},
             index         : { type : Number, required: true},
             probability   : { type : Number, required: true},
-            resultAmount  : { type : Boolean, required : true}
+            resultAmount  : { type : Number, required : true}
         }]
     }],
 }
