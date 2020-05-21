@@ -1,6 +1,6 @@
 import { UserLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import { UsersRepository } from '../db/repos';
+import { UsersRepository, AppRepository } from '../db/repos';
 import {
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
@@ -150,12 +150,19 @@ class User extends ModelComponent {
     }
 
     async getDepositAddress() {
-        const { id } = this.self.params;
-
-        try {
+        const { app } = this.self.params;
+        /* Mutex In */
+        try{
+            await AppRepository.prototype.changeUserAllLockPosition(app, true);
             let res = await this.process('GetDepositAddress');
+            AppRepository.prototype.changeUserAllLockPosition(app, false);
             return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
-        } catch (err) {
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not betting/withdrawing atm */
+                /* Open Mutex */
+                AppRepository.prototype.changeUserAllLockPosition(app, false);
+            }
             throw err;
         }
     }

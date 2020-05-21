@@ -18,6 +18,16 @@ WalletSchema.prototype.schema = {
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
     hashed_passphrase           : { type: String},
     link_url                    : { type: String, default : null},
+    availableDepositAddresses   : [{
+        address             : { type: mongoose.Schema.Types.ObjectId, ref: 'Address' },
+        lockedAt            : { type : Date },
+        lockedFor           : { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+        history             : [{
+            startTime   : { type: Date, required : true },
+            endTime     : { type: Date, required : true },
+            user        : { type: mongoose.Schema.Types.ObjectId, ref: 'User', required : true }
+        }]
+    }],
     virtual                     : { type : Boolean, default : false, required : true},
     /* If Virtual Wallet */
     image                       : { type : String, default : ''},

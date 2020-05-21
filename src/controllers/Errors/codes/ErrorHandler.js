@@ -75,7 +75,9 @@ ErrorHandler.prototype.KEYS =  {
     'IS_VIRTUAL_WALLET'                     : "058",
     'UNAUTHORIZED_COUNTRY'                  : "059",
     'IS_ETHEREUM_WALLET'                    : "060",
-    'WRONG_THEME'                           : "061"
+    'WRONG_THEME'                           : "061",
+    'ADDRESS_NOT_AVAILABLE'                 : "062",
+    'USER_LOCK_MODE_IN_API'                 : "063"
 };
 
 /***************************

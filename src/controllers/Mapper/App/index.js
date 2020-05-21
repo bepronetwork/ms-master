@@ -36,10 +36,12 @@ import { MapperGetLogsSingleton } from "./MapperGetLogs";
 import { MapperEditThemeSingleton } from "./MapperEditTheme";
 import { MapperaddAddonTxFeeSingleton } from "./MapperAddTxFee";
 import { MapperEditAddonTxFeeSingleton } from "./MapperEditTxFee";
+import { MapperGenerateAddressSingleton } from "./MapperGenerateAddresses";
 
 export {
     MapperEditAddonTxFeeSingleton,
     MapperaddAddonTxFeeSingleton,
+    MapperGenerateAddressSingleton,
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
     MapperEditBannersSingleton,

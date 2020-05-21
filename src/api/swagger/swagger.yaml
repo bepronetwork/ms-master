@@ -416,7 +416,7 @@ paths:
           description: User object to submit to the network
           required: true
           schema:
-            $ref: '#/definitions/setPasswordRequest'
+            $ref: '#/definitions/SetPasswordRequest'
       responses:
         "200":
           description: Success
@@ -2312,6 +2312,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/address/generate:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - address
+      summary: Generate User Deposit Based Addresses
+      operationId: generateAddresses
+      description: Generate Addresses for User Deposits
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: address
+          description: Game Information
+          required: true
+          schema:
+            $ref: '#/definitions/GenerateAddressesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /status/post:
     x-swagger-router-controller: ping
     post:
@@ -2432,8 +2462,32 @@ definitions:
         minLength: 1
         description: |
           user id
-
-  setPasswordRequest:
+  GenerateAddressesRequest :
+    type: object
+    required:
+      - app
+      - currency
+      - amount
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App ID
+      currency:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Unique identifier of the currency
+      amount:
+        type : number
+        format: number
+        example: 1
+        description: |
+          Amount of Addresses to generate ( If value is the same or inferior to the previous set, no more will be created)
+  SetPasswordRequest:
     type: object
     required:
       - token
