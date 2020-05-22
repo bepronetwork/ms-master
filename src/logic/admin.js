@@ -2,7 +2,7 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { SecurityRepository, AppRepository, PermissionRepository, AdminsRepository } from '../db/repos';
+import { SecurityRepository, AppRepository, PermissionRepository, AdminsRepository, TokenRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
