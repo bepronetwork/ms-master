@@ -12,7 +12,7 @@
         "listIds": [2]
     },
     "resetPassword": {
-        "templateId" : 1,
+        "templateId" : 5,
         "listIds": [2]
     }
 }
