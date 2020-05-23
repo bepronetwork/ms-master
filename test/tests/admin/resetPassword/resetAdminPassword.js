@@ -41,7 +41,7 @@ context('Reset Admin Password', async () => {
     }));
     it('should Set Password With Token Invalid', mochaAsync(async () => {
         const res = await setAdminPassword({
-            admin_id : admin._id,
+            admin_id : admin.id,
             token   : "asdasdasdasdasdasd",
             password: "123123"
         });
@@ -51,7 +51,7 @@ context('Reset Admin Password', async () => {
     }));
     it('should Set Password With Token Expired', mochaAsync(async () => {
         const res = await setAdminPassword({
-            admin_id : admin._id,
+            admin_id : admin.id,
             token   : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoxNTgwOTUyMjgwODg3LCJpYXQiOjE1ODA5NTEwMzd9.qovq5qXqzWdlSSvkx5XSTpYU5BSfaAMWvQWf1pLadcfPySw2Q0lk5WAuHoIVQlCYvXioKM86gnIpQQLKw_zAiA",
             password: "123123"
         });
