@@ -44,6 +44,7 @@ context('Reset Admin Password', async () => {
             token   : "asdasdasdasdasdasd",
             password: "123123"
         });
+        console.log(res)
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(49);
     }));
