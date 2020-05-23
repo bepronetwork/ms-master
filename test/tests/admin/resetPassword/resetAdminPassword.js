@@ -13,6 +13,7 @@ context('Reset Admin Password', async () => {
 
     before( async () =>  {
         admin = global.test.admin;
+        console.log(admin)
     });
 
     it('should Reset Password With Username', mochaAsync(async () => {
