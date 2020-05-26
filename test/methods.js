@@ -40,6 +40,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async getPotJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/jackpot/pot')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAddonJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/jackpot/add')

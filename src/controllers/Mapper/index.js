@@ -80,7 +80,12 @@ import {
     MapperEditVirtualCurrencySingleton
 } from "./Wallet";
 
+import {
+    MapperGetPotJackpotSingleton
+} from "./Jackpot";
+
 export {
+    MapperGetPotJackpotSingleton,
     MapperGetBetSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,

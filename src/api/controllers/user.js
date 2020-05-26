@@ -1,5 +1,5 @@
 import {
-	User
+	User, Jackpot
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
@@ -168,6 +168,20 @@ async function userGetBets (req, res) {
 	}
 }
 
+async function getPotJackpot (req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'user', req});
+        let params = req.body;
+		let jackpot = new Jackpot(params);
+		let data = await jackpot.getPotJackpot();
+        MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 async function userSummary (req, res) {
     try{
         await SecuritySingleton.verify({type : 'user', req});
@@ -259,5 +273,6 @@ export {
     setPassword,
     confirmEmail,
     resendEmail,
-    userGetBets
+    userGetBets,
+    getPotJackpot
 }
