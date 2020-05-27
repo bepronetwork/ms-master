@@ -16,7 +16,6 @@ context('Jackpot', async () => {
 
     it('should get pot jackpot', mochaAsync(async () => {
         const res = await getPotJackpot({ currency, app: app.id, user: user.id}, user.bearerToken , {id : user.id});
-        console.log(res);
         const { status } = res.data;
         expect(status).to.be.equal(200);
     }));
