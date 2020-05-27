@@ -925,7 +925,6 @@ const progressActions = {
     },
     __addAddonDepositBonus : async (params) => {
         const { min_deposit, percentage, max_deposit, app } = params;
-        //suspeito de erro nessa parte do New DepositBonus
         let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit});
         const depositBonusResult = await depositBonus.register();
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
