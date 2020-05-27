@@ -246,5 +246,13 @@
     "061" : {
         "key" : "WRONG_THEME",
         "message"   : "Theme not available, choose dark or light"
+    },
+    "062" : {
+        "key" : "ADD_ON_NOT_EXISTS",
+        "message"   : "AddOn not exists"
+    },
+    "063" : {
+        "key" : "ADD_ON_DEPOSIT_BONUS_NOT_EXISTS",
+        "message"   : "Deposit Bonus AddOn not exists"
     }
 }

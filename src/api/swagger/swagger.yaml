@@ -2191,6 +2191,68 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/depositBonus/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Deposit Bonus
+      operationId: addAddonDepositBonus
+      description: add Deposit Bonus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonDepositBonusRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/depositBonus/editDepositBonus:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If has Deposit Bonus
+      operationId: editAddonDepositBonus
+      description: Edit If has Deposit Bonus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditAddonDepositBonusRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -3824,6 +3886,64 @@ definitions:
           deposit_fee :
             type: number
           withdraw_fee :
+            type: number
+
+  AddAddonDepositBonusRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+  
+  AppEditAddonDepositBonusRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - depositBonusParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      depositBonusParams :
+        type: object
+        properties:
+          isDepositBonus :
+            type : boolean
+            example: true
+          min_deposit :
+            type: number
+          percentage :
+            type: number
+          max_deposit :
             type: number
 
   AppServicesRequest : 

@@ -102,6 +102,22 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addAddonDepositBonus(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/depositBonus/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonDepositBonus(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/depositBonus/editDepositBonus')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAddonBalance(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/balance/edit')

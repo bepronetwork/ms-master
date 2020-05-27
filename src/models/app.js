@@ -334,6 +334,31 @@ class App extends ModelComponent {
         }
     }
 
+    async addAddonDepositBonus() {
+        try {
+            let app = await this.process('AddAddonDepositBonus');
+            return app._doc;
+            // return MapperaddAddonTxFeeSingleton.output('AddAddonTxFee', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAddonDepositBonus() {
+        try {
+            let app = await this.process('EditAddonDepositBonus');
+            return app;
+            // return MapperEditAddonTxFeeSingleton.output('EditAddonTxFee', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
     * @param {String} 
     * @return {bool || Exception}  
