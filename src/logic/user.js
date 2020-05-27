@@ -358,6 +358,17 @@ const processActions = {
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
+            /* Verify AddOn Deposit Bonus */
+            let value = 0;
+            if(addOn && addOn.depositBonus && addOn.depositBonus.isDepositBonus){
+                let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+
+                if (amount >= min_deposit && amount <= max_deposit){
+                    value = (amount * (percentage/100));
+                } 
+            }
             /* Get User Info */
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
@@ -397,7 +408,8 @@ const processActions = {
                 currencyTicker: wallet.currency.ticker,
                 amount: amount,
                 isValid,
-                fee
+                fee,
+                value
             }
 
             return res;
@@ -605,7 +617,7 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet } = params;
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, value } = params;
             var message;
 
             /* Condition to set value of deposit amount and fee */
@@ -613,7 +625,7 @@ const progressActions = {
                 fee = amount;
                 amount = 0;
             }else{
-                amount = amount - fee;
+                amount = (amount+value) - fee;
             }
             
             const options = {
