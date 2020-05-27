@@ -340,7 +340,7 @@ const processActions = {
             && (a.lockedAt && Math.abs((Date(a.lockedAt).getTime() - new Date().getTime()) <= 15*60*1000)) /* Still on his time */
             && a.address.address /* Address is generated already */
         );
-
+        console.log("hasDepositAddress", hasDepositAddress, app_wallet.availableDepositAddresses)
         return {
             app_wallet,
             user,
@@ -582,7 +582,7 @@ const progressActions = {
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, address, user, availableDepositAddress, hasDepositAddress } = params;
         var res;
-
+        console.log("previousAddressHistory", hasDepositAddress)
         if(!hasDepositAddress){
             /* If user does not have a deposit address */
             let previousAddressHistory = availableDepositAddress.lockedAt ? {
@@ -611,6 +611,8 @@ const progressActions = {
                 lockedAt : hasDepositAddress.lockedAt
             }
         }
+        console.log("res.address", res)
+
             
         /* Set Lock time of 15 minutes */
         var lockedUntil = new Date(res.lockedAt);

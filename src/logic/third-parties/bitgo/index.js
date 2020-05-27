@@ -44,13 +44,23 @@ class BitGoClass {
     }
 
     async generateDepositAddress({wallet, id, label}){
-        label = new String(label).toLowerCase().toString();
+        var label = new String(label).toLowerCase().toString();
         //Check if Deposit Address Exists
         if(!id){
-            console.log("Creating address for : ", label)
-            return await wallet.createAddress({label});
+            console.log("Creating address for : ", label);
+            try{
+                return await wallet.createAddress({label});
+            }catch(err){
+                console.log("err", err, err.includes('wallet pending on-chain initialization'));
+                console.log("address", await wallet.getAddress({id : id}));
+                if(err.includes('wallet pending on-chain initialization')){
+                    return false;
+                }else{
+                    throw err;
+                }
+            }
         }else{
-            return await wallet.getAddress({id});
+            return await wallet.getAddress({id : id});
         }
     }
 

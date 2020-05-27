@@ -611,6 +611,7 @@ const processActions = {
         return params;
     },
     __generateAddresses : async (params) => {
+        console.log("here")
         let { app, currency, amount } = params;
         app = await AppRepository.prototype.findAppById(app, "address");
         if (!app) { throwError('APP_NOT_EXISTENT') };
@@ -1194,30 +1195,37 @@ const progressActions = {
     }, 
     __generateAddresses  : async (params) => {
 
-        const { app_wallet, availableDepositAddresses, amount } = params;
+        const { app_wallet, availableDepositAddresses, amount, app } = params;
+        console.log("availableDepositAddresses", availableDepositAddresses)
         var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
         const currentAddressAmount = availableDepositAddresses.length;
+        console.log("currentAddressAmount", currentAddressAmount)
+        console.log("wallet_bitgo", wallet)
+
         // See if address is already provided
-        var bitgo_id;
         for(var i = 1; i <= amount; i++){
-            var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: i /* label type */, id: bitgo_id });
-            if(i <= currentAddressAmount){
-                // old label see if it is 
-                var availableDeposit = availableDepositAddresses[i];
-                // Get Bitgo info on this address
-                if(!availableDeposit.address.address && bitgo_address.address){
-                    // If the system does not have this address saved still - bitgo has the address already
-                    // Add Deposit Address to User Deposit Addresses
-                    await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
+            var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: `${app._id}${i}` /* label type */, id: app_wallet.bitgo_id });
+            if(bitgo_address){
+                console.log("bitgo_address", bitgo_address.address, bitgo_address)
+                if(i <= currentAddressAmount){
+                    // old label see if it is 
+                    var availableDeposit = availableDepositAddresses[i];
+                    console.log("availableDeposit", availableDeposit)
+                    // Get Bitgo info on this address
+                    if(!availableDeposit.address.address && bitgo_address.address){
+                        // If the system does not have this address saved still - bitgo has the address already
+                        // Add Deposit Address to User Deposit Addresses
+                        await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
+                    }else{
+                        // If system already has this data but the address was not generated yet - do nothing
+                    }
                 }else{
-                    // If system already has this data but the address was not generated yet - do nothing
+                    // new label - save it
+                    // If the system does not have this address saved still - bitgo has the address already
+                    let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                    // Add Deposit Address to User Deposit Addresses
+                    await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
                 }
-            }else{
-                // new label - save it
-                // If the system does not have this address saved still - bitgo has the address already
-                let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
-                // Add Deposit Address to User Deposit Addresses
-                await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
             }
         }
     }

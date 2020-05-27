@@ -2468,6 +2468,7 @@ definitions:
       - app
       - currency
       - amount
+      - admin
     properties:
       app:
         type : string
@@ -2475,6 +2476,12 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App ID
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin ID
       currency:
         type : string
         format: name

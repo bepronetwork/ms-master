@@ -33,7 +33,7 @@ class MapperGenerateAddress {
          */
 
         this.KEYS = {
-            GenerateAddress: 'generateAddresses'
+            GenerateAddresses: 'generateAddresses'
         }
     }
 
