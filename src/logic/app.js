@@ -369,7 +369,6 @@ const processActions = {
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
             if(!addOn){throwError('ADD_ON_NOT_EXISTS')}
-            console.log(addOn)
             let depositBonus = await DepositBonusRepository.prototype.findById(addOn.depositBonus)
             if(!depositBonus){throwError('ADD_ON_DEPOSIT_BONUS_NOT_EXISTS')}
             let res = {
