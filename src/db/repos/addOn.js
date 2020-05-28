@@ -100,6 +100,22 @@ class AddOnRepository extends MongoComponent{
         });
     }
 
+    addAddonDepositBonus(addOn_id, depositBonus){
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn_id,
+                {
+                    $set: {depositBonus}
+                },
+                {'new': true}
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
 }
 
 AddOnRepository.prototype.schema = new AddOnSchema();

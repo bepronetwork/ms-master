@@ -724,6 +724,16 @@ class ErrorManager {
         }
     }
 
+    depositBonus = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
 
     addOn = function (object, type){
         try{
