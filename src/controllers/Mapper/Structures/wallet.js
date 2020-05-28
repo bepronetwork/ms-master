@@ -14,7 +14,7 @@ const wallet_object = (object) => {
                 "link_url": wallet.link_url,
                 "currency": !wallet.currency ? {} : {
                     "_id": wallet.currency._id,
-                    "image": wallet.currency.image,
+                    "image": (wallet.image == null || wallet.image == '') ? wallet.currency.image : wallet.image,
                     "ticker": wallet.currency.ticker,
                     "decimals": wallet.currency.decimals,
                     "name": wallet.currency.name,
