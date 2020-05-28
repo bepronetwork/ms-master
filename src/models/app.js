@@ -42,7 +42,7 @@ import {
     MapperEditThemeSingleton,
     MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton } from '../controllers/Mapper/App';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
 
 class App extends ModelComponent {
 
@@ -338,8 +338,7 @@ class App extends ModelComponent {
     async addAddonDepositBonus() {
         try {
             let app = await this.process('AddAddonDepositBonus');
-            return app._doc;
-            // return MapperaddAddonTxFeeSingleton.output('AddAddonTxFee', app._doc);
+            return MapperAddAddonDepositBonusSingleton.output('AddAddonDepositBonus', app._doc);
         } catch (err) {
             throw err;
         }
@@ -353,8 +352,7 @@ class App extends ModelComponent {
     async editAddonDepositBonus() {
         try {
             let app = await this.process('EditAddonDepositBonus');
-            return app;
-            // return MapperEditAddonTxFeeSingleton.output('EditAddonTxFee', app);
+            return MapperEditAddonDepositBonusSingleton.output('EditAddonDepositBonus', app);
         } catch (err) {
             throw err;
         }

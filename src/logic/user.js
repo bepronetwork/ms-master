@@ -243,6 +243,11 @@ const processActions = {
     },
     __register: async (params) => {
         var username = new String(params.username).toLowerCase().trim();
+        let email = new String(params.email).toLowerCase().trim();
+        let userEmail = await __private.db.findUserByEmail(email);
+        if (userEmail) { throwError('ALREADY_EXISTING_EMAIL') }
+        let userUsername = await __private.db.findUser(username);
+        if (userUsername) { throwError('USERNAME_ALREADY_EXISTS') }
 
         const { affiliateLink, affiliate } = params;
         var input_params = params;

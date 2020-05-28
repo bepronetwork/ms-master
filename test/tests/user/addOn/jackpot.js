@@ -1,6 +1,6 @@
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
-import { getPotJackpot } from '../../../methods';
+import { getPotJackpot, getAppAuth } from '../../../methods';
 const expect = chai.expect;
 
 context('Jackpot', async () => {
