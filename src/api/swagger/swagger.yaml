@@ -272,6 +272,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /admins/password/reset/ask:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Reset Admin Password
+      operationId: resetAdminPassword
+      description: reset Admin password
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/ResetAdminPasswordRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/password/reset/set:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Reset Admin Password Set
+      operationId: setAdminPassword
+      description: reset admin password set
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/setAdminPasswordRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /deposit/max/set :
     x-swagger-router-controller: deposit
     post:
@@ -2553,6 +2613,46 @@ definitions:
         minLength: 1
         description: |
           user id
+  ResetAdminPasswordRequest:
+    type: object
+    required:
+      - username_or_email
+    properties:
+      username_or_email:
+        type : string
+        format: string
+        example: "Jamy_234"
+        minLength: 1
+        description: |
+         username or email
+  setAdminPasswordRequest:
+    type: object
+    required:
+      - token
+      - password
+      - admin_id
+    properties:
+      token:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          token
+      password:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          password
+      admin_id:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          Admin ID
   ResetPasswordRequest:
     type: object
     required:

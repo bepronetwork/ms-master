@@ -106,6 +106,26 @@ class Admin extends ModelComponent {
         }
     }
 
+    async resetAdminPassword() {
+        //Boolean
+        try {
+            let res = await this.process('ResetAdminPassword');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async setAdminPassword() {
+        //Boolean
+        try {
+            let res = await this.process('SetAdminPassword');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
 }
 
 export default Admin;
