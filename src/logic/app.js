@@ -1,13 +1,36 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
-    GamesRepository, ChatRepository, TopBarRepository, 
-    BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository, TxFeeRepository, BackgroundRepository
+import {
+    AppRepository,
+    AdminsRepository,
+    WalletsRepository,
+    DepositRepository,
+    UsersRepository,
+    GamesRepository,
+    ChatRepository,
+    TopBarRepository,
+    BannersRepository,
+    LogoRepository,
+    FooterRepository,
+    ColorRepository,
+    AffiliateRepository,
+    CurrencyRepository,
+    TypographyRepository,
+    TopIconRepository,
+    MailSenderRepository,
+    LoadingGifRepository,
+    AddOnRepository,
+    AutoWithdrawRepository,
+    LogRepository,
+    BetRepository,
+    CustomizationRepository,
+    TxFeeRepository,
+    BackgroundRepository,
+    DepositBonusRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -21,7 +44,7 @@ import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
-import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 let error = new ErrorManager();
@@ -328,6 +351,59 @@ const processActions = {
             throw err
         }
     },
+    __addAddonDepositBonus : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let min_deposit = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let percentage = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let max_deposit = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let res = {
+            min_deposit,
+            percentage,
+            max_deposit,
+            app
+        }
+		return res;
+    },
+    __editAddonDepositBonus : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError('ADD_ON_NOT_EXISTS')}
+            let depositBonus = await DepositBonusRepository.prototype.findById(addOn.depositBonus)
+            if(!depositBonus){throwError('ADD_ON_DEPOSIT_BONUS_NOT_EXISTS')}
+            let res = {
+                depositBonus,
+                currency : params.currency,
+                depositBonusParams : params.depositBonusParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
     __editAddonAutoWithdraw : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -367,9 +443,8 @@ const processActions = {
 		return res;
     },
     __getPopularNumbers : async (params) => {
-        let res = await AppRepository.prototype.getPopularNumbers({
-            id : params.app,
-            size : params.size 
+        let res = await PopularNumberRepository.prototype.getPopularNumber({
+            id : params.app
         });
 		return res;
     },
@@ -879,6 +954,19 @@ const progressActions = {
         let res = await TxFeeRepository.prototype.findById(txFee._id);
         return res;
     },
+    __addAddonDepositBonus : async (params) => {
+        const { min_deposit, percentage, max_deposit, app } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit});
+        const depositBonusResult = await depositBonus.register();
+        await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
+		return depositBonusResult;
+    },
+    __editAddonDepositBonus : async (params) => {
+        const { depositBonus, currency, depositBonusParams } = params
+        await DepositBonusRepository.prototype.findByIdAndUpdate(depositBonus._id, currency, depositBonusParams)
+        let res = await DepositBonusRepository.prototype.findById(depositBonus._id);
+        return res;
+    },
     __editAddonAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
@@ -1299,6 +1387,12 @@ class AppLogic extends LogicComponent{
                 case 'EditAddonTxFee' : {
                     return await library.process.__editAddonTxFee(params); break;
                 };
+                case 'AddAddonDepositBonus' : {
+                    return await library.process.__addAddonDepositBonus(params); break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    return await library.process.__editAddonDepositBonus(params); break;
+                };
                 case 'editAddonAutoWithdraw' : {
                     return await library.process.__editAddonAutoWithdraw(params); break;
                 };
@@ -1431,6 +1525,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditAddonTxFee' : {
                     return await library.progress.__editAddonTxFee(params); break;
+                };
+                case 'AddAddonDepositBonus' : {
+                    return await library.progress.__addAddonDepositBonus(params); break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    return await library.progress.__editAddonDepositBonus(params); break;
                 };
                 case 'editAddonAutoWithdraw' : {
                     return await library.progress.__editAddonAutoWithdraw(params); break;

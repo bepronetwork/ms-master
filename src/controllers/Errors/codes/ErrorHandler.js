@@ -75,7 +75,9 @@ ErrorHandler.prototype.KEYS =  {
     'IS_VIRTUAL_WALLET'                     : "058",
     'UNAUTHORIZED_COUNTRY'                  : "059",
     'IS_ETHEREUM_WALLET'                    : "060",
-    'WRONG_THEME'                           : "061"
+    'WRONG_THEME'                           : "061",
+    'ADD_ON_NOT_EXISTS'                     : "062",
+    'ADD_ON_DEPOSIT_BONUS_NOT_EXISTS'       : "063"
 };
 
 /***************************

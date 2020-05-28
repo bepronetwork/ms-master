@@ -40,6 +40,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async getPotJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/jackpot/pot')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAddonJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/jackpot/add')
@@ -97,6 +105,22 @@ module.exports = {
     async editAddonTxFee(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/txFee/editTxFee')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async addAddonDepositBonus(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/depositBonus/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonDepositBonus(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/depositBonus/editDepositBonus')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
@@ -342,6 +366,18 @@ module.exports = {
     async setPassword(params) {
         return request(global.server)
         .post('/api/users/password/reset/set')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async resetAdminPassword(params) {
+        return request(global.server)
+        .post('/api/admins/password/reset/ask')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async setAdminPassword(params) {
+        return request(global.server)
+        .post('/api/admins/password/reset/set')
         .send(params)
         .then(res => detectServerError(res))
     },

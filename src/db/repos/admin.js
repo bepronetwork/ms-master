@@ -99,6 +99,20 @@ class AdminsRepository{
         });
     }
 
+    updatePasswordAdmin({id, param}) {
+        return new Promise( async (resolve,reject) => {
+            AdminSchema.prototype.model.findByIdAndUpdate(
+                id,
+                { $set : param },
+                { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     findAdminByApp(app) {
         return new Promise((resolve)=>{
             AdminSchema.prototype.schema.model.find({app})

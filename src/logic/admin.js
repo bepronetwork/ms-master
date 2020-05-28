@@ -2,12 +2,14 @@ const _ = require('lodash');
 import { Security } from '../controllers/Security';
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { SecurityRepository, AppRepository, PermissionRepository } from '../db/repos';
+import { SecurityRepository, AppRepository, PermissionRepository, AdminsRepository, TokenRepository } from '../db/repos';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { mail } from '../mocks';
 import { SENDINBLUE_EMAIL_TO } from '../config';
 import { SendinBlueSingleton } from './third-parties/sendInBlue';
+import { GenerateLink } from '../helpers/generateLink';
+import { Token } from '../models';
 let error = new ErrorManager();
 
 
@@ -32,9 +34,9 @@ const processActions = {
     __login: async (params) => {
         // Get User by Username
         let admin = await __private.db.findAdmin(params.username);
-        if(!admin){throwError('USER_NOT_EXISTENT')};
-        if(admin.registered === false){throwError()};
-        if(!admin.security){throwError()};
+        if (!admin) { throwError('USER_NOT_EXISTENT') };
+        if (admin.registered === false) { throwError() };
+        if (!admin.security) { throwError() };
         let has2FASet = admin.security['2fa_set'];
         let bearerToken = MiddlewareSingleton.sign(admin._id);
         let normalized = {
@@ -121,24 +123,24 @@ const processActions = {
 
         return normalized;
     },
-	__register : async (params) => {
+    __register: async (params) => {
 
         let admin = await __private.db.findAdminEmail(params.email);
         let adminUsername = await __private.db.findAdminUsername(params.username);
         let registered = false;
         let newBearerToken;
-        if(!admin && !adminUsername) {registered = true} 
-        if(admin && admin.registered === true) {throwError('ALREADY_EXISTING_EMAIL')}
-        if(adminUsername && adminUsername.registered === true) {throwError('USERNAME_ALREADY_EXISTS')}
-        if(admin != null && admin.security != null && admin.security != undefined) {
+        if (!admin && !adminUsername) { registered = true }
+        if (admin && admin.registered === true) { throwError('ALREADY_EXISTING_EMAIL') }
+        if (adminUsername && adminUsername.registered === true) { throwError('USERNAME_ALREADY_EXISTS') }
+        if (admin != null && admin.security != null && admin.security != undefined) {
             const payload = MiddlewareSingleton.resultTokenDate(params.bearerToken);
-            if(!payload) {
+            if (!payload) {
                 throwError('TOKEN_EXPIRED');
             }
-            if( Number((new Date()).getTime()) > Number(payload.time) ) {
+            if (Number((new Date()).getTime()) > Number(payload.time)) {
                 throwError('TOKEN_EXPIRED');
             }
-            if(String(admin.security.bearerToken) !== String(params.bearerToken)) {
+            if (String(admin.security.bearerToken) !== String(params.bearerToken)) {
                 throwError('TOKEN_INVALID');
             }
             newBearerToken = MiddlewareSingleton.sign(admin._id);
@@ -146,62 +148,107 @@ const processActions = {
         }
         let password = new Security(params.password).hash();
 
-		let normalized = {
+        let normalized = {
             newBearerToken,
-			username 		: params.username,
-			name 			: params.name,
-            hash_password   : password,
-            security 	    : params.security,
-            email			: params.email,
-            registered      : registered,
-            permission      : params.permission
-		}
-		return normalized;
+            username: params.username,
+            name: params.name,
+            hash_password: password,
+            security: params.security,
+            email: params.email,
+            registered: registered,
+            permission: params.permission
+        }
+        return normalized;
     },
-    __addAdmin : async (params) => {
+    __addAdmin: async (params) => {
         let admin = await __private.db.findAdminById(params.admin);
-        if(!admin){throwError('USER_NOT_EXISTENT')};
+        if (!admin) { throwError('USER_NOT_EXISTENT') };
         let app = await AppRepository.prototype.findAppById(admin.app._id);
-        if(!app){throwError('USER_NOT_EXISTENT')};
-        if(String(app._id) !== String(params.app)) {throwError('APP_INVALID')};
+        if (!app) { throwError('USER_NOT_EXISTENT') };
+        if (String(app._id) !== String(params.app)) { throwError('APP_INVALID') };
         let adminEmail = (await __private.db.findAdminEmail(params.email));
-        if(adminEmail && adminEmail.registered === true) { throwError()}
-        let bearerToken = MiddlewareSingleton.generateTokenDate( ( new Date( ((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000) )).getTime() );
+        if (adminEmail && adminEmail.registered === true) { throwError() }
+        let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000))).getTime());
         let password = new Security(String((new Date()).getTime())).hash();
         let permissionObject = await PermissionRepository.prototype.findById(params.permission)
-		let normalized = {
-            adminEmail      : adminEmail,
-			username 		: `user${params.admin}${String((new Date()).getTime())}`,
-			name 			: 'nameTMP',
-            hash_password   : password,
-            security 	    : params.security,
-            email			: params.email,
-            app             : admin.app,
-            bearerToken     : bearerToken,
-            registered      : false,
-            permission      : permissionObject
+        let normalized = {
+            adminEmail: adminEmail,
+            username: `user${params.admin}${String((new Date()).getTime())}`,
+            name: 'nameTMP',
+            hash_password: password,
+            security: params.security,
+            email: params.email,
+            app: admin.app,
+            bearerToken: bearerToken,
+            registered: false,
+            permission: permissionObject
         }
-		return normalized;
+        return normalized;
     },
 
-    __editAdminType : async (params) => {
+    __editAdminType: async (params) => {
         let admin = await __private.db.findAdminById(params.admin);
-        if(!admin){throwError('USER_NOT_EXISTENT')};
+        if (!admin) { throwError('USER_NOT_EXISTENT') };
         let app = await AppRepository.prototype.findAppById(admin.app._id);
-        if(!app){throwError('APP_NOT_EXISTENT')};
+        if (!app) { throwError('APP_NOT_EXISTENT') };
         const adminFind = app.listAdmins.find(a => new String(a).toString() == new String(params.adminToModify).toString())
         let adminToChangeType = await __private.db.findAdminById(adminFind);
-        if(!adminFind){throwError('USER_NOT_EXISTENT')};
+        if (!adminFind) { throwError('USER_NOT_EXISTENT') };
         let permissionObject = {
             ...params.permission,
             _id: adminToChangeType.permission._id
-        } 
-		let normalized = {
-            admin              : adminFind,
-            permission         : permissionObject
-		}
-		return normalized;
-    }
+        }
+        let normalized = {
+            admin: adminFind,
+            permission: permissionObject
+        }
+        return normalized;
+    },
+    __resetAdminPassword: async (params) => {
+        try {
+            const admin = await __private.db.findAdmin(params.username_or_email);
+            if (!admin) { throwError("USERNAME_OR_EMAIL_NOT_EXISTS"); }
+
+            var app = await AppRepository.prototype.findAppById(admin.app, "simple");
+            if (!app) { throwError("APP_NOT_EXISTENT"); }
+
+
+            let normalized = {
+                name: admin.name,
+                admin: admin,
+                app: app,
+                admin_id: admin._id,
+                url: app.web_url
+            };
+            return normalized;
+        } catch (error) {
+            throw error;
+        }
+    },
+    __setAdminPassword: async (params) => {
+        const payload = MiddlewareSingleton.resultTokenDate(params.token);
+        if (!payload) {
+            throwError('TOKEN_INVALID');
+        }
+
+        if (Number((new Date()).getTime()) > Number(payload.time)) {
+            throwError('TOKEN_EXPIRED');
+        }
+        const findToken = await TokenRepository.prototype.findByToken(params.token);
+
+        if (!findToken || (String(findToken.admin) !== String(params.admin_id))) {
+            throwError('TOKEN_INVALID');
+        }
+
+        let hash_password = new Security(params.password).hash();
+
+        let normalized = {
+            admin_id: params.admin_id,
+            hash_password
+        }
+
+        return normalized;
+    },
 }
 
 /**
@@ -236,15 +283,15 @@ const progressActions = {
         await SecurityRepository.prototype.addSecret2FA(security_id, newSecret);
         return params;
     },
-	__register : async (params) => {
-        let admin       = null;
-        let email       = params.email;
-        let listIds     = mail.registerAdmin.listIds;
-        let templateId  = mail.registerAdmin.templateId;
-        let attributes  = {
+    __register: async (params) => {
+        let admin = null;
+        let email = params.email;
+        let listIds = mail.registerAdmin.listIds;
+        let templateId = mail.registerAdmin.templateId;
+        let attributes = {
             NOME: params.name
         };
-        if(params.registered === true) {
+        if (params.registered === true) {
             admin = await self.save(params);
             await SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
@@ -257,20 +304,20 @@ const progressActions = {
         await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
     },
-    __addAdmin : async (params) => {
+    __addAdmin: async (params) => {
         let attributes = {
-            NOME    : params.name,
-            TOKEN   : params.bearerToken,
-            APP     : params.app._id,
-            URL     : SENDINBLUE_EMAIL_TO
+            NOME: params.name,
+            TOKEN: params.bearerToken,
+            APP: params.app._id,
+            URL: SENDINBLUE_EMAIL_TO
         };
         let resultAdmin;
         let email = params.email;
-        let templateId  = mail.multiplesAdmins.templateId;
-        let listIds     = mail.multiplesAdmins.listIds;
+        let templateId = mail.multiplesAdmins.templateId;
+        let listIds = mail.multiplesAdmins.listIds;
         let securityId;
 
-        if(!params.adminEmail) {
+        if (!params.adminEmail) {
             delete params['adminEmail'];
             resultAdmin = await self.save(params);
             securityId = String(resultAdmin.security);
@@ -281,14 +328,41 @@ const progressActions = {
             await SendinBlueSingleton.updateContact(email, attributes);
         }
         await SecurityRepository.prototype.setBearerToken(securityId, params.bearerToken);
-		let admin = await __private.db.findAdminById(resultAdmin._id);
+        let admin = await __private.db.findAdminById(resultAdmin._id);
         await SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
     },
-    __editAdminType : async (params) => {
+    __editAdminType: async (params) => {
         await PermissionRepository.prototype.findByIdAndUpdate(params.permission._id, params.permission);
         return params;
-    }
+    },
+    __resetAdminPassword: async (params) => {
+        const { admin_id, url, admin } = params;
+        let email = admin.email;
+        let templateId = mail.resetPassword.templateId;
+        //expires in 1 days
+        let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 1 * 24 * 60 * 60 * 1000))).getTime());
+
+        await (new Token({ admin: admin._id, token: bearerToken })).register();
+
+        let attributes = {
+            TOKEN: bearerToken,
+            URL: GenerateLink.resetAdminPassword([url, bearerToken, admin_id])
+        };
+        SendinBlueSingleton.updateContact(email, attributes);
+        SendinBlueSingleton.sendTemplate(templateId, [email]);
+        return true;
+    },
+    __setAdminPassword: async (params) => {
+        const { admin_id, hash_password } = params;
+
+        let updatePassword = await AdminsRepository.prototype.updatePasswordAdmin({ id: admin_id, param: { hash_password } });
+
+        if (!updatePassword) {
+            throwError();
+        }
+        return true;
+    },
 }
 
 /**
@@ -354,28 +428,34 @@ class AdminLogic extends LogicComponent {
                 case 'Register': {
                     return await library.process.__register(params); break;
                 };
-                case 'AddAdmin' : {
+                case 'AddAdmin': {
                     return await library.process.__addAdmin(params); break;
                 };
-                case 'EditAdminType' : {
+                case 'EditAdminType': {
                     return await library.process.__editAdminType(params); break;
                 };
-                case 'GetAdminAll' : {
+                case 'GetAdminAll': {
                     return await library.process.__getAdminAll(params); break;
-                }
-			}
-		}catch(error){
-			throw error;
-		}
-	}
+                };
+                case 'ResetAdminPassword': {
+                    return await library.process.__resetAdminPassword(params); break;
+                };
+                case 'SetAdminPassword': {
+                    return await library.process.__setAdminPassword(params); break;
+                };
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 
-	 /**
-	 * Tests user schema.
-	 *
-	 * @param {user} user
-	 * @returns {user} user
-	 * @throws {string} On schema.validate failure
-	 */
+    /**
+    * Tests user schema.
+    *
+    * @param {user} user
+    * @returns {user} user
+    * @throws {string} On schema.validate failure
+    */
 
     testParams(params, action) {
         try {
@@ -386,38 +466,44 @@ class AdminLogic extends LogicComponent {
     }
 
 
-	async progress(params, progressAction){
-		try{
-			switch(progressAction) {
-				case 'Login' : {
-					return await library.progress.__login(params);
+    async progress(params, progressAction) {
+        try {
+            switch (progressAction) {
+                case 'Login': {
+                    return await library.progress.__login(params);
                 };
-                case 'Login2FA' : {
-					return await library.progress.__login2FA(params);
+                case 'Login2FA': {
+                    return await library.progress.__login2FA(params);
                 };
-                case 'Auth' : {
-					return await library.progress.__auth(params);
+                case 'Auth': {
+                    return await library.progress.__auth(params);
                 };
-                case 'Set2FA' : {
-					return await library.progress.__set2FA(params);
-				};
-				case 'Register' : {
-					return await library.progress.__register(params);
+                case 'Set2FA': {
+                    return await library.progress.__set2FA(params);
                 };
-                case 'AddAdmin' : {
-					return await library.progress.__addAdmin(params);
+                case 'Register': {
+                    return await library.progress.__register(params);
                 };
-                case 'EditAdminType' : {
+                case 'AddAdmin': {
+                    return await library.progress.__addAdmin(params);
+                };
+                case 'EditAdminType': {
                     return await library.progress.__editAdminType(params); break;
                 };
-                case 'GetAdminAll' : {
-					return await library.progress.__getAdminAll(params);
+                case 'GetAdminAll': {
+                    return await library.progress.__getAdminAll(params);
                 };
-			}
-		}catch(error){
-			throw error;
-		}
-	}
+                case 'ResetAdminPassword': {
+                    return await library.progress.__resetAdminPassword(params); break;
+                };
+                case 'SetAdminPassword': {
+                    return await library.progress.__setAdminPassword(params); break;
+                };
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 // Export Default Module

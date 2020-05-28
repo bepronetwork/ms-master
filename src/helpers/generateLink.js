@@ -5,5 +5,8 @@ export const GenerateLink = {
     },
     resetPassword: (param) => {
         return `${param[0]}password/reset?token=${param[1]}&userId=${param[2]}`;
+    },
+    resetAdminPassword: (param) => {
+        return `${param[0]}password/reset?token=${param[1]}&adminId=${param[2]}`;
     }
 }

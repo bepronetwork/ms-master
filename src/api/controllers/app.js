@@ -26,10 +26,10 @@ async function createApp(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.register();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -40,10 +40,10 @@ async function getAppAuth(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getAuth();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -54,10 +54,10 @@ async function editRestrictedCountries(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editRestrictedCountries();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -67,10 +67,10 @@ async function getApp(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.get();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -81,10 +81,10 @@ async function getBetInfo(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getBetInfo();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -94,10 +94,10 @@ async function getGames(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getGames();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -109,10 +109,10 @@ async function deployApp(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.deployApp();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -124,10 +124,10 @@ async function createGame(req, res) {
         let params = req.body;
         let game = new Game(params);
         let data = await game.register();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -139,53 +139,53 @@ async function addGame(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addGame();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
 
-async function editVirtualCurrency (req, res) {
+async function editVirtualCurrency(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         let params = req.body;
         let wallet = new Wallet(params);
         let data = await wallet.editVirtualCurrency();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
 // JSON WebToken Security Functions
-async function addAddonBalance (req, res) {
-    try{
-        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+async function addAddonBalance(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         let params = req.body;
         let app = new App(params);
         let data = await app.addAddonBalance();
-        MiddlewareSingleton.log({type: "admin", req, code : 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
 
 // JSON WebToken Security Functions
-async function addAddonJackpot (req, res) {
-    try{
-        await SecuritySingleton.verify({type : 'admin', req, permissions: ["all"]});
+async function addAddonJackpot(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
         let params = req.body;
         let app = new App(params);
         let data = await app.addAddonJackpot();
-        MiddlewareSingleton.log({type: "admin", req, code : 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -196,10 +196,10 @@ async function addAddonAutoWithdraw(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addAddonAutoWithdraw();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -210,10 +210,10 @@ async function editAddonAutoWithdraw(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editAddonAutoWithdraw();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -224,10 +224,10 @@ async function addAddonTxFee(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addAddonTxFee();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -238,10 +238,38 @@ async function editAddonTxFee(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editAddonTxFee();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function addAddonDepositBonus(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addAddonDepositBonus();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function editAddonDepositBonus(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editAddonDepositBonus();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -253,10 +281,10 @@ async function addCurrencyWallet(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addCurrencyWallet();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -268,65 +296,65 @@ async function getGame(req, res) {
         let params = req.body;
         let game = new Game(params);
         let data = await game.get();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
 
-async function editAddonBalance (req, res) {
-    try{
-        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-	    let params = req.body;
-		let balance = new Balance(params);
-		let data = await balance.editAddonBalance();
-        MiddlewareSingleton.log({type: "admin", req, code : 200});
-        MiddlewareSingleton.respond(res, req, data);
-	}catch(err){
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
-	}
-}
-
-async function editEdgeJackpot (req, res) {
-    try{
-        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
-	    let params = req.body;
-		let jackpot = new Jackpot(params);
-		let data = await jackpot.editEdgeJackpot();
-        MiddlewareSingleton.log({type: "admin", req, code : 200});
-        MiddlewareSingleton.respond(res, req, data);
-	}catch(err){
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
-	}
-}
-
-async function createBet (req, res) {
+async function editAddonBalance(req, res) {
     try {
-        let perf = new PerfomanceMonitor({id : 'createBet'});
-        await SecuritySingleton.verify({type : 'user', req});
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let balance = new Balance(params);
+        let data = await balance.editAddonBalance();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function editEdgeJackpot(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let jackpot = new Jackpot(params);
+        let data = await jackpot.editEdgeJackpot();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function createBet(req, res) {
+    try {
+        let perf = new PerfomanceMonitor({ id: 'createBet' });
+        await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
 
         // place a bet on the game
         let bet = new Bet(params);
         let data = await bet.register();
-        try{
+        try {
             // Check if percentage to jackpot is > 0, and if yes, then call jackpot queue
-            if(data.jackpotAmount > 0) {
+            if (data.jackpotAmount > 0) {
                 workerQueueSingleton.sendToQueue("betJackpot", MiddlewareSingleton.convertToJson(req, data.jackpotAmount));
             }
-        }catch(err){
+        } catch (err) {
             console.log("Problem Connecting to Jackpot MS");
             console.log(err);
         }
-        MiddlewareSingleton.log({type: "user", req, code: 200});
+        MiddlewareSingleton.log({ type: "user", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
 
     } catch (err) {
-        MiddlewareSingleton.log({type: "user", req, code: err.code});
+        MiddlewareSingleton.log({ type: "user", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -339,7 +367,7 @@ async function setMaxBet(req, res) {
         let data = await game.setMaxBet();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 
@@ -353,10 +381,10 @@ async function resolveBet(req, res) {
         let params = req.body;
         let bet = new Bet(params);
         let data = await bet.resolve();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -383,10 +411,10 @@ async function summary(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.summary();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -397,10 +425,10 @@ async function appGetUsersBets(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.appGetUsersBets();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -427,10 +455,10 @@ async function getTransactions(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getTransactions();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -443,10 +471,10 @@ async function addServices(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addServices();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -456,10 +484,10 @@ async function getLastBets(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getLastBets();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -469,10 +497,10 @@ async function getBiggestBetWinners(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getBiggestBetWinners();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -482,10 +510,10 @@ async function getBiggestUserWinners(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getBiggestUserWinners();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -495,10 +523,10 @@ async function getPopularNumbers(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getPopularNumbers();
-        MiddlewareSingleton.log({ type: "global", req, code: 200});
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "global", req, code: err.code});
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -509,10 +537,10 @@ async function editAffiliateStructure(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editAffiliateStructure();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -523,10 +551,10 @@ async function editIntegration(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editIntegration();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -537,10 +565,10 @@ async function editMailSenderIntegration(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editMailSenderIntegration();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -551,10 +579,10 @@ async function editTheme(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTheme();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -565,10 +593,10 @@ async function editTopBar(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTopBar();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -579,10 +607,10 @@ async function editBanners(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editBanners();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -593,10 +621,10 @@ async function editLogo(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editLogo();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -607,10 +635,10 @@ async function editColors(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editColors();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -621,10 +649,10 @@ async function editFooter(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editFooter();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -635,10 +663,10 @@ async function editTopIcon(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTopIcon();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -649,10 +677,10 @@ async function editLoadingGif(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editLoadingGif();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -663,10 +691,10 @@ async function editTypography(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editTypography();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -677,10 +705,10 @@ async function getUsers(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.getUsers();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -741,11 +769,11 @@ async function createAffiliateCustom(req, res) {
         let params = req.body;
         let affiliateLink = new AffiliateLink(params);
         let data = await affiliateLink.setCustomAffiliatePercentage();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         console.log(err)
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
@@ -761,19 +789,21 @@ async function createAffiliateCustom(req, res) {
 async function getLogs(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        let body  = req.body;
+        let body = req.body;
         let app = new App(body);
         let data = await app.getLogs();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
     }
 }
 
 
 export {
+    addAddonDepositBonus,
+    editAddonDepositBonus,
     addAddonTxFee,
     editAddonTxFee,
     editTheme,
