@@ -331,6 +331,36 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /users/jackpot/pot:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: get pot Jackpot
+      operationId: getPotJackpot
+      description: get pot Jackpot
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: user Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetPotJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /users/email/confirm:
     x-swagger-router-controller: user
@@ -2535,6 +2565,31 @@ definitions:
         minLength: 1
         description: |
          username or email
+
+  GetPotJackpotRequest:
+    type: object
+    required:
+      - app
+      - user
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          user ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
 
   UserRegisterRequest:
     type: object

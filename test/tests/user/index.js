@@ -1,5 +1,6 @@
 context('User', async () => {
     require('./login');
+    require('./addOn')
     require('./resetPassword');
     require('./confirmEmail');
     require('./get')

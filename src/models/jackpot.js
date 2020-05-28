@@ -2,6 +2,10 @@ import { JackpotLogic } from '../logic';
 import { JackpotRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
 
+import {
+    MapperGetPotJackpotSingleton
+} from '../controllers/Mapper';
+
 class Jackpot extends ModelComponent{
 
     constructor(params){
@@ -19,6 +23,15 @@ class Jackpot extends ModelComponent{
                 ]
             }
             );
+    }
+
+    async getPotJackpot() {
+        try {
+            let res = await this.process('GetPotJackpot');
+            return MapperGetPotJackpotSingleton.output('GetPotJackpot', res);
+        } catch (err) {
+            throw err;
+        }
     }
 
     async editEdgeJackpot(){

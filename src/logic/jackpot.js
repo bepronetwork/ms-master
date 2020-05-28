@@ -61,6 +61,27 @@ const betJackpotActions = {
 
 const processActions = {
 
+	__getPotJackpot : async (params) => {
+		try {
+			const app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(params.app);
+			if(!app){throwError('APP_NOT_EXISTENT')}
+			if(app.addOn.jackpot==undefined || app.addOn.jackpot==null) {throwError('JACKPOT_NOT_EXIST_IN_APP')}
+			const jackpot = await JackpotRepository.prototype.findJackpotById(app.addOn.jackpot);
+			if(!jackpot){throwError('JACKPOT_NOT_EXIST_IN_APP')}
+
+			let pot = jackpot.limits.find((limit) => limit.currency == params.currency );
+			if((pot == null) || (pot.pot == null) || (pot.pot == undefined)){throwError('CURRENCY_NOT_EXISTENT')}
+			pot = pot.pot;
+
+			return {
+				pot,
+				id: jackpot._id
+			}
+
+		}catch(err){
+			throw err;
+		}
+	},
 	__editEdgeJackpot : async (params) => {
 		try {
 			let app = await AppRepository.prototype.findAppByIdWithJackpotPopulated(params.app);
@@ -233,6 +254,15 @@ const processActions = {
 
 
 const progressActions = {
+
+	__getPotJackpot : async (params) => {
+		try {
+			const {pot, id} = params; // i left this redundancy to make the parameters clearer
+			return { pot, id };
+		}catch(err){
+			throw err;
+		}
+	},
 	__editEdgeJackpot : async (params) => {
 		try {
 			let res = await JackpotRepository.prototype.editEdgeJackpot(params.jackpot_id, params.edge);
@@ -387,6 +417,9 @@ class JackpotLogic extends LogicComponent {
 				case 'EditEdgeJackpot' : {
 					return await library.process.__editEdgeJackpot(params); break;
 				};
+				case 'GetPotJackpot' : {
+					return await library.process.__getPotJackpot(params); break;
+				};
 
 			}
 		}catch(error){
@@ -427,6 +460,9 @@ class JackpotLogic extends LogicComponent {
 				};
 				case 'EditEdgeJackpot' : {
 					return await library.progress.__editEdgeJackpot(params); break;
+				};
+				case 'GetPotJackpot' : {
+					return await library.progress.__getPotJackpot(params); break;
 				};
 			}
 		}catch(error){
