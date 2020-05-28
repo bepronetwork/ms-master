@@ -38,6 +38,7 @@ import Balance from "./balance";
 import BiggestBetWinner from "./biggestBetWinner";
 import BiggestUserWinner from "./biggestUserWinner";
 import LastBets from "./lastBets";
+import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
 
@@ -83,5 +84,6 @@ export {
     TopIcon,
     Token,
     MailSender,
-    LoadingGif
+    LoadingGif,
+    Background
 }

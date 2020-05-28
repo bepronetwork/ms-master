@@ -197,6 +197,10 @@ const app_object = (object) => {
                     "_id": object.app.customization.logo._id,
                     "id": !object.app.customization.logo.id ? '' : object.app.customization.logo.id
                 },
+                "background": !object.app.customization.background ? {} : {
+                    "_id": object.app.customization.background._id,
+                    "id": !object.app.customization.background.id ? '' : object.app.customization.background.id
+                },
                 "footer": !object.app.customization.footer ? {} : {
                     "_id": object.app.customization.footer._id,
                     "supportLinks": !object.app.customization.footer.supportLinks ? [] : object.app.customization.footer.supportLinks.map(support_link => {

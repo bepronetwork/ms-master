@@ -433,6 +433,21 @@ async function appGetUsersBets(req, res) {
     }
 }
 
+async function editBackground(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editBackground();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+
 // JSON WebToken Security Functions
 async function getTransactions(req, res) {
     try {
@@ -835,5 +850,6 @@ export {
     editVirtualCurrency,
     editRestrictedCountries,
     getLogs,
-    getBetInfo
+    getBetInfo,
+    editBackground
 };
