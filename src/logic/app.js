@@ -684,8 +684,8 @@ const progressActions = {
             APP: app._id
         };
         let templateId = mail.registerApp.templateId;
-        await SendinBlueSingleton.updateContact(email, attributes);
-        await SendinBlueSingleton.sendTemplate(templateId, [email]);
+        SendinBlueSingleton.updateContact(email, attributes);
+        SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
 	},
 	__summary : async (params) => {
