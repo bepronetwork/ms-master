@@ -39,7 +39,8 @@ import {
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
     MapperGetBetSingleton,
-    MapperEditThemeSingleton
+    MapperEditThemeSingleton,
+    MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
 
@@ -603,6 +604,21 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditLogo');
             return MapperEditLogoSingleton.output('EditLogo', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async editBackground() {
+        try {
+            let app = await this.process('EditBackground');
+            return MapperEditBackgroundSingleton.output('EditBackground', app);
         } catch (err) {
             throw err;
         }

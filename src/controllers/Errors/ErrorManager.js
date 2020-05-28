@@ -572,6 +572,16 @@ class ErrorManager {
         }
     }
 
+    background = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     topIcon = function (object, type){
         try{
             switch(type){

@@ -1,6 +1,7 @@
 context('Customization', async () => {
     require('./editVirtualCurrency');
     require('./addTopBarInformation');
+    require('./addBackground');
     require('./addBanner');
     require('./addLogo');
     require('./editColors');

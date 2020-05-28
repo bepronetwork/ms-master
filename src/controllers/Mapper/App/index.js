@@ -38,6 +38,7 @@ import { MapperaddAddonTxFeeSingleton } from "./MapperAddTxFee";
 import { MapperEditAddonTxFeeSingleton } from "./MapperEditTxFee";
 import { MapperAddAddonDepositBonusSingleton } from "./MapperAddDepositBonus";
 import { MapperEditAddonDepositBonusSingleton } from "./MapperEditDepositBonus";
+import { MapperEditBackgroundSingleton } from "./MapperEditBackground";
 
 export {
     MapperAddAddonDepositBonusSingleton,
@@ -79,5 +80,6 @@ export {
     MapperGetBiggetsUserWinnersSingleton,
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
-    MapperEditThemeSingleton
+    MapperEditThemeSingleton,
+    MapperEditBackgroundSingleton
 }

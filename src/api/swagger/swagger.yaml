@@ -1210,6 +1210,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/background :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Background Information
+      operationId: editBackground
+      description: Change Background
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationBackground'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/colors : 
     x-swagger-router-controller: app
     post:
@@ -3239,6 +3269,22 @@ definitions:
         description: |
           App id
       logo:
+        type : string
+        example: 876348bct3t2rc2t34
+        description : image blob or link
+  AppCustomizationBackground :
+    type: object
+    required:
+      - app
+      - background
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      background:
         type : string
         example: 876348bct3t2rc2t34
         description : image blob or link
