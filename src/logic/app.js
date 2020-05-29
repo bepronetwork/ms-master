@@ -1132,6 +1132,10 @@ const progressActions = {
     __editTheme  : async (params) => {
         let { app, theme } = params;
         let themeResult = await CustomizationRepository.prototype.setTheme(app.customization._id, theme);
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
     __editTopBar  : async (params) => {
