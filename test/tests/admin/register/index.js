@@ -63,7 +63,7 @@ context('Register', async () => {
                 NAME: admin.name
             };
             let listIds = mail.registerAdmin.listIds;
-            await SendinBlueSingleton.createContact(email, attributes, listIds);
+            SendinBlueSingleton.createContact(email, attributes, listIds);
         } catch (err) {
             expect(err.status).to.equal(400);
         }

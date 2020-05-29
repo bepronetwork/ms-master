@@ -293,7 +293,7 @@ const progressActions = {
         };
         if (params.registered === true) {
             admin = await self.save(params);
-            await SendinBlueSingleton.createContact(email, attributes, listIds);
+            SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
             delete params["security"];
             params.registered = true;
@@ -301,7 +301,7 @@ const progressActions = {
             await AppRepository.prototype.addAdmin(String(admin.app._id), admin);
             await SecurityRepository.prototype.setBearerToken(admin.security._id, params.newBearerToken);
         }
-        await SendinBlueSingleton.sendTemplate(templateId, [email]);
+        SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
     },
     __addAdmin: async (params) => {
@@ -321,15 +321,15 @@ const progressActions = {
             delete params['adminEmail'];
             resultAdmin = await self.save(params);
             securityId = String(resultAdmin.security);
-            await SendinBlueSingleton.createContact(email, attributes, listIds);
+            SendinBlueSingleton.createContact(email, attributes, listIds);
         } else {
             resultAdmin = params.adminEmail;
             securityId = String(resultAdmin.security._id);
-            await SendinBlueSingleton.updateContact(email, attributes);
+            SendinBlueSingleton.updateContact(email, attributes);
         }
         await SecurityRepository.prototype.setBearerToken(securityId, params.bearerToken);
         let admin = await __private.db.findAdminById(resultAdmin._id);
-        await SendinBlueSingleton.sendTemplate(templateId, [email]);
+        SendinBlueSingleton.sendTemplate(templateId, [email]);
         return admin
     },
     __editAdminType: async (params) => {

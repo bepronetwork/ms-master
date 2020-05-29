@@ -12,8 +12,10 @@ import { currencies_object } from "./currencies";
 import { edit_game_object } from "./editGame";
 import { get_object } from "./get";
 import { tx_fee_object } from "./txFee";
+import { deposit_bonus_object } from "./depositBonus";
 
 export{
+    deposit_bonus_object,
     tx_fee_object,
     app_object,
     result_space_object,
