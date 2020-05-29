@@ -33,8 +33,6 @@ module.exports = {
         { _id: customization._id },
         { $set: { "background": result.ops[0]._id } }
       )
-      console.log(customization._id);
-      break;
     }
     processObj.destroyProgress();
   },
