@@ -1041,7 +1041,7 @@ const progressActions = {
         if(image_url.includes("https")){
             /* If it is a link already */
             gameImageURL = image_url;
-        }else{
+        }else if(image_url!=""){
             /* Does not have a Link and is a blob encoded64 */
             gameImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
             image_url = gameImageURL
@@ -1061,7 +1061,7 @@ const progressActions = {
         if(background_url.includes("https")){
             /* If it is a link already */
             gameBackgroundImageURL = background_url;
-        }else{
+        }else if(background_url!=""){
             /* Does not have a Link and is a blob encoded64 */
             gameBackgroundImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : background_url});
             background_url = gameBackgroundImageURL
@@ -1174,11 +1174,11 @@ const progressActions = {
     },
     __editBackground: async (params) => {
         let { app, background } = params;
-        let backgroundURL;
+        let backgroundURL ="";
         if(background.includes("https")){
             /* If it is a link already */
             backgroundURL = background;
-        }else{
+        }else if(background!=""){
             /* Does not have a Link and is a blob encoded64 */
             backgroundURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : background});
         }
