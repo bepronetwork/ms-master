@@ -26,7 +26,7 @@ context('Generate ETH Addresses', async () => {
             currency : currency._id,
             admin : admin.id
         };
-        await delay(5*60*1000); // 100 secs
+        await delay(10*60*1000); // 100 secs
         /* Guarantee Currency Added with Success to Wallet */
         let res = await generateAddresses(postData, admin.security.bearerToken , {id : admin.id});
         console.log(res)
@@ -35,8 +35,9 @@ context('Generate ETH Addresses', async () => {
         expect(status).to.be.equal(200);
         let res_app = await getAppAuth({...get_app(app.id), admin: admin.id}, admin.security.bearerToken, {id : admin.id});
         console.log("wallet", res_app.data.message.wallet)
+        console.log("\n new \n")
         /* Verify if new wallet has that info */
-        await delay(7*60*1000); // 100 secs
+        await delay(20*60*1000); // 100 secs
         /* Guarantee Currency Added with Success to Wallet */
         res = await generateAddresses(postData, admin.security.bearerToken , {id : admin.id});
         console.log(res)
