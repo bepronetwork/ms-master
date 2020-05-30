@@ -73,6 +73,9 @@ const get_object = (object) => {
                 "currency": deposit.currency,
                 "transactionHash": deposit.transactionHash,
                 "amount": deposit.amount,
+                "fee": deposit.fee,
+                "hasBonus": deposit.hasBonus,
+                "bonusAmount": deposit.bonusAmount
             })
         }) : object.deposits,
         "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,

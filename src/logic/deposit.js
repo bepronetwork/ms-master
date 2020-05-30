@@ -59,7 +59,9 @@ const processActions = {
             confirmations           : params.confirmations || 0,
 			maxConfirmations        : params.maxConfirmations || 0,
 			link_url                : link_url,
-			fee                     : !params.fee ? 0 : params.fee
+			fee                     : !params.fee ? 0 : params.fee,
+			hasBonus                : !params.hasBonus ? 0 : params.hasBonus,
+			bonusAmount             : !params.bonusAmount ? 0 : params.bonusAmount
 		}
 		return normalized;
     },

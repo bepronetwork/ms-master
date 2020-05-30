@@ -365,7 +365,9 @@ const processActions = {
 
             /* Verify AddOn Deposit Bonus */
             let depositBonusValue = 0;
+            let hasBonus = false;
             if(addOn && addOn.depositBonus && addOn.depositBonus.isDepositBonus){
+                hasBonus = addOn.depositBonus.isDepositBonus;
                 let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                 let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                 let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
@@ -414,7 +416,8 @@ const processActions = {
                 amount: amount,
                 isValid,
                 fee,
-                depositBonusValue
+                depositBonusValue,
+                hasBonus
             }
 
             return res;
@@ -622,7 +625,7 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue } = params;
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue, hasBonus } = params;
             var message;
 
             /* Condition to set value of deposit amount and fee */
@@ -653,7 +656,9 @@ const progressActions = {
                 address: params.from,                         // Deposit Address 
                 currency: wallet.currency._id,
                 amount: amount,
-                fee: fee
+                fee: fee,
+                hasBonus: hasBonus,
+                bonusAmount: depositBonusValue
             })
 
             /* Save Deposit Data */
