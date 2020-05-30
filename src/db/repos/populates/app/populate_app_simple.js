@@ -26,6 +26,10 @@ let populate_app_simple = [
                 path : 'txFee',
                 model : 'TxFee',
                 select : { '__v': 0}
+            },{
+                path : 'depositBonus',
+                model : 'DepositBonus',
+                select : { '__v': 0}
             }
         ]
     },

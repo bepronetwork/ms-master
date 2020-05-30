@@ -43,8 +43,11 @@ import AddOnsEcoRepository from "./ecosystem/addon";
 import BalanceRepository from "./balance";
 import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsRepository,  PopularNumberRepository} from "./redis";
 import TxFeeRepository from "./txFee";
+import BackgroundRepository from "./background";
+import DepositBonusRepository from "./depositBonus";
 
 export {
+    DepositBonusRepository,
     PopularNumberRepository,
     TxFeeRepository,
     BiggestBetWinnerRepository, 
@@ -92,5 +95,6 @@ export {
     MailSenderRepository,
     LoadingGifRepository,
     PermissionRepository,
-    AutoWithdrawRepository
+    AutoWithdrawRepository,
+    BackgroundRepository
 }

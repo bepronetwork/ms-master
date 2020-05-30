@@ -149,7 +149,7 @@ const runTests = async () => {
             }))
         });
     })();
-
+    mocha.addFile('./test/tests/middlewares');
     mocha.addFile('./test/tests/bets');
     mocha.addFile('./test/tests/ecosystem');
     mocha.addFile('./test/tests/admin');

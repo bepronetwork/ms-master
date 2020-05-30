@@ -1,13 +1,36 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
-    GamesRepository, ChatRepository, TopBarRepository, 
-    BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository, TxFeeRepository, AddressRepository
+import {
+    AppRepository,
+    AdminsRepository,
+    WalletsRepository,
+    DepositRepository,
+    UsersRepository,
+    GamesRepository,
+    ChatRepository,
+    TopBarRepository,
+    BannersRepository,
+    LogoRepository,
+    FooterRepository,
+    ColorRepository,
+    AffiliateRepository,
+    CurrencyRepository,
+    TypographyRepository,
+    TopIconRepository,
+    MailSenderRepository,
+    LoadingGifRepository,
+    AddOnRepository,
+    AutoWithdrawRepository,
+    LogRepository,
+    BetRepository,
+    CustomizationRepository,
+    TxFeeRepository,
+    BackgroundRepository,
+    DepositBonusRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, Address } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -329,6 +352,59 @@ const processActions = {
             throw err
         }
     },
+    __addAddonDepositBonus : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let min_deposit = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let percentage = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let max_deposit = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let res = {
+            min_deposit,
+            percentage,
+            max_deposit,
+            app
+        }
+		return res;
+    },
+    __editAddonDepositBonus : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError('ADD_ON_NOT_EXISTS')}
+            let depositBonus = await DepositBonusRepository.prototype.findById(addOn.depositBonus)
+            if(!depositBonus){throwError('ADD_ON_DEPOSIT_BONUS_NOT_EXISTS')}
+            let res = {
+                depositBonus,
+                currency : params.currency,
+                depositBonusParams : params.depositBonusParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
     __editAddonAutoWithdraw : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -549,6 +625,15 @@ const processActions = {
             app
         };
     },
+    __editBackground : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editLogo : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -646,8 +731,8 @@ const progressActions = {
             APP: app._id
         };
         let templateId = mail.registerApp.templateId;
-        await SendinBlueSingleton.updateContact(email, attributes);
-        await SendinBlueSingleton.sendTemplate(templateId, [email]);
+        SendinBlueSingleton.updateContact(email, attributes);
+        SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
 	},
 	__summary : async (params) => {
@@ -884,6 +969,19 @@ const progressActions = {
         let res = await TxFeeRepository.prototype.findById(txFee._id);
         return res;
     },
+    __addAddonDepositBonus : async (params) => {
+        const { min_deposit, percentage, max_deposit, app } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit});
+        const depositBonusResult = await depositBonus.register();
+        await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
+		return depositBonusResult;
+    },
+    __editAddonDepositBonus : async (params) => {
+        const { depositBonus, currency, depositBonusParams } = params
+        await DepositBonusRepository.prototype.findByIdAndUpdate(depositBonus._id, currency, depositBonusParams)
+        let res = await DepositBonusRepository.prototype.findById(depositBonus._id);
+        return res;
+    },
     __editAddonAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
@@ -958,7 +1056,7 @@ const progressActions = {
         if(image_url.includes("https")){
             /* If it is a link already */
             gameImageURL = image_url;
-        }else{
+        }else if(image_url!=""){
             /* Does not have a Link and is a blob encoded64 */
             gameImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
             image_url = gameImageURL
@@ -978,7 +1076,7 @@ const progressActions = {
         if(background_url.includes("https")){
             /* If it is a link already */
             gameBackgroundImageURL = background_url;
-        }else{
+        }else if(background_url!=""){
             /* Does not have a Link and is a blob encoded64 */
             gameBackgroundImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : background_url});
             background_url = gameBackgroundImageURL
@@ -1049,6 +1147,10 @@ const progressActions = {
     __editTheme  : async (params) => {
         let { app, theme } = params;
         let themeResult = await CustomizationRepository.prototype.setTheme(app.customization._id, theme);
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
     __editTopBar  : async (params) => {
@@ -1085,6 +1187,23 @@ const progressActions = {
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
             autoDisplay,
             ids
+        })
+        // Save info on Customization Part
+        return params;
+    },
+    __editBackground: async (params) => {
+        let { app, background } = params;
+        let backgroundURL ="";
+        if(background.includes("https")){
+            /* If it is a link already */
+            backgroundURL = background;
+        }else if(background!=""){
+            /* Does not have a Link and is a blob encoded64 */
+            backgroundURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : background});
+        }
+
+        await BackgroundRepository.prototype.findByIdAndUpdate(app.customization.background._id, {
+            id : backgroundURL
         })
         // Save info on Customization Part
         return params;
@@ -1316,6 +1435,12 @@ class AppLogic extends LogicComponent{
                 case 'EditAddonTxFee' : {
                     return await library.process.__editAddonTxFee(params); break;
                 };
+                case 'AddAddonDepositBonus' : {
+                    return await library.process.__addAddonDepositBonus(params); break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    return await library.process.__editAddonDepositBonus(params); break;
+                };
                 case 'editAddonAutoWithdraw' : {
                     return await library.process.__editAddonAutoWithdraw(params); break;
                 };
@@ -1400,6 +1525,9 @@ class AppLogic extends LogicComponent{
                 case 'GetBetInfo' : {
 					return await library.process.__getBetInfo(params); break;
                 };
+                case 'EditBackground' : {
+					return await library.process.__editBackground(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1448,6 +1576,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditAddonTxFee' : {
                     return await library.progress.__editAddonTxFee(params); break;
+                };
+                case 'AddAddonDepositBonus' : {
+                    return await library.progress.__addAddonDepositBonus(params); break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    return await library.progress.__editAddonDepositBonus(params); break;
                 };
                 case 'editAddonAutoWithdraw' : {
                     return await library.progress.__editAddonAutoWithdraw(params); break;
@@ -1553,6 +1687,9 @@ class AppLogic extends LogicComponent{
                 }
                 case 'GetBetInfo': {
                     return await library.progress.__getBetInfo(params); break;
+                }
+                case 'EditBackground': {
+                    return await library.progress.__editBackground(params); break;
                 }
 			}
 		}catch(error){

@@ -64,7 +64,8 @@ import {
     MapperGetLogsSingleton,
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
-    MapperaddAddonTxFeeSingleton
+    MapperaddAddonTxFeeSingleton,
+    MapperEditBackgroundSingleton
 } from "./App";
 
 import {
@@ -81,7 +82,12 @@ import {
     MapperEditVirtualCurrencySingleton
 } from "./Wallet";
 
+import {
+    MapperGetPotJackpotSingleton
+} from "./Jackpot";
+
 export {
+    MapperGetPotJackpotSingleton,
     MapperGetBetSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
@@ -142,5 +148,6 @@ export {
     MapperGetLogsSingleton,
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
-    MapperaddAddonTxFeeSingleton
+    MapperaddAddonTxFeeSingleton,
+    MapperEditBackgroundSingleton
 }

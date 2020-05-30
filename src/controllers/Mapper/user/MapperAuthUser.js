@@ -104,7 +104,10 @@ let outputs = {
                     "confirmations": deposit.confirmations,
                     "maxConfirmations": deposit.maxConfirmations,
                     "confirmed": deposit.confirmed,
-                    "link_url": deposit.link_url
+                    "link_url": deposit.link_url,
+                    "fee": deposit.fee,
+                    "hasBonus": deposit.hasBonus,
+                    "bonusAmount": deposit.bonusAmount
                 })
             }) : object.deposits,
             ...bets_object(object),
