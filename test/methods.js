@@ -471,6 +471,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async pingPostMiddleware(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/status/post')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => res)
+    },
     async editTableLimit(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editTableLimit')
