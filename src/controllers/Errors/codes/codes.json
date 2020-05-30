@@ -254,5 +254,17 @@
     "063" : {
         "key" : "ADD_ON_DEPOSIT_BONUS_NOT_EXISTS",
         "message"   : "Deposit Bonus AddOn not exists"
+    },
+    "064" : {
+        "key" : "INVALID_DEPOSIT_BONUS_PERCENTAGE",
+        "message"   : "Deposit Bonus Percentage can't be equal or less than 0"
+    },
+    "065" : {
+        "key" : "INVALID_DEPOSIT_BONUS_MAX_DEPOSIT",
+        "message"   : "Deposit Bonus Maximum Deposit can't be less than Minimum Deposit"
+    },
+    "066" : {
+        "key" : "INVALID_DEPOSIT_BONUS_MIN_DEPOSIT",
+        "message"   : "Deposit Bonus Minimum Deposit can't be equal or less than 0"
     }
 }

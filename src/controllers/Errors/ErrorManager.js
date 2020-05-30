@@ -365,6 +365,24 @@ class ErrorManager {
                     }
                     break;
                 };
+                case 'EditAddonDepositBonus' : {
+                    // Verify App
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                       libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT));
+                    // Verify if Percentage > 0
+                    if(object.depositBonusParams.percentage <= 0){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INVALID_DEPOSIT_BONUS_PERCENTAGE));
+                    }
+                    // Verify if Max Deposit Bonus >= Min Deposit Bonus
+                    if(object.depositBonusParams.max_deposit < object.depositBonusParams.min_deposit){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INVALID_DEPOSIT_BONUS_MAX_DEPOSIT));
+                    }
+                    // Verify if Min Deposit Bonus < 0
+                    if(object.depositBonusParams.min_deposit <= 0){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INVALID_DEPOSIT_BONUS_MIN_DEPOSIT));
+                    }
+                    break;
+                };
             }
         }catch(err){
             throw err
