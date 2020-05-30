@@ -4,7 +4,7 @@ const wallet_object = (object) => {
         "wallet": object.wallet ? object.wallet.map(wallet => {
             return ({
                 "_id": wallet._id,
-                "image" :wallet.image,
+                "image" :(wallet.image == null || wallet.image == '') ? wallet.currency.image : wallet.image,
                 "playBalance": wallet.playBalance,
                 "max_deposit": wallet.max_deposit,
                 "max_withdraw": wallet.max_withdraw,
@@ -14,7 +14,7 @@ const wallet_object = (object) => {
                 "link_url": wallet.link_url,
                 "currency": !wallet.currency ? {} : {
                     "_id": wallet.currency._id,
-                    "image": (wallet.image == null || wallet.image == '') ? wallet.currency.image : wallet.image,
+                    "image": wallet.currency.image,
                     "ticker": wallet.currency.ticker,
                     "decimals": wallet.currency.decimals,
                     "name": wallet.currency.name,
