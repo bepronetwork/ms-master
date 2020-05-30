@@ -71,6 +71,7 @@ let outputs = {
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
+                    "image": (wallet.image == null || wallet.image == '') ? wallet.currency.image : wallet.image,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
                     "min_withdraw": wallet.min_withdraw,
