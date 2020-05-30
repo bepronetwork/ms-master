@@ -1,5 +1,5 @@
 import {
-    pingPostMiddleware
+    pingPostMiddleware, pingPost
 } from '../../../methods';
 
 import { mochaAsync } from '../../../utils';
@@ -21,8 +21,13 @@ context('Rate-Limit', async () => {
             pingPostMiddleware({type: "global", app: app.id}, {}, {});
         }
         var res = await pingPostMiddleware({type: "global", app: app.id}, {}, {});
-        await delay(60*1000);
         expect(res.status).to.equal(429);
+    }));
+
+    it('should should after 1 minute', mochaAsync(async () => {
+        await delay(60*1000);
+        var res = await pingPost({type: "global", app: app.id}, {}, {});
+        expect(res.data.status).to.equal(200);
     }));
 });
 
