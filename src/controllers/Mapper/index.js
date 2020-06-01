@@ -41,7 +41,6 @@ import {
     MapperEditTopBarSingleton,
     MapperEditTopIconSingleton,
     MapperEditTypographySingleton,
-    MapperGenerateAddressSingleton,
     MapperGetSingleton,
     MapperGetAuthSingleton,
     MapperGetGamesSingleton,

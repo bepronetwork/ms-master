@@ -1,5 +1,6 @@
 import MathSingleton from "./math";
 import { throwError } from "../../controllers/Errors/ErrorManager";
+import Combinatorics from 'js-combinatorics';
 
 function findWithAttr(array, attr, value) {
     for(var i = 0; i < array.length; i += 1) {
@@ -48,13 +49,13 @@ class CasinoLogic{
     
     /**
      * 
-     * @param {Int} outcomeSpaceResult 
+     * @param {Int} outcomeResultSpace 
      * @param {fromOutcometoResultSpace} userResultSpace 
      */
 
-    isWon(outcomeSpaceResult, userResultSpace){
-        let unit =  userResultSpace.reduce( (acc, resultBetted) => {
-            return parseInt(outcomeSpaceResult.index) == parseInt(resultBetted.place) ? acc+1 : acc;
+    isWon(outcomeResultSpace, userResultSpace){
+        let unit = userResultSpace.reduce( (acc, resultBetted) => {
+            return parseInt(outcomeResultSpace.index) == parseInt(resultBetted.place) ? acc+1 : acc;
         }, 0)
 
         return unit >= 1 ? true : false;
@@ -206,6 +207,48 @@ class CasinoLogic{
                         maxWin = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         winAmount = parseFloat(maxWin);
                     }  
+                    break;
+                };
+                case 'keno_simple' : {
+                    const KENO_RESULT_SPACE = 10; /* Amount of results needed */
+                    if(outcomeResultSpace.length != KENO_RESULT_SPACE){throwError('BAD_BET')} /* Result Space has to be 10 diff values */
+                    var n = resultSpace.length; /* Number of total squares -  resultSpace.length ex : 40*/
+                    var d = KENO_RESULT_SPACE; /* Static Output - KENO_RESULT_SPACE */
+                    var x = userResultSpace.length; /* Squares Picked */
+                    var y = 0; /* Number of values that are equal outcome<->userResult */
+    
+                    if(x <= 0){throwError('BAD_BET')} /* No User Result Space */
+    
+                    /* Verify if all the numbers have the same value for each box */ 
+                    let medianValue = userResultSpace[0].value;   
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')} /* Not a Number */
+                        if(item.value <= 0){ throw throwError('BAD_BET')} /* Neg or 0 */
+                        if(item.value != medianValue){throwError('BAD_BET')} /* All values should be the same */
+                        medianValue = item.value;
+                        /* Check for all the outcomes if any matches */
+                        outcomeResultSpace.map( o => {  
+                            if(item.place == o.index){
+                                /* Check if the value is equal to choosen */
+                                y++;
+                            }
+                        })  
+                        return acc+item.value;
+                    }, 0));
+
+                    if(y <= 0){
+                        /* is Lost */
+                        isWon = false;
+                        winAmount = 0;
+                    }else{
+                        /* is Won */
+                        isWon = true;
+                        let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
+                        let odd = parseFloat(this.probabilityToOdd(probability));
+                        let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
+                        let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
+                        winAmount = parseFloat(winBalance - houseEdgeBalance);
+                    }
                     break;
                 };
                 default : { 
@@ -380,6 +423,36 @@ class CasinoLogic{
                     winAmount = parseFloat(winBalance - houseEdgeBalance);
                     break;
                 };
+                case 'keno_simple' : {
+                    const KENO_RESULT_SPACE = 10; /* Amount of results needed */
+                    var n = resultSpace.length; /* Number of total squares -  resultSpace.length ex : 40*/
+                    var d = KENO_RESULT_SPACE; /* Static Output - KENO_RESULT_SPACE */
+                    var x = userResultSpace.length; /* Squares Picked */
+                    var y = x; /* Max number of values that are equal outcome<->userResult */
+    
+                    if(x <= 0){throwError('BAD_BET')} /* No User Result Space */
+                    if(x > KENO_RESULT_SPACE){throwError('BAD_BET')} /* Result Space bigger than KENO */
+                    /* Verify if all the numbers have the same value for each box */ 
+                    let medianValue = userResultSpace[0].value;   
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')} /* Not a Number */
+                        if(item.value <= 0){ throw throwError('BAD_BET')} /* Neg or 0 */
+                        if(item.value != medianValue){throwError('BAD_BET')} /* All values should be the same */
+                        medianValue = item.value;                      
+                        return acc+item.value;
+                    }, 0));
+
+                
+                    /* is Won */
+                    console.log(n,d,x,y)
+                    let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
+                    let odd = parseFloat(this.probabilityToOdd(probability));
+                    console.log("probability", probability, odd, totalBetAmount)
+                    let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
+                    let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
+                    winAmount = parseFloat(winBalance - houseEdgeBalance);
+                    break;
+                };
                 default : { 
                     throw new Error('Game Not Integrated')
                 }
@@ -400,7 +473,7 @@ class CasinoLogic{
      */
 
     probabilityToOdd(probability){
-        return 1/MathSingleton.toFloat(probability);
+        return 1/probability;
     }
 }
 

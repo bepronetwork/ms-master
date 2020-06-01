@@ -45,7 +45,6 @@ export {
     MapperEditAddonDepositBonusSingleton,
     MapperEditAddonTxFeeSingleton,
     MapperaddAddonTxFeeSingleton,
-    MapperGenerateAddressSingleton,
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
     MapperEditBannersSingleton,
