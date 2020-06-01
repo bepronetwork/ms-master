@@ -27,7 +27,7 @@ let outputs = {
                 "currency": object.bet.currency,
                 "user": object.bet.user,
                 "app": object.bet.app,
-                "outcomeResultSpace": {
+                "outcomeResultSpace": object.bet ? object.bet.outcomeResultSpace : {
                     "key": object.bet.outcomeResultSpace.key,
                     "start": object.bet.outcomeResultSpace.start,
                     "end": object.bet.outcomeResultSpace.end,
@@ -89,7 +89,7 @@ let outputs = {
             },
             "user": object.user,
             "app": object.app,
-            "outcomeResultSpace": {
+            "outcomeResultSpace": object.outcomeResultSpace ? object.outcomeResultSpace : {
                 "key": object.outcomeResultSpace.key,
                 "start": object.outcomeResultSpace.start,
                 "end": object.outcomeResultSpace.end,
