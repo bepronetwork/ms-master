@@ -99,6 +99,7 @@ ErrorHandler.prototype.getKey = function(code){
 }
 
 ErrorHandler.prototype.getError = function(code){
+    console.log("code", code);
     return {
         key     : this.getKey(code),
         code    : parseInt(code),

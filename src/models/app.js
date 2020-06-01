@@ -371,6 +371,27 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+    async generateAddresses() {
+        
+        const { app } = this.self.params;
+        try{
+            await AppRepository.prototype.changeWithdrawPosition(app, true);
+            let res = await this.process('Auto');
+            AppRepository.prototype.changeWithdrawPosition(app, false);
+            return MapperAddCurrencyWalletSingleton.output('GenerateAddresses', res);
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not betting/withdrawing atm */
+                /* Open Mutex */
+                AppRepository.prototype.changeWithdrawPosition(app, false);
+            }
+            throw err;
+        }
+    }
 
     /**
     * @param {String} 

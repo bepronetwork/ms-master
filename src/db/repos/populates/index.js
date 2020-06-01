@@ -8,10 +8,14 @@ import populate_jackpot from './populate_jackpot';
 import populate_app_simple from './app/populate_app_simple';
 import populate_app_wallet from './app/populate_app_wallet';
 import populate_user_simple from './user/populate_user_simple';
+import populate_app_address from './app/populate_app_address';
+import populate_user_wallet from './user/populate_user_wallet';
 
 export {
     populate_affiliateLink,
     populate_user_simple,
+    populate_app_address,
+    populate_user_wallet,
     populate_app_affiliates,
     populate_app_simple,
     populate_app_all,

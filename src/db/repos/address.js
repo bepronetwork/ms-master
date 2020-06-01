@@ -58,6 +58,21 @@ class AddressRepository extends MongoComponent{
         });
     }
 
+    editAddress(id, address) {
+        return new Promise((resolve, reject)=>{
+            AddressRepository.prototype.schema.model.findByIdAndUpdate(
+                id,
+                { $set: {
+                    "address" : address
+                } },
+                {'new' : true}
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
 }
 
 AddressRepository.prototype.schema = new AddressSchema();

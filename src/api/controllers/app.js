@@ -801,10 +801,32 @@ async function getLogs(req, res) {
 }
 
 
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+
+async function generateAddresses(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let body  = req.body;
+        let app = new App(body);
+        let data = await app.generateAddresses();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+
 export {
     addAddonDepositBonus,
     editAddonDepositBonus,
     addAddonTxFee,
+    generateAddresses,
     editAddonTxFee,
     editTheme,
     createApp,

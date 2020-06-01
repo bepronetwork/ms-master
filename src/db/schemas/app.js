@@ -31,6 +31,7 @@ AppSchema.prototype.schema =  {
     licensesId          : [{ type: String}],
     metadataJSON        : {  type: JSON},
     isWithdrawing       : { type : Boolean, default : false, required : true },
+    isUsersAllLocked    : { type : Boolean, default : false, required : true },
     hosting_id          : { type : String },
     web_url             : { type : String },
     addOn               : { type: mongoose.Schema.Types.ObjectId, ref: 'AddOn'},

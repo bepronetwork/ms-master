@@ -85,7 +85,7 @@ let populate_app_simple = [
         model : 'Typography',
         select : { '__v': 0 },
         populate : populate_typography
-    },
+    }
 ] 
 
 export default populate_app_simple;

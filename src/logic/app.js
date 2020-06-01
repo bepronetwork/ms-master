@@ -128,7 +128,7 @@ const processActions = {
     },
     __getLogs : async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if(!app){throwError('APP_NOT_EXISTENT')}
 
             let offset  = (params.offset == undefined) ? 0 : params.offset;
@@ -141,7 +141,7 @@ const processActions = {
         }
     },
     __deployApp : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
         let normalized = {
@@ -177,7 +177,7 @@ const processActions = {
     },
     __getBetInfo : async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if (!app){ throwError('APP_NOT_EXISTENT') }
             let bet = await BetRepository.prototype.findBetById(params.bet);
             return bet;
@@ -187,7 +187,7 @@ const processActions = {
     },
     __editRestrictedCountries : async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if (!app){ throwError('APP_NOT_EXISTENT') }
             return params;
         } catch(err) {
@@ -197,7 +197,7 @@ const processActions = {
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
 
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
@@ -319,6 +319,7 @@ const processActions = {
                 amount      : 0
             }
         }));
+
         let withdraw_fee = await Promise.all(arrayCurrency.map( async c => {
             return {
                 currency    : c._id,
@@ -451,7 +452,7 @@ const processActions = {
     __updateWallet : async (params) => {
         var { currency, id, wBT } = params;
         /* Get App Id */
-        var app = await AppRepository.prototype.findAppById(id);
+        var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         const wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
@@ -486,7 +487,7 @@ const processActions = {
     },
     __getGames : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.findAppById(params.app);
+        let res = await AppRepository.prototype.findAppById(params.app, "simple");
         if(!res){throwError('APP_NOT_EXISTENT')}
 
         return res.games;
@@ -586,19 +587,19 @@ const processActions = {
     },
     __editIntegration : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
     __editMailSenderIntegration : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
     __editTheme : async (params) => {
         let { app, theme } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         if((theme != "dark") && (theme != "light")){ throwError('WRONG_THEME') }
         return {
@@ -608,7 +609,7 @@ const processActions = {
     },
     __editTopBar : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -617,7 +618,7 @@ const processActions = {
     },
     __editBanners : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -635,7 +636,7 @@ const processActions = {
     },
     __editLogo : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -644,7 +645,7 @@ const processActions = {
     },
     __editColors : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -653,7 +654,7 @@ const processActions = {
     },
     __editFooter : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -662,7 +663,7 @@ const processActions = {
     },
     __editTopIcon : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -671,7 +672,7 @@ const processActions = {
     },
     __editLoadingGif : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -680,7 +681,7 @@ const processActions = {
     },
     __editTypography: async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         let typography = await TypographyRepository.prototype.findById(app.typography._id);
 
         if (!app) { throwError('APP_NOT_EXISTENT') };
@@ -693,6 +694,20 @@ const processActions = {
     },
     __getUsers : async (params) => {
         return params;
+    },
+    __generateAddresses : async (params) => {
+        let { app, currency, amount } = params;
+        app = await AppRepository.prototype.findAppById(app, "address");
+        if (!app) { throwError('APP_NOT_EXISTENT') };
+        const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        if (!app_wallet) { throwError('CURRENCY_NOT_EXISTENT') };
+        const { availableDepositAddresses } = app_wallet;
+        return {
+            app_wallet,
+            amount,
+            availableDepositAddresses,
+            app
+        };
     }
 }
 
@@ -1295,6 +1310,35 @@ const progressActions = {
     __getUsers : async (params) => {
         let res = await UsersRepository.prototype.getAllFiltered(params);
         return res;
+    }, 
+    __generateAddresses  : async (params) => {
+
+        const { app_wallet, availableDepositAddresses, amount } = params;
+        var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+        const currentAddressAmount = availableDepositAddresses.length;
+        // See if address is already provided
+        var bitgo_id;
+        for(var i = 1; i <= amount; i++){
+            var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: i /* label type */, id: bitgo_id });
+            if(i <= currentAddressAmount){
+                // old label see if it is 
+                var availableDeposit = availableDepositAddresses[i];
+                // Get Bitgo info on this address
+                if(!availableDeposit.address.address && bitgo_address.address){
+                    // If the system does not have this address saved still - bitgo has the address already
+                    // Add Deposit Address to User Deposit Addresses
+                    await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
+                }else{
+                    // If system already has this data but the address was not generated yet - do nothing
+                }
+            }else{
+                // new label - save it
+                // If the system does not have this address saved still - bitgo has the address already
+                let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                // Add Deposit Address to User Deposit Addresses
+                await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
+            }
+        }
     }
 }
 
@@ -1466,6 +1510,9 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.process.__getUsers(params); break;
                 };
+                case 'GenerateAddresses' : {
+					return await library.process.__generateAddresses(params); break;
+                };
                 case 'AddAddonBalance' : {
 					return await library.process.__addAddonBalance(params); break;
                 };
@@ -1625,6 +1672,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetUsers' : {
 					return await library.progress.__getUsers(params); break;
+                };
+                case 'GenerateAddresses' : {
+					return await library.progress.__generateAddresses(params); break;
                 };
                 case 'AddAddonBalance' : {
 					return await library.progress.__addAddonBalance(params); break;
