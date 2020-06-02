@@ -218,7 +218,7 @@ const processActions = {
                 admin: admin,
                 app: app,
                 admin_id: admin._id,
-                url: "https://app.betprotocol.com/"
+                url: SENDINBLUE_EMAIL_TO
             };
             return normalized;
         } catch (error) {
