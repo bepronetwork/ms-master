@@ -339,9 +339,9 @@ const processActions = {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
+            if(!addOn){throwError('UNKNOWN')}
             let txFee = await TxFeeRepository.prototype.findById(addOn.txFee)
-            if(!txFee){throwError()}
+            if(!txFee){throwError('UNKNOWN')}
             let res = {
                 txFee,
                 currency : params.currency,
@@ -410,9 +410,9 @@ const processActions = {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
+            if(!addOn){throwError('UNKNOWN')}
             let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
+            if(!autoWithdraw){throwError('UNKNOWN')}
             let res = {
                 autoWithdraw,
                 currency : params.currency,
@@ -1128,7 +1128,7 @@ const progressActions = {
         /* Test functioning of Client */
         await sendinBlueClient.getContacts();
 
-        if(!mailSender){ throwError();}
+        if(!mailSender){ throwError('UNKNOWN');}
 
         await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
             apiKey : encryptedAPIKey,
@@ -1138,7 +1138,7 @@ const progressActions = {
         for (let attribute of SendInBlueAttributes){
             await sendinBlueClient.createAttribute(attribute).catch((e)=>{
                 if(e.response.body.message !== "Attribute name must be unique") {
-                    // throwError();
+                    // throwError('UNKNOWN');
                 }
             });
         }

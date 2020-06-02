@@ -95,7 +95,7 @@ const processActions = {
         var username = new String(params.username).toLowerCase().trim();
         let user = await __private.db.findUser(username);
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN'); };
 
         let has2FASet = user.security['2fa_set'];
         let newBearerToken = MiddlewareSingleton.sign(user._id);
@@ -162,7 +162,7 @@ const processActions = {
         let updatePassword = await UsersRepository.prototype.updateUser({ id: params.user_id, param: { hash_password } });
 
         if (!updatePassword) {
-            throwError();
+            throwError('UNKNOWN');
         }
 
         let normalized = {
@@ -177,7 +177,7 @@ const processActions = {
         let user = await __private.db.findUser(username);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN');    };
 
         var has2FASet = user.security['2fa_set'];
         var secret2FA = user.security['2fa_secret'];
@@ -216,7 +216,7 @@ const processActions = {
         // Get User by Username
         let user = await __private.db.findUserById(params.user);
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN') };
         let normalized = user;
         return normalized;
     },
@@ -225,7 +225,7 @@ const processActions = {
         let user = await __private.db.findUserById(params.user);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN') };
 
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
             secret: params['2fa_secret'],
