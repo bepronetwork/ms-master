@@ -51,12 +51,18 @@ const betResolvingActions = {
             case 'keno_simple' : {
                 outcomeResultSpace = [];
                 /* 10 Outcome Result Spaces */
-                for(var i = 0; i < 10; i++){
+                while(outcomeResultSpace.length < 10){
                     serverSeed = CryptographySingleton.generateSeed();
                     hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
-                    outcome = CryptographySingleton.hexToInt(hmca_hash) ;
-                    outcomeResultSpace.push(CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace));
-                };
+                    outcome = CryptographySingleton.hexToInt(hmca_hash);
+                    let outcomeResultSpaceIndividual = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
+                    console.log("outcomeResultSpaceIndividual", outcomeResultSpaceIndividual);
+                    let exists = outcomeResultSpace.find( o => outcomeResultSpaceIndividual.index == o.index)
+                    if(!exists){
+                        /* Make sure they dont have the same result space */
+                        outcomeResultSpace.push(outcomeResultSpaceIndividual);
+                    }
+                }
                 break;
             };
             default : {
