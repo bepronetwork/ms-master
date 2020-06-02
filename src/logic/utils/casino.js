@@ -1,6 +1,7 @@
 import MathSingleton from "./math";
 import { throwError } from "../../controllers/Errors/ErrorManager";
 import Combinatorics from 'js-combinatorics';
+import { getGameProbablityNormalizer } from "./games";
 
 function findWithAttr(array, attr, value) {
     for(var i = 0; i < array.length; i += 1) {
@@ -244,7 +245,7 @@ class CasinoLogic{
                         /* is Won */
                         isWon = true;
                         let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
-                        let odd = parseFloat(this.probabilityToOdd(probability));
+                        let odd = parseFloat(this.probabilityToOdd(getGameProbablityNormalizer({metaName : game, probability})));
                         let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
                         winAmount = parseFloat(winBalance - houseEdgeBalance);
@@ -446,7 +447,8 @@ class CasinoLogic{
                     /* is Won */
                     console.log(n,d,x,y)
                     let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
-                    let odd = parseFloat(this.probabilityToOdd(probability));
+                    console.log("getGameProbablityNormalizer", getGameProbablityNormalizer({metaName : game, probability}), game)
+                    let odd = parseFloat(this.probabilityToOdd(getGameProbablityNormalizer({metaName : game, probability})));
                     console.log("probability", probability, odd, totalBetAmount)
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                     let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
