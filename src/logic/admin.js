@@ -218,7 +218,7 @@ const processActions = {
                 admin: admin,
                 app: app,
                 admin_id: admin._id,
-                url: app.web_url
+                url: "https://app.betprotocol.com/"
             };
             return normalized;
         } catch (error) {
