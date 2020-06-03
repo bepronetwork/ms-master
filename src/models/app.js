@@ -42,11 +42,8 @@ import {
     MapperEditThemeSingleton,
     MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
-<<<<<<< HEAD
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperGenerateAddressSingleton } from '../controllers/Mapper/App';
-=======
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
->>>>>>> dev
+import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
 
 class App extends ModelComponent {
 
