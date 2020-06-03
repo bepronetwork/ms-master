@@ -20,6 +20,10 @@ DepositBonusSchema.prototype.schema =  {
         currency             : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
         amount               : { type: Number, required : true, default : 0},
     }],
+    multiplier           : [{
+        currency             : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+        amount               : { type: Number, required : true, default : 0},
+    }],
 }
 
 

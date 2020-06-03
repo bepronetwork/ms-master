@@ -50,6 +50,7 @@ class DepositBonusRepository extends MongoComponent{
                 await this.findByIdAndUpdateMaxDepositAmount(_id, currency, newStructure.max_deposit)
                 await this.findByIdAndUpdateMinDepositAmount(_id, currency, newStructure.min_deposit)
                 await this.findByIdAndUpdatePercentageAmount(_id, currency, newStructure.percentage)
+                await this.findByIdAndUpdateMultiplierAmount(_id, currency, newStructure.multiplier)
                 if(err) { reject(err)}
                 resolve(item);
             });
@@ -97,6 +98,23 @@ class DepositBonusRepository extends MongoComponent{
                 {
                     $set: {
                         "percentage.$.amount" : parseFloat(amount)
+                    }
+                }
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
+    findByIdAndUpdateMultiplierAmount(_id, currency, amount){
+        return new Promise( (resolve,reject) => {
+            DepositBonusRepository.prototype.schema.model.updateOne(
+                {_id, "multiplier.currency": currency},
+                {
+                    $set: {
+                        "multiplier.$.amount" : parseFloat(amount)
                     }
                 }
             )
