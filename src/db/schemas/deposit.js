@@ -25,7 +25,9 @@ DepositSchema.prototype.schema = {
     /* If Purchase */
     isPurchase              : { type: Boolean, default : false, required : true},
     purchaseAmount          : { type: Number, default : 0},
-    fee                     : { type: Number }
+    fee                     : { type: Number },
+    hasBonus                : { type: Boolean, default : false, required : true},
+    bonusAmount             : { type: Number, default : 0}
 }
 
 // db o only allows once per type

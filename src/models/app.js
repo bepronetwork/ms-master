@@ -39,9 +39,14 @@ import {
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
     MapperGetBetSingleton,
-    MapperEditThemeSingleton
+    MapperEditThemeSingleton,
+    MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
+<<<<<<< HEAD
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperGenerateAddressSingleton } from '../controllers/Mapper/App';
+=======
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
+>>>>>>> dev
 
 class App extends ModelComponent {
 
@@ -334,6 +339,29 @@ class App extends ModelComponent {
         }
     }
 
+    async addAddonDepositBonus() {
+        try {
+            let app = await this.process('AddAddonDepositBonus');
+            return MapperAddAddonDepositBonusSingleton.output('AddAddonDepositBonus', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAddonDepositBonus() {
+        try {
+            let app = await this.process('EditAddonDepositBonus');
+            return MapperEditAddonDepositBonusSingleton.output('EditAddonDepositBonus', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
     * @param {String} 
     * @return {bool || Exception}  
@@ -601,6 +629,21 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditLogo');
             return MapperEditLogoSingleton.output('EditLogo', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async editBackground() {
+        try {
+            let app = await this.process('EditBackground');
+            return MapperEditBackgroundSingleton.output('EditBackground', app);
         } catch (err) {
             throw err;
         }

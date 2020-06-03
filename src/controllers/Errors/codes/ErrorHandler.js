@@ -76,8 +76,11 @@ ErrorHandler.prototype.KEYS =  {
     'UNAUTHORIZED_COUNTRY'                  : "059",
     'IS_ETHEREUM_WALLET'                    : "060",
     'WRONG_THEME'                           : "061",
-    'ADDRESS_NOT_AVAILABLE'                 : "062",
-    'USER_LOCK_MODE_IN_API'                 : "063"
+    'ADD_ON_NOT_EXISTS'                     : "062",
+    'ADD_ON_DEPOSIT_BONUS_NOT_EXISTS'       : "063",
+    'INVALID_DEPOSIT_BONUS_PERCENTAGE'      : "064",
+    'INVALID_DEPOSIT_BONUS_MAX_DEPOSIT'     : "065",
+    'INVALID_DEPOSIT_BONUS_MIN_DEPOSIT'     : "066"
 };
 
 /***************************

@@ -33,8 +33,11 @@ import { PermissionSchema } from "./permission";
 import { AutoWithdrawSchema } from "./addOn/autoWithdraw";
 import { BalanceSchema } from "./addOn/balance";
 import { TxFeeSchema } from "./addOn/txFee";
+import { BackgroundSchema }  from './customization/background';
+import { DepositBonusSchema } from "./addOn/depositBonus";
 
 export {
+    DepositBonusSchema,
     TxFeeSchema,
     BalanceSchema,
     CurrencySchema,
@@ -69,5 +72,6 @@ export {
     AddOnSchema,
     JackpotSchema,
     PermissionSchema,
-    AutoWithdrawSchema
+    AutoWithdrawSchema,
+    BackgroundSchema
 }

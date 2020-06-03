@@ -10,5 +10,9 @@
     "multiplesAdmins": {
         "templateId" : 4,
         "listIds": [2]
+    },
+    "resetPassword": {
+        "templateId" : 5,
+        "listIds": [2]
     }
 }

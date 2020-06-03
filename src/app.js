@@ -2,6 +2,7 @@ import { PORT, QUOTA_GUARD_URL } from './config';
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
 import PusherSingleton from './logic/third-parties/pusher';
+import { rateLimiterUsingThirdParty } from './controllers/middlewares';
 
 /** MACROS */
 var SwaggerExpress = require('swagger-express-mw');
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(expressIp().getIpInfoMiddleware);
+app.use(rateLimiterUsingThirdParty);
 
 //--------RUN APP-------------------//
 
@@ -41,5 +43,5 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
 	});
 
 });
-            
+
 module.exports = app;
