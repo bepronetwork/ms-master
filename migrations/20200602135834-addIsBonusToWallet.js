@@ -24,24 +24,18 @@ module.exports = {
     let index = -1;
     while (true) {
       index++;
-      let wallets = await db.collection('wallets').find({ bonusAmount: null }).skip(1000 * index).limit(1000).toArray();
+      let wallets = await db.collection('wallets').find({ isBonus: false }).skip(1000 * index).limit(1000).toArray();
       if (wallets.length === 0) {
         break;
       }
       let processIndex = wallets.length;
-      let processObj = new Progress(processIndex, "ADD_MULTIPLIER_TO_DEPOSIT_BONUS");
+      let processObj = new Progress(processIndex, "REMOVE_IS_BONUS_FROM_WALLET");
       for (let wallet of wallets) {
         processObj.setProcess(processIndex);
         processIndex--;
         await db.collection('wallets').updateOne(
           { _id: wallet._id },
-          {
-            $set: {
-              "bonusAmount": 0,
-              "minBetAmountForBonusUnlocked": 0,
-              "incrementBetAmountForBonus": 0
-            }
-          }
+          { $unset: { "isBonus": "" } }
         )
       }
       processObj.destroyProgress();
