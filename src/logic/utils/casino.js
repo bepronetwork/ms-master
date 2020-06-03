@@ -211,6 +211,7 @@ class CasinoLogic{
                     break;
                 };
                 case 'keno_simple' : {
+                    console.log("hhhh")
                     const KENO_RESULT_SPACE = 10; /* Amount of results needed */
                     if(outcomeResultSpace.length != KENO_RESULT_SPACE){throwError('BAD_BET')} /* Result Space has to be 10 diff values */
                     var n = resultSpace.length; /* Number of total squares -  resultSpace.length ex : 40*/
@@ -219,7 +220,6 @@ class CasinoLogic{
                     var y = 0; /* Number of values that are equal outcome<->userResult */
     
                     if(x <= 0){throwError('BAD_BET')} /* No User Result Space */
-    
                     /* Verify if all the numbers have the same value for each box */ 
                     let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
@@ -236,6 +236,7 @@ class CasinoLogic{
                         })  
                         return acc+item.value;
                     }, 0));
+                    console.log("heee", x, y, d ,n)
 
                     if(y <= 0){
                         /* is Lost */
@@ -425,6 +426,7 @@ class CasinoLogic{
                     break;
                 };
                 case 'keno_simple' : {
+                    console.log("here", n, d, x, y)
                     const KENO_RESULT_SPACE = 10; /* Amount of results needed */
                     var n = resultSpace.length; /* Number of total squares -  resultSpace.length ex : 40*/
                     var d = KENO_RESULT_SPACE; /* Static Output - KENO_RESULT_SPACE */

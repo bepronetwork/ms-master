@@ -702,6 +702,7 @@ const processActions = {
         if (!app) { throwError('APP_NOT_EXISTENT') };
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         if (!app_wallet) { throwError('CURRENCY_NOT_EXISTENT') };
+        console.log("app_wallet", app_wallet)
         const { availableDepositAddresses } = app_wallet;
         return {
             app_wallet,
