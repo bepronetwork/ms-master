@@ -82,5 +82,5 @@ export function getGameProbablityNormalizer({metaName, x, y}){
             }
         }
     }
-    return ret;
+    return parseFloat(ret);
 }

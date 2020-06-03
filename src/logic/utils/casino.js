@@ -247,6 +247,8 @@ class CasinoLogic{
                         isWon = true;
                         //let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
                         let odd = parseFloat(this.probabilityToOdd(getGameProbablityNormalizer({metaName : game, x, y})));
+                        //let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
+                        console.log("odd", odd, x, y, getGameProbablityNormalizer({metaName : game, x, y}));
                         let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
                         winAmount = parseFloat(winBalance - houseEdgeBalance);
@@ -476,6 +478,7 @@ class CasinoLogic{
      */
 
     probabilityToOdd(probability){
+        if(probability <= 0){ return 0 };
         return 1/probability;
     }
 }
