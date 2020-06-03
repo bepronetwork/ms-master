@@ -30,7 +30,7 @@ import {
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -696,6 +696,7 @@ const processActions = {
         return params;
     },
     __generateAddresses : async (params) => {
+        console.log("here")
         let { app, currency, amount } = params;
         app = await AppRepository.prototype.findAppById(app, "address");
         if (!app) { throwError('APP_NOT_EXISTENT') };
@@ -1313,30 +1314,40 @@ const progressActions = {
     }, 
     __generateAddresses  : async (params) => {
 
-        const { app_wallet, availableDepositAddresses, amount } = params;
+        const { app_wallet, availableDepositAddresses, amount, app } = params;
         var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
         const currentAddressAmount = availableDepositAddresses.length;
+        console.log("currentAddressAmount", currentAddressAmount)
+
         // See if address is already provided
-        var bitgo_id;
         for(var i = 1; i <= amount; i++){
-            var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: i /* label type */, id: bitgo_id });
-            if(i <= currentAddressAmount){
-                // old label see if it is 
-                var availableDeposit = availableDepositAddresses[i];
-                // Get Bitgo info on this address
-                if(!availableDeposit.address.address && bitgo_address.address){
-                    // If the system does not have this address saved still - bitgo has the address already
-                    // Add Deposit Address to User Deposit Addresses
+            // old label see if it is 
+            var availableDeposit = availableDepositAddresses[i];
+            console.log("availableDeposit", availableDeposit);
+            if(availableDeposit){
+                // Already is on the system
+                console.log("availableDeposit", availableDeposit)
+                // Bitgo already has the address
+                var bitgo_address = await BitGoSingleton.getDepositAddress({ wallet,  id: availableDeposit.address.bitgo_id });
+                console.log("bitgo_address", bitgo_address.address, bitgo_address.id, "pendingChainInitialization", bitgo_address.coinSpecific.pendingChainInitialization)
+                if(bitgo_address.id && bitgo_address.address){
+                // Add Deposit Address to User Deposit Addresses
                     await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
                 }else{
-                    // If system already has this data but the address was not generated yet - do nothing
+                    // Address is not generated still
+                    console.log("nothing still", i)
                 }
             }else{
+                // Not on the system (1st call)
+                var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: `${i}` /* label type */, id: app_wallet.bitgo_id });
+                console.log("a")
                 // new label - save it
                 // If the system does not have this address saved still - bitgo has the address already
                 let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
                 // Add Deposit Address to User Deposit Addresses
+                console.log("addressObject", addressObject, app_wallet._id)
                 await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
+                console.log("b")
             }
         }
     }

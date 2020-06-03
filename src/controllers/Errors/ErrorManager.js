@@ -127,7 +127,7 @@ class ErrorManager {
                     // Verify no address is available
                     if(!object.availableDepositAddress){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ADDRESS_NOT_AVAILABLE));
-                    }
+                    } 
                     // Ethereum Wallet for Virtual Currencies not allowed, costs money
                     if((new String(object.app_wallet.currency.ticker).toLowerCase() == 'eth') && object.app.virtual){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_ETHEREUM_WALLET));

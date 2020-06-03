@@ -312,6 +312,7 @@ class AppRepository extends MongoComponent{
             case 'address' : { populate_type = populate_app_address; break; }
             case 'none' : { populate_type = []; break; }
         }
+
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
