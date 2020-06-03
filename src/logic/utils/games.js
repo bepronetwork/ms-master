@@ -1,7 +1,7 @@
 export function getGameProbablityNormalizer({metaName, x, y}){
     /* y = results that are equal to outcome - rubys */
     /* x = User Result Space */
-    let ret = probability;
+    let ret = 0;
     switch(metaName){
         case 'keno_simple' : {
             if(x == 1){
