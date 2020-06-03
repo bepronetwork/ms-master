@@ -80,7 +80,8 @@ ErrorHandler.prototype.KEYS =  {
     'ADD_ON_DEPOSIT_BONUS_NOT_EXISTS'       : "063",
     'INVALID_DEPOSIT_BONUS_PERCENTAGE'      : "064",
     'INVALID_DEPOSIT_BONUS_MAX_DEPOSIT'     : "065",
-    'INVALID_DEPOSIT_BONUS_MIN_DEPOSIT'     : "066"
+    'INVALID_DEPOSIT_BONUS_MIN_DEPOSIT'     : "066",
+    'ADDRESS_NOT_AVAILABLE'                 : "067"
 };
 
 /***************************
