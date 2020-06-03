@@ -42,7 +42,11 @@ import {
     MapperEditThemeSingleton,
     MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
+<<<<<<< HEAD
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperGenerateAddressSingleton } from '../controllers/Mapper/App';
+=======
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
+>>>>>>> dev
 
 class App extends ModelComponent {
 
@@ -380,9 +384,9 @@ class App extends ModelComponent {
         const { app } = this.self.params;
         try{
             await AppRepository.prototype.changeWithdrawPosition(app, true);
-            let res = await this.process('Auto');
+            let res = await this.process('GenerateAddresses');
             AppRepository.prototype.changeWithdrawPosition(app, false);
-            return MapperAddCurrencyWalletSingleton.output('GenerateAddresses', res);
+            return MapperGenerateAddressSingleton.output('GenerateAddresses', res);
         }catch(err){
             if(parseInt(err.code) != 14){
                 /* If not betting/withdrawing atm */
