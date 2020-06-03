@@ -37,6 +37,7 @@ WalletSchema.prototype.schema = {
     }],
     bonusAmount                  : { type : Number, default : 0, required : true},
     minBetAmountForBonusUnlocked : { type : Number, default : 0, required : true},
+    incrementBetAmountForBonus   : { type : Number, default : 0, required : true}
 }
 
 WalletSchema.prototype.model = db.model(WalletSchema.prototype.name, new db.Schema(WalletSchema.prototype.schema));
