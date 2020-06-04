@@ -428,7 +428,6 @@ class CasinoLogic{
                     break;
                 };
                 case 'keno_simple' : {
-                    console.log("here", n, d, x, y)
                     const KENO_RESULT_SPACE = 10; /* Amount of results needed */
                     var n = resultSpace.length; /* Number of total squares -  resultSpace.length ex : 40*/
                     var d = KENO_RESULT_SPACE; /* Static Output - KENO_RESULT_SPACE */
