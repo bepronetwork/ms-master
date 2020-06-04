@@ -153,16 +153,9 @@ class User extends ModelComponent {
         const { app } = this.self.params;
         /* Mutex In */
         try{
-            await AppRepository.prototype.changeUserAllLockPosition(app, true);
             let res = await this.process('GetDepositAddress');
-            AppRepository.prototype.changeUserAllLockPosition(app, false);
             return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
         }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not betting/withdrawing atm */
-                /* Open Mutex */
-                AppRepository.prototype.changeUserAllLockPosition(app, false);
-            }
             throw err;
         }
     }
