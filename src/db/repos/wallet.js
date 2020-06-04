@@ -102,6 +102,43 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    addAvailableDepositAddress(id, address){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate( 
+                { _id: id}, 
+                { $push: { 
+                    "availableDepositAddresses" : {
+                        address             : address
+                    } 
+                } },
+                { 'new': true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    lockAvailableDepositAddress(id, {user, address, history}){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate( 
+                /* Match by address */
+                { _id: id, "availableDepositAddresses.address" : address }, 
+                { $set: { 
+                    'availableDepositAddresses.$.lockedAt'  : new Date(),
+                    'availableDepositAddresses.$.lockedFor' : user,
+                    'availableDepositAddresses.$.history'   : history
+                }},
+                { 'new': true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePlayBalance(id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,

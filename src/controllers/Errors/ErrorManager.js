@@ -232,18 +232,22 @@ class ErrorManager {
                 case 'UpdateWallet': {
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null)){
+                        console.log("1", "APP_NOT_EXISTENT")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
                     }
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded){
+                        console.log("2", "ALREADY_EXISTING_DEPOSIT_TRANSACTION")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION)); break; 
                     }
                     // Verify if Deposit is Valid
                     if(!object.isValid){
+                        console.log("2", "DEPOSIT_TRANSACTION_NOT_VALID")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID)); break;   
                     }
                     // Verify if App is Mentioned
                     if(!object.app || _.isEmpty(object.app)){
+                        console.log("2", "APP_NOT_EXISTENT")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
                     }
                     break;
@@ -362,6 +366,24 @@ class ErrorManager {
                     // Verify if hsa fields
                     if(!object.publicKey || !object.privateKey){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_REQUEST));
+                    }
+                    break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    // Verify App
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                       libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT));
+                    // Verify if Percentage > 0
+                    if(object.depositBonusParams.percentage <= 0){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INVALID_DEPOSIT_BONUS_PERCENTAGE));
+                    }
+                    // Verify if Max Deposit Bonus >= Min Deposit Bonus
+                    if(object.depositBonusParams.max_deposit < object.depositBonusParams.min_deposit){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INVALID_DEPOSIT_BONUS_MAX_DEPOSIT));
+                    }
+                    // Verify if Min Deposit Bonus < 0
+                    if(object.depositBonusParams.min_deposit <= 0){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INVALID_DEPOSIT_BONUS_MIN_DEPOSIT));
                     }
                     break;
                 };
@@ -572,6 +594,16 @@ class ErrorManager {
         }
     }
 
+    background = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     topIcon = function (object, type){
         try{
             switch(type){
@@ -715,6 +747,16 @@ class ErrorManager {
     }
 
     autoWithdraw = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    depositBonus = function (object, type){
         try{
             switch(type){
                

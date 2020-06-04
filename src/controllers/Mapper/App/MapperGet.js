@@ -71,6 +71,7 @@ let outputs = {
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
+                    "image": (wallet.image == null || wallet.image == '') ? wallet.currency.image : wallet.image,
                     "max_deposit": wallet.max_deposit,
                     "max_withdraw": wallet.max_withdraw,
                     "min_withdraw": wallet.min_withdraw,
@@ -147,6 +148,10 @@ let outputs = {
                     "_id": object.customization.logo._id,
                     "id": !object.customization.logo.id ? '' : object.customization.logo.id
                 },
+                "background": !object.customization.background ? {} : {
+                    "_id": object.customization.background._id,
+                    "id": !object.customization.background.id ? '' : object.customization.background.id
+                },
                 "footer": !object.customization.footer ? {} : {
                     "_id": object.customization.footer._id,
                     "supportLinks": !object.customization.footer.supportLinks ? [] : object.customization.footer.supportLinks.map(support_link => {
@@ -206,7 +211,8 @@ let outputs = {
             "addOn": !object.addOn ? {} : {
                 autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
                 balance       : !object.addOn.balance       ? null : object.addOn.balance,
-                txFee         : !object.addOn.txFee       ? null : object.addOn.txFee
+                txFee         : !object.addOn.txFee       ? null : object.addOn.txFee,
+                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus
             },
             "__v": object.__v,
         }

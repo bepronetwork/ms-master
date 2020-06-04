@@ -10,6 +10,7 @@ CustomizationSchema.prototype.schema =  {
     topBar      : { type : mongoose.Schema.Types.ObjectId, ref: 'TopBar', required : true },
     banners     : { type : mongoose.Schema.Types.ObjectId, ref: 'Banners', required : true },
     logo        : { type : mongoose.Schema.Types.ObjectId, ref: 'Logo', required : true },
+    background  : { type : mongoose.Schema.Types.ObjectId, ref: 'Background', required : true },
     colors      : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Color', required : true }],
     footer      : { type : mongoose.Schema.Types.ObjectId, ref: 'Footer', required : true },
     topIcon     : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },

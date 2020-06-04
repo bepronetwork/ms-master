@@ -1,6 +1,6 @@
 import { UserLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import { UsersRepository } from '../db/repos';
+import { UsersRepository, AppRepository } from '../db/repos';
 import {
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
@@ -150,12 +150,12 @@ class User extends ModelComponent {
     }
 
     async getDepositAddress() {
-        const { id } = this.self.params;
-
-        try {
+        const { app } = this.self.params;
+        /* Mutex In */
+        try{
             let res = await this.process('GetDepositAddress');
             return MapperGetDepositAddressUserSingleton.output('GetDepositAddressUser', res);
-        } catch (err) {
+        }catch(err){
             throw err;
         }
     }

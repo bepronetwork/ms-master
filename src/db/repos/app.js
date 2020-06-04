@@ -14,7 +14,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet } from './populates';
+import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -187,6 +187,29 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    changeUserAllLockPosition(_id, state){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findByIdAndUpdate(
+                    { _id: _id}, 
+                    { $set:  {  "isUsersAllLocked" : state} } )
+                    .exec( (err, item) => {
+                        if(err){reject(err)}
+                        try{
+                            if((state == true) && (item.isUsersAllLocked == true)){throwError('USER_LOCK_MODE_IN_API')}
+                            resolve(item);
+                        }catch(err){
+                            reject(err);
+                        }
+
+                    }
+                )
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
     getLastBets({_id, size, offset, currency, game}){ 
         try{
             return new Promise( (resolve, reject) => {
@@ -282,12 +305,15 @@ class AppRepository extends MongoComponent{
     }
 
     findAppById(_id, populate_type=populate_app_all){
+        let type = populate_type;
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
             case 'simple' : { populate_type = populate_app_simple; break; }
             case 'wallet' : { populate_type = populate_app_wallet; break; }
+            case 'address' : { populate_type = populate_app_address; break; }
             case 'none' : { populate_type = []; break; }
         }
+
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)

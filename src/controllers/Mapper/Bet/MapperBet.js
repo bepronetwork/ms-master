@@ -24,19 +24,19 @@ let outputs = {
             }),
             "isResolved": object.isResolved,
             "currency": object.currency ? {
-                    "_id": object.currency._id,
-                    "image": object.currency.image,
-                    "ticker": object.currency.ticker,
-                    "decimals": object.currency.decimals,
-                    "name": object.currency.name,
-                    "address": object.currency.address,
-                    "virtual": object.currency.virtual
+                "_id": object.currency._id,
+                "image": object.currency.image,
+                "ticker": object.currency.ticker,
+                "decimals": object.currency.decimals,
+                "name": object.currency.name,
+                "address": object.currency.address,
+                "virtual": object.currency.virtual
             } : object.currency,
             "user": {
                 "bets": object.user.bets,
-                "deposits": object.user.deposits ? object.user.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.user.deposits,
-                "withdraws": object.user.withdraws ? object.user.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.user.withdraws,
-                "wallet": object.user.wallet ? object.user.wallet.map(wallet_id => { return ({_id: wallet_id }) } ) : object.user.wallet,
+                "deposits": object.user.deposits ? object.user.deposits.map(deposit_id => { return ({ _id: deposit_id }) }) : object.user.deposits,
+                "withdraws": object.user.withdraws ? object.user.withdraws.map(withdraw_id => { return ({ _id: withdraw_id }) }) : object.user.withdraws,
+                "wallet": object.user.wallet ? object.user.wallet.map(wallet_id => { return ({ _id: wallet_id }) }) : object.user.wallet,
                 "isWithdrawing": object.user.isWithdrawing,
                 "email_confirmed": object.user.email_confirmed,
                 "_id": object.user._id,
@@ -55,13 +55,21 @@ let outputs = {
                 "affiliateLink": object.user.affiliateLink
             },
             ...app_object(object.app),
-            "outcomeResultSpace": !object.outcomeResultSpace ? {} : {
-                "key": object.outcomeResultSpace.key,
-                "start": object.outcomeResultSpace.start,
-                "end": object.outcomeResultSpace.end,
-                "probability": object.outcomeResultSpace.probability,
-                "index": object.outcomeResultSpace.index,
-            },
+            "outcomeResultSpace": Array.isArray(object.outcomeResultSpace) ? object.outcomeResultSpace.map(outcomeResultSpace => {
+                return ({
+                    "key": outcomeResultSpace.key,
+                    "start": outcomeResultSpace.start,
+                    "end": outcomeResultSpace.end,
+                    "probability": outcomeResultSpace.probability,
+                    "index": outcomeResultSpace.index
+                })
+            }) : {
+                    "key": object.outcomeResultSpace.key,
+                    "start": object.outcomeResultSpace.start,
+                    "end": object.outcomeResultSpace.end,
+                    "probability": object.outcomeResultSpace.probability,
+                    "index": object.outcomeResultSpace.index
+                },
             "isWon": object.isWon,
             "game": object.game,
             "winAmount": object.winAmount,

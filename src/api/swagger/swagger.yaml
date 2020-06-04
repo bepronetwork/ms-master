@@ -272,6 +272,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /admins/password/reset/ask:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Reset Admin Password
+      operationId: resetAdminPassword
+      description: reset Admin password
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/ResetAdminPasswordRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /admins/password/reset/set:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Reset Admin Password Set
+      operationId: setAdminPassword
+      description: reset admin password set
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/setAdminPasswordRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /deposit/max/set :
     x-swagger-router-controller: deposit
     post:
@@ -331,6 +391,36 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /users/jackpot/pot:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: get pot Jackpot
+      operationId: getPotJackpot
+      description: get pot Jackpot
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: user Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetPotJackpotRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /users/email/confirm:
     x-swagger-router-controller: user
@@ -416,7 +506,7 @@ paths:
           description: User object to submit to the network
           required: true
           schema:
-            $ref: '#/definitions/setPasswordRequest'
+            $ref: '#/definitions/SetPasswordRequest'
       responses:
         "200":
           description: Success
@@ -1109,6 +1199,36 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AppCustomizationLogo'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/customization/background :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Background Information
+      operationId: editBackground
+      description: Change Background
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationBackground'
       responses:
         "200":
           description: Success
@@ -2191,6 +2311,68 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/depositBonus/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Deposit Bonus
+      operationId: addAddonDepositBonus
+      description: add Deposit Bonus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonDepositBonusRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/depositBonus/editDepositBonus:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If has Deposit Bonus
+      operationId: editAddonDepositBonus
+      description: Edit If has Deposit Bonus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditAddonDepositBonusRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -2301,6 +2483,36 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/GameGetRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/address/generate:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - address
+      summary: Generate User Deposit Based Addresses
+      operationId: generateAddresses
+      description: Generate Addresses for User Deposits
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: address
+          description: Game Information
+          required: true
+          schema:
+            $ref: '#/definitions/GenerateAddressesRequest'
       responses:
         "200":
           description: Success
@@ -2432,8 +2644,39 @@ definitions:
         minLength: 1
         description: |
           user id
-
-  setPasswordRequest:
+  GenerateAddressesRequest :
+    type: object
+    required:
+      - app
+      - currency
+      - amount
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App ID
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin ID
+      currency:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Unique identifier of the currency
+      amount:
+        type : number
+        format: number
+        example: 1
+        description: |
+          Amount of Addresses to generate ( If value is the same or inferior to the previous set, no more will be created)
+  SetPasswordRequest:
     type: object
     required:
       - token
@@ -2461,6 +2704,46 @@ definitions:
         minLength: 1
         description: |
           user id
+  ResetAdminPasswordRequest:
+    type: object
+    required:
+      - username_or_email
+    properties:
+      username_or_email:
+        type : string
+        format: string
+        example: "Jamy_234"
+        minLength: 1
+        description: |
+         username or email
+  setAdminPasswordRequest:
+    type: object
+    required:
+      - token
+      - password
+      - admin_id
+    properties:
+      token:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          token
+      password:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          password
+      admin_id:
+        type : string
+        format: string
+        example: "2h4g3242hg3h4jg23hj4g32h4ghj32g"
+        minLength: 1
+        description: |
+          Admin ID
   ResetPasswordRequest:
     type: object
     required:
@@ -2473,6 +2756,31 @@ definitions:
         minLength: 1
         description: |
          username or email
+
+  GetPotJackpotRequest:
+    type: object
+    required:
+      - app
+      - user
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          user ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
 
   UserRegisterRequest:
     type: object
@@ -3025,6 +3333,22 @@ definitions:
         type : string
         example: 876348bct3t2rc2t34
         description : image blob or link
+  AppCustomizationBackground :
+    type: object
+    required:
+      - app
+      - background
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      background:
+        type : string
+        example: 876348bct3t2rc2t34
+        description : image blob or link
   AppCustomizationFooter : 
     type: object
     required:
@@ -3456,11 +3780,6 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      size :
-        type : number
-        example : 10
-        description: |
-          size
   AppLastBetsRequest : 
     type: object
     required:
@@ -3829,6 +4148,64 @@ definitions:
           deposit_fee :
             type: number
           withdraw_fee :
+            type: number
+
+  AddAddonDepositBonusRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+  
+  AppEditAddonDepositBonusRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - depositBonusParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      depositBonusParams :
+        type: object
+        properties:
+          isDepositBonus :
+            type : boolean
+            example: true
+          min_deposit :
+            type: number
+          percentage :
+            type: number
+          max_deposit :
             type: number
 
   AppServicesRequest : 

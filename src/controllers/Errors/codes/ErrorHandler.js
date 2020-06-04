@@ -75,7 +75,13 @@ ErrorHandler.prototype.KEYS =  {
     'IS_VIRTUAL_WALLET'                     : "058",
     'UNAUTHORIZED_COUNTRY'                  : "059",
     'IS_ETHEREUM_WALLET'                    : "060",
-    'WRONG_THEME'                           : "061"
+    'WRONG_THEME'                           : "061",
+    'ADD_ON_NOT_EXISTS'                     : "062",
+    'ADD_ON_DEPOSIT_BONUS_NOT_EXISTS'       : "063",
+    'INVALID_DEPOSIT_BONUS_PERCENTAGE'      : "064",
+    'INVALID_DEPOSIT_BONUS_MAX_DEPOSIT'     : "065",
+    'INVALID_DEPOSIT_BONUS_MIN_DEPOSIT'     : "066",
+    'ADDRESS_NOT_AVAILABLE'                 : "067"
 };
 
 /***************************
@@ -94,6 +100,7 @@ ErrorHandler.prototype.getKey = function(code){
 }
 
 ErrorHandler.prototype.getError = function(code){
+    console.log("code", code);
     return {
         key     : this.getKey(code),
         code    : parseInt(code),

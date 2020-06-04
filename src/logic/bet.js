@@ -45,15 +45,35 @@ const betResolvingActions = {
 	},
     auto : (params) => {
 		var hmca_hash, outcome, isWon, outcomeResultSpace;
+        var { gameMetaName, serverSeed, clientSeed } = params;
 
-		/**
-		 * @function HMCA SHA512 Result Output
-		 */
-
-		hmca_hash = CryptographySingleton.generateRandomResult(params.serverSeed, params.clientSeed, params.nonce),
-		outcome = CryptographySingleton.hexToInt(hmca_hash) 
-		 
-		outcomeResultSpace 	= CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace)
+        switch(gameMetaName){
+            case 'keno_simple' : {
+                outcomeResultSpace = [];
+                /* 10 Outcome Result Spaces */
+                while(outcomeResultSpace.length < 10){
+                    serverSeed = CryptographySingleton.generateSeed();
+                    hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
+                    outcome = CryptographySingleton.hexToInt(hmca_hash);
+                    let outcomeResultSpaceIndividual = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
+                    console.log("outcomeResultSpaceIndividual", outcomeResultSpaceIndividual);
+                    let exists = outcomeResultSpace.find( o => outcomeResultSpaceIndividual.index == o.index)
+                    if(!exists){
+                        /* Make sure they dont have the same result space */
+                        outcomeResultSpace.push(outcomeResultSpaceIndividual);
+                    }
+                }
+                break;
+            };
+            default : {
+                hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
+                outcome = CryptographySingleton.hexToInt(hmca_hash) ;
+                outcomeResultSpace = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
+                /* 1 Outcome Result Space */
+                break;
+            }
+        }
+        
         var { winAmount, isWon, totalBetAmount } =  CasinoLogicSingleton.calculateWinAmountWithOutcome({
             userResultSpace : params.result,
             resultSpace : params.resultSpace,
@@ -67,12 +87,9 @@ const betResolvingActions = {
         
         return { winAmount, outcomeResultSpace, isWon, outcome, totalBetAmount, hmca_hash };
     },
+    /* TO ADD LATER ON ESPORTS
     oracled : (params) => {
         let hmca_hash, outcome, isWon, outcomeResultSpace;
-
-		/**
-		 * @function HMCA SHA512 Result Output
-		 */
 
 		hmca_hash = CryptographySingleton.generateRandomResult(params.serverSeed, params.clientSeed, params.nonce),
 		 
@@ -91,6 +108,7 @@ const betResolvingActions = {
         return {...params, winAmount, outcomeResultSpace, isWon, maxWinAmount, outcome, hmca_hash};
 
     }
+    */
 }
 /**
  * Login logic.

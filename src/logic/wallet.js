@@ -32,7 +32,7 @@ const processActions = {
 			let ticker = currency.ticker
 			let address = params.bank_address
 			if((ticker == (null && undefined)) || (address == (null && undefined))){
-				throwError();
+				throwError('UNKNOWN');
 			}
 			var link_url = setLinkUrl({ticker, address, isTransactionHash: false});
 		} catch (err) {

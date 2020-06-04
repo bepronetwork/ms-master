@@ -27,7 +27,15 @@ let outputs = {
                 "currency": object.bet.currency,
                 "user": object.bet.user,
                 "app": object.bet.app,
-                "outcomeResultSpace": {
+                "outcomeResultSpace": Array.isArray(object.bet.outcomeResultSpace) ? object.bet.outcomeResultSpace.map(outcomeResultSpace => {
+                    return ({
+                        "key": outcomeResultSpace.key,
+                        "start": outcomeResultSpace.start,
+                        "end": outcomeResultSpace.end,
+                        "probability": outcomeResultSpace.probability,
+                        "index": outcomeResultSpace.index
+                    })
+                }) : {
                     "key": object.bet.outcomeResultSpace.key,
                     "start": object.bet.outcomeResultSpace.start,
                     "end": object.bet.outcomeResultSpace.end,
@@ -46,8 +54,8 @@ let outputs = {
                 "serverSeed": object.bet.serverSeed,
                 "__v": object.bet.__v,
             },
-            "totalBetAmount"  : object.totalBetAmount,
-            "jackpotAmount" : object.bet.jackpotAmount,
+            "totalBetAmount": object.totalBetAmount,
+            "jackpotAmount": object.bet.jackpotAmount,
             "user_in_app": object.user_in_app,
             "isUserWithdrawingAPI": object.isUserWithdrawingAPI,
             "isAppWithdrawingAPI": object.isAppWithdrawingAPI,
@@ -55,7 +63,7 @@ let outputs = {
             "app_delta": object.app_delta,
             "isUserAffiliated": object.isUserAffiliated,
             "affiliateReturns": !object.affiliateReturns ? [] : object.affiliateReturns.map(affiliate_return_id => {
-                return({
+                return ({
                     "_id": affiliate_return_id
                 })
             }),
@@ -89,13 +97,21 @@ let outputs = {
             },
             "user": object.user,
             "app": object.app,
-            "outcomeResultSpace": {
-                "key": object.outcomeResultSpace.key,
-                "start": object.outcomeResultSpace.start,
-                "end": object.outcomeResultSpace.end,
-                "probability": object.outcomeResultSpace.probability,
-                "index": object.outcomeResultSpace.index
-            },
+            "outcomeResultSpace": Array.isArray(object.outcomeResultSpace) ? object.outcomeResultSpace.map(outcomeResultSpace => {
+                return ({
+                    "key": outcomeResultSpace.key,
+                    "start": outcomeResultSpace.start,
+                    "end": outcomeResultSpace.end,
+                    "probability": outcomeResultSpace.probability,
+                    "index": outcomeResultSpace.index
+                })
+            }) : {
+                    "key": object.outcomeResultSpace.key,
+                    "start": object.outcomeResultSpace.start,
+                    "end": object.outcomeResultSpace.end,
+                    "probability": object.outcomeResultSpace.probability,
+                    "index": object.outcomeResultSpace.index
+                },
             "isWon": object.isWon,
             "game": object.game,
             "betSystem": object.betSystem,

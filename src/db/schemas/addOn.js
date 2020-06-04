@@ -10,7 +10,9 @@ AddOnSchema.prototype.schema =  {
     autoWithdraw  : { type : mongoose.Schema.Types.ObjectId, ref: 'AutoWithdraw' },
     balance       : { type : mongoose.Schema.Types.ObjectId, ref: 'Balance' },
     txFee         : { type : mongoose.Schema.Types.ObjectId, ref: 'TxFee' },
+    depositBonus  : { type : mongoose.Schema.Types.ObjectId, ref: 'DepositBonus' }
 }
+
 
 AddOnSchema.prototype.model = db.model(AddOnSchema.prototype.name, new db.Schema(AddOnSchema.prototype.schema));
 export {

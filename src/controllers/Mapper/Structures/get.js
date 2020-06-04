@@ -73,6 +73,9 @@ const get_object = (object) => {
                 "currency": deposit.currency,
                 "transactionHash": deposit.transactionHash,
                 "amount": deposit.amount,
+                "fee": deposit.fee,
+                "hasBonus": deposit.hasBonus,
+                "bonusAmount": deposit.bonusAmount
             })
         }) : object.deposits,
         "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
@@ -133,6 +136,10 @@ const get_object = (object) => {
             "logo": !object.customization.logo ? {} : {
                 "_id": object.customization.logo._id,
                 "id": !object.customization.logo.id ? '' : object.customization.logo.id
+            },
+            "background": !object.customization.background ? {} : {
+                "_id": object.customization.background._id,
+                "id": !object.customization.background.id ? '' : object.customization.background.id
             },
             "footer": !object.customization.footer ? {} : {
                 "_id": object.customization.footer._id,

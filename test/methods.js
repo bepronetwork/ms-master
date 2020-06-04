@@ -40,6 +40,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async getPotJackpot(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/users/jackpot/pot')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAddonJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/jackpot/add')
@@ -97,6 +105,22 @@ module.exports = {
     async editAddonTxFee(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/txFee/editTxFee')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async addAddonDepositBonus(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/depositBonus/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonDepositBonus(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/depositBonus/editDepositBonus')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
@@ -297,6 +321,15 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async generateAddresses(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/address/generate')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
     async deposit(params, pk) {
         try{
             let acc = new account(global.web3, global.web3.eth.accounts.privateKeyToAccount(pk));
@@ -342,6 +375,18 @@ module.exports = {
     async setPassword(params) {
         return request(global.server)
         .post('/api/users/password/reset/set')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async resetAdminPassword(params) {
+        return request(global.server)
+        .post('/api/admins/password/reset/ask')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async setAdminPassword(params) {
+        return request(global.server)
+        .post('/api/admins/password/reset/set')
         .send(params)
         .then(res => detectServerError(res))
     },
@@ -435,6 +480,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async pingPostMiddleware(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/status/post')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => res)
+    },
     async editTableLimit(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editTableLimit')
@@ -487,6 +540,14 @@ module.exports = {
     async editBannersCustomizationApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/customization/banners')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editBackgroundCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/background')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

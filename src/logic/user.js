@@ -95,7 +95,7 @@ const processActions = {
         var username = new String(params.username).toLowerCase().trim();
         let user = await __private.db.findUser(username);
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN'); };
 
         let has2FASet = user.security['2fa_set'];
         let newBearerToken = MiddlewareSingleton.sign(user._id);
@@ -162,7 +162,7 @@ const processActions = {
         let updatePassword = await UsersRepository.prototype.updateUser({ id: params.user_id, param: { hash_password } });
 
         if (!updatePassword) {
-            throwError();
+            throwError('UNKNOWN');
         }
 
         let normalized = {
@@ -177,7 +177,7 @@ const processActions = {
         let user = await __private.db.findUser(username);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN');    };
 
         var has2FASet = user.security['2fa_set'];
         var secret2FA = user.security['2fa_secret'];
@@ -216,7 +216,7 @@ const processActions = {
         // Get User by Username
         let user = await __private.db.findUserById(params.user);
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN') };
         let normalized = user;
         return normalized;
     },
@@ -225,7 +225,7 @@ const processActions = {
         let user = await __private.db.findUserById(params.user);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN') };
 
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
             secret: params['2fa_secret'],
@@ -243,6 +243,11 @@ const processActions = {
     },
     __register: async (params) => {
         var username = new String(params.username).toLowerCase().trim();
+        let email = new String(params.email).toLowerCase().trim();
+        let userEmail = await __private.db.findUserByEmail(email);
+        if (userEmail) { throwError('ALREADY_EXISTING_EMAIL') }
+        let userUsername = await __private.db.findUser(username);
+        if (userUsername) { throwError('USERNAME_ALREADY_EXISTS') }
 
         const { affiliateLink, affiliate } = params;
         var input_params = params;
@@ -358,6 +363,19 @@ const processActions = {
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
+            /* Verify AddOn Deposit Bonus */
+            let depositBonusValue = 0;
+            let hasBonus = false;
+            if(addOn && addOn.depositBonus && addOn.depositBonus.isDepositBonus){
+                hasBonus = addOn.depositBonus.isDepositBonus;
+                let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+
+                if (amount >= min_deposit && amount <= max_deposit){
+                    depositBonusValue = (amount * (percentage/100));
+                } 
+            }
             /* Get User Info */
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
@@ -397,7 +415,9 @@ const processActions = {
                 currencyTicker: wallet.currency.ticker,
                 amount: amount,
                 isValid,
-                fee
+                fee,
+                depositBonusValue,
+                hasBonus
             }
 
             return res;
@@ -605,7 +625,7 @@ const progressActions = {
     },
     __updateWallet: async (params) => {
         try {
-            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet } = params;
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue, hasBonus } = params;
             var message;
 
             /* Condition to set value of deposit amount and fee */
@@ -613,7 +633,7 @@ const progressActions = {
                 fee = amount;
                 amount = 0;
             }else{
-                amount = amount - fee;
+                amount = (amount+depositBonusValue) - fee;
             }
             
             const options = {
@@ -636,7 +656,9 @@ const progressActions = {
                 address: params.from,                         // Deposit Address 
                 currency: wallet.currency._id,
                 amount: amount,
-                fee: fee
+                fee: fee,
+                hasBonus: hasBonus,
+                bonusAmount: depositBonusValue
             })
 
             /* Save Deposit Data */

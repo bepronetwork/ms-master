@@ -246,5 +246,29 @@
     "061" : {
         "key" : "WRONG_THEME",
         "message"   : "Theme not available, choose dark or light"
+    },
+    "062" : {
+        "key" : "ADD_ON_NOT_EXISTS",
+        "message"   : "AddOn not exists"
+    },
+    "063" : {
+        "key" : "ADD_ON_DEPOSIT_BONUS_NOT_EXISTS",
+        "message"   : "Deposit Bonus AddOn not exists"
+    },
+    "064" : {
+        "key" : "INVALID_DEPOSIT_BONUS_PERCENTAGE",
+        "message"   : "Deposit Bonus Percentage can't be equal or less than 0"
+    },
+    "065" : {
+        "key" : "INVALID_DEPOSIT_BONUS_MAX_DEPOSIT",
+        "message"   : "Deposit Bonus Maximum Deposit can't be less than Minimum Deposit"
+    },
+    "066" : {
+        "key" : "INVALID_DEPOSIT_BONUS_MIN_DEPOSIT",
+        "message"   : "Deposit Bonus Minimum Deposit can't be equal or less than 0"
+    },
+    "067" : {
+        "key" : "ADDRESS_NOT_AVAILABLE",
+        "message"   : "No Deposit Address Available"
     }
 }

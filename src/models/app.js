@@ -39,9 +39,11 @@ import {
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
     MapperGetBetSingleton,
-    MapperEditThemeSingleton
+    MapperEditThemeSingleton,
+    MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton } from '../controllers/Mapper/App';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
+import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
 
 class App extends ModelComponent {
 
@@ -334,6 +336,29 @@ class App extends ModelComponent {
         }
     }
 
+    async addAddonDepositBonus() {
+        try {
+            let app = await this.process('AddAddonDepositBonus');
+            return MapperAddAddonDepositBonusSingleton.output('AddAddonDepositBonus', app._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editAddonDepositBonus() {
+        try {
+            let app = await this.process('EditAddonDepositBonus');
+            return MapperEditAddonDepositBonusSingleton.output('EditAddonDepositBonus', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
     * @param {String} 
     * @return {bool || Exception}  
@@ -347,6 +372,27 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+    async generateAddresses() {
+        
+        const { app } = this.self.params;
+        try{
+            await AppRepository.prototype.changeWithdrawPosition(app, true);
+            let res = await this.process('GenerateAddresses');
+            AppRepository.prototype.changeWithdrawPosition(app, false);
+            return MapperGenerateAddressSingleton.output('GenerateAddresses', res);
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not betting/withdrawing atm */
+                /* Open Mutex */
+                AppRepository.prototype.changeWithdrawPosition(app, false);
+            }
+            throw err;
+        }
+    }
 
     /**
     * @param {String} 
@@ -580,6 +626,21 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditLogo');
             return MapperEditLogoSingleton.output('EditLogo', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async editBackground() {
+        try {
+            let app = await this.process('EditBackground');
+            return MapperEditBackgroundSingleton.output('EditBackground', app);
         } catch (err) {
             throw err;
         }

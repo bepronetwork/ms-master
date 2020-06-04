@@ -2,6 +2,7 @@ import {
     getUserAuth,
     placeBet,
     authAdmin,
+    addGame,
     loginUser,
     getAppAuth
 } from '../../methods';
@@ -43,6 +44,10 @@ context('Bet Errors Exploit - Prevention', async () => {
         var userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
+        detectValidationErrors(res);
+        if(res.errors){
+            console.log(res.errors[0].errors);
+        }
         var isWon = res.data.message.isWon;
         return { 
             isWon, res, userPreBetCurrencyWallet, appPreBetCurrencyWallet
@@ -77,7 +82,100 @@ context('Bet Errors Exploit - Prevention', async () => {
 
     /* wheel_simple */
 
+  /*  it(`should add all games (if not there already)`, mochaAsync(async () => {
+        global.test.ECOSYSTEM_GAMES.map( async g => {
+            let get_app_model = {
+                game : g._id,
+                app : app.id
+            };
+
+            let res = await addGame({...get_app_model, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+            console.log(g.metaName, res.data.status);
+            detectValidationErrors(res);
+        })
+    })); */
+
+
+    /* keno_simple */
+
+    it(`it shound´t be able to bet different amounts on keno_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'keno_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value : i/10000
+            }})
+        };
+
+        let { res } =await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+
+    it(`it shound´t be able to bet the same place on keno_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'keno_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: 0, value: betAmount/(game.resultSpace.length)
+            }})
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+    
+    it(`it shound´t be able to bet negative values on keno_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'keno_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: -(betAmount/(game.resultSpace.length))
+            }})
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+    it(`it shound´t be able to bet with no more than the 10 Keno space on keno_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'keno_simple'
+        })
+
+        let result = Array(11).fill(0).map( (r, i) => {return {
+            place: i, value: (betAmount/100)
+        }});
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: result
+        };
+
+        let { res } = await insideBetFunction({postData});
+
+        expect(res.data.status).to.equal(13);
+    }));
   
+    /* wheel_simple */
+
     it(`it shound´t be able to bet different amounts on wheel_simple`, mochaAsync(async () => {
 
         await beforeBetFunction({
@@ -490,7 +588,7 @@ context('Bet Errors Exploit - Prevention', async () => {
         expect(res.data.status).to.equal(13);
     }));
     
-    it(`it shound´t be able to bet negative values on coinflip_simple`, mochaAsync(async () => {
+    it(`it shound´t be able to bet negative values on `, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'coinflip_simple'
@@ -767,4 +865,5 @@ context('Bet Errors Exploit - Prevention', async () => {
         let { res } = await insideBetFunction({ postData});
         expect(res.data.status).to.equal(13);
     }));
+
 });

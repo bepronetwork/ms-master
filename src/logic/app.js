@@ -1,13 +1,37 @@
 import _ from 'lodash';
 import { ErrorManager } from '../controllers/Errors';
-import { AppRepository, AdminsRepository, WalletsRepository, DepositRepository, UsersRepository,
-    GamesRepository, ChatRepository, TopBarRepository, 
-    BannersRepository, LogoRepository, FooterRepository, ColorRepository, 
-    AffiliateRepository, CurrencyRepository, TypographyRepository, TopIconRepository, MailSenderRepository, LoadingGifRepository, AddOnRepository, AutoWithdrawRepository, LogRepository, BetRepository, CustomizationRepository, TxFeeRepository
+import {
+    AppRepository,
+    AdminsRepository,
+    WalletsRepository,
+    DepositRepository,
+    UsersRepository,
+    GamesRepository,
+    ChatRepository,
+    TopBarRepository,
+    BannersRepository,
+    LogoRepository,
+    FooterRepository,
+    ColorRepository,
+    AffiliateRepository,
+    CurrencyRepository,
+    TypographyRepository,
+    TopIconRepository,
+    MailSenderRepository,
+    LoadingGifRepository,
+    AddressRepository,
+    AddOnRepository,
+    AutoWithdrawRepository,
+    LogRepository,
+    BetRepository,
+    CustomizationRepository,
+    TxFeeRepository,
+    BackgroundRepository,
+    DepositBonusRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -21,7 +45,7 @@ import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
-import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository } from "../db/repos/redis";
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 let error = new ErrorManager();
@@ -105,7 +129,7 @@ const processActions = {
     },
     __getLogs : async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if(!app){throwError('APP_NOT_EXISTENT')}
 
             let offset  = (params.offset == undefined) ? 0 : params.offset;
@@ -118,7 +142,7 @@ const processActions = {
         }
     },
     __deployApp : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
         let normalized = {
@@ -154,7 +178,7 @@ const processActions = {
     },
     __getBetInfo : async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if (!app){ throwError('APP_NOT_EXISTENT') }
             let bet = await BetRepository.prototype.findBetById(params.bet);
             return bet;
@@ -164,7 +188,7 @@ const processActions = {
     },
     __editRestrictedCountries : async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if (!app){ throwError('APP_NOT_EXISTENT') }
             return params;
         } catch(err) {
@@ -174,7 +198,7 @@ const processActions = {
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
 
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
@@ -296,6 +320,7 @@ const processActions = {
                 amount      : 0
             }
         }));
+
         let withdraw_fee = await Promise.all(arrayCurrency.map( async c => {
             return {
                 currency    : c._id,
@@ -315,13 +340,66 @@ const processActions = {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
+            if(!addOn){throwError('UNKNOWN')}
             let txFee = await TxFeeRepository.prototype.findById(addOn.txFee)
-            if(!txFee){throwError()}
+            if(!txFee){throwError('UNKNOWN')}
             let res = {
                 txFee,
                 currency : params.currency,
                 txFeeParams : params.txFeeParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
+    __addAddonDepositBonus : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let min_deposit = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let percentage = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let max_deposit = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                amount      : 0
+            }
+        }));
+
+        let res = {
+            min_deposit,
+            percentage,
+            max_deposit,
+            app
+        }
+		return res;
+    },
+    __editAddonDepositBonus : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError('ADD_ON_NOT_EXISTS')}
+            let depositBonus = await DepositBonusRepository.prototype.findById(addOn.depositBonus)
+            if(!depositBonus){throwError('ADD_ON_DEPOSIT_BONUS_NOT_EXISTS')}
+            let res = {
+                depositBonus,
+                currency : params.currency,
+                depositBonusParams : params.depositBonusParams
             }
 		    return res;
         } catch (err) {
@@ -333,9 +411,9 @@ const processActions = {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
+            if(!addOn){throwError('UNKNOWN')}
             let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
+            if(!autoWithdraw){throwError('UNKNOWN')}
             let res = {
                 autoWithdraw,
                 currency : params.currency,
@@ -367,16 +445,15 @@ const processActions = {
 		return res;
     },
     __getPopularNumbers : async (params) => {
-        let res = await AppRepository.prototype.getPopularNumbers({
-            id : params.app,
-            size : params.size 
+        let res = await PopularNumberRepository.prototype.getPopularNumber({
+            id : params.app
         });
 		return res;
     },
     __updateWallet : async (params) => {
         var { currency, id, wBT } = params;
         /* Get App Id */
-        var app = await AppRepository.prototype.findAppById(id);
+        var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         const wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
@@ -411,7 +488,7 @@ const processActions = {
     },
     __getGames : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.findAppById(params.app);
+        let res = await AppRepository.prototype.findAppById(params.app, "simple");
         if(!res){throwError('APP_NOT_EXISTENT')}
 
         return res.games;
@@ -511,19 +588,19 @@ const processActions = {
     },
     __editIntegration : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
     __editMailSenderIntegration : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
     __editTheme : async (params) => {
         let { app, theme } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         if((theme != "dark") && (theme != "light")){ throwError('WRONG_THEME') }
         return {
@@ -533,7 +610,7 @@ const processActions = {
     },
     __editTopBar : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -541,6 +618,15 @@ const processActions = {
         };
     },
     __editBanners : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editBackground : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -551,7 +637,7 @@ const processActions = {
     },
     __editLogo : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -560,7 +646,7 @@ const processActions = {
     },
     __editColors : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -569,7 +655,7 @@ const processActions = {
     },
     __editFooter : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -578,7 +664,7 @@ const processActions = {
     },
     __editTopIcon : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -587,7 +673,7 @@ const processActions = {
     },
     __editLoadingGif : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -596,7 +682,7 @@ const processActions = {
     },
     __editTypography: async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         let typography = await TypographyRepository.prototype.findById(app.typography._id);
 
         if (!app) { throwError('APP_NOT_EXISTENT') };
@@ -609,6 +695,22 @@ const processActions = {
     },
     __getUsers : async (params) => {
         return params;
+    },
+    __generateAddresses : async (params) => {
+        console.log("here")
+        let { app, currency, amount } = params;
+        app = await AppRepository.prototype.findAppById(app, "address");
+        if (!app) { throwError('APP_NOT_EXISTENT') };
+        const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        if (!app_wallet) { throwError('CURRENCY_NOT_EXISTENT') };
+        console.log("app_wallet", app_wallet)
+        const { availableDepositAddresses } = app_wallet;
+        return {
+            app_wallet,
+            amount,
+            availableDepositAddresses,
+            app
+        };
     }
 }
 
@@ -632,8 +734,8 @@ const progressActions = {
             APP: app._id
         };
         let templateId = mail.registerApp.templateId;
-        await SendinBlueSingleton.updateContact(email, attributes);
-        await SendinBlueSingleton.sendTemplate(templateId, [email]);
+        SendinBlueSingleton.updateContact(email, attributes);
+        SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
 	},
 	__summary : async (params) => {
@@ -870,6 +972,19 @@ const progressActions = {
         let res = await TxFeeRepository.prototype.findById(txFee._id);
         return res;
     },
+    __addAddonDepositBonus : async (params) => {
+        const { min_deposit, percentage, max_deposit, app } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit});
+        const depositBonusResult = await depositBonus.register();
+        await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
+		return depositBonusResult;
+    },
+    __editAddonDepositBonus : async (params) => {
+        const { depositBonus, currency, depositBonusParams } = params
+        await DepositBonusRepository.prototype.findByIdAndUpdate(depositBonus._id, currency, depositBonusParams)
+        let res = await DepositBonusRepository.prototype.findById(depositBonus._id);
+        return res;
+    },
     __editAddonAutoWithdraw : async (params) => {
         const { autoWithdraw, currency, autoWithdrawParams } = params
         await AutoWithdrawRepository.prototype.findByIdAndUpdate(autoWithdraw._id, currency, autoWithdrawParams)
@@ -944,7 +1059,7 @@ const progressActions = {
         if(image_url.includes("https")){
             /* If it is a link already */
             gameImageURL = image_url;
-        }else{
+        }else if(image_url!=""){
             /* Does not have a Link and is a blob encoded64 */
             gameImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
             image_url = gameImageURL
@@ -964,7 +1079,7 @@ const progressActions = {
         if(background_url.includes("https")){
             /* If it is a link already */
             gameBackgroundImageURL = background_url;
-        }else{
+        }else if(background_url!=""){
             /* Does not have a Link and is a blob encoded64 */
             gameBackgroundImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : background_url});
             background_url = gameBackgroundImageURL
@@ -1016,7 +1131,7 @@ const progressActions = {
         /* Test functioning of Client */
         await sendinBlueClient.getContacts();
 
-        if(!mailSender){ throwError();}
+        if(!mailSender){ throwError('UNKNOWN');}
 
         await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
             apiKey : encryptedAPIKey,
@@ -1026,7 +1141,7 @@ const progressActions = {
         for (let attribute of SendInBlueAttributes){
             await sendinBlueClient.createAttribute(attribute).catch((e)=>{
                 if(e.response.body.message !== "Attribute name must be unique") {
-                    // throwError();
+                    // throwError('UNKNOWN');
                 }
             });
         }
@@ -1035,6 +1150,10 @@ const progressActions = {
     __editTheme  : async (params) => {
         let { app, theme } = params;
         let themeResult = await CustomizationRepository.prototype.setTheme(app.customization._id, theme);
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
     __editTopBar  : async (params) => {
@@ -1071,6 +1190,23 @@ const progressActions = {
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
             autoDisplay,
             ids
+        })
+        // Save info on Customization Part
+        return params;
+    },
+    __editBackground: async (params) => {
+        let { app, background } = params;
+        let backgroundURL ="";
+        if(background.includes("https")){
+            /* If it is a link already */
+            backgroundURL = background;
+        }else if(background!=""){
+            /* Does not have a Link and is a blob encoded64 */
+            backgroundURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : background});
+        }
+
+        await BackgroundRepository.prototype.findByIdAndUpdate(app.customization.background._id, {
+            id : backgroundURL
         })
         // Save info on Customization Part
         return params;
@@ -1177,6 +1313,42 @@ const progressActions = {
     __getUsers : async (params) => {
         let res = await UsersRepository.prototype.getAllFiltered(params);
         return res;
+    }, 
+    __generateAddresses  : async (params) => {
+
+        const { app_wallet, availableDepositAddresses, amount, app } = params;
+        var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+        const currentAddressAmount = availableDepositAddresses.length;
+        console.log("currentAddressAmount", currentAddressAmount)
+
+        // See if address is already provided
+        for(var i = 1; i <= amount; i++){
+            // old label see if it is 
+            var availableDeposit = availableDepositAddresses[i];
+            if(availableDeposit){
+                // Already is on the system
+                // Bitgo already has the address
+                var bitgo_address = await BitGoSingleton.getDepositAddress({ wallet,  id: availableDeposit.address.bitgo_id });
+                if(bitgo_address.id && bitgo_address.address){
+                // Add Deposit Address to User Deposit Addresses
+                    await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
+                }else{
+                    // Address is not generated still
+                    console.log("nothing still", i)
+                }
+            }else{
+                // Not on the system (1st call)
+                var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: `${i}` /* label type */, id: app_wallet.bitgo_id });
+                console.log("a")
+                // new label - save it
+                // If the system does not have this address saved still - bitgo has the address already
+                let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                // Add Deposit Address to User Deposit Addresses
+                console.log("addressObject", addressObject, app_wallet._id)
+                await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
+                console.log("b")
+            }
+        }
     }
 }
 
@@ -1273,6 +1445,12 @@ class AppLogic extends LogicComponent{
                 case 'EditAddonTxFee' : {
                     return await library.process.__editAddonTxFee(params); break;
                 };
+                case 'AddAddonDepositBonus' : {
+                    return await library.process.__addAddonDepositBonus(params); break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    return await library.process.__editAddonDepositBonus(params); break;
+                };
                 case 'editAddonAutoWithdraw' : {
                     return await library.process.__editAddonAutoWithdraw(params); break;
                 };
@@ -1342,6 +1520,9 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.process.__getUsers(params); break;
                 };
+                case 'GenerateAddresses' : {
+					return await library.process.__generateAddresses(params); break;
+                };
                 case 'AddAddonBalance' : {
 					return await library.process.__addAddonBalance(params); break;
                 };
@@ -1353,6 +1534,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetBetInfo' : {
 					return await library.process.__getBetInfo(params); break;
+                };
+                case 'EditBackground' : {
+					return await library.process.__editBackground(params); break;
                 };
 			}
 		}catch(error){
@@ -1402,6 +1586,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditAddonTxFee' : {
                     return await library.progress.__editAddonTxFee(params); break;
+                };
+                case 'AddAddonDepositBonus' : {
+                    return await library.progress.__addAddonDepositBonus(params); break;
+                };
+                case 'EditAddonDepositBonus' : {
+                    return await library.progress.__editAddonDepositBonus(params); break;
                 };
                 case 'editAddonAutoWithdraw' : {
                     return await library.progress.__editAddonAutoWithdraw(params); break;
@@ -1493,6 +1683,9 @@ class AppLogic extends LogicComponent{
                 case 'GetUsers' : {
 					return await library.progress.__getUsers(params); break;
                 };
+                case 'GenerateAddresses' : {
+					return await library.progress.__generateAddresses(params); break;
+                };
                 case 'AddAddonBalance' : {
 					return await library.progress.__addAddonBalance(params); break;
                 };
@@ -1504,6 +1697,9 @@ class AppLogic extends LogicComponent{
                 }
                 case 'GetBetInfo': {
                     return await library.progress.__getBetInfo(params); break;
+                }
+                case 'EditBackground': {
+                    return await library.progress.__editBackground(params); break;
                 }
 			}
 		}catch(error){

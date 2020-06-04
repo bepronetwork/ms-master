@@ -50,7 +50,7 @@ context('Normal', async () =>  {
             const attributes = {
                 NAME: faker.name.firstName()
             };
-            await SendinBlueSingleton.updateContact(email, attributes);
+            SendinBlueSingleton.updateContact(email, attributes);
         } catch (err) {
             console.log(err)
         }
@@ -62,7 +62,7 @@ context('Normal', async () =>  {
             const attributes = {
                 NAME: faker.name.firstName()
             };
-            await SendinBlueSingleton.updateContact(email, attributes);
+            SendinBlueSingleton.updateContact(email, attributes);
         } catch (err) {
             expect(err.status).to.equal(404);
         }
