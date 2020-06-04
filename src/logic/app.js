@@ -19,6 +19,7 @@ import {
     TopIconRepository,
     MailSenderRepository,
     LoadingGifRepository,
+    AddressRepository,
     AddOnRepository,
     AutoWithdrawRepository,
     LogRepository,
@@ -1324,13 +1325,10 @@ const progressActions = {
         for(var i = 1; i <= amount; i++){
             // old label see if it is 
             var availableDeposit = availableDepositAddresses[i];
-            console.log("availableDeposit", availableDeposit);
             if(availableDeposit){
                 // Already is on the system
-                console.log("availableDeposit", availableDeposit)
                 // Bitgo already has the address
                 var bitgo_address = await BitGoSingleton.getDepositAddress({ wallet,  id: availableDeposit.address.bitgo_id });
-                console.log("bitgo_address", bitgo_address.address, bitgo_address.id, "pendingChainInitialization", bitgo_address.coinSpecific.pendingChainInitialization)
                 if(bitgo_address.id && bitgo_address.address){
                 // Add Deposit Address to User Deposit Addresses
                     await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);

@@ -234,7 +234,6 @@ class ErrorManager {
                     break;
                 };
                 case 'UpdateWallet': {
-                    console.log("UpdateWallet", object)
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null)){
                         console.log("1", "APP_NOT_EXISTENT")
