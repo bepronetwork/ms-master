@@ -6,23 +6,26 @@ let populate_app_address = [
         model : 'Wallet',
         select : { '__v': 0},
         populate : [
-            ...populate_wallet_all,
-            {  
-                path : 'availableDepositAddresses',
+            {
+                path : 'currency',
+                model : 'Currency',
                 select : { '__v': 0},
-                populate : [
-                    {
-                        path : 'address',
-                        model : 'Address',
-                        select : { '__v': 0}
-                    },
-                    {
-                        path : 'user',
-                        model : 'User',
-                        select : { '__v': 0}
-                    }
-                ]
-            }
+            },
+            {
+                path : 'depositAddresses',
+                model : 'Address',
+                select : { '__v': 0},
+            },
+            {  
+                path : 'availableDepositAddresses.address',
+                model : 'Address',
+                select : { '__v': 0}
+            }/*,
+            {  
+                path : 'availableDepositAddresses.lockedFor',
+                model : 'User',
+                select : { '__v': 0}
+            }*/
         ]
     }
 ] 
