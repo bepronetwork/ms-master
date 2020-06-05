@@ -24,7 +24,7 @@ module.exports = {
     let index = -1;
     while (true) {
       index++;
-      let wallets = await db.collection('wallets').find({ bonusAmount: null }).skip(1000 * index).limit(1000).toArray();
+      let wallets = await db.collection('wallets').find().skip(1000 * index).limit(1000).toArray();
       if (wallets.length === 0) {
         break;
       }

@@ -24,7 +24,7 @@ module.exports = {
     let index = -1;
     while (true) {
       index++;
-      let depositbonus = await db.collection('depositbonus').find({ multiplier: 0 }).skip(1000 * index).limit(1000).toArray();
+      let depositbonus = await db.collection('depositbonus').find().skip(1000 * index).limit(1000).toArray();
       if (depositbonus.length === 0) {
         break;
       }
