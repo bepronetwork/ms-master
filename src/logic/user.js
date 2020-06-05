@@ -95,7 +95,7 @@ const processActions = {
         var username = new String(params.username).toLowerCase().trim();
         let user = await __private.db.findUser(username);
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN'); };
 
         let has2FASet = user.security['2fa_set'];
         let newBearerToken = MiddlewareSingleton.sign(user._id);
@@ -162,7 +162,7 @@ const processActions = {
         let updatePassword = await UsersRepository.prototype.updateUser({ id: params.user_id, param: { hash_password } });
 
         if (!updatePassword) {
-            throwError();
+            throwError('UNKNOWN');
         }
 
         let normalized = {
@@ -177,7 +177,7 @@ const processActions = {
         let user = await __private.db.findUser(username);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN');    };
 
         var has2FASet = user.security['2fa_set'];
         var secret2FA = user.security['2fa_secret'];
@@ -216,7 +216,7 @@ const processActions = {
         // Get User by Username
         let user = await __private.db.findUserById(params.user);
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN') };
         let normalized = user;
         return normalized;
     },
@@ -225,7 +225,7 @@ const processActions = {
         let user = await __private.db.findUserById(params.user);
 
         if (!user) { throwError('USER_NOT_EXISTENT') };
-        if (!user.security) { throwError() };
+        if (!user.security) { throwError('UNKNOWN') };
 
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
             secret: params['2fa_secret'],
@@ -327,31 +327,17 @@ const processActions = {
     __getDepositAddress: async (params) => {
         var { currency, id, app } = params;
         /* Get User Id */
-        let user = await UsersRepository.prototype.findUserById(id, "wallet");
-        app = await AppRepository.prototype.findAppById(app, "address");
+        let user = await UsersRepository.prototype.findUserById(id);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if (!user) { throwError('USER_NOT_EXISTENT') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         const user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
 
-        /* Get an available address - see if there is any that was locked in > 15 minutes */
-        let availableDepositAddress = app_wallet.availableDepositAddresses.find( 
-            a => (!a.lockedAt || Math.abs((Date(a.lockedAt).getTime() - new Date().getTime()) > 15*60*1000))
-            && a.address.address /* Address is generated already */
-        )
-
-        let hasDepositAddress = app_wallet.availableDepositAddresses.find( 
-            a => (a.lockedFor.toString().toLowerCase() == id.toString().toLowerCase()) /* User has address already */
-            && (a.lockedAt && Math.abs((Date(a.lockedAt).getTime() - new Date().getTime()) <= 15*60*1000)) /* Still on his time */
-            && a.address.address /* Address is generated already */
-        );
-
         return {
             app_wallet,
             user,
-            hasDepositAddress,
             app,
-            availableDepositAddress,
             user_wallet
         };
 
@@ -600,48 +586,42 @@ const progressActions = {
         return params;
     },
     __getDepositAddress: async (params) => {
-        const { app_wallet, user_wallet, address, user, availableDepositAddress, hasDepositAddress } = params;
-        var res;
+        const { app_wallet, user_wallet, user } = params;
 
-        if(!hasDepositAddress){
-            /* If user does not have a deposit address */
-            let previousAddressHistory = availableDepositAddress.lockedAt ? {
-                startTime : availableDepositAddress.lockedAt,
-                endTime : new Date(),
-                user : availableDepositAddress.lockedFor
-            } : null;
-            
-            var history = []
-            if(previousAddressHistory){
-                /* Add History Information for later understand which deposit represents to who */
-                history = (availableDepositAddress.history || []).concat(previousAddressHistory);
+        let addresses = user_wallet.depositAddresses;
+        let address = addresses.find( a => a.address);
+        if(!address){
+            var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+            // See if address is already provided
+            let bitgo_id;
+            if(addresses.length > 0){
+                bitgo_id = addresses.find( a => a.bitgo_id).bitgo_id;
             }
-        
-            /* Lock Address to user - update history & add user + lockDate*/
-            await WalletsRepository.prototype.lockAvailableDepositAddress(id, {user, address : availableDepositAddress.address._id, history})   
-
-            res = {
-                address: availableDepositAddress.address.address,
-                lockedAt : availableDepositAddress.lockedAt
+            let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
+            address = bitgo_address;
+            if((!bitgo_id) || bitgo_address.address){
+                // Bitgo has created the address
+                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                // Add Deposit Address to User Deposit Addresses
+                await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
             }
-
         }else{
-            res = {
-                address: hasDepositAddress.address.address,
-                lockedAt : hasDepositAddress.lockedAt
+            // System already has an address
+        }
+
+        if (address.address) {
+            //Address Existent
+            return {
+                address: address.address,
+                currency: user_wallet.currency.ticker
+            }
+        } else {
+            // Not existent
+            return {
+                message: 'Waiting for address initialization'
             }
         }
-            
-        /* Set Lock time of 15 minutes */
-        var lockedUntil = new Date(res.lockedAt);
-        lockedUntil.setMinutes( new Date(res.lockedAt).getMinutes() + 15);
 
-        return {
-            ...res,
-            currency: user_wallet.currency.ticker,
-            lockedUntil
-        }
-        
     },
     __updateWallet: async (params) => {
         try {

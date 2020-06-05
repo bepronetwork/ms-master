@@ -35,8 +35,8 @@ const processActions = {
         // Get User by Username
         let admin = await __private.db.findAdmin(params.username);
         if (!admin) { throwError('USER_NOT_EXISTENT') };
-        if (admin.registered === false) { throwError() };
-        if (!admin.security) { throwError() };
+        if (admin.registered === false) { throwError('UNKNOWN') };
+        if (!admin.security) { throwError('UNKNOWN') };
         let has2FASet = admin.security['2fa_set'];
         let bearerToken = MiddlewareSingleton.sign(admin._id);
         let normalized = {
@@ -56,7 +56,7 @@ const processActions = {
         let admin = await __private.db.findAdmin(params.username);
 
         if (!admin) { throwError('USER_NOT_EXISTENT') };
-        if (!admin.security) { throwError() };
+        if (!admin.security) { throwError('UNKNOWN') };
 
         var has2FASet = admin.security['2fa_set'];
         var secret2FA = admin.security['2fa_secret'];
@@ -95,7 +95,7 @@ const processActions = {
         let admin = await __private.db.findAdminById(params.admin);
 
         if (!admin) { throwError('USER_NOT_EXISTENT') };
-        if (!admin.security) { throwError() };
+        if (!admin.security) { throwError('UNKNOWN') };
         let normalized = admin;
         return normalized;
     },
@@ -104,7 +104,7 @@ const processActions = {
         let admin = await __private.db.findAdminById(params.admin);
 
         if (!admin) { throwError('USER_NOT_EXISTENT') };
-        if (!admin.security) { throwError() };
+        if (!admin.security) { throwError('UNKNOWN') };
 
         let isVerifiedToken2FA = (new Security()).isVerifiedToken2FA({
             secret: params['2fa_secret'],
@@ -167,7 +167,7 @@ const processActions = {
         if (!app) { throwError('USER_NOT_EXISTENT') };
         if (String(app._id) !== String(params.app)) { throwError('APP_INVALID') };
         let adminEmail = (await __private.db.findAdminEmail(params.email));
-        if (adminEmail && adminEmail.registered === true) { throwError() }
+        if (adminEmail && adminEmail.registered === true) { throwError('UNKNOWN') }
         let bearerToken = MiddlewareSingleton.generateTokenDate((new Date(((new Date()).getTime() + 7 * 24 * 60 * 60 * 1000))).getTime());
         let password = new Security(String((new Date()).getTime())).hash();
         let permissionObject = await PermissionRepository.prototype.findById(params.permission)
@@ -359,7 +359,7 @@ const progressActions = {
         let updatePassword = await AdminsRepository.prototype.updatePasswordAdmin({ id: admin_id, param: { hash_password } });
 
         if (!updatePassword) {
-            throwError();
+            throwError('UNKNOWN');
         }
         return true;
     },

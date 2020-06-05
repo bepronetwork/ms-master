@@ -124,10 +124,6 @@ class ErrorManager {
                     if(object.app_wallet.currency.virtual){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_VIRTUAL_WALLET));
                     }
-                    // Verify no address is available
-                    if(!object.availableDepositAddress){
-                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ADDRESS_NOT_AVAILABLE));
-                    }
                     // Ethereum Wallet for Virtual Currencies not allowed, costs money
                     if((new String(object.app_wallet.currency.ticker).toLowerCase() == 'eth') && object.app.virtual){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.IS_ETHEREUM_WALLET));
@@ -236,18 +232,22 @@ class ErrorManager {
                 case 'UpdateWallet': {
                     // Verify User
                     if(typeof object == 'undefined' || Object.is(object, null)){
+                        console.log("1", "APP_NOT_EXISTENT")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
                     }
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded){
+                        console.log("2", "ALREADY_EXISTING_DEPOSIT_TRANSACTION")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION)); break; 
                     }
                     // Verify if Deposit is Valid
                     if(!object.isValid){
+                        console.log("2", "DEPOSIT_TRANSACTION_NOT_VALID")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID)); break;   
                     }
                     // Verify if App is Mentioned
                     if(!object.app || _.isEmpty(object.app)){
+                        console.log("2", "APP_NOT_EXISTENT")
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
                     }
                     break;

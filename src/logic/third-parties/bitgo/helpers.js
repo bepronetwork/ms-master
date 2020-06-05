@@ -19,7 +19,7 @@ export const normalizePolicy = ({timeWindow, ticker}) => {
         };
         default : {
             // no time window
-            throwError('UNKOWN');
+            throwError('UNKNOWN');
         }
     }
     let maxWithdraw = getMaxWithdraw({ticker, timeWindow});

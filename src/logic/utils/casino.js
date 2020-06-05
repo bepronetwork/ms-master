@@ -1,6 +1,7 @@
 import MathSingleton from "./math";
 import { throwError } from "../../controllers/Errors/ErrorManager";
 import Combinatorics from 'js-combinatorics';
+import { getGameProbablityNormalizer } from "./games";
 
 function findWithAttr(array, attr, value) {
     for(var i = 0; i < array.length; i += 1) {
@@ -210,6 +211,7 @@ class CasinoLogic{
                     break;
                 };
                 case 'keno_simple' : {
+                    console.log("hhhh")
                     const KENO_RESULT_SPACE = 10; /* Amount of results needed */
                     if(outcomeResultSpace.length != KENO_RESULT_SPACE){throwError('BAD_BET')} /* Result Space has to be 10 diff values */
                     var n = resultSpace.length; /* Number of total squares -  resultSpace.length ex : 40*/
@@ -218,7 +220,6 @@ class CasinoLogic{
                     var y = 0; /* Number of values that are equal outcome<->userResult */
     
                     if(x <= 0){throwError('BAD_BET')} /* No User Result Space */
-    
                     /* Verify if all the numbers have the same value for each box */ 
                     let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
@@ -235,6 +236,7 @@ class CasinoLogic{
                         })  
                         return acc+item.value;
                     }, 0));
+                    console.log("heee", x, y, d ,n)
 
                     if(y <= 0){
                         /* is Lost */
@@ -243,8 +245,10 @@ class CasinoLogic{
                     }else{
                         /* is Won */
                         isWon = true;
-                        let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
-                        let odd = parseFloat(this.probabilityToOdd(probability));
+                        //let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
+                        let odd = parseFloat(this.probabilityToOdd(getGameProbablityNormalizer({metaName : game, x, y})));
+                        //let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
+                        console.log("odd", odd, x, y, getGameProbablityNormalizer({metaName : game, x, y}));
                         let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                         let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
                         winAmount = parseFloat(winBalance - houseEdgeBalance);
@@ -446,7 +450,7 @@ class CasinoLogic{
                     /* is Won */
                     console.log(n,d,x,y)
                     let probability = (Combinatorics.C(n-x, d-y)*Combinatorics.C(x, y))/Combinatorics.C(n, d);
-                    let odd = parseFloat(this.probabilityToOdd(probability));
+                    let odd = parseFloat(this.probabilityToOdd(getGameProbablityNormalizer({metaName : game, x, y})));
                     console.log("probability", probability, odd, totalBetAmount)
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd);
                     let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
@@ -473,6 +477,7 @@ class CasinoLogic{
      */
 
     probabilityToOdd(probability){
+        if(probability <= 0){ return 0 };
         return 1/probability;
     }
 }

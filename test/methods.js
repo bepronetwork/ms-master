@@ -321,6 +321,15 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async generateAddresses(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/address/generate')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
     async deposit(params, pk) {
         try{
             let acc = new account(global.web3, global.web3.eth.accounts.privateKeyToAccount(pk));

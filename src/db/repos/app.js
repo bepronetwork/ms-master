@@ -305,6 +305,7 @@ class AppRepository extends MongoComponent{
     }
 
     findAppById(_id, populate_type=populate_app_all){
+        let type = populate_type;
         switch(populate_type){
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
             case 'simple' : { populate_type = populate_app_simple; break; }
@@ -312,6 +313,7 @@ class AppRepository extends MongoComponent{
             case 'address' : { populate_type = populate_app_address; break; }
             case 'none' : { populate_type = []; break; }
         }
+
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)

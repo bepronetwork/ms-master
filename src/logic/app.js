@@ -19,6 +19,7 @@ import {
     TopIconRepository,
     MailSenderRepository,
     LoadingGifRepository,
+    AddressRepository,
     AddOnRepository,
     AutoWithdrawRepository,
     LogRepository,
@@ -30,7 +31,7 @@ import {
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -339,9 +340,9 @@ const processActions = {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
+            if(!addOn){throwError('UNKNOWN')}
             let txFee = await TxFeeRepository.prototype.findById(addOn.txFee)
-            if(!txFee){throwError()}
+            if(!txFee){throwError('UNKNOWN')}
             let res = {
                 txFee,
                 currency : params.currency,
@@ -410,9 +411,9 @@ const processActions = {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
             if(!app){throwError('APP_NOT_EXISTENT')}
             let addOn = await AddOnRepository.prototype.findById(app.addOn)
-            if(!addOn){throwError()}
+            if(!addOn){throwError('UNKNOWN')}
             let autoWithdraw = await AutoWithdrawRepository.prototype.findById(addOn.autoWithdraw)
-            if(!autoWithdraw){throwError()}
+            if(!autoWithdraw){throwError('UNKNOWN')}
             let res = {
                 autoWithdraw,
                 currency : params.currency,
@@ -696,11 +697,13 @@ const processActions = {
         return params;
     },
     __generateAddresses : async (params) => {
+        console.log("here")
         let { app, currency, amount } = params;
         app = await AppRepository.prototype.findAppById(app, "address");
         if (!app) { throwError('APP_NOT_EXISTENT') };
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         if (!app_wallet) { throwError('CURRENCY_NOT_EXISTENT') };
+        console.log("app_wallet", app_wallet)
         const { availableDepositAddresses } = app_wallet;
         return {
             app_wallet,
@@ -1128,7 +1131,7 @@ const progressActions = {
         /* Test functioning of Client */
         await sendinBlueClient.getContacts();
 
-        if(!mailSender){ throwError();}
+        if(!mailSender){ throwError('UNKNOWN');}
 
         await MailSenderRepository.prototype.findByIdAndUpdate(mailSender._id, {
             apiKey : encryptedAPIKey,
@@ -1138,7 +1141,7 @@ const progressActions = {
         for (let attribute of SendInBlueAttributes){
             await sendinBlueClient.createAttribute(attribute).catch((e)=>{
                 if(e.response.body.message !== "Attribute name must be unique") {
-                    // throwError();
+                    // throwError('UNKNOWN');
                 }
             });
         }
@@ -1313,30 +1316,37 @@ const progressActions = {
     }, 
     __generateAddresses  : async (params) => {
 
-        const { app_wallet, availableDepositAddresses, amount } = params;
+        const { app_wallet, availableDepositAddresses, amount, app } = params;
         var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
         const currentAddressAmount = availableDepositAddresses.length;
+        console.log("currentAddressAmount", currentAddressAmount)
+
         // See if address is already provided
-        var bitgo_id;
         for(var i = 1; i <= amount; i++){
-            var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: i /* label type */, id: bitgo_id });
-            if(i <= currentAddressAmount){
-                // old label see if it is 
-                var availableDeposit = availableDepositAddresses[i];
-                // Get Bitgo info on this address
-                if(!availableDeposit.address.address && bitgo_address.address){
-                    // If the system does not have this address saved still - bitgo has the address already
-                    // Add Deposit Address to User Deposit Addresses
+            // old label see if it is 
+            var availableDeposit = availableDepositAddresses[i];
+            if(availableDeposit){
+                // Already is on the system
+                // Bitgo already has the address
+                var bitgo_address = await BitGoSingleton.getDepositAddress({ wallet,  id: availableDeposit.address.bitgo_id });
+                if(bitgo_address.id && bitgo_address.address){
+                // Add Deposit Address to User Deposit Addresses
                     await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
                 }else{
-                    // If system already has this data but the address was not generated yet - do nothing
+                    // Address is not generated still
+                    console.log("nothing still", i)
                 }
             }else{
+                // Not on the system (1st call)
+                var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: `${i}` /* label type */, id: app_wallet.bitgo_id });
+                console.log("a")
                 // new label - save it
                 // If the system does not have this address saved still - bitgo has the address already
                 let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
                 // Add Deposit Address to User Deposit Addresses
+                console.log("addressObject", addressObject, app_wallet._id)
                 await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
+                console.log("b")
             }
         }
     }
