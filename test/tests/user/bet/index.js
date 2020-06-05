@@ -5,4 +5,5 @@ context('Bets', async () => {
     require('./linear_dice');
     require('./errors');
     require('./jackpot');
+    require('./depositBonus');
 });
