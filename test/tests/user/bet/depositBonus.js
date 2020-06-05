@@ -7,9 +7,9 @@ import {
 } from '../../../methods';
 
 import chai from 'chai';
-import { mochaAsync, detectValidationErrors } from '../../utils';
-import { getRandom } from '../../utils/math';
-import { digestBetResult } from '../../utils/bet';
+import { mochaAsync, detectValidationErrors } from '../../../utils';
+import { getRandom } from '../../../utils/math';
+import { digestBetResult } from '../../../utils/bet';
 
 const expect = chai.expect;
 
