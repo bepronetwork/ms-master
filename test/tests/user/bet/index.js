@@ -1,6 +1,6 @@
 context('Bets', async () => {
     require('./depositBonus');
-    require('./keno_simple');
+    // require('./keno_simple');
     require('./coinflip');
     require('./european_roulette');
     require('./linear_dice');
