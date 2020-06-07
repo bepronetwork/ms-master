@@ -60,7 +60,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     before( async () =>  {
         user = global.test.user
         app = global.test.app
-        betAmount = 1;
+        betAmount = 0.001;
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
@@ -76,9 +76,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         }
     });
   
-    it(`it should do a normal bet for the User - Coin Flip (Win)`, mochaAsync(async () => {
-
-        // await WalletsRepository.prototype.updateBonusAndAmount({})
+    it(`it should do a normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
@@ -112,7 +110,8 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         })
     }));
 
-    it(`it should do a normal bet for the User - Coin Flip (Lost)`, mochaAsync(async () => {
+
+    it(`it should do a normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
 
         await beforeBetFunction({
             metaName : 'wheel_simple'
@@ -145,5 +144,4 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             res : __res
         })
     }));
-
 });
