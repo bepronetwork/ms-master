@@ -59,6 +59,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
 
     
     before( async () =>  {
+        user = global.test.user
         betAmount = 0.000001;
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
         await loginUser({username : user.username, password : user.password, app : app.id}).data.message;

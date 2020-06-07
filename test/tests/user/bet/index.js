@@ -1,4 +1,4 @@
-context('Bets', async () => {
+context('Bets', () => {
     require('./depositBonus');
     // require('./keno_simple');
     require('./coinflip');
