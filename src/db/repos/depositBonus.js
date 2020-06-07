@@ -108,13 +108,13 @@ class DepositBonusRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdateMultiplierAmount(_id, currency, amount){
+    findByIdAndUpdateMultiplierAmount(_id, currency, multiple){
         return new Promise( (resolve,reject) => {
             DepositBonusRepository.prototype.schema.model.updateOne(
                 {_id, "multiplier.currency": currency},
                 {
                     $set: {
-                        "multiplier.$.amount" : parseFloat(amount)
+                        "multiplier.$.multiple" : parseFloat(multiple)
                     }
                 }
             )
