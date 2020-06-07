@@ -21,7 +21,6 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         var userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        console.log("userPreBetCurrencyWallet:: ",userPreBetCurrencyWallet)
         var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         var isWon = res.data.message.isWon;
@@ -61,20 +60,13 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     before( async () =>  {
         user = global.test.user
         app = global.test.app
-        console.log("user:: ",user)
-        console.log("app:: ",app)
-        betAmount = 0.000001;
+        betAmount = 1;
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
-        console.log("admin:: ",admin)
-        console.log("user.username:: ",user.username)
-        console.log("user.password:: ",user.password)
-        console.log("app.id:: ",app.id)
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         userWallet = (user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
-        console.log("userWallet:: ",userWallet)
 
         postDataDefault = {
             user: user.id,
@@ -89,7 +81,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         // await WalletsRepository.prototype.updateBonusAndAmount({})
 
         await beforeBetFunction({
-            metaName : 'coinflip_simple'
+            metaName : 'wheel_simple'
         })
 
         let postData = {  
@@ -123,7 +115,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     it(`it should do a normal bet for the User - Coin Flip (Lost)`, mochaAsync(async () => {
 
         await beforeBetFunction({
-            metaName : 'coinflip_simple'
+            metaName : 'wheel_simple'
         })
 
         let postData = {  
