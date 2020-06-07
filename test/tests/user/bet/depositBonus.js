@@ -9,17 +9,19 @@ import {
 import chai from 'chai';
 import { mochaAsync, detectValidationErrors } from '../../../utils';
 import { getRandom } from '../../../utils/math';
-import { digestBetResult } from '../../../utils/bet';
+import { digestBetBonusResult } from '../../../utils/bet';
+import WalletsRepository from '../../../../src/db/repos/wallet';
 
 const expect = chai.expect;
 
 context('After Deposit Bonus sBets (Overall Math)', async () => {
-    var app, walletApp, user, admin, betAmount, game, ticker = 'eth',postDataDefault, currency, bet;
+    var app, walletApp, user, admin, betAmount, game, ticker = 'eth',postDataDefault, currency, bet, userWallet;
 
     const insideBetFunction = async ({postData}) => {
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         var userPreBetCurrencyWallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        console.log("userPreBetCurrencyWallet:: ",userPreBetCurrencyWallet)
         var appPreBetCurrencyWallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         var res = await placeBet(postData, user.bearerToken, {id : user.id});
         var isWon = res.data.message.isWon;
@@ -38,8 +40,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
 
-        expect(await digestBetResult({
-            edge : game.edge, 
+        expect(await digestBetBonusResult({
             res : res, 
             newBalance : userPosBetCurrencyWallet.playBalance, 
             previousBalance : userPreBetCurrencyWallet.playBalance,
@@ -65,6 +66,8 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
         walletApp = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
+        userWallet = (user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
+        console.log("userWallet:: ",userWallet)
 
         postDataDefault = {
             user: user.id,
@@ -74,10 +77,12 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         }
     });
   
-    it(`it should do a normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
+    it(`it should do a normal bet for the User - Coin Flip (Win)`, mochaAsync(async () => {
+
+        // await WalletsRepository.prototype.updateBonusAndAmount({})
 
         await beforeBetFunction({
-            metaName : 'wheel_simple'
+            metaName : 'coinflip_simple'
         })
 
         let postData = {  
@@ -108,10 +113,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         })
     }));
 
-    it(`it should do a normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
+    it(`it should do a normal bet for the User - Coin Flip (Lost)`, mochaAsync(async () => {
 
         await beforeBetFunction({
-            metaName : 'wheel_simple'
+            metaName : 'coinflip_simple'
         })
 
         let postData = {  
@@ -141,74 +146,5 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             res : __res
         })
     }));
-
-    it(`it should do a normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
-
-        await beforeBetFunction({
-            metaName : 'wheel_variation_1'
-        })
-
-        let postData = {  
-            ...postDataDefault,
-            game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-
-        let __isWon = false, __res;
-        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
-        
-        while(!__isWon){
-            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
-                postData
-            });
-            __isWon = isWon;
-            __res = res;
-            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
-            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
-        }
-
-        await afterBetFunction({
-            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
-            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
-            res : __res
-        })
-    }));
-
-    it(`it should do a normal bet for the User - Plinko (Win)`, mochaAsync(async () => {
-
-        await beforeBetFunction({
-            metaName : 'plinko_variation_1'
-        })
-
-        let postData = {  
-            ...postDataDefault,
-            game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-
-        let __isWon = false, __res;
-        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
-        
-        while(!__isWon){
-            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
-                postData
-            });
-            __isWon = isWon;
-            __res = res;
-            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
-            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
-        }
-
-        await afterBetFunction({
-            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
-            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
-            res : __res
-        })
-    }));
-
 
 });
