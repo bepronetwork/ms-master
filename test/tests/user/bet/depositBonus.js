@@ -66,7 +66,8 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         betAmount = 0.000001;
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
         console.log("admin:: ",admin)
-        await loginUser({username : user.username, password : user.password, app : app.id}).data.message;
+        user = await loginUser({username : user.username, password : user.password, app : app.id}).data;
+        console.log("Loginn:: ",user)
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase())).currency;
