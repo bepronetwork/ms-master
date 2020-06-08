@@ -78,12 +78,15 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     });
   
     it(`Wheel Classic (Win) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
+        
+        await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.001, bonusAmount: 0}),
+        console.log("userWallet._id: ",userWallet._id)
+        await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+        console.log("walletApp._id:" ,walletApp._id)
 
-        await beforeBetFunction(
-            {metaName : 'wheel_simple'},
-            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.001, bonusAmount: 0}),
-            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
-            )
+        await beforeBetFunction({
+            metaName : 'wheel_simple'
+        })
 
         let postData = {  
             ...postDataDefault,
