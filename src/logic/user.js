@@ -359,7 +359,7 @@ const processActions = {
     __updateWallet: async (params) => {
         try {
             var { currency, id, wBT } = params;
-
+            console.log(params);
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
@@ -409,9 +409,16 @@ const processActions = {
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
                     if (amount >= min_deposit && amount <= max_deposit){
+                        console.log("aqui");
                         depositBonusValue = (amount * (percentage/100));
                         minBetAmountForBonusUnlocked = (depositBonusValue*multiplierNeeded);
                     }
+                    console.log("====================");
+                    console.log(min_deposit);
+                    console.log(percentage);
+                    console.log(max_deposit);
+                    console.log(multiplierNeeded);
+                    console.log("====================");
                 }
             }
 
@@ -649,6 +656,7 @@ const progressActions = {
         
     },
     __updateWallet: async (params) => {
+        console.log(params);
         try {
             let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue, hasBonus, minBetAmountForBonusUnlocked } = params;
             var message;
