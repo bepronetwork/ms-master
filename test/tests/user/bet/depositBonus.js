@@ -14,7 +14,7 @@ import WalletsRepository from '../../../../src/db/repos/wallet';
 
 const expect = chai.expect;
 
-context('After Deposit Bonus sBets (Overall Math)', async () => {
+context('After Deposit Bonus Bets (Overall Math)', async () => {
     var app, walletApp, user, admin, game, ticker = 'eth', postDataDefault, currency, userWallet, betAmount;
 
     const insideBetFunction = async ({ postData }) => {
@@ -107,6 +107,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -144,6 +145,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -180,6 +182,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -217,6 +220,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -253,6 +257,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -290,6 +295,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -326,6 +332,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -363,6 +370,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
+            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
