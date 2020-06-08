@@ -77,22 +77,20 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         }
     });
 
-    it(`Wheel Classic (Win) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Win) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
         console.log("userWallet._id: ", userWallet._id)
         console.log("walletApp._id:", walletApp._id)
         betAmount = userWallet.playBalance
         await beforeBetFunction({
-            metaName: 'wheel_simple'
+            metaName: 'coinflip_simple'
         })
 
         let postData = {
             ...postDataDefault,
             game: game._id,
-            result: game.resultSpace.map((r, i) => {
-                return {
-                    place: i, value: betAmount / (game.resultSpace.length)
-                }
-            })
+            result: [
+                {place : 1, value: betAmount}
+            ]
         };
 
         let __isWon = false, __res;
@@ -101,6 +99,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         while (!__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0 });
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            console.log("postData:: ",postData)
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -119,10 +118,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     }));
 
 
-    it(`Wheel Classic (Lost) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Lost) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
@@ -157,10 +156,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         })
     }));
 
-    it(`Wheel Classic (Win) - User PlayBalance: 0.001; User BonusAmount: 0.001 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Win) - User PlayBalance: 0.001; User BonusAmount: 0.001 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0.001 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
@@ -196,10 +195,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     }));
 
 
-    it(`Wheel Classic (Lost) - User PlayBalance: 0.001; User BonusAmount: 0.001 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Lost) - User PlayBalance: 0.001; User BonusAmount: 0.001 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0.001 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
@@ -234,10 +233,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         })
     }));
 
-    it(`Wheel Classic (Win) - User PlayBalance: 0.0015; User BonusAmount: 0.0005 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Win) - User PlayBalance: 0.0015; User BonusAmount: 0.0005 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0015, bonusAmount: 0.0005 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
@@ -273,10 +272,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     }));
 
 
-    it(`Wheel Classic (Win) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Win) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
@@ -311,10 +310,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         })
     }));
 
-    it(`Wheel Classic (Lost) - User PlayBalance: 0.0015; User BonusAmount: 0.0005 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Lost) - User PlayBalance: 0.0015; User BonusAmount: 0.0005 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0015, bonusAmount: 0.0005 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
@@ -350,10 +349,10 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     }));
 
 
-    it(`Wheel Classic (Lost) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
+    it(`Coin Flip (Lost) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
-            { metaName: 'wheel_simple' },
+            { metaName: 'coinflip_simple' },
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 }),
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 })
         )
