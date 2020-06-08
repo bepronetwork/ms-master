@@ -41,7 +41,7 @@ export async function digestBetResult({newBalance, res, previousBalance, edge, p
 export async function digestBetBonusResult({newBalance, res, previousBalance, previousBalanceApp, newBalanceApp, previousBonusBalance, newBonusBalance}){
     const { winAmount, betAmount, isWon, user_delta, app_delta } = res.data.message;
     
-    if(isWon && !previousBonusBalance && !newBonusBalance && (previousBalance == betAmount)){
+    if(isWon && previousBonusBalance == 0 && newBonusBalance == 0 && (previousBalance == betAmount)){
         /* Verify if WinAmount Value is right */
         expect(winAmount).to.be.greaterThan(0)
         /* Verify if AppDelta Value is Negative */
@@ -55,7 +55,7 @@ export async function digestBetBonusResult({newBalance, res, previousBalance, pr
         // Confirm New App Balance is equal to previous plus delta. Ps.: AppDelta is a negative number
         expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp + app_delta));
     }
-    else if(!isWon && !previousBonusBalance && !newBonusBalance && (previousBalance == betAmount)){
+    else if(!isWon && previousBonusBalance == 0 && newBonusBalance == 0 && (previousBalance == betAmount)){
         /* Verify if WinAmount Value is right */
         expect(winAmount).to.be.equal(0)
         /* Verify if AppDelta Value is Positive */

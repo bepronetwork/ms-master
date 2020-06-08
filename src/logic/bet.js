@@ -171,8 +171,6 @@ const processActions = {
                 game : game.metaName
             }); 
 
-            console.log("userBalance:: ",userBalance)
-            console.log("totalBetAmount:: ",totalBetAmount)
             /* Error Check Before Bet Result to bet set */
             if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
