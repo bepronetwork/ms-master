@@ -15,7 +15,7 @@ import WalletsRepository from '../../../../src/db/repos/wallet';
 const expect = chai.expect;
 
 context('After Deposit Bonus sBets (Overall Math)', async () => {
-    var app, walletApp, user, admin, betAmount, game, ticker = 'eth',postDataDefault, currency, bet, userWallet;
+    var app, walletApp, user, admin, game, ticker = 'eth',postDataDefault, currency, userWallet;
 
     const insideBetFunction = async ({postData}) => {
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
@@ -60,7 +60,6 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     before( async () =>  {
         user = global.test.user
         app = global.test.app
-        betAmount = 0.001;
         admin = (await authAdmin({ admin : global.test.admin.id }, global.test.admin.security.bearerToken, { id : global.test.admin.id})).data.message;
         user = (await getUserAuth({user : user.id, app: app.id}, user.bearerToken, {id : user.id})).data.message;
         app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
@@ -76,17 +75,19 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
         }
     });
   
-    it(`it should do a normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
+    it(`Wheel Classic (Win) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
 
-        await beforeBetFunction({
-            metaName : 'wheel_simple'
-        })
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.001, bonusAmount: 0}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
 
         let postData = {  
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
+                place: i, value: 0.001/(game.resultSpace.length)
             }})
         };
 
@@ -111,17 +112,19 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     }));
 
 
-    it(`it should do a normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
+    it(`Wheel Classic (Lost) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
 
-        await beforeBetFunction({
-            metaName : 'wheel_simple'
-        })
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.001, bonusAmount: 0}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
 
         let postData = {  
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
+                place: i, value: 0.001/(game.resultSpace.length)
             }})
         };
 
