@@ -2,7 +2,7 @@ import {
     getUserAuth,
     placeBet,
     authAdmin,
-    loginUser,
+    editTableLimit,
     getAppAuth
 } from '../../../methods';
 
@@ -80,10 +80,17 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
     it(`Coin Flip (Win) - User PlayBalance: 0.001; User BonusAmount: 0 and AppBalance: 0.002`, mochaAsync(async () => {
         console.log("userWallet._id: ", userWallet._id)
         console.log("walletApp._id:", walletApp._id)
-        betAmount = userWallet.playBalance
         await beforeBetFunction({
             metaName: 'coinflip_simple'
         })
+
+        let tableLimit = {
+            app : app.id,
+            game : game._id,
+            tableLimit : 1,
+            wallet : walletApp._id
+        }
+        await editTableLimit({...tableLimit, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
 
         let postData = {
             ...postDataDefault,
