@@ -89,7 +89,7 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: betAmount}
+                {place : 1, value: 0.001}
             ]
         };
 
