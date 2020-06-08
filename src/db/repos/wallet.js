@@ -150,7 +150,43 @@ class WalletsRepository extends MongoComponent{
             });
         });
     }
-  
+
+    updatePlayBalanceBonus(id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $inc : { bonusAmount : parseFloat(amount) } } ,{ new: true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateIncrementBetAmountForBonus(id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $inc : { incrementBetAmountForBonus : parseFloat(amount) } } ,{ new: true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateMinBetAmountForBonusUnlocked(id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $inc : { minBetAmountForBonusUnlocked : parseFloat(amount) } } ,{ new: true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     getAll = async() => {
         return new Promise( (resolve,reject) => {
             WalletsRepository.prototype.schema.model.find().lean().populate()
