@@ -143,8 +143,11 @@ const processActions = {
             const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
-            let appPlayBalance = appWallet.playBalance;
-            let userBalance = userWallet.playBalance;
+            let appPlayBalance                  = appWallet.playBalance;
+            let userBalance                     = userWallet.playBalance;
+            const amountBonus                   = userWallet.bonusAmount;
+            const minBetAmountForBonusUnlocked  = userWallet.minBetAmountForBonusUnlocked;
+            const incrementBetAmountForBonus    = userWallet.incrementBetAmountForBonus;
 
             let resultBetted = CasinoLogicSingleton.normalizeBet(params.result, game.resultSpace);
             var serverSeed = CryptographySingleton.generateSeed();
@@ -167,7 +170,7 @@ const processActions = {
 
 
             /* Error Check Before Bet Result to bet set */
-            if(userBalance < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
+            if(userBalance+amountBonus < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
             if(maxBetValue){if(maxBetValue < totalBetAmount){throwError('MAX_BET_ACHIEVED')}}
 
             /* Remove Fee from Math */
@@ -252,7 +255,10 @@ const processActions = {
                 nonce               :   params.nonce,
                 clientSeed          :   clientSeed,
                 serverHashedSeed    :   CryptographySingleton.hashSeed(serverSeed),
-                serverSeed          :   serverSeed
+                serverSeed          :   serverSeed,
+                amountBonus,
+                minBetAmountForBonusUnlocked,
+                incrementBetAmountForBonus
             }
             return normalized;
         }catch(err){
@@ -277,14 +283,13 @@ const processActions = {
  * @param {function} params - Function Params
  **/
 
-  
 const progressActions = {
     __auto : async (params) => {
 
-        const { isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet } = params;
+        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus } = params;
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
-        let dependentObjects = Object.keys(result).map( async key => 
+        let dependentObjects = Object.keys(result).map( async key =>
             await (new BetResultSpace(result[key])).register()
         );
         PerformanceBet.end({id : 'BetResultSpace.register'});
@@ -304,18 +309,35 @@ const progressActions = {
             ...params,
             betAmount : params.totalBetAmount
         });
-        PerformanceBet.end({id : 'bet.register'});
+        console.log(user_delta);
 
-		/* Update PlayBalance */
-        PerformanceBet.start({id : 'wallet1'});
-        await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
-        PerformanceBet.end({id : 'wallet1'});
-        /* Update App PlayBalance */
-        PerformanceBet.start({id : 'wallet2'});
-        await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
-        PerformanceBet.end({id : 'wallet2'});
+        if(isWon){
+            if(amountBonus>0){
+                console.log(user_delta);
+                await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, user_delta);
+                await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
+            }else{
+                await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
+                await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
+            }
+        } else {
+            if(amountBonus>0){
+                await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
+            }
+            await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, params.totalBetAmount >= playBalance ? (playBalance-params.totalBetAmount) : 0);
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (params.totalBetAmount >= playBalance ? playBalance : params.totalBetAmount));
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, ( params.totalBetAmount >= playBalance ? -playBalance : -params.totalBetAmount));
+        }
+
+        if( incrementBetAmountForBonus >= minBetAmountForBonusUnlocked && amountBonus > 0 ) {
+            await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, -(user_delta+amountBonus));
+            await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, -(params.totalBetAmount+incrementBetAmountForBonus));
+            await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked));
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, (user_delta+amountBonus));
+        }
+
         /* Update Balance of Affiliates */
-        if(isUserAffiliated){
+        if(isUserAffiliated && amountBonus <= 0){
             let userAffiliatedWalletsPromises = affiliateReturns.map( async a => {
                 return WalletsRepository.prototype.updatePlayBalance(a.parentAffiliateWalletId, a.amount)
             })

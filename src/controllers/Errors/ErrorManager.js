@@ -866,7 +866,7 @@ class ErrorManager {
                         break;
                     }
                     /* Verify if User has Balance  */
-                    if(bet.playBalance < bet.betAmount){
+                    if(bet.playBalance + bet.amountBonus < bet.betAmount){
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.INSUFFICIENT_FUNDS));
                     }
                     // Verify App (Syntax Error)
