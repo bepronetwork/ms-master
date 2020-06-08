@@ -44,7 +44,9 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             newBalance : userPosBetCurrencyWallet.playBalance, 
             previousBalance : userPreBetCurrencyWallet.playBalance,
             newBalanceApp : appPosBetCurrencyWallet.playBalance,
-            previousBalanceApp : appPreBetCurrencyWallet.playBalance
+            previousBalanceApp : appPreBetCurrencyWallet.playBalance,
+            previousBonusBalance : userPreBetCurrencyWallet.bonusAmount,
+            newBonusBalance : userPosBetCurrencyWallet.bonusAmount
         }), true);
     }
 
