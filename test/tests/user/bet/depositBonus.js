@@ -149,4 +149,223 @@ context('After Deposit Bonus sBets (Overall Math)', async () => {
             res : __res
         })
     }));
+
+    it(`Wheel Classic (Win) - User PlayBalance: 0.001; User BonusAmount: 0.001 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.001, bonusAmount: 0.001}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: 0.002/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
+
+
+    it(`Wheel Classic (Lost) - User PlayBalance: 0.001; User BonusAmount: 0.001 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.001, bonusAmount: 0.001}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: 0.002/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = true, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
+
+    it(`Wheel Classic (Win) - User PlayBalance: 0.0015; User BonusAmount: 0.0005 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.0015, bonusAmount: 0.0005}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: 0.002/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
+
+
+    it(`Wheel Classic (Win) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: 0.002/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
+
+    it(`Wheel Classic (Lost) - User PlayBalance: 0.0015; User BonusAmount: 0.0005 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.0015, bonusAmount: 0.0005}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: 0.002/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = true, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
+
+
+    it(`Wheel Classic (Lost) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            {metaName : 'wheel_simple'},
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015}),
+            await WalletsRepository.prototype.updateBonusAndAmount({wallet_id : walletApp._id, playBalance: 0.002, bonusAmount: 0})
+            )
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: 0.002/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = true, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));
 });
