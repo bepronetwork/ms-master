@@ -393,10 +393,18 @@ const processActions = {
             }
         }));
 
+        let multiplier = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                multiple      : 0
+            }
+        }));
+
         let res = {
             min_deposit,
             percentage,
             max_deposit,
+            multiplier,
             app
         }
 		return res;
@@ -990,8 +998,8 @@ const progressActions = {
         return res;
     },
     __addAddonDepositBonus : async (params) => {
-        const { min_deposit, percentage, max_deposit, app } = params;
-        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit});
+        const { min_deposit, percentage, max_deposit, multiplier, app } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit, multiplier});
         const depositBonusResult = await depositBonus.register();
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
 		return depositBonusResult;

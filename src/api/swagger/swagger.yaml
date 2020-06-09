@@ -4278,6 +4278,8 @@ definitions:
             type: number
           max_deposit :
             type: number
+          multiplier :
+            type: number
 
   AppServicesRequest : 
     type: object
