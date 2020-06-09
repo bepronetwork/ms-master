@@ -1256,39 +1256,32 @@ const progressActions = {
     __editFooter : async (params) => {
         let { app, communityLinks, supportLinks } = params;
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
+            var imageCommunity = ''
+            if(c.image_url.includes("https")){
+                /* If it is a link already */
+                imageCommunity = c.image_url;
+            } else {
+                imageCommunity = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
+            }
             return (await new Link({
                 href: c.href,
                 name: c.name,
-                images: c.images.map( async images =>{
-                    if(images.image_url.includes("https")){
-                        /* If it is a link already */
-                        return images;
-                    } else {
-                        return {
-                            image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : images.image_url}),
-                            link_url    : images.link_url,
-                        }
-                    }
-                })
+                image_url: imageCommunity
             }).register())._doc._id
         }));
 
         let supportLinkIDs = await Promise.all(supportLinks.map( async c => {
+            var imageSupport = '';
+            if(c.image_url.includes("https")){
+                /* If it is a link already */
+                imageSupport = c.image_url;
+            } else {
+                imageSupport = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
+            }
             return (await new Link({
                 href: c.href,
                 name: c.name,
-                images: c.images.map( async images =>{
-                    console.log("Images:: ",images);
-                    if(images.image_url.includes("https")){
-                        /* If it is a link already */
-                        return images;
-                    } else {
-                        return {
-                            image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : images.image_url}),
-                            link_url    : images.link_url,
-                        }
-                    }
-                })
+                image_url: imageSupport
             }).register())._doc._id
         }));
 
@@ -1297,8 +1290,9 @@ const progressActions = {
             supportLinks : supportLinkIDs,
         })
 
+        let result = await FooterRepository.prototype.findById(footer._id)
         // Save info on Customization Part
-        return footer;
+        return result;
     },
     __editTopIcon : async (params) => {
         let { app, topIcon } = params;

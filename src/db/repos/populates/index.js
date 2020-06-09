@@ -10,8 +10,10 @@ import populate_app_wallet from './app/populate_app_wallet';
 import populate_user_simple from './user/populate_user_simple';
 import populate_app_address from './app/populate_app_address';
 import populate_user_wallet from './user/populate_user_wallet';
+import populate_footer from "./customization/footer";
 
 export {
+    populate_footer,
     populate_affiliateLink,
     populate_user_simple,
     populate_app_address,

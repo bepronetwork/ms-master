@@ -13,20 +13,23 @@ let self;
 let outputs = {
     editFooter: (object) => {
         return {
+            "id": object.id,
             "supportLinks": !object.supportLinks ? [] : object.supportLinks.map(support_link => {
                 return ({
+                    "id": support_link.id,
                     "name": support_link.name,
-                    "href": support_link.href
+                    "href": support_link.href,
+                    "image_url": support_link.image_url
                 })
             }),
             "communityLinks": !object.communityLinks ? [] : object.communityLinks.map(community_link => {
                 return ({
+                    "id": community_link.id,
                     "name": community_link.name,
-                    "href": community_link.href
+                    "href": community_link.href,
+                    "image_url": support_link.image_url
                 })
             }),
-            ...app_object(object),
-            "admin": object.admin,
         }
     },
 }

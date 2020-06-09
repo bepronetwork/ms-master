@@ -21,60 +21,24 @@ context('Edit Footer', async () => {
                 {
                     "name": "Affiliate",
                     "href": "https://",
-                    "images": [
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste.com"
-                        },
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste2.com"
-                        }
-                    ]
+                    "image_url": image_data
                 },
                 {
                     "name": "Affiliate 2",
                     "href": "https://",
-                    "images": [
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste.com"
-                        },
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste2.com"
-                        }
-                    ]
+                    "image_url": image_data
                 },
             ],
             communityLinks: [
                 {
                     "name": "Affiliate",
                     "href": "https://",
-                    "images": [
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste.com"
-                        },
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste2.com"
-                        }
-                    ]
+                    "image_url": image_data
                 },
                 {
                     "name": "Affiliate 2",
                     "href": "https://",
-                    "images": [
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste.com"
-                        },
-                        {
-                            "image_url": image_data,
-                            "link_url": "https://teste2.com"
-                        }
-                    ]
+                    "image_url": image_data
                 },
             ],
             app: app.id

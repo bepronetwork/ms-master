@@ -8,10 +8,7 @@ LinkSchema.prototype.name = 'Link';
 LinkSchema.prototype.schema =  {
     href        : { type : String },
     name        : { type : String },
-    images      : [{
-        image_url   : {type : String},
-        link_url    : {type : String}
-    }]
+    image_url   : {type : String}
 }
 
 
