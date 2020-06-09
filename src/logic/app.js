@@ -1277,7 +1277,7 @@ const progressActions = {
             return (await new Link({
                 href: c.href,
                 name: c.name,
-                images: c.images.map(images =>{
+                images: c.images.map( async images =>{
                     if(images.image_url.includes("https")){
                         /* If it is a link already */
                         return images;
