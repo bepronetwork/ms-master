@@ -110,8 +110,7 @@ context('Bet', async () => {
         const app_data_after = (await getApp({app, admin})).data.message;
         /* Verify balance on App */
         const affiliateReturns = (betAmount - jackpotAmount - fee)*(user_2_percentageOnLoss+user_1_percentageOnLoss);
-        console.log("RESS:: ",res)
-        console.log("Wallet:: ",getCurrencyWallet({wallet : app_data_after.wallet, ticker}))
+
         expect(parseFloat(getCurrencyWallet({wallet : app_data_after.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : app_data_before.wallet, ticker}).playBalance+betAmountWithoutJackpotAndFee-affiliateReturns+jackpotAmount+fee).toFixed(6));
         /* Verify Balance on User 3 */
         expect(parseFloat(getCurrencyWallet({wallet : user_3_after_info.wallet, ticker}).playBalance).toFixed(6)).to.equal(parseFloat(getCurrencyWallet({wallet : user_3_before_info.wallet, ticker}).playBalance-(betAmountWithoutJackpotAndFee+fee+jackpotAmount)).toFixed(6));
