@@ -3,7 +3,9 @@ import {
     placeBet,
     authAdmin,
     editTableLimit,
-    getAppAuth
+    getAppAuth,
+    editEdgeJackpot,
+    editAddonTxFee
 } from '../../../methods';
 
 import chai from 'chai';
@@ -83,18 +85,20 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
         })
 
         let tableLimit = {
-            app : app.id,
-            game : game._id,
-            tableLimit : 1,
-            wallet : walletApp._id
+            app: app.id,
+            game: game._id,
+            tableLimit: 1,
+            wallet: walletApp._id
         }
-        await editTableLimit({...tableLimit, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+        await editTableLimit({ ...tableLimit, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
+        await editEdgeJackpot({ edge: 0, app: app.id, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
+        await editAddonTxFee({ app: app.id, admin: admin.id, currency: currency._id, txFeeParams: { isTxFee: false, deposit_fee: 0, withdraw_fee: 0 } }, admin.security.bearerToken, { id: admin.id });
 
         let postData = {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.001}
+                { place: 1, value: 0.001 }
             ]
         };
 
@@ -132,7 +136,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.001}
+                { place: 1, value: 0.001 }
             ]
         };
 
@@ -169,7 +173,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.002}
+                { place: 1, value: 0.002 }
             ]
         };
 
@@ -207,7 +211,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.002}
+                { place: 1, value: 0.002 }
             ]
         };
 
@@ -244,7 +248,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.002}
+                { place: 1, value: 0.002 }
             ]
         };
 
@@ -282,7 +286,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.002}
+                { place: 1, value: 0.002 }
             ]
         };
 
@@ -319,7 +323,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.002}
+                { place: 1, value: 0.002 }
             ]
         };
 
@@ -357,7 +361,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: [
-                {place : 1, value: 0.002}
+                { place: 1, value: 0.002 }
             ]
         };
 
