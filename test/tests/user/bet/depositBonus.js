@@ -107,7 +107,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (!__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -145,7 +145,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -182,7 +182,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (!__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0.001 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -220,7 +220,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.001, bonusAmount: 0.001 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -257,7 +257,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (!__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0015, bonusAmount: 0.0005 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -295,7 +295,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -332,7 +332,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (!__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0015, bonusAmount: 0.0005 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
@@ -370,7 +370,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
 
         while (__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.002, bonusAmount: 0 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
