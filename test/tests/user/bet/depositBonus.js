@@ -275,7 +275,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
         })
     }));
 
-
     it(`Coin Flip (Win) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
 
         await beforeBetFunction(
@@ -293,7 +292,7 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
         let __isWon = false, __res;
         var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
 
-        while (__isWon) {
+        while (!__isWon) {
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 });
             await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
