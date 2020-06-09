@@ -132,7 +132,7 @@ const processActions = {
             let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if(!app){throwError('APP_NOT_EXISTENT');}
             let user = await UsersRepository.prototype.findUserById(params.user, "simple");
-            if(user.app_id != app._id){throwError('USER_NOT_EXISTENT_IN_APP');}
+            if(new String(user.app_id).toString() != new String(app._id).toString()){throwError('USER_NOT_EXISTENT_IN_APP');}
             let wallet = user.wallet.find( w => new String(w._id).toString() == new String(params.wallet).toString());
             if(!wallet){throwError('CURRENCY_NOT_EXISTENT');}
             return params;
