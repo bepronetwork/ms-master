@@ -1256,20 +1256,49 @@ const progressActions = {
     __editFooter : async (params) => {
         let { app, communityLinks, supportLinks } = params;
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
-            return (await new Link(c).register())._doc._id
+            return (await new Link({
+                href: c.href,
+                name: c.name,
+                images: c.images.map(images =>{
+                    if(images.image_url.includes("https")){
+                        /* If it is a link already */
+                        return images;
+                    } else {
+                        return {
+                            image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : images.image_url}),
+                            link_url    : images.link_url,
+                        }
+                    }
+                })
+            }).register())._doc._id
         }));
 
         let supportLinkIDs = await Promise.all(supportLinks.map( async c => {
-            return (await new Link(c).register())._doc._id
+            return (await new Link({
+                href: c.href,
+                name: c.name,
+                images: c.images.map(images =>{
+                    if(images.image_url.includes("https")){
+                        /* If it is a link already */
+                        return images;
+                    } else {
+                        return {
+                            image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : images.image_url}),
+                            link_url    : images.link_url,
+                        }
+                    }
+                })
+            }).register())._doc._id
         }));
 
-        await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
+        let footer = await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,
             supportLinks : supportLinkIDs,
         })
 
         // Save info on Customization Part
-        return params;
+        console.log("footer:: ",footer)
+        return footer;
     },
     __editTopIcon : async (params) => {
         let { app, topIcon } = params;

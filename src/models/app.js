@@ -669,7 +669,9 @@ class App extends ModelComponent {
     async editFooter() {
         try {
             let app = await this.process('EditFooter');
-            return MapperEditFooterSingleton.output('EditFooter', app);
+            console.log("MODELL:: ",app)
+            return app;
+            // return MapperEditFooterSingleton.output('EditFooter', app);
         } catch (err) {
             throw err;
         }
