@@ -7,7 +7,7 @@ import chai from 'chai';
 
 const expect = chai.expect;
 context('Add Balance Manual', async () => {
-    var app, user, admin, wallet, previousBalance = 0;
+    var app, user, admin, wallet, previousBalance = 0, sumBalance =  0.01;
 
     before( async () =>  {
         app             = global.test.app;
@@ -25,7 +25,7 @@ context('Add Balance Manual', async () => {
                 app: app.id,
                 admin: admin.id,
                 wallet: wallet._id,
-                newBalance: wallet.playBalance + 0.01
+                newBalance: wallet.playBalance + sumBalance
             },
             admin.security.bearerToken,
             {
@@ -34,7 +34,7 @@ context('Add Balance Manual', async () => {
         );
         let updatedUser = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         expect(res.data.status).to.equal(200);
-        expect(updatedUser.wallet[0].playBalance).to.equal(previousBalance+0.01);
+        expect(updatedUser.wallet[0].playBalance).to.equal(previousBalance + sumBalance);
     }));
 });
 
