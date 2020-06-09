@@ -392,6 +392,7 @@ const processActions = {
                     let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    console.log(addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()))
                     let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
                     if (amount >= min_deposit && amount <= max_deposit){
                         depositBonusValue = (amount * (percentage/100));
