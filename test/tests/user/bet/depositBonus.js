@@ -111,7 +111,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -149,7 +148,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -186,7 +184,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -224,7 +221,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -261,44 +257,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
-            __isWon = isWon;
-            __res = res;
-            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
-            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
-        }
-
-        await afterBetFunction({
-            appPreBetCurrencyWallet: __appPreBetCurrencyWallet,
-            userPreBetCurrencyWallet: __userPreBetCurrencyWallet,
-            res: __res
-        })
-    }));
-
-    it(`Coin Flip (Win) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
-
-        await beforeBetFunction(
-            { metaName: 'coinflip_simple' }
-        )
-
-        let postData = {
-            ...postDataDefault,
-            game: game._id,
-            result: [
-                { place: 1, value: 0.002 }
-            ]
-        };
-
-        let __isWon = false, __res;
-        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
-
-        while (!__isWon) {
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 });
-            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
-            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
-                postData
-            });
-            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -335,7 +293,6 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
@@ -372,7 +329,42 @@ context('After Deposit Bonus Bets (Overall Math)', async () => {
             var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
                 postData
             });
-            console.log("RESSS:: ", res)
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet: __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet: __userPreBetCurrencyWallet,
+            res: __res
+        })
+    }));
+
+    it(`Coin Flip (Win) - User PlayBalance: 0.0005; User BonusAmount: 0.0015 and AppBalance: 0.002`, mochaAsync(async () => {
+
+        await beforeBetFunction(
+            { metaName: 'coinflip_simple' }
+        )
+
+        let postData = {
+            ...postDataDefault,
+            game: game._id,
+            result: [
+                { place: 1, value: 0.002 }
+            ]
+        };
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+
+        while (!__isWon) {
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: userWallet._id, playBalance: 0.0005, bonusAmount: 0.0015 });
+            await WalletsRepository.prototype.updateBonusAndAmount({ wallet_id: walletApp._id, playBalance: 0.006, bonusAmount: 0 });
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
             __isWon = isWon;
             __res = res;
             __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
