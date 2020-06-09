@@ -173,6 +173,7 @@ const processActions = {
                 houseEdge : game.edge,
                 game : game.metaName
             }); 
+            console.log("maxWinAmount:: ",maxWinAmount)
 
             /* Error Check Before Bet Result to bet set */
             if(userBalance+amountBonus < totalBetAmount){throwError('INSUFFICIENT_FUNDS')}
