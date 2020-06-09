@@ -14,7 +14,9 @@ context('Add Balance Manual', async () => {
         user = global.test.user;
         admin = global.test.admin;
         user = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
-        wallet = user.wallet.find((w) => w.currency.ticket== "eth");
+        console.log(user);
+        console.log(user.wallet);
+        wallet = user.wallet[0];
     });
 
     it('should add 0.01 in balance of user', mochaAsync(async () => {
