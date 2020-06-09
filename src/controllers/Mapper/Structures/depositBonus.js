@@ -24,6 +24,13 @@ const deposit_bonus_object = (object) => {
                 "currency": max_deposit.currency
             })
         }),
+        "multiplier": !object.multiplier ? [] : object.multiplier.map(multiplier => {
+            return ({
+                "_id": multiplier._id,
+                "multiple": multiplier.multiple,
+                "currency": multiplier.currency
+            })
+        }),
         "__v": object.__v,
     }
 }
