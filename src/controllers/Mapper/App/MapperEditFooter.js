@@ -27,7 +27,7 @@ let outputs = {
                     "id": community_link.id,
                     "name": community_link.name,
                     "href": community_link.href,
-                    "image_url": support_link.image_url
+                    "image_url": community_link.image_url
                 })
             }),
         }
