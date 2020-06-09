@@ -1278,6 +1278,7 @@ const progressActions = {
                 href: c.href,
                 name: c.name,
                 images: c.images.map( async images =>{
+                    console.log("Images:: ",images);
                     if(images.image_url.includes("https")){
                         /* If it is a link already */
                         return images;
@@ -1297,7 +1298,6 @@ const progressActions = {
         })
 
         // Save info on Customization Part
-        console.log("footer:: ",footer)
         return footer;
     },
     __editTopIcon : async (params) => {
