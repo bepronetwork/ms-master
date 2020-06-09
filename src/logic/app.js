@@ -127,6 +127,19 @@ const processActions = {
         }
 		return normalized;
     },
+    __modifyBalance : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
+            if(!app){throwError('APP_NOT_EXISTENT');}
+            let user = await UsersRepository.prototype.findUserById(params.user, "simple");
+            if(new String(user.app_id).toString() != new String(app._id).toString()){throwError('USER_NOT_EXISTENT_IN_APP');}
+            let wallet = user.wallet.find( w => new String(w._id).toString() == new String(params.wallet).toString());
+            if(!wallet){throwError('CURRENCY_NOT_EXISTENT');}
+            return params;
+        } catch(err) {
+            throw err;
+        }
+    },
     __getLogs : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppById(params.app, "simple");
@@ -753,6 +766,10 @@ const progressActions = {
     },
     __appGetUsersBets : async (params) => {
         return params;
+    },
+    __modifyBalance : async (params) => {
+        await WalletsRepository.prototype.updatePlayBalanceNotInc(params.wallet, {newBalance : params.newBalance});
+        return true;
     },
     __getLogs : async (params) => {
         return params;
@@ -1546,6 +1563,9 @@ class AppLogic extends LogicComponent{
                 case 'EditBackground' : {
 					return await library.process.__editBackground(params); break;
                 };
+                case 'ModifyBalance' : {
+					return await library.process.__modifyBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1708,6 +1728,9 @@ class AppLogic extends LogicComponent{
                 }
                 case 'EditBackground': {
                     return await library.progress.__editBackground(params); break;
+                }
+                case 'ModifyBalance': {
+                    return await library.progress.__modifyBalance(params); break;
                 }
 			}
 		}catch(error){

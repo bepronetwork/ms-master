@@ -20,6 +20,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async modifyBalance(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/balance/modify')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
+    },
     async confirmEmail(params) {
         return request(global.server)
         .post('/api/users/email/confirm')

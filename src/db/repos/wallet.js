@@ -139,6 +139,20 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updatePlayBalanceNotInc(id, {newBalance}){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: id},
+                { $set: {playBalance : newBalance}},
+                { 'new': true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePlayBalance(id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,

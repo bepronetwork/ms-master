@@ -2125,6 +2125,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/balance/modify:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: modify Balance
+      operationId: modifyBalance
+      description: modify Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/ModifyBalanceRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/jackpot/edge/edit:
     x-swagger-router-controller: app
     post:
@@ -4015,6 +4046,46 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
+
+  ModifyBalanceRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - user
+      - wallet
+      - newBalance
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          user ID
+      wallet :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          wallet ID
+      newBalance :
+        type : number
+        format: number
+        example: 0.1
+        description: |
+          new balance
 
   AddAddonBalanceRequest :
     type: object
