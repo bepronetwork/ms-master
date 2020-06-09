@@ -27,7 +27,7 @@ context('Add Balance Manual', async () => {
                 wallet: wallet._id,
                 newBalance: wallet.playBalance + 0.01
             },
-            admin.security.bearerToke,
+            admin.security.bearerToken,
             {
                 id : admin.id
             }
