@@ -11,6 +11,7 @@ import populate_user_simple from './user/populate_user_simple';
 import populate_app_address from './app/populate_app_address';
 import populate_user_wallet from './user/populate_user_wallet';
 import populate_app_auth from './app/populate_app_auth';
+import populate_app_game from './app/populate_app_game';
 
 export {
     populate_affiliateLink,
@@ -25,5 +26,6 @@ export {
     populate_admin,
     populate_app_wallet,
     populate_jackpot,
-    populate_app_auth
+    populate_app_auth,
+    populate_app_game
 }

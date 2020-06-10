@@ -509,7 +509,7 @@ const processActions = {
     },
     __getGames : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.findAppById(params.app, "simple");
+        let res = await AppRepository.prototype.findAppById(params.app, "populate_type");
         if(!res){throwError('APP_NOT_EXISTENT')}
 
         return res.games;
