@@ -1,5 +1,6 @@
 import MongoComponent from './MongoComponent';
 import { FooterSchema } from '../schemas';
+import { populate_footer } from './populates';
 
 /**
  * Accounts database interaction class.
@@ -31,6 +32,7 @@ class FooterRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             FooterRepository.prototype.schema.model.findById(_id)
+            .populate(populate_footer)
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

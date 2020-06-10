@@ -6,8 +6,9 @@ class LinkSchema{};
 LinkSchema.prototype.name = 'Link';
 
 LinkSchema.prototype.schema =  {
-    href : { type : String },
-    name  : { type : String }
+    href        : { type : String },
+    name        : { type : String },
+    image_url   : {type : String}
 }
 
 
