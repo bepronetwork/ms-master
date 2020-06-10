@@ -509,10 +509,9 @@ const processActions = {
     },
     __getGames : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.findAppById(params.app, "get_game");
+        let res = await GamesRepository.prototype.findGameByApp(params.app);
         if(!res){throwError('APP_NOT_EXISTENT')}
-
-        return res.games;
+        return res;
     },
     __editGameTableLimit : async (params) => {
 

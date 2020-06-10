@@ -52,6 +52,16 @@ class GamesRepository extends MongoComponent{
         });
     }
 
+    findGameByApp = async(app) => {
+        return new Promise((resolve, reject) => {
+            GamesRepository.prototype.schema.model.find({app})
+            .exec( (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     editTableLimit({id, tableLimit, wallet}){
         return new Promise( (resolve,reject) => {
             GamesRepository.prototype.schema.model.updateOne(
