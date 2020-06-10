@@ -52,7 +52,7 @@ class GamesRepository extends MongoComponent{
         });
     }
 
-    findGameByApp = async(app) => {
+    findGameByApp(app) {
         return new Promise((resolve, reject) => {
             GamesRepository.prototype.schema.model.find({app})
             .exec( (err, item) => {
