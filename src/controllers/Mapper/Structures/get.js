@@ -19,11 +19,6 @@ const get_object = (object) => {
         ...currencies_object(object),
         "users": object.users ? object.users.map(user => {
             return ({
-                "bets": user.bets ? user.bets.map(bet_id => {
-                    return ({
-                        "_id": bet_id
-                    })
-                }) : user.bets,
                 "deposits": user.deposits ? user.deposits.map(deposit_id => {
                     return ({
                         "_id": deposit_id
@@ -197,7 +192,13 @@ const get_object = (object) => {
         "description": object.description,
         "hosting_id": object.hosting_id,
         "web_url": object.web_url,
-        "addOn": object.addOn,
+        "addOn": {...object.addOn,
+            jackpot: {
+                ...object.addOn.jackpot,
+                bets: [],
+                resultSpace: []
+            }
+        },
         "__v": object.__v,
     }
 }
