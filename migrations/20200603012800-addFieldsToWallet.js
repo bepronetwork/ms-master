@@ -29,7 +29,7 @@ module.exports = {
         break;
       }
       let processIndex = wallets.length;
-      let processObj = new Progress(processIndex, "ADD_MULTIPLIER_TO_DEPOSIT_BONUS");
+      let processObj = new Progress(processIndex, "ADD_FIELDS_TO_WALLET");
       for (let wallet of wallets) {
         processObj.setProcess(processIndex);
         processIndex--;
