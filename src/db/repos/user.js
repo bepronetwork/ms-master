@@ -267,7 +267,7 @@ class UsersRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find({app_id: app})
             .limit(size > 200 ? 200 : size)
-            .skip(!skip ? 0 : skip)
+            .skip(offset)
             .populate(populate_users)
             .exec( (err, docs) => {
                 if(err){reject(err)}
