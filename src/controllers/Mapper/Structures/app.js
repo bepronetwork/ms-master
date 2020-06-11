@@ -208,6 +208,7 @@ const app_object = (object) => {
                             "_id": support_link._id,
                             "name": support_link.name,
                             "href": support_link.href,
+                            "image_url": support_link.image_url,
                         })
                     }),
                     "communityLinks": !object.app.customization.footer.communityLinks ? [] : object.app.customization.footer.communityLinks.map(community_link => {
@@ -215,6 +216,7 @@ const app_object = (object) => {
                             "_id": community_link._id,
                             "name": community_link.name,
                             "href": community_link.href,
+                            "image_url": community_link.image_url,
                         })
                     })
                 },
