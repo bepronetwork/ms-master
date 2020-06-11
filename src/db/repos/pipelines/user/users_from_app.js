@@ -12,7 +12,7 @@ export function usersFromAppFiltered({size, offset, app, user}){
 
     if(size != 0){
         limit = {
-            '$limit': size
+            '$limit': size > 200 ? 200 : size
         };
     };
 
