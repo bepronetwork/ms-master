@@ -266,9 +266,8 @@ class UsersRepository extends MongoComponent{
     async getAllFiltered({size=30, offset=0, app, user}){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.find({app_id: app})
-            .sort({'register_timestamp': -1})
             .limit(size > 200 ? 200 : size)
-            .skip(skip)
+            .skip(!skip ? 0 : skip)
             .populate(populate_users)
             .exec( (err, docs) => {
                 if(err){reject(err)}
