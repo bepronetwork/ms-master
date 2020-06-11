@@ -17,41 +17,6 @@ const get_object = (object) => {
         }) : object.listAdmins,
         "services": object.services ? object.services.map(service => service) : object.services,
         ...currencies_object(object),
-        "users": object.users ? object.users.map(user => {
-            return ({
-                "deposits": user.deposits ? user.deposits.map(deposit_id => {
-                    return ({
-                        "_id": deposit_id
-                    })
-                }) : user.deposits,
-                "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
-                    return ({
-                        "_id": withdraw_id
-                    })
-                }) : user.withdraws,
-                "wallet": user.wallet ? user.wallet.map(wallet_id => {
-                    return ({
-                        "_id": wallet_id
-                    })
-                }) : user.wallet,
-                "isWithdrawing": user.isWithdrawing,
-                "email_confirmed": user.email_confirmed,
-                "_id": user._id,
-                "username": user.username,
-                "full_name": user.full_name,
-                "affiliate": user.affiliate,
-                "name": user.name,
-                "register_timestamp": user.register_timestamp,
-                "nationality": user.nationality,
-                "age": user.age,
-                "security": user.security,
-                "email": user.email,
-                "app_id": user.app_id,
-                "external_user": user.external_user,
-                "external_id": user.external_id,
-                "affiliateLink": user.affiliateLink
-            })
-        }) : object.users,
         "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
         ...wallet_object(object),
         "deposits": object.deposits ? object.deposits.map(deposit => {

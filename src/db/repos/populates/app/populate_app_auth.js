@@ -45,11 +45,6 @@ let populate_app_auth = [
         populate : populate_wallet_all
     },
     {
-        path : 'users',
-        model : 'User',
-        select : { '__v': 0}
-    },
-    {
         path : 'games',
         model : 'Game',
         select : { '__v': 0}
