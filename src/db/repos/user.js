@@ -8,7 +8,7 @@ import {
     pipeline_all_users_balance,
     pipeline_my_bets
 } from './pipelines/user';
-import { populate_user, populate_user_simple, populate_user_wallet } from './populates';
+import { populate_user, populate_user_simple, populate_user_wallet, populate_users } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
@@ -265,12 +265,21 @@ class UsersRepository extends MongoComponent{
 
     async getAllFiltered({size=30, offset=0, app, user}){
         return new Promise( (resolve,reject) => {
-            UsersRepository.prototype.schema.model
-            .aggregate(usersFromAppFiltered({size, offset, app, user}))
+            UsersRepository.prototype.schema.model.find({app_id: app})
+            .sort({'register_timestamp': -1})
+            .limit(size > 200 ? 200 : size)
+            .skip(skip)
+            .populate(populate_users)
             .exec( (err, docs) => {
                 if(err){reject(err)}
                 resolve(docs);
             })
+            // UsersRepository.prototype.schema.model
+            // .aggregate(usersFromAppFiltered({size, offset, app, user}))
+            // .exec( (err, docs) => {
+            //     if(err){reject(err)}
+            //     resolve(docs);
+            // })
         })
     }
 
