@@ -47,7 +47,14 @@ let populate_app_auth = [
     {
         path : 'games',
         model : 'Game',
-        select : { '__v': 0}
+        select : { '__v': 0},
+        populate : [
+            {
+                path : 'resultSpace',
+                model : 'ResultSpace',
+                select : { '__v': 0}
+            }
+        ]
     },
     {
         path : 'withdraws',
