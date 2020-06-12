@@ -4,31 +4,31 @@ export function usersFromAppFiltered({size, offset, app, user}){
     var limit, skip, user;
 
     if(offset != 0){
-        skip = {
+        skip = [{
             '$skip': offset
-        };
+        }];
     }
 
     if(size != 0){
-        limit = {
+        limit = [{
             '$limit': size > 100 ? 100 : size
-        };
+        }];
     };
 
 
     if(user){
-        user = {
+        user = [{
             '$match': {
                 _id : mongoose.Types.ObjectId(user)
             }
-        };
+        }];
     }
 
-    let sort = {
+    let sort = [{
         '$sort': {
             'register_timestamp': -1
         }
-    }
+    }]
     
     let populate = [
         {
@@ -88,8 +88,8 @@ export function usersFromAppFiltered({size, offset, app, user}){
     populate.push(limit);
     populate.push(skip);
     populate.push(sort);
-    populate = populate.concat(populate_end);
-    populate = populate.filter(el => el != undefined);
+    populate.push(populate_end);
+    // populate = populate.filter(el => el != undefined);
     return populate;
 }
 
