@@ -13,8 +13,10 @@ import populate_user_wallet from './user/populate_user_wallet';
 import populate_app_auth from './app/populate_app_auth';
 import populate_app_game from './app/populate_app_game';
 import populate_users from './populate_users';
+import populate_footer from "./customization/footer";
 
 export {
+    populate_footer,
     populate_affiliateLink,
     populate_user_simple,
     populate_app_address,
