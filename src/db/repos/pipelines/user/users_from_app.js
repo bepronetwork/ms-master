@@ -4,7 +4,6 @@ export function usersFromAppFiltered({size, offset, app, user}){
     var limit, skip, user;
 
     if(offset != 0){
-        size += offset;
         skip = {
             '$skip': offset
         };
