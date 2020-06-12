@@ -9,6 +9,7 @@ const games_object = (object) => {
                         "_id": result_id
                     })
                 }) : game.result,
+                "resultSpace": game.resultSpace,
                 "isClosed": game.isClosed,
                 "maxBet": game.maxBet,
                 "background_url": game.background_url,
