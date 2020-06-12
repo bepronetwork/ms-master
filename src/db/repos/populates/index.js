@@ -10,6 +10,9 @@ import populate_app_wallet from './app/populate_app_wallet';
 import populate_user_simple from './user/populate_user_simple';
 import populate_app_address from './app/populate_app_address';
 import populate_user_wallet from './user/populate_user_wallet';
+import populate_app_auth from './app/populate_app_auth';
+import populate_app_game from './app/populate_app_game';
+import populate_users from './populate_users';
 import populate_footer from "./customization/footer";
 
 export {
@@ -25,5 +28,8 @@ export {
     populate_user,
     populate_admin,
     populate_app_wallet,
-    populate_jackpot
+    populate_jackpot,
+    populate_app_auth,
+    populate_app_game,
+    populate_users
 }

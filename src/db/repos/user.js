@@ -8,7 +8,7 @@ import {
     pipeline_all_users_balance,
     pipeline_my_bets
 } from './pipelines/user';
-import { populate_user, populate_user_simple, populate_user_wallet } from './populates';
+import { populate_user, populate_user_simple, populate_user_wallet, populate_users } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";

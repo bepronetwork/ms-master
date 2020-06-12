@@ -117,7 +117,7 @@ const processActions = {
 		return normalized;
     },
     __getAuth : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "get_app_auth");
         let addOns  = await AddOnsEcoRepository.prototype.getAll();
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
@@ -509,10 +509,9 @@ const processActions = {
     },
     __getGames : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.findAppById(params.app, "simple");
+        let res = await GamesRepository.prototype.findGameByApp(params.app);
         if(!res){throwError('APP_NOT_EXISTENT')}
-
-        return res.games;
+        return res;
     },
     __editGameTableLimit : async (params) => {
 
