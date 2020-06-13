@@ -315,6 +315,9 @@ const progressActions = {
             ...params,
             betAmount : params.totalBetAmount
         });
+        console.log(isWon);
+        console.log(virtual);
+        console.log(amountBonus);
 
         // Logic for when the APP is not virtual
         if(isWon && !virtual){
@@ -322,6 +325,7 @@ const progressActions = {
                 await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, user_delta);
                 await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
             }else{
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                 await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
                 await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
             }
