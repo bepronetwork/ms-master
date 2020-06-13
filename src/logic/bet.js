@@ -229,6 +229,7 @@ const processActions = {
             const tableLimit = (game.wallets.find( w => w.wallet.toString() == appWallet._id.toString() )).tableLimit;
 
             let normalized = {
+                virtual: app.virtual,
                 jackpotAmount,
                 user_in_app,
                 isUserWithdrawingAPI,
@@ -291,7 +292,7 @@ const processActions = {
 const progressActions = {
     __auto : async (params) => {
 
-        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus } = params;
+        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual } = params;
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
         let dependentObjects = Object.keys(result).map( async key =>
@@ -314,18 +315,17 @@ const progressActions = {
             ...params,
             betAmount : params.totalBetAmount
         });
-        console.log(user_delta);
 
-        if(isWon){
+        // Logic for when the APP is not virtual
+        if(isWon && !virtual){
             if(amountBonus>0){
-                console.log(user_delta);
                 await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, user_delta);
                 await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
             }else{
                 await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
                 await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
             }
-        } else {
+        } else if(!isWon && !virtual) {
             if(amountBonus>0){
                 await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
             }
@@ -334,7 +334,20 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, ( params.totalBetAmount >= playBalance ? -playBalance : -params.totalBetAmount));
         }
 
-        if( incrementBetAmountForBonus >= minBetAmountForBonusUnlocked && amountBonus > 0 ) {
+        // Logic for when the APP is virtual
+        if(virtual) {
+            /* Update PlayBalance */
+            PerformanceBet.start({id : 'wallet1'});
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
+            PerformanceBet.end({id : 'wallet1'});
+            /* Update App PlayBalance */
+            PerformanceBet.start({id : 'wallet2'});
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
+            PerformanceBet.end({id : 'wallet2'});
+        }
+
+        // if the increment of the bonus bet is greater than the minimum for the bonus to be unlocked, and the bonus is greater than then: Then the bonus owner is sent to playbalance.
+        if( incrementBetAmountForBonus >= minBetAmountForBonusUnlocked && amountBonus > 0 && !virtual) {
             await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, -(user_delta+amountBonus));
             await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, -(params.totalBetAmount+incrementBetAmountForBonus));
             await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked));
