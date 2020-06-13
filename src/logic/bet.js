@@ -330,7 +330,7 @@ const progressActions = {
                 await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
             }
             await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, params.totalBetAmount >= playBalance ? (playBalance-params.totalBetAmount) : 0);
-            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (params.totalBetAmount >= playBalance ? playBalance : params.totalBetAmount));
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (params.totalBetAmount >= playBalance ? playBalance : app_delta));
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, ( params.totalBetAmount >= playBalance ? -playBalance : -params.totalBetAmount));
         }
 
