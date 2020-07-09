@@ -164,16 +164,31 @@ const processActions = {
        return normalized;
     },
     __appGetUsersBets : async (params) => {
-        let res = await AppRepository.prototype.getAppBets({
-            _id : params.app,
-            offset: params.offset,
-            size : params.size,
-            user: params.user == undefined ? {} : {user : params.user},
-            bet: params.bet == undefined ? {} : {_id : params.bet},
-            currency: params.currency == undefined ? {} : {currency : params.currency},
-            game: params.game == undefined ? {} : {game : params.game},
-            isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot}
-        });
+        var res = ""
+        if(!params.username){
+            res = await AppRepository.prototype.getAppBets({
+                _id : params.app,
+                offset: params.offset,
+                size : params.size,
+                user: params.user == undefined ? {} : {user : params.user},
+                bet: params.bet == undefined ? {} : {_id : params.bet},
+                currency: params.currency == undefined ? {} : {currency : params.currency},
+                game: params.game == undefined ? {} : {game : params.game},
+                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot}
+            });
+        } else {
+            res = await AppRepository.prototype.getAppBetsPipeline({
+                app : params.app,
+                offset: params.offset,
+                size : params.size,
+                user: params.user,
+                _id: params.bet,
+                currency: params.currency,
+                game: params.game,
+                isJackpot: params.isJackpot,
+                username: params.username
+            });
+        }
 		return res;
     },
     __getBetInfo : async (params) => {

@@ -10,7 +10,8 @@ import {
     pipeline_last_bets,
     pipeline_biggest_bet_winners,
     pipeline_popular_numbers,
-    pipeline_biggest_user_winners
+    pipeline_biggest_user_winners,
+    pipeline_get_users_bets
 } from './pipelines/app';
 
 
@@ -262,6 +263,28 @@ class AppRepository extends MongoComponent{
                         app : _id,
                         ...user,
                         ...bet,
+                        ...game,
+                        ...currency
+                    }).countDocuments().exec();
+                    if(err){reject(err)}
+                    resolve({list: item, totalCount });
+                })
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username }){
+        try{
+            return new Promise( (resolve, reject) => {
+                BetRepository.prototype.schema.model
+                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username}))
+                .exec( async (err, item) => {
+                    const totalCount = await BetRepository.prototype.schema.model.find({
+                        app,
+                        ...user,
+                        ..._id,
                         ...game,
                         ...currency
                     }).countDocuments().exec();
