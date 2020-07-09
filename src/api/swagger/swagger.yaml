@@ -3984,6 +3984,12 @@ definitions:
         example: true
         description: |
           Is Jackpot
+      username :
+        type : string
+        format: name
+        example: "teste"
+        description: |
+          Username of User
       size:
         type : number
         example: 15
