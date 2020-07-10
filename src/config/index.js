@@ -43,6 +43,8 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
+export const MS_ESPORTS_URL = process.env.MS_ESPORTS_URL;
+
 export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
 
 export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
