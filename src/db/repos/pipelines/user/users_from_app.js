@@ -39,7 +39,7 @@ export function usersFromAppFiltered({ size, offset, app, user, username, email 
     if (email) {
         email = {
             '$match': {
-                'username': {
+                'email': {
                     '$regex': email,
                     '$options': 'i'
                 }
