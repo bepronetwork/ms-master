@@ -263,10 +263,10 @@ class UsersRepository extends MongoComponent{
         })
     }
 
-    async getAllFiltered({size=30, offset=0, app, user}){
+    async getAllFiltered({size=30, offset=0, app, user, username, email}){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model
-            .aggregate(usersFromAppFiltered({size, offset, app, user}))
+            .aggregate(usersFromAppFiltered({size, offset, app, user, username, email}))
             .exec( (err, docs) => {
                 if(err){reject(err)}
                 resolve(docs);

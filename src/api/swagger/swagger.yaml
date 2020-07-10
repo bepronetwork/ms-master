@@ -3854,6 +3854,18 @@ definitions:
           User Id
       offset :
         type : number
+      username :
+        type : string
+        format : name
+        example : "crawford" 
+        description: |
+          Username of User
+      email :
+        type : string
+        format : name
+        example : "crawford@test.com" 
+        description: |
+          Email of User
   UserBetsRequest : 
     type: object
     required:
@@ -3972,6 +3984,12 @@ definitions:
         example: true
         description: |
           Is Jackpot
+      username :
+        type : string
+        format: name
+        example: "teste"
+        description: |
+          Username of User
       size:
         type : number
         example: 15
