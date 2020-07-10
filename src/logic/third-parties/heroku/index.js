@@ -1,5 +1,5 @@
 import Heroku  from 'heroku-client';
-import { HEROKU_API_TOKEN, HEROKU_API_BEARER_TOKEN, INFURA_KEY, MS_MASTER_URL, MS_WITHDRAW_URL, ETH_NET_NAME, FRONTEND_BRANCH, ENV, GITHUB_LAYOUT_REPO } from '../../../config';
+import { HEROKU_API_TOKEN, HEROKU_API_BEARER_TOKEN, INFURA_KEY, MS_MASTER_URL, MS_WITHDRAW_URL, ETH_NET_NAME, FRONTEND_BRANCH, ENV, GITHUB_LAYOUT_REPO, MS_ESPORTS_URL } from '../../../config';
 import { throwError } from '../../../controllers/Errors/ErrorManager';
 import axios from 'axios';
 import delay from 'delay';
@@ -66,6 +66,7 @@ class HerokuClient{
                     "NODE_PATH" : 'src/',
                     "REACT_APP_API_MASTER" : MS_MASTER_URL,
                     "REACT_APP_API_WITHDRAW" : MS_WITHDRAW_URL,
+                    "REACT_API_ESPORTS" : MS_ESPORTS_URL,
                     "REACT_APP_APP_ID" : id,
                     "REACT_APP_ETH_NETWORK" : ETH_NET_NAME,
                     "REACT_APP_INFURA_API" : `https://${ETH_NET_NAME}.infura.io/v3/${INFURA_KEY}`,

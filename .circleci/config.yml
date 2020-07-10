@@ -32,6 +32,7 @@ jobs: # a collection of steps
             echo 'export HEROKU_API_BEARER_TOKEN=b39c70fe-d147-468f-93ac-73f70ed7c8ee' >> $BASH_ENV
             echo 'export MS_MASTER_URL=https://sandbox-ms-master.betprotocol.com' >> $BASH_ENV
             echo 'export MS_WITHDRAW_URL=https://sandbox-ms-withdraw.betprotocol.com' >> $BASH_ENV
+            echo 'export MS_ESPORTS_URL=https://ms-esports-dev.herokuapp.com' >> $BASH_ENV
             echo 'export GITHUB_LAYOUT_REPO=layout-1' >> $BASH_ENV 
             echo 'export BITGO_ENTERPRISE_ID=5e2ee3674141b74006f37e0b0fdf6813' >> $BASH_ENV                 
             echo 'export BITGO_KEY=v2x9c8c188179741a91e4778ae69e76116a2ef3980dacb035737c0feb55b76367c1' >> $BASH_ENV                 
