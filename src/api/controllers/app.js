@@ -160,6 +160,21 @@ async function editVirtualCurrency(req, res) {
         MiddlewareSingleton.respondError(res, err);
     }
 }
+
+async function modifyBalance(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.modifyBalance();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 // JSON WebToken Security Functions
 async function addAddonBalance(req, res) {
     try {
@@ -873,5 +888,6 @@ export {
     editRestrictedCountries,
     getLogs,
     getBetInfo,
-    editBackground
+    editBackground,
+    modifyBalance
 };

@@ -16,9 +16,6 @@ let outputs = {
         return object.map(object => {
             return ({
                 "_id": object._id,
-                ...result_space_object(object),
-                ...result_object(object),
-                ...bets_object(object),
                 "isClosed": object.isClosed,
                 "maxBet": object.maxBet,
                 "background_url": object.background_url,

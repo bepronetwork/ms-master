@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 export function usersFromAppFiltered({ size, offset, app, user, username, email }) {
     var limit, skip, user;
 
-    if (offset != 0) {
-        size += offset;
+    if(offset != 0){
         skip = {
             '$skip': offset
         };
@@ -12,7 +11,7 @@ export function usersFromAppFiltered({ size, offset, app, user, username, email 
 
     if (size != 0) {
         limit = {
-            '$limit': size
+            '$limit': size > 100 ? 100 : size
         };
     };
 
@@ -110,8 +109,8 @@ export function usersFromAppFiltered({ size, offset, app, user, username, email 
     populate.push(user);
     populate.push(username);
     populate.push(email);
-    populate.push(limit);
     populate.push(skip);
+    populate.push(limit);
     populate.push(sort);
     populate = populate.concat(populate_end);
     populate = populate.filter(el => el != undefined);

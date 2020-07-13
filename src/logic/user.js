@@ -345,7 +345,6 @@ const processActions = {
     __updateWallet: async (params) => {
         try {
             var { currency, id, wBT } = params;
-
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
@@ -363,19 +362,6 @@ const processActions = {
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = ((state == 'confirmed') && (type == 'receive'));
 
-            /* Verify AddOn Deposit Bonus */
-            let depositBonusValue = 0;
-            let hasBonus = false;
-            if(addOn && addOn.depositBonus && addOn.depositBonus.isDepositBonus){
-                hasBonus = addOn.depositBonus.isDepositBonus;
-                let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
-                let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
-                let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
-
-                if (amount >= min_deposit && amount <= max_deposit){
-                    depositBonusValue = (amount * (percentage/100));
-                } 
-            }
             /* Get User Info */
             let user = await UsersRepository.prototype.findUserById(label);
             if (!user) { throwError('USER_NOT_EXISTENT') }
@@ -389,12 +375,30 @@ const processActions = {
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x.toString() == user._id.toString())) > -1);
 
+            let depositBonusValue = 0;
+            let minBetAmountForBonusUnlocked = 0;
+            let hasBonus = false;
+
             /* Verify it is a virtual casino purchase */
             if(app.virtual == true){
                 isPurchase = true;
                 virtualWallet = user.wallet.find( w => w.currency.virtual == true);
                 appVirtualWallet = app.wallet.find( w => w.currency.virtual == true);
-                if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };                
+                if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            } else { /* Verify it not is a virtual casino purchase */
+                /* Verify AddOn Deposit Bonus */
+                if(addOn && addOn.depositBonus && addOn.depositBonus.isDepositBonus){
+                    hasBonus = addOn.depositBonus.isDepositBonus;
+                    let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    console.log(addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()))
+                    let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
+                    if (amount >= min_deposit && amount <= max_deposit){
+                        depositBonusValue = (amount * (percentage/100));
+                        minBetAmountForBonusUnlocked = (depositBonusValue*multiplierNeeded);
+                    }
+                }
             }
 
             let res = {
@@ -417,7 +421,8 @@ const processActions = {
                 isValid,
                 fee,
                 depositBonusValue,
-                hasBonus
+                hasBonus,
+                minBetAmountForBonusUnlocked
             }
 
             return res;
@@ -624,8 +629,9 @@ const progressActions = {
 
     },
     __updateWallet: async (params) => {
+
         try {
-            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue, hasBonus } = params;
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue, hasBonus, minBetAmountForBonusUnlocked } = params;
             var message;
 
             /* Condition to set value of deposit amount and fee */
@@ -633,7 +639,7 @@ const progressActions = {
                 fee = amount;
                 amount = 0;
             }else{
-                amount = (amount+depositBonusValue) - fee;
+                amount = amount - fee;
             }
             
             const options = {
@@ -666,13 +672,15 @@ const progressActions = {
 
             if(isPurchase){
                 /* User Purchase - Virtual */
-                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
                 await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
                 message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${amount} ${wallet.currency.ticker}`
             }else{
+                /* Add bonus amount */
+                await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, depositBonusValue);
+                await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, minBetAmountForBonusUnlocked);
                 /* User Deposit - Real */
                 await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
-                await WalletsRepository.prototype.updatePlayBalance(wallet, amount);
+                await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
                 message = `Deposited ${amount} ${wallet.currency.ticker} in your account`
             }
             /* Add Deposit to user */

@@ -48,7 +48,8 @@ context('Deposit Bonus', async () => {
                 isDepositBonus: true,
                 min_deposit: 0.001,
                 percentage: 10,
-                max_deposit: 10
+                max_deposit: 10,
+                multiplier: 10
             }
         }, admin.security.bearerToken, { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
@@ -65,7 +66,8 @@ context('Deposit Bonus', async () => {
                 isDepositBonus: true,
                 min_deposit: 0.001,
                 percentage: 0,
-                max_deposit: 10
+                max_deposit: 10,
+                multiplier: 10
             }
         }, admin.security.bearerToken, { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
@@ -82,7 +84,8 @@ context('Deposit Bonus', async () => {
                 isDepositBonus: true,
                 min_deposit: 1,
                 percentage: 10,
-                max_deposit: 0.5
+                max_deposit: 0.5,
+                multiplier: 10
             }
         }, admin.security.bearerToken, { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
@@ -99,7 +102,8 @@ context('Deposit Bonus', async () => {
                 isDepositBonus: true,
                 min_deposit: 0,
                 percentage: 10,
-                max_deposit: 10
+                max_deposit: 10,
+                multiplier: 10
             }
         }, admin.security.bearerToken, { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
@@ -116,7 +120,8 @@ context('Deposit Bonus', async () => {
                 isDepositBonus: true,
                 min_deposit: 0.001,
                 percentage: 10,
-                max_deposit: 10
+                max_deposit: 10,
+                multiplier: 10
             }
         }, admin.security.bearerToken, { id: "31093xjewbh11" });
         expect(detectValidationErrors(res)).to.be.equal(false);
@@ -133,7 +138,8 @@ context('Deposit Bonus', async () => {
                 isDepositBonus: true,
                 min_deposit: 0.001,
                 percentage: 10,
-                max_deposit: 10
+                max_deposit: 10,
+                multiplier: 10
             }
         }, "194832rfdhcedvcgvaswhjqbwv23tehju12wsgwebhcdshy2gsbysndjkbcyeubywusab2", { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);

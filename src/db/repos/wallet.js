@@ -139,6 +139,20 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updatePlayBalanceNotInc(id, {newBalance}){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: id},
+                { $set: {playBalance : newBalance}},
+                { 'new': true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePlayBalance(id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
@@ -150,7 +164,43 @@ class WalletsRepository extends MongoComponent{
             });
         });
     }
-  
+
+    updatePlayBalanceBonus(id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $inc : { bonusAmount : parseFloat(amount) } } ,{ new: true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateIncrementBetAmountForBonus(id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $inc : { incrementBetAmountForBonus : parseFloat(amount) } } ,{ new: true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateMinBetAmountForBonusUnlocked(id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $inc : { minBetAmountForBonusUnlocked : parseFloat(amount) } } ,{ new: true }
+            )
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     getAll = async() => {
         return new Promise( (resolve,reject) => {
             WalletsRepository.prototype.schema.model.find().lean().populate()
@@ -167,6 +217,22 @@ class WalletsRepository extends MongoComponent{
                 { _id: wallet_id, "depositAddresses" : {$nin : [address] } }, 
                 { $push: { "depositAddresses" : address } },
                 { 'new': true })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
+    }
+
+    updateBonusAndAmount({wallet_id, playBalance, bonusAmount}){        
+        return new Promise( (resolve,reject) => {
+            WalletsRepository.prototype.schema.model.findOneAndUpdate(
+                { _id: wallet_id}, 
+                { $set: { 
+                    "playBalance" : playBalance,
+                    "bonusAmount" : bonusAmount
+                } })
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);

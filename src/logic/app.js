@@ -117,7 +117,7 @@ const processActions = {
 		return normalized;
     },
     __getAuth : async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "get_app_auth");
         let addOns  = await AddOnsEcoRepository.prototype.getAll();
         if(!app){throwError('APP_NOT_EXISTENT')}
         // Get App by Appname
@@ -126,6 +126,19 @@ const processActions = {
             storeAddOn: addOns
         }
 		return normalized;
+    },
+    __modifyBalance : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
+            if(!app){throwError('APP_NOT_EXISTENT');}
+            let user = await UsersRepository.prototype.findUserById(params.user, "simple");
+            if(new String(user.app_id).toString() != new String(app._id).toString()){throwError('USER_NOT_EXISTENT_IN_APP');}
+            let wallet = user.wallet.find( w => new String(w._id).toString() == new String(params.wallet).toString());
+            if(!wallet){throwError('CURRENCY_NOT_EXISTENT');}
+            return params;
+        } catch(err) {
+            throw err;
+        }
     },
     __getLogs : async (params) => {
         try {
@@ -395,10 +408,18 @@ const processActions = {
             }
         }));
 
+        let multiplier = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                multiple      : 0
+            }
+        }));
+
         let res = {
             min_deposit,
             percentage,
             max_deposit,
+            multiplier,
             app
         }
 		return res;
@@ -503,10 +524,9 @@ const processActions = {
     },
     __getGames : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.findAppById(params.app, "simple");
+        let res = await GamesRepository.prototype.findGameByApp(params.app);
         if(!res){throwError('APP_NOT_EXISTENT')}
-
-        return res.games;
+        return res;
     },
     __editGameTableLimit : async (params) => {
 
@@ -761,6 +781,10 @@ const progressActions = {
     __appGetUsersBets : async (params) => {
         return params;
     },
+    __modifyBalance : async (params) => {
+        await WalletsRepository.prototype.updatePlayBalanceNotInc(params.wallet, {newBalance : params.newBalance});
+        return true;
+    },
     __getLogs : async (params) => {
         return params;
     },
@@ -988,8 +1012,8 @@ const progressActions = {
         return res;
     },
     __addAddonDepositBonus : async (params) => {
-        const { min_deposit, percentage, max_deposit, app } = params;
-        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit});
+        const { min_deposit, percentage, max_deposit, multiplier, app } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit, multiplier});
         const depositBonusResult = await depositBonus.register();
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
 		return depositBonusResult;
@@ -1263,20 +1287,43 @@ const progressActions = {
     __editFooter : async (params) => {
         let { app, communityLinks, supportLinks } = params;
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
-            return (await new Link(c).register())._doc._id
+            var imageCommunity = ''
+            if(c.image_url.includes("https")){
+                /* If it is a link already */
+                imageCommunity = c.image_url;
+            } else {
+                imageCommunity = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
+            }
+            return (await new Link({
+                href: c.href,
+                name: c.name,
+                image_url: imageCommunity
+            }).register())._doc._id
         }));
 
         let supportLinkIDs = await Promise.all(supportLinks.map( async c => {
-            return (await new Link(c).register())._doc._id
+            var imageSupport = '';
+            if(c.image_url.includes("https")){
+                /* If it is a link already */
+                imageSupport = c.image_url;
+            } else {
+                imageSupport = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
+            }
+            return (await new Link({
+                href: c.href,
+                name: c.name,
+                image_url: imageSupport
+            }).register())._doc._id
         }));
 
-        await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
+        let footer = await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,
             supportLinks : supportLinkIDs,
         })
 
+        let result = await FooterRepository.prototype.findById(footer._id)
         // Save info on Customization Part
-        return params;
+        return result;
     },
     __editTopIcon : async (params) => {
         let { app, topIcon } = params;
@@ -1553,6 +1600,9 @@ class AppLogic extends LogicComponent{
                 case 'EditBackground' : {
 					return await library.process.__editBackground(params); break;
                 };
+                case 'ModifyBalance' : {
+					return await library.process.__modifyBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1715,6 +1765,9 @@ class AppLogic extends LogicComponent{
                 }
                 case 'EditBackground': {
                     return await library.progress.__editBackground(params); break;
+                }
+                case 'ModifyBalance': {
+                    return await library.progress.__modifyBalance(params); break;
                 }
 			}
 		}catch(error){

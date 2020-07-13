@@ -15,7 +15,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address } from './populates';
+import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -330,6 +330,8 @@ class AppRepository extends MongoComponent{
     findAppById(_id, populate_type=populate_app_all){
         let type = populate_type;
         switch(populate_type){
+            case 'get_game' : { populate_type = populate_app_game; break; }
+            case 'get_app_auth' : { populate_type = populate_app_auth; break; }
             case 'affiliates' : { populate_type = populate_app_affiliates; break; }
             case 'simple' : { populate_type = populate_app_simple; break; }
             case 'wallet' : { populate_type = populate_app_wallet; break; }

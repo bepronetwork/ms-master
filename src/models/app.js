@@ -93,6 +93,23 @@ class App extends ModelComponent {
         }
     }
 
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async modifyBalance() {
+         // output Boolean
+        try {
+            let res = await this.process('ModifyBalance');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
     /**
      * @param {String} 
      * @return {bool || Exception}  

@@ -17,7 +17,7 @@ export async function digestBetResult({newBalance, res, previousBalance, edge, p
     
     if(isWon){
         /* Verify if WinAmount is ight Value is right */
-        expect(winAmount).to.be.greaterThan(0)
+        // expect(winAmount).to.be.greaterThan(0)
         // Confirm New User Balance is equal to previous plus delta
         expect(Numbers.toFormatBet(newBalance)).to.be.equal(Numbers.toFormatBet(previousBalance + user_delta));
     }else{
@@ -34,6 +34,143 @@ export async function digestBetResult({newBalance, res, previousBalance, edge, p
     expect(Numbers.toFormatBet(newBalance)).to.be.equal(Numbers.toFormatBet(previousBalance+user_delta));
     // Confim balance of App to be the diff
     expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp+app_delta));
+
+    return true;
+}
+
+export async function digestBetBonusResult({newBalance, res, previousBalance, previousBalanceApp, newBalanceApp, previousBonusBalance, newBonusBalance}){
+    const { winAmount, betAmount, isWon, user_delta, app_delta } = res.data.message;
+    
+    if(isWon && previousBonusBalance == 0 && newBonusBalance == 0 && (previousBalance == betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.greaterThan(0)
+        /* Verify if AppDelta Value is Negative */
+        expect(app_delta).to.be.lessThan(0)
+        /* Verify if UserDelta Value is Positive */
+        expect(user_delta).to.be.greaterThan(0)
+        /* Verify if betAmount Value is equal to winAmount minus delta */
+        expect(betAmount).to.be.equal(winAmount - user_delta)
+        // Confirm New User Balance is equal to previous plus delta
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(Numbers.toFormatBet(previousBalance + user_delta));
+        // Confirm New App Balance is equal to previous plus delta. Ps.: AppDelta is a negative number
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp + app_delta));
+    }
+    else if(!isWon && previousBonusBalance == 0 && newBonusBalance == 0 && (previousBalance == betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.equal(0)
+        /* Verify if AppDelta Value is Positive */
+        expect(app_delta).to.be.greaterThan(0)
+        /* Verify if UserDelta Value is Negative */
+        expect(user_delta).to.be.lessThan(0)
+        /* Verify if betAmount Value is equal to Appdelta */
+        expect(betAmount).to.be.equal(app_delta)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(Numbers.toFormatBet(previousBalance + user_delta));
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp + app_delta));
+    }
+
+    else if(isWon && ((previousBalance + previousBonusBalance)==betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.greaterThan(0)
+        /* Verify if AppDelta Value is Negative */
+        expect(app_delta).to.be.lessThan(0)
+        /* Verify if UserDelta Value is Positive */
+        expect(user_delta).to.be.greaterThan(0)
+        /* Verify if betAmount Value is equal to Previous Balance plus Previous Bonus Balance  */
+        expect(betAmount).to.be.equal(previousBalance+previousBonusBalance)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(Numbers.toFormatBet(previousBalance));
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp));
+        // Confirm New Bonus Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBonusBalance)).to.be.equal(Numbers.toFormatBet(previousBonusBalance+user_delta));
+    }
+
+    else if(!isWon && ((previousBalance + previousBonusBalance)==betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.equal(0)
+        /* Verify if AppDelta Value is Positive */
+        expect(app_delta).to.be.greaterThan(0)
+        /* Verify if UserDelta Value is Negative */
+        expect(user_delta).to.be.lessThan(0)
+        /* Verify if betAmount Value is equal to Previous Balance plus Previous Bonus Balance */
+        expect(betAmount).to.be.equal(previousBalance+previousBonusBalance)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(0);
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp+app_delta));
+        // Confirm New Bonus Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBonusBalance)).to.be.equal(0);
+    }
+
+    else if(isWon && (previousBalance > previousBonusBalance) && ((previousBalance + previousBonusBalance)==betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.greaterThan(0)
+        /* Verify if AppDelta Value is Positive */
+        expect(app_delta).to.be.lessThan(0)
+        /* Verify if UserDelta Value is Negative */
+        expect(user_delta).to.be.greaterThan(0)
+        /* Verify if betAmount Value is equal to Previous Balance plus Previous Bonus Balance */
+        expect(betAmount).to.be.equal(previousBalance+previousBonusBalance)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(previousBalance);
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp));
+        // Confirm New Bonus Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBonusBalance)).to.be.equal(previousBonusBalance + user_delta);
+    }
+
+    else if(isWon && (previousBalance < previousBonusBalance) && ((previousBalance + previousBonusBalance)==betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.greaterThan(0)
+        /* Verify if AppDelta Value is Positive */
+        expect(app_delta).to.be.lessThan(0)
+        /* Verify if UserDelta Value is Negative */
+        expect(user_delta).to.be.greaterThan(0)
+        /* Verify if betAmount Value is equal to Previous Balance plus Previous Bonus Balance */
+        expect(betAmount).to.be.equal(previousBalance+previousBonusBalance)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(previousBalance);
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp));
+        // Confirm New Bonus Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBonusBalance)).to.be.equal(previousBonusBalance + user_delta);
+    }
+
+    else if(!isWon && (previousBalance > previousBonusBalance) && ((previousBalance + previousBonusBalance)==betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.equal(0)
+        /* Verify if AppDelta Value is Positive */
+        expect(app_delta).to.be.greaterThan(0)
+        /* Verify if UserDelta Value is Negative */
+        expect(user_delta).to.be.lessThan(0)
+        /* Verify if betAmount Value is equal to Previous Balance plus Previous Bonus Balance */
+        expect(betAmount).to.be.equal(previousBalance+previousBonusBalance)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(0);
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp+app_delta));
+        // Confirm New Bonus Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBonusBalance)).to.be.equal(0);
+    }
+
+    else if(!isWon && (previousBalance < previousBonusBalance) && ((previousBalance + previousBonusBalance)==betAmount)){
+        /* Verify if WinAmount Value is right */
+        expect(winAmount).to.be.equal(0)
+        /* Verify if AppDelta Value is Positive */
+        expect(app_delta).to.be.greaterThan(0)
+        /* Verify if UserDelta Value is Negative */
+        expect(user_delta).to.be.lessThan(0)
+        /* Verify if betAmount Value is equal to Previous Balance plus Previous Bonus Balance */
+        expect(betAmount).to.be.equal(previousBalance+previousBonusBalance)
+        // Confirm New User Balance is equal to previous plus delta. Ps.: UserDelta is a negative number
+        expect(Numbers.toFormatBet(newBalance)).to.be.equal(0);
+        // Confirm New App Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBalanceApp)).to.be.equal(Numbers.toFormatBet(previousBalanceApp+app_delta));
+        // Confirm New Bonus Balance is equal to previous plus delta.
+        expect(Numbers.toFormatBet(newBonusBalance)).to.be.equal(0);
+    }
 
     return true;
 }
