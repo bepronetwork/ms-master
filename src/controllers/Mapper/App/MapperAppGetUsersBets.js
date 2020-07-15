@@ -50,7 +50,8 @@ let outputs = {
                     "__v": list.__v,
                 })
             }),
-            "totalCount": object.totalCount
+            "totalCount": object.totalCount,
+            "tag": object.tag
         }
     }
 }

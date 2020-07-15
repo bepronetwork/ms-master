@@ -206,15 +206,16 @@ class App extends ModelComponent {
 
     async appGetUsersBets() {
         try {
+            var app ="";
             switch (this.self.params.tag) {
                 case "cassino":
-                    let app = await this.process('AppGetUsersBets');
+                    app = await this.process('AppGetUsersBets');
                     return MapperAppGetBetsSingleton.output('AppGetBets', app);
                 case "esports":
-                    let app = await this.process('AppGetUsersBetsEsports');
+                    app = await this.process('AppGetUsersBetsEsports');
                     return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
                 default:
-                    let app = await this.process('AppGetUsersBets');
+                    app = await this.process('AppGetUsersBets');
                     return MapperAppGetBetsSingleton.output('AppGetBets', app);
             }
         } catch (err) {

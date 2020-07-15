@@ -23,20 +23,17 @@ let outputs = {
                         "username": list.user.username,
                     },
                     "app": list.app,
+                    "videogames": list.videogames,
                     "isWon": list.isWon,
-                    "market": list.market,
-                    "winAmount": list.winAmount,
-                    "betType": list.betType,
-                    "statistic": list.statistic,
-                    "finished": list.finished,
-                    "created_at": list.created_at,
                     "result": list.result,
                     "type": list.type,
-                    "tag": list.tag,
+                    "winAmount": list.winAmount,
+                    "created_at": list.created_at,
                     "__v": list.__v,
                 })
             }),
-            "totalCount": object.totalCount
+            "totalCount": object.totalCount,
+            "tag": object.tag
         }
     }
 }

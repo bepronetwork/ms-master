@@ -74,7 +74,7 @@ class BetEsportsRepository extends MongoComponent{
                 .skip(offset == undefined ? 0 : offset)
                 .limit((size > 200 || !size || size <= 0) ? 200 : size)
                 .lean()
-                .exec((err, user) => {
+                .exec(async (err, item) => {
                     const totalCount = await BetEsportsRepository.prototype.schema.model.find({
                         app : app,
                         ...user,

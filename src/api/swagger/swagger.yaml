@@ -4028,12 +4028,12 @@ definitions:
         description: |
           Username of User (Tag: cassino)
       videogames :
-        type : Array
+        type : array
         items:
           type : string
-          example: "xenwx33213njj2"
+          example: "xvwvj1vxhw21378"
           description: |
-            Videogames Id (Tag: E-Sports)
+            Videogames ID (Tag: E-Sports)
       size:
         type : number
         example: 15

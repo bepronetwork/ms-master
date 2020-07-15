@@ -215,8 +215,11 @@ const processActions = {
             currency: params.currency == undefined ? {} : { currency : params.currency },
             videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } }
         });
-
-		return {...res, tag: "esports"};
+        let normalized = {
+            ...res, 
+            tag: "esports"
+        }
+		return normalized;
     },
     __getBetInfo : async (params) => {
         try {
