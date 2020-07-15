@@ -46,6 +46,7 @@ let outputs = {
                     "clientSeed": list.clientSeed,
                     "serverHashedSeed": list.serverHashedSeed,
                     "serverSeed": list.serverSeed,
+                    "tag": list.tag,
                     "__v": list.__v,
                 })
             }),

@@ -27,7 +27,8 @@ import {
     CustomizationRepository,
     TxFeeRepository,
     BackgroundRepository,
-    DepositBonusRepository
+    DepositBonusRepository,
+    BetEsportsRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -202,7 +203,20 @@ const processActions = {
                 username: params.username
             });
         }
-		return res;
+		return {...res, tag: "cassino"};
+    },
+    __appGetUsersBetsEsports : async (params) => {
+        let res = await BetEsportsRepository.prototype.getAppBetsEsports({
+            app : params.app,
+            offset: params.offset,
+            size : params.size,
+            user: params.user == undefined ? {} : { user : params.user },
+            _id: params.bet == undefined ? {} : { _id : params.bet },
+            currency: params.currency == undefined ? {} : { currency : params.currency },
+            videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } }
+        });
+
+		return {...res, tag: "esports"};
     },
     __getBetInfo : async (params) => {
         try {
@@ -779,6 +793,9 @@ const progressActions = {
         return res;
     },
     __appGetUsersBets : async (params) => {
+        return params;
+    },
+    __appGetUsersBetsEsports : async (params) => {
         return params;
     },
     __modifyBalance : async (params) => {
@@ -1471,6 +1488,9 @@ class AppLogic extends LogicComponent{
                 case 'AppGetUsersBets' : {
 					return await library.process.__appGetUsersBets(params); break;
                 };
+                case 'AppGetUsersBetsEsports' : {
+					return await library.process.__appGetUsersBetsEsports(params); break;
+                };
                 case 'DeployApp' : {
 					return await library.process.__deployApp(params); break;
                 };
@@ -1669,6 +1689,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AppGetUsersBets' : {
 					return await library.progress.__appGetUsersBets(params); break;
+                };
+                case 'AppGetUsersBetsEsports' : {
+					return await library.progress.__appGetUsersBetsEsports(params); break;
                 };
                 case 'DeployApp' : {
 					return await library.progress.__deployApp(params); break;

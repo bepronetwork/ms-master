@@ -35,6 +35,8 @@ import { BalanceSchema } from "./addOn/balance";
 import { TxFeeSchema } from "./addOn/txFee";
 import { BackgroundSchema }  from './customization/background';
 import { DepositBonusSchema } from "./addOn/depositBonus";
+import { BetEsportsSchema } from "./betEsports";
+import { MatchSchema } from "./match";
 
 export {
     DepositBonusSchema,
@@ -73,5 +75,7 @@ export {
     JackpotSchema,
     PermissionSchema,
     AutoWithdrawSchema,
-    BackgroundSchema
+    BackgroundSchema,
+    BetEsportsSchema,
+    MatchSchema
 }
