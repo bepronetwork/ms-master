@@ -6,7 +6,8 @@ import {
     editTableLimit,
     editGameEdge,
     editGameImage,
-    editGameBackgroundImage
+    editGameBackgroundImage,
+    getGameStats
 } from '../../../methods';
 
 import {
@@ -41,7 +42,21 @@ global.test.ECOSYSTEM_GAMES.forEach( async ga => {
             let res = await addGame({...get_app_model, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
             detectValidationErrors(res);
             shouldAddEcosystemGameEuropeanRoulette(res.data, expect);
-        })); 
+        }));
+
+        it(`${ga.metaName} Get Game Stats`, mochaAsync(async () => {
+            var game = ECOSYSTEM_GAMES.find( g => g.metaName == ga.metaName);
+            let currency = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String("eth").toLowerCase())).currency;
+            let get_app_model = {
+                game     : game._id,
+                app      : app.id,
+                currency : currency._id
+            }
+            let res = await getGameStats({...get_app_model, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+            console.log(res);
+            detectValidationErrors(res);
+            expect(res.data.status).to.equal(200);
+        }));
 
         it(`${ga.metaName} should change game Table Limit`, mochaAsync(async () => {
             GAMES = (await getApp({app, admin})).data.message.games;
