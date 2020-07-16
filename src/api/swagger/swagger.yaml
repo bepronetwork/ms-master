@@ -2905,6 +2905,7 @@ definitions:
     required:
       - user
       - app
+      - currency
     properties:
       user:
         type : string
@@ -2916,6 +2917,11 @@ definitions:
         example: "43256291237846817623"
         description: |
           Unique identifier of the user, ID
+      currency:
+        type : string
+        example: "vg234h1f3g13f1"
+        description: |
+          Currency ID
 
   EditAdminTypeRequest : 
     type: object
