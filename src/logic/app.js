@@ -106,7 +106,7 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')}
         let admin = await AdminsRepository.prototype.findAdminById(params.admin);
         if(!admin){throwError('USER_NOT_EXISTENT')}
-        let game = await AppRepository.prototype.getSummaryOneStats(params.app, { currency: params.currency, game: params.currency });
+        let game = await AppRepository.prototype.getSummaryOneStats(params.app, { currency: params.currency, game: params.game });
         return game;
     },
     __get : async (params) => {
