@@ -5,6 +5,7 @@ import {
     pipeline_user_stats, 
     pipeline_bet_stats, 
     pipeline_game_stats, 
+    pipeline_one_game_stats,
     pipeline_app_wallet,
     pipeline_get_by_external_id,
     pipeline_last_bets,
@@ -544,6 +545,22 @@ class AppRepository extends MongoComponent{
             .exec( (err, App) => {
                 if(err) {reject(err)}
                 resolve(App);
+            });
+        });
+    }
+
+    /**
+     * 
+     * @param {Mongoose Id} _id 
+     */
+
+    async getSummaryStats(_id, { currency, game }) {
+        return new Promise( (resolve, reject) => {
+            AppRepository.prototype.schema.model
+            .aggregate(pipeline_one_game_stats(_id, { currency, game }))
+            .exec( (err, item) => {
+                if(err) { reject(err)}
+                resolve(item.game);
             });
         });
     }

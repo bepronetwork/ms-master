@@ -116,6 +116,23 @@ class App extends ModelComponent {
      */
 
 
+    async getGameStats() {
+        try {
+            let app = await this.process('GetGameStats');
+            return app;
+            // return MapperGetLogsSingleton.output('GetLogs', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
     async getLogs() {
         try {
             let app = await this.process('GetLogs');
