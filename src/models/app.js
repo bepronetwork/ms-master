@@ -40,7 +40,8 @@ import {
     MapperGetLogsSingleton,
     MapperGetBetSingleton,
     MapperEditThemeSingleton,
-    MapperEditBackgroundSingleton
+    MapperEditBackgroundSingleton,
+    MapperSummaryOneGamesSingleton
 } from '../controllers/Mapper';
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
@@ -119,8 +120,7 @@ class App extends ModelComponent {
     async getGameStats() {
         try {
             let app = await this.process('GetGameStats');
-            return app;
-            // return MapperGetLogsSingleton.output('GetLogs', app);
+            return MapperSummaryOneGamesSingleton.output('SummaryOneGames', app);
         } catch (err) {
             throw err;
         }
