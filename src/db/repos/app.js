@@ -554,7 +554,7 @@ class AppRepository extends MongoComponent{
      * @param {Mongoose Id} _id 
      */
 
-    async getSummaryStats(_id, { currency, game }) {
+    async getSummaryOneStats(_id, { currency, game }) {
         return new Promise( (resolve, reject) => {
             AppRepository.prototype.schema.model
             .aggregate(pipeline_one_game_stats(_id, { currency, game }))
