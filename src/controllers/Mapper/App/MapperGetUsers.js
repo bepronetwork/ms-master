@@ -28,9 +28,13 @@ let outputs = {
                     })
                 }) : object.withdraws,
                 ...wallet_object(object),
+                "isWithdrawing": object.isWithdrawing,
+                "email_confirmed": object.email_confirmed,
                 "username": object.username,
                 "full_name": object.full_name,
                 "affiliate": !object.affiliate ? {} : {
+                    "_id": object.affiliate._id,
+                    "affiliatedLinks": object.affiliate.affiliatedLinks,
                     "wallet": object.affiliate.wallet ? object.affiliate.wallet.map(wallet => {
                         return ({
                             "_id": wallet._id,
@@ -41,6 +45,12 @@ let outputs = {
                             "affiliate_min_withdraw": wallet.affiliate_min_withdraw,
                             "depositAddresses": wallet.depositAddresses ? wallet.depositAddresses.map(deposit_address_id => deposit_address_id) : wallet.depositAddresses,
                             "link_url": wallet.link_url,
+                            "virtual": wallet.virtual,
+                            "image": wallet.image,
+                            "bonusAmount": wallet.bonusAmount,
+                            "minBetAmountForBonusUnlocked": wallet.minBetAmountForBonusUnlocked,
+                            "incrementBetAmountForBonus": wallet.incrementBetAmountForBonus,
+                            "availableDepositAddresses": wallet.availableDepositAddresses,
                             "currency": !wallet.currency ? {} : {
                                 "_id": wallet.currency._id,
                                 "image": wallet.currency.image,
