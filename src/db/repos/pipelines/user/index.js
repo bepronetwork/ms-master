@@ -4,6 +4,7 @@ import pipeline_user_wallet from "./user_wallet";
 import pipeline_all_users_balance from './all_users_balance';
 import pipeline_my_bets from './my_bets';
 import pipeline_user_bets_by_currency from "./pipeline_user_bets_by_currency";
+import pipeline_user_specific_stats from "./user_stats_specific";
 
 export {
     pipeline_bet_stats,
@@ -11,5 +12,6 @@ export {
     pipeline_user_wallet,
     pipeline_all_users_balance,
     pipeline_my_bets,
-    pipeline_user_bets_by_currency
+    pipeline_user_bets_by_currency,
+    pipeline_user_specific_stats
 }

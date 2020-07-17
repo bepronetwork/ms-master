@@ -101,6 +101,14 @@ const processActions = {
 		}
 		return normalized;
     },
+    __getGameStats : async (params) => {
+        let app = await AppRepository.prototype.findAppById(params.app, "get_app_auth");
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        let admin = await AdminsRepository.prototype.findAdminById(params.admin);
+        if(!admin){throwError('USER_NOT_EXISTENT')}
+        let game = await AppRepository.prototype.getSummaryOneStats(params.app, { currency: params.currency, game: params.game });
+        return game;
+    },
     __get : async (params) => {
         perf.start({id :'get_app_perf'});
         let app = await AppRepository.prototype.findAppById(params.app, 'simple');
@@ -772,7 +780,10 @@ const progressActions = {
         SendinBlueSingleton.updateContact(email, attributes);
         SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
-	},
+    },
+    __getGameStats : async (params) => {
+        return params;
+    },
 	__summary : async (params) => {
         // Get Specific App Data
         let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts);
@@ -1603,6 +1614,9 @@ class AppLogic extends LogicComponent{
                 case 'ModifyBalance' : {
 					return await library.process.__modifyBalance(params); break;
                 };
+                case 'GetGameStats' : {
+					return await library.process.__getGameStats(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1769,6 +1783,10 @@ class AppLogic extends LogicComponent{
                 case 'ModifyBalance': {
                     return await library.progress.__modifyBalance(params); break;
                 }
+                case 'GetGameStats': {
+                    return await library.progress.__getGameStats(params); break;
+                }
+                
 			}
 		}catch(error){
 			throw error;

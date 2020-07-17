@@ -102,6 +102,20 @@ async function getGames(req, res) {
     }
 }
 
+async function getGameStats(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getGameStats();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 // JSON WebToken Security Functions
 async function deployApp(req, res) {
     try {
@@ -889,5 +903,6 @@ export {
     getLogs,
     getBetInfo,
     editBackground,
-    modifyBalance
+    modifyBalance,
+    getGameStats
 };

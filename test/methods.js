@@ -118,6 +118,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getGameStats(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/game/stats')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAddonDepositBonus(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/depositBonus/add')
