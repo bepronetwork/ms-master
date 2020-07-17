@@ -452,7 +452,7 @@ const processActions = {
         const { user, currency } = params;
         let res = await UsersRepository.prototype.findUserById(user);
         let userStats = await UsersRepository.prototype.findUserStatsById(user, currency);
-        let statsObject = userStats[0]
+        let statsObject = !userStats[0] ? {} : userStats[0];
         let normalized = {
             ...res._doc,
             ...statsObject

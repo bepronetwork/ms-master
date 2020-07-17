@@ -30,7 +30,7 @@ const pipeline_user_specific_stats = (_id, currency) =>
             }
         }, {
             '$match': {
-                'wallet.currency': mongoose.Types.ObjectId(currency)
+                'bets.currency': mongoose.Types.ObjectId(currency)
             }
         }, {
             '$group': {
