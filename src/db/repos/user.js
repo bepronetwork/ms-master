@@ -6,7 +6,8 @@ import {
     pipeline_financial_stats, 
     pipeline_user_wallet,
     pipeline_all_users_balance,
-    pipeline_my_bets
+    pipeline_my_bets,
+    pipeline_user_specific_stats
 } from './pipelines/user';
 import { populate_user, populate_user_simple, populate_user_wallet, populate_users } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
@@ -65,6 +66,21 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findById(_id)
                 .populate(populate_type)
+                .exec( (err, user) => {
+                    if(err) { resolve(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async findUserStatsById(user, currency){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model
+                .aggregate(pipeline_user_specific_stats(user, currency))
                 .exec( (err, user) => {
                     if(err) { resolve(null)}
                     resolve(user);
