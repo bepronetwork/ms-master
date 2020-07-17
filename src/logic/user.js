@@ -29,6 +29,7 @@ import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
 import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
+import { resetPassword } from '../api/controllers/user';
 
 let error = new ErrorManager();
 
@@ -448,9 +449,15 @@ const processActions = {
         return bets;
     },
     __getInfo: async (params) => {
-        const { user } = params;
+        const { user, currency } = params;
         let res = await UsersRepository.prototype.findUserById(user);
-        return res;
+        let userStats = await UsersRepository.prototype.findUserStatsById(user, currency);
+        let statsObject = !userStats[0] ? {} : userStats[0];
+        let normalized = {
+            ...res._doc,
+            ...statsObject
+        }
+        return normalized;
     }
 }
 

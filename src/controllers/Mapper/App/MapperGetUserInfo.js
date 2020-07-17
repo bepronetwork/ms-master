@@ -106,6 +106,11 @@ let outputs = {
             },
             "external_user": object.external_user,
             "affiliateLink": object.affiliateLink,
+            "betAmount": !object.betAmount ? 0 : object.betAmount,
+            "winAmount": !object.winAmount ? 0 : object.winAmount,
+            "profit": !object.profit ? 0 : object.profit,
+            "playBalance": !object.playBalance ? object.wallet.map(wallet => wallet.playBalance) : object.playBalance,
+            "currency": !object.currency ? null : object.currency,
         })
     },
 }

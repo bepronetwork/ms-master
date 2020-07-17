@@ -2435,6 +2435,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/game/stats:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      - games
+      summary: Get a Games stats
+      operationId: getGameStats
+      description: Get a Games stats
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: game
+          description: Game Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetStatGameRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/games/bet/place:
     x-swagger-router-controller: app
     post:
@@ -2874,6 +2905,7 @@ definitions:
     required:
       - user
       - app
+      - currency
     properties:
       user:
         type : string
@@ -2885,6 +2917,11 @@ definitions:
         example: "43256291237846817623"
         description: |
           Unique identifier of the user, ID
+      currency:
+        type : string
+        example: "vg234h1f3g13f1"
+        description: |
+          Currency ID
 
   EditAdminTypeRequest : 
     type: object
@@ -4404,6 +4441,34 @@ definitions:
         example: "Aweruithwe4837592837"
         description: |
           App Id
+  GetStatGameRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - game
+    properties:
+      app:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          App Id
+      admin:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          admin Id
+      currency:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          currency Id
+      game:
+        type : string
+        example: "Aweruithwe4837592837"
+        description: |
+          game Id
   GetGamesFromAppRequest : 
     type: object
     required:
