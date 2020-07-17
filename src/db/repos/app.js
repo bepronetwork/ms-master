@@ -560,7 +560,7 @@ class AppRepository extends MongoComponent{
             .aggregate(pipeline_one_game_stats(_id, { currency, game }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
-                resolve(item[0].game);
+                resolve(item[0]==null ? null : item[0].game);
             });
         });
     }
