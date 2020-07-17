@@ -9,7 +9,8 @@ import {
     MapperSet2faUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetBetsSingleton,
-    MapperUserGetBetsSingleton
+    MapperUserGetBetsSingleton,
+    MapperGetUserInfoSingleton
 } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
@@ -130,10 +131,9 @@ class User extends ModelComponent {
     }
 
     async getInfo() {
-        // No Output
         try {
             let res = await this.process('GetInfo');
-            return res;
+            return MapperGetUserInfoSingleton.output('GetUserInfo', res);
         } catch (err) {
             throw err;
         }
