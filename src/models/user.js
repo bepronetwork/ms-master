@@ -173,8 +173,18 @@ class User extends ModelComponent {
 
     async getBets() {
         try {
-            let res = await this.process('GetBets');
-            return MapperGetBetsSingleton.output('GetBets', res);
+            var res ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    res = await this.process('GetBets');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+                case "esports":
+                    res = await this.process('GetBetsEsports');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+                default:
+                    res = await this.process('GetBets');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+            }
         } catch (err) {
             throw err;
         }
