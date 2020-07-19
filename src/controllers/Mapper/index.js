@@ -6,7 +6,8 @@ import {
     MapperSet2faUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetBetsSingleton,
-    MapperUserGetBetsSingleton
+    MapperUserGetBetsSingleton,
+    MapperGetBetsEsportsSingleton
 } from "./user";
 
 import {
@@ -148,5 +149,6 @@ export {
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
     MapperaddAddonTxFeeSingleton,
-    MapperEditBackgroundSingleton
+    MapperEditBackgroundSingleton,
+    MapperGetBetsEsportsSingleton
 }

@@ -45,8 +45,10 @@ import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsReposi
 import TxFeeRepository from "./txFee";
 import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
+import BetEsportsRepository from "./betEsports";
 
 export {
+    BetEsportsRepository,
     DepositBonusRepository,
     PopularNumberRepository,
     TxFeeRepository,

@@ -13,6 +13,7 @@ import { populate_user, populate_user_simple, populate_user_wallet, populate_use
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
+import BetEsportsRepository from './betEsports';
 /**
  * Accounts database interaction class.
  *
@@ -94,7 +95,7 @@ class UsersRepository extends MongoComponent{
     getBetsEsports({_id, size, dates, currency, type, offset, slug}){
         try{
             return new Promise( (resolve, reject) => {
-                UsersRepository.prototype.schema.model
+                BetEsportsRepository.prototype.schema.model
                 .aggregate(pipeline_bets_esports(_id,{ size, dates, currency, type, offset, slug  }))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
