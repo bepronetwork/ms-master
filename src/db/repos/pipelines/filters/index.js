@@ -10,6 +10,10 @@ import { pipeline_app_user_by_bet } from "./by_app_user_bet";
 import { pipeline_match_by_currency } from "./match_by_currency";
 import { pipeline_bets_by_currency_id } from "./bets_by_currency";
 import { pipeline_match_by_game } from "./by_game";
+import { pipeline_user_username } from "./by_user_username";
+import { pipeline_user } from "./by_user";
+import { pipeline_id } from "./by_id";
+import { pipeline_jackpot } from "./by_jackpot";
 
 
 export {
@@ -24,5 +28,9 @@ export {
     pipeline_app_user_by_bet,
     pipeline_match_by_currency,
     pipeline_bets_by_currency_id,
-    pipeline_match_by_game
+    pipeline_match_by_game,
+    pipeline_user_username,
+    pipeline_user,
+    pipeline_id,
+    pipeline_jackpot
 }

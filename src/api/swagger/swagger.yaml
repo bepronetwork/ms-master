@@ -3885,6 +3885,18 @@ definitions:
           User Id
       offset :
         type : number
+      username :
+        type : string
+        format : name
+        example : "crawford" 
+        description: |
+          Username of User
+      email :
+        type : string
+        format : name
+        example : "crawford@test.com" 
+        description: |
+          Email of User
   UserBetsRequest : 
     type: object
     required:
@@ -3978,36 +3990,55 @@ definitions:
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          User ID
+          User ID (Tag: cassino or E-Sports)
       currency :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Currency ID
+          Currency ID (Tag: cassino or E-Sports)
       bet :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Bet ID
+          Bet ID (Tag: cassino or E-Sports)
       game :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Game ID
+          Game ID (Tag: cassino)
       isJackpot :
         type : boolean
         format: boolean
         example: true
         description: |
-          Is Jackpot
+          Is Jackpot (Tag: cassino)
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag Type of bet
+      username :
+        type : string
+        format: name
+        example: "teste"
+        description: |
+          Username of User (Tag: cassino)
+      videogames :
+        type : array
+        items:
+          type : string
+          example: "xvwvj1vxhw21378"
+          description: |
+            Videogames ID (Tag: E-Sports)
       size:
         type : number
         example: 15
         description: |
-          Amount of Bets Wanted
+          Amount of Bets Wanted (Tag: cassino or E-Sports)
       offset :
         type : number
   AppAddGameRequest : 

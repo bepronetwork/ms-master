@@ -8,6 +8,7 @@ import pipeline_last_bets from './last_bets';
 import pipeline_biggest_user_winners from './biggest_user_winners';
 import pipeline_biggest_bet_winners from './biggest_bet_winners';
 import pipeline_popular_numbers from './popular_numbers';
+import pipeline_get_users_bets from "./get_users_bets";
 
 export {
     pipeline_bet_stats,
@@ -19,5 +20,6 @@ export {
     pipeline_app_wallet,
     pipeline_get_by_external_id,
     pipeline_last_bets,
-    pipeline_biggest_user_winners
+    pipeline_biggest_user_winners,
+    pipeline_get_users_bets
 }

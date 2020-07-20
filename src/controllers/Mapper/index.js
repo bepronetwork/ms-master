@@ -64,7 +64,8 @@ import {
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
     MapperaddAddonTxFeeSingleton,
-    MapperEditBackgroundSingleton
+    MapperEditBackgroundSingleton,
+    MapperAppGetBetsEsportsSingleton
 } from "./App";
 
 import {
@@ -148,5 +149,6 @@ export {
     MapperEditThemeSingleton,
     MapperEditAddonTxFeeSingleton,
     MapperaddAddonTxFeeSingleton,
-    MapperEditBackgroundSingleton
+    MapperEditBackgroundSingleton,
+    MapperAppGetBetsEsportsSingleton
 }
