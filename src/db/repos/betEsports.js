@@ -56,6 +56,40 @@ class BetEsportsRepository extends MongoComponent{
             throw (err)
         }
     }
+
+    async getAppBetsEsports({app, offset, size, user = {}, _id = {}, currency = {}, videogames = {}}) {
+        try {
+            return new Promise((resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model.find({
+                    app : app,
+                    ...user,
+                    ..._id,
+                    ...videogames,
+                    ...currency
+                })
+                .sort({created_at: -1})
+                .populate([
+                    'user'
+                ])
+                .skip(offset == undefined ? 0 : offset)
+                .limit((size > 200 || !size || size <= 0) ? 200 : size)
+                .lean()
+                .exec(async (err, item) => {
+                    const totalCount = await BetEsportsRepository.prototype.schema.model.find({
+                        app : app,
+                        ...user,
+                        ..._id,
+                        ...videogames,
+                        ...currency
+                    }).countDocuments().exec();
+                    if(err){reject(err)}
+                    resolve({list: item, totalCount });
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
 }
 
 BetEsportsRepository.prototype.schema = new BetEsportsSchema();

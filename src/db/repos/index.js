@@ -46,6 +46,7 @@ import TxFeeRepository from "./txFee";
 import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
 import BetEsportsRepository from "./betEsports";
+import MatchRepository from "./match";
 
 export {
     BetEsportsRepository,
@@ -98,5 +99,7 @@ export {
     LoadingGifRepository,
     PermissionRepository,
     AutoWithdrawRepository,
-    BackgroundRepository
+    BackgroundRepository,
+    BetEsportsRepository,
+    MatchRepository
 }
