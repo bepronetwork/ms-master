@@ -100,6 +100,5 @@ export {
     PermissionRepository,
     AutoWithdrawRepository,
     BackgroundRepository,
-    BetEsportsRepository,
     MatchRepository
 }
