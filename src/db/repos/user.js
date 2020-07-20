@@ -6,12 +6,14 @@ import {
     pipeline_financial_stats, 
     pipeline_user_wallet,
     pipeline_all_users_balance,
-    pipeline_my_bets
+    pipeline_my_bets,
+    pipeline_bets_esports
 } from './pipelines/user';
 import { populate_user, populate_user_simple, populate_user_wallet, populate_users } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
+import BetEsportsRepository from './betEsports';
 /**
  * Accounts database interaction class.
  *
@@ -80,6 +82,21 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_my_bets(_id,{ dates, currency, game, offset, size  }))
+                .exec( (err, data) => {
+                    if(err) { reject(err)}
+                    resolve(data.slice(0, size));
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getBetsEsports({_id, size, dates, currency, type, offset, slug}){
+        try{
+            return new Promise( (resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model
+                .aggregate(pipeline_bets_esports(_id,{ size, dates, currency, type, offset, slug  }))
                 .exec( (err, data) => {
                     if(err) { reject(err)}
                     resolve(data.slice(0, size));

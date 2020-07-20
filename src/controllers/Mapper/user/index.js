@@ -6,8 +6,10 @@ import { MapperSet2faUserSingleton } from "./MapperSet2FAUser";
 import { MapperGetDepositAddressUserSingleton } from "./MapperGetDepositAddress";
 import { MapperGetBetsSingleton } from "./MapperGetBets";
 import { MapperUserGetBetsSingleton } from "./MapperUserGetBets";
+import { MapperGetBetsEsportsSingleton } from "./MapperGetBetsEsports";
 
 export{
+    MapperGetBetsEsportsSingleton,
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
     MapperAuthUserSingleton,

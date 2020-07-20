@@ -9,7 +9,8 @@ import {
     MapperSet2faUserSingleton,
     MapperGetDepositAddressUserSingleton,
     MapperGetBetsSingleton,
-    MapperUserGetBetsSingleton
+    MapperUserGetBetsSingleton,
+    MapperGetBetsEsportsSingleton
 } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
@@ -173,8 +174,18 @@ class User extends ModelComponent {
 
     async getBets() {
         try {
-            let res = await this.process('GetBets');
-            return MapperGetBetsSingleton.output('GetBets', res);
+            var res ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    res = await this.process('GetBets');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+                case "esports":
+                    res = await this.process('GetBetsEsports');
+                    return MapperGetBetsEsportsSingleton.output('GetBetsEsports', res);
+                default:
+                    res = await this.process('GetBets');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+            }
         } catch (err) {
             throw err;
         }

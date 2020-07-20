@@ -49,6 +49,7 @@ import BetEsportsRepository from "./betEsports";
 import MatchRepository from "./match";
 
 export {
+    BetEsportsRepository,
     DepositBonusRepository,
     PopularNumberRepository,
     TxFeeRepository,

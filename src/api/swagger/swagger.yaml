@@ -3902,6 +3902,7 @@ definitions:
     required:
       - user
       - currency
+      - tag
     properties:
       size:
         type : number
@@ -3914,18 +3915,24 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
       periodicity :
         type : string
         format: name
         example: "Weekly"
         description: |
-          Periodicity of Data
+          Periodicity of Data (Cassino And E-Sports)
       currency :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Currency ID
+          Currency ID (Cassino And E-Sports)
       offset :
         type : number
       game :
@@ -3933,7 +3940,19 @@ definitions:
         format : name
         example : "5cuedgq7e6t334t34" 
         description: |
-          Game ID
+          Game ID (Cassino)
+      type :
+        type : string
+        format : name
+        example : "simple or multiple" 
+        description: |
+          Type of Bet (E-Sports)
+      slug :
+        type : string
+        format : name
+        example : "r6-siege" 
+        description: |
+          Slug of Videogame (E-Sports)
   AppSummaryRequest:
     type: object
     required:

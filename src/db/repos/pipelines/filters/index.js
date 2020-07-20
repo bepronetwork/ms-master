@@ -14,9 +14,15 @@ import { pipeline_user_username } from "./by_user_username";
 import { pipeline_user } from "./by_user";
 import { pipeline_id } from "./by_id";
 import { pipeline_jackpot } from "./by_jackpot";
+import { pipeline_esports_by_date } from "./by_date_esports";
+import { pipeline_by_type } from "./by_type";
+import { pipeline_by_videogame_slug } from "./by_videogame_slug";
 
 
 export {
+    pipeline_by_videogame_slug,
+    pipeline_by_type,
+    pipeline_esports_by_date,
     pipeline_bets_by_date,
     pipeline_bets_by_currency,
     pipeline_user_by_bet,
