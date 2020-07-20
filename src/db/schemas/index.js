@@ -39,7 +39,6 @@ import { BetEsportsSchema } from "./betEsports";
 import { MatchSchema } from "./match";
 
 export {
-    BetEsportsSchema,
     DepositBonusSchema,
     TxFeeSchema,
     BalanceSchema,
