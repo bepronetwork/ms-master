@@ -3827,7 +3827,13 @@ definitions:
         format : name
         example : "5cuedgq7e6t334t34" 
         description: |
-          Game ID
+          Game ID (Cassino)
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
   AppUserDepositAddressRequest : 
     type: object
     required:
@@ -3864,6 +3870,12 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
   AppUsersRequest : 
     type: object
     required:

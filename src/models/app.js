@@ -443,8 +443,19 @@ class App extends ModelComponent {
 
     async getLastBets() {
         try {
-            let app = await this.process('GetLastBets');
-            return MapperGetLastBetsSingleton.output('GetLastBets', app);
+            var app ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetLastBets');
+                    return MapperGetLastBetsSingleton.output('GetLastBets', app);
+                case "esports":
+                    app = await this.process('GetLastBetsEsports');
+                    return app;
+                    // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('GetLastBets');
+                    return MapperGetLastBetsSingleton.output('GetLastBets', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -458,8 +469,19 @@ class App extends ModelComponent {
 
     async getBiggestBetWinners() {
         try {
-            let app = await this.process('GetBiggestBetWinners');
-            return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+            var app ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetBiggestBetWinners');
+                    return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+                case "esports":
+                    app = await this.process('GetBiggestBetWinnersEsports');
+                    return app;
+                    // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('GetBiggestBetWinners');
+                    return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -472,8 +494,19 @@ class App extends ModelComponent {
 
     async getBiggestUserWinners() {
         try {
-            let app = await this.process('GetBiggestUserWinners');
-            return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+            var app ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetBiggestUserWinners');
+                    return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+                case "esports":
+                    app = await this.process('GetBiggestUserWinnersEsports');
+                    return app;
+                    // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('GetBiggestUserWinners');
+                    return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+            }
         } catch (err) {
             throw err;
         }
