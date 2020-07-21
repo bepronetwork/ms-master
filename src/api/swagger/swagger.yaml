@@ -4072,6 +4072,18 @@ definitions:
           Amount of Bets Wanted (Tag: cassino or E-Sports)
       offset :
         type : number
+      type :
+        type : string
+        format: name
+        example: "simple or multiple"
+        description: |
+          Type of bet (E-Sports)
+      periodicity :
+        type : string
+        format: name
+        example: "Weekly"
+        description: |
+          Periodicity of Data
   AppAddGameRequest : 
     type: object
     required:

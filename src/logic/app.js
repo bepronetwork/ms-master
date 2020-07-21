@@ -188,7 +188,8 @@ const processActions = {
                 bet: params.bet == undefined ? {} : {_id : params.bet},
                 currency: params.currency == undefined ? {} : {currency : params.currency},
                 game: params.game == undefined ? {} : {game : params.game},
-                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot}
+                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot},
+                dates: fromPeriodicityToDates({ periodicity: params.periodicity })
             });
         } else {
             res = await AppRepository.prototype.getAppBetsPipeline({
@@ -200,7 +201,8 @@ const processActions = {
                 currency: params.currency,
                 game: params.game,
                 isJackpot: params.isJackpot,
-                username: params.username
+                username: params.username,
+                dates: fromPeriodicityToDates({ periodicity: params.periodicity })
             });
         }
 		return {...res, tag: "cassino"};
@@ -213,7 +215,9 @@ const processActions = {
             user: params.user == undefined ? {} : { user : params.user },
             _id: params.bet == undefined ? {} : { _id : params.bet },
             currency: params.currency == undefined ? {} : { currency : params.currency },
-            videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } }
+            videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } },
+            type: params.type == undefined ? {} : { type : params.type },
+            dates: fromPeriodicityToDates({ periodicity: params.periodicity })
         });
         let normalized = {
             ...res, 

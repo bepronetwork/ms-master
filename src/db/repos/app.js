@@ -241,7 +241,7 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}, dates}){
         try{
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model.find({
@@ -250,7 +250,11 @@ class AppRepository extends MongoComponent{
                     ...bet,
                     ...game,
                     ...currency,
-                    ...isJackpot
+                    ...isJackpot,
+                    timestamp: { 
+                        $gte: new Date( !dates.from ? new Date().setDate(new Date().getDate() - 20000) : dates.from ), 
+                        $lte: new Date ( !dates.to ? new Date().setDate(new Date().getDate() + 100) : dates.to )
+                    },
                 })
                 .sort({timestamp: -1})
                 .populate([
@@ -275,11 +279,11 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username }){
+    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username, dates }){
         try{
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model
-                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username}))
+                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username, dates}))
                 .exec( async (err, item) => {
                     const totalCount = await BetRepository.prototype.schema.model.find({
                         app,

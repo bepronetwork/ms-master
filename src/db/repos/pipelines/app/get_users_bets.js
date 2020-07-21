@@ -7,11 +7,12 @@ import {
     pipeline_match_by_game,
     pipeline_user,
     pipeline_id,
-    pipeline_jackpot
+    pipeline_jackpot,
+    pipeline_bets_by_timestamp
 } from '../filters';
 
 
-const pipeline_get_users_bets = ({ app, _id, game, currency, jackpot, user, username, offset, size }) =>
+const pipeline_get_users_bets = ({ app, _id, game, currency, jackpot, user, username, offset, size, dates }) =>
     [
         {
             '$match': {
@@ -36,6 +37,7 @@ const pipeline_get_users_bets = ({ app, _id, game, currency, jackpot, user, user
             }
         },
         ...pipeline_user_username({ username }),
+        ...pipeline_bets_by_timestamp({begin_at: dates.from, end_at: dates.to}),
         {
             '$sort': {
                 'timestamp': -1
