@@ -57,11 +57,22 @@ class BetEsportsRepository extends MongoComponent{
         }
     }
 
-    async getAppBetsEsports({app, offset, size, user = {}, _id = {}, currency = {}, videogames = {}, type = {}, dates}) {
-        switch (dates) {
-            case (dates.from && dates.to == undefined):
-                dates.from = new Date(new Date().setDate(new Date().getDate() - 20000));
-                dates.to = new Date(new Date().setDate(new Date().getDate() + 100));
+    async getAppBetsEsports({app, offset, size, user = {}, _id = {}, currency = {}, videogames = {}, type = {}, begin_at, end_at }) {
+        switch (begin_at) {
+            case "all":
+                begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                break;
+            case undefined:
+                begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                break;
+        }
+        switch (end_at) {
+            case undefined:
+                end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                break;
+            case end_at:
+                end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
                 break;
         }
         try {
@@ -74,8 +85,8 @@ class BetEsportsRepository extends MongoComponent{
                     ...currency,
                     ...type,
                     created_at: { 
-                        $gte: new Date(!dates.from ? new Date().setDate(new Date().getDate() - 20000) : dates.from), 
-                        $lte: new Date (!dates.to ? new Date().setDate(new Date().getDate() + 100) : dates.to)
+                        $gte: begin_at, 
+                        $lte: end_at
                     },
                 })
                 .sort({created_at: -1})
