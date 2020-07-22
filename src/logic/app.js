@@ -46,7 +46,7 @@ import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
 import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
-import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository, LastBetsEsportsRepository, BiggestBetWinnerEsportsRepository, BiggestUserWinnerEsportsRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 let error = new ErrorManager();
@@ -188,7 +188,8 @@ const processActions = {
                 bet: params.bet == undefined ? {} : {_id : params.bet},
                 currency: params.currency == undefined ? {} : {currency : params.currency},
                 game: params.game == undefined ? {} : {game : params.game},
-                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot}
+                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot},
+                dates: fromPeriodicityToDates({ periodicity: params.periodicity })
             });
         } else {
             res = await AppRepository.prototype.getAppBetsPipeline({
@@ -200,7 +201,8 @@ const processActions = {
                 currency: params.currency,
                 game: params.game,
                 isJackpot: params.isJackpot,
-                username: params.username
+                username: params.username,
+                dates: fromPeriodicityToDates({ periodicity: params.periodicity })
             });
         }
 		return {...res, tag: "cassino"};
@@ -213,7 +215,9 @@ const processActions = {
             user: params.user == undefined ? {} : { user : params.user },
             _id: params.bet == undefined ? {} : { _id : params.bet },
             currency: params.currency == undefined ? {} : { currency : params.currency },
-            videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } }
+            videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } },
+            type: params.type == undefined ? {} : { type : params.type },
+            dates: fromPeriodicityToDates({ periodicity: params.periodicity })
         });
         let normalized = {
             ...res, 
@@ -484,6 +488,12 @@ const processActions = {
         });
 		return res;
     },
+    __getLastBetsEsports : async (params) => {
+        let res = await LastBetsEsportsRepository.prototype.getLastBetsEsports({
+            _id : params.app
+        });
+		return res;
+    },
     __getBiggestBetWinners : async (params) => {
         let res = await BiggestBetWinnerRepository.prototype.getBiggetsBetWinner({
             _id : params.app,
@@ -491,8 +501,20 @@ const processActions = {
         });
 		return res;
     },
+    __getBiggestBetWinnersEsports : async (params) => {
+        let res = await BiggestBetWinnerEsportsRepository.prototype.getBiggestBetWinnerEsports({
+            _id : params.app
+        });
+		return res;
+    },
     __getBiggestUserWinners : async (params) => {
         let res = await BiggestUserWinnerRepository.prototype.getBiggetsUserWinner({
+            _id : params.app
+        });
+		return res;
+    },
+    __getBiggestUserWinnersEsports : async (params) => {
+        let res = await BiggestUserWinnerEsportsRepository.prototype.getBiggestUserWinnerEsports({
             _id : params.app
         });
 		return res;
@@ -1054,11 +1076,23 @@ const progressActions = {
         let res = params;
 		return res;
     },
+    __getLastBetsEsports : async (params) => {
+        let res = params;
+		return res;
+    },
     __getBiggestBetWinners : async (params) => {
         let res = params;
 		return res;
     },
+    __getBiggestBetWinnersEsports : async (params) => {
+        let res = params;
+		return res;
+    },
     __getBiggestUserWinners : async (params) => {
+        let res = params;
+		return res;
+    },
+    __getBiggestUserWinnersEsports : async (params) => {
         let res = params;
 		return res;
     },
@@ -1593,11 +1627,20 @@ class AppLogic extends LogicComponent{
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
                 };
+                case 'GetLastBetsEsports' : {
+					return await library.process.__getLastBetsEsports(params); break;
+                };
                 case 'GetBiggestBetWinners' : {
 					return await library.process.__getBiggestBetWinners(params); break;
                 };
+                case 'GetBiggestBetWinnersEsports' : {
+					return await library.process.__getBiggestBetWinnersEsports(params); break;
+                };
                 case 'GetBiggestUserWinners' : {
 					return await library.process.__getBiggestUserWinners(params); break;
+                };
+                case 'GetBiggestUserWinnersEsports' : {
+					return await library.process.__getBiggestUserWinnersEsports(params); break;
                 };
                 case 'GetPopularNumbers' : {
 					return await library.process.__getPopularNumbers(params); break;
@@ -1762,11 +1805,20 @@ class AppLogic extends LogicComponent{
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;
                 };
+                case 'GetLastBetsEsports' : {
+					return await library.progress.__getLastBetsEsports(params); break;
+                };
                 case 'GetBiggestBetWinners' : {
 					return await library.progress.__getBiggestBetWinners(params); break;
                 };
+                case 'GetBiggestBetWinnersEsports' : {
+					return await library.progress.__getBiggestBetWinnersEsports(params); break;
+                };
                 case 'GetBiggestUserWinners' : {
 					return await library.progress.__getBiggestUserWinners(params); break;
+                };
+                case 'GetBiggestUserWinnersEsports' : {
+					return await library.progress.__getBiggestUserWinnersEsports(params); break;
                 };
                 case 'GetPopularNumbers' : {
 					return await library.progress.__getPopularNumbers(params); break;

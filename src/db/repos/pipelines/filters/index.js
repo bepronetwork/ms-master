@@ -17,9 +17,10 @@ import { pipeline_jackpot } from "./by_jackpot";
 import { pipeline_esports_by_date } from "./by_date_esports";
 import { pipeline_by_type } from "./by_type";
 import { pipeline_by_videogame_slug } from "./by_videogame_slug";
-
+import { pipeline_bets_by_timestamp } from "./by_timestamp";
 
 export {
+    pipeline_bets_by_timestamp,
     pipeline_by_videogame_slug,
     pipeline_by_type,
     pipeline_esports_by_date,

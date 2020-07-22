@@ -37,8 +37,10 @@ import { BackgroundSchema }  from './customization/background';
 import { DepositBonusSchema } from "./addOn/depositBonus";
 import { BetEsportsSchema } from "./betEsports";
 import { MatchSchema } from "./match";
+import { BetResultSchema } from "./betResult";
 
 export {
+    BetResultSchema,
     DepositBonusSchema,
     TxFeeSchema,
     BalanceSchema,
