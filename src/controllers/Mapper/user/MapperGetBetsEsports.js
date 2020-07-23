@@ -19,7 +19,8 @@ let outputs = {
                 "isWon": object.isWon,
                 "winAmount": object.winAmount,
                 "currency": object.currency,
-                "game": object.videogames.slug,
+                "game": object.videogames._id,
+                "tag": "esports"
             })
         })
     }
