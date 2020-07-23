@@ -241,8 +241,25 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}, dates}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}, begin_at, end_at}){
         try{
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model.find({
                     app : _id,
@@ -252,8 +269,8 @@ class AppRepository extends MongoComponent{
                     ...currency,
                     ...isJackpot,
                     timestamp: { 
-                        $gte: new Date( !dates.from ? new Date().setDate(new Date().getDate() - 20000) : dates.from ), 
-                        $lte: new Date ( !dates.to ? new Date().setDate(new Date().getDate() + 100) : dates.to )
+                        $gte: new Date( begin_at ), 
+                        $lte: new Date ( end_at )
                     },
                 })
                 .sort({timestamp: -1})
@@ -279,11 +296,28 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username, dates }){
+    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username, begin_at, end_at }){
         try{
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model
-                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username, dates}))
+                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username, begin_at, end_at}))
                 .exec( async (err, item) => {
                     const totalCount = await BetRepository.prototype.schema.model.find({
                         app,

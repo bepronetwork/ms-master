@@ -4078,12 +4078,16 @@ definitions:
         example: "simple or multiple"
         description: |
           Type of bet (E-Sports)
-      periodicity :
+      begin_at :
         type : string
-        format: name
-        example: "Weekly"
+        example: "2002-12-09"
         description: |
-          Periodicity of Data
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   AppAddGameRequest : 
     type: object
     required:
