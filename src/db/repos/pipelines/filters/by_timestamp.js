@@ -3,7 +3,7 @@ const pipeline_bets_by_timestamp = ({ begin_at, end_at }) => {
     return [
         {
             '$match': {
-                'timestamp': { '$gte': begin_at, '$lte': end_at }
+                'timestamp': { '$gte': new Date(begin_at), '$lte': new Date(end_at) }
             }
         }
     ]
