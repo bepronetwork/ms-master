@@ -217,7 +217,7 @@ const processActions = {
             user: params.user == undefined ? {} : { user : params.user },
             _id: params.bet == undefined ? {} : { _id : params.bet },
             currency: params.currency == undefined ? {} : { currency : params.currency },
-            videogames: params.match == undefined ? {} : { videogames : { $in: params.videogames } },
+            videogames: params.videogames == undefined ? {} : { videogames : { $in: params.videogames } },
             type: params.type == undefined ? {} : { type : params.type },
             begin_at: params.begin_at,
             end_at: params.end_at
