@@ -7,7 +7,8 @@ import {
     addAdmin,
     registerAdmin,
     getAdminByApp,
-    editAdminType
+    editAdminType,
+    editVideogameEdge
 } from '../../../methods';
 
 import faker from 'faker';
@@ -185,6 +186,18 @@ context('Normal', async () =>  {
         let res = await addAppServices({...service_call_add_model, admin: admin.id}, admin.security.bearerToken, { id: admin.id });
         detectValidationErrors(res);
         shouldIntegrateServicesIntoApp(res.data, expect);
+    }));
+
+    it('should Edit Videogame Edge', mochaAsync(async () => {
+        let postData = {
+            app: app.id,
+            admin: admin.id,
+            edge: 10,
+            videogame: "5ef2c7304f95d0b0d1185977"
+        }
+        let res = await editVideogameEdge({...postData}, admin.security.bearerToken, { id: admin.id });
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
     }));
 
 });

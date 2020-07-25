@@ -836,8 +836,23 @@ async function generateAddresses(req, res) {
     }
 }
 
+async function editVideogameEdge(req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        let params = req.body;
+		let app = new App(params);
+        let data = await app.editVideogameEdge();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 
 export {
+    editVideogameEdge,
     addAddonDepositBonus,
     editAddonDepositBonus,
     addAddonTxFee,

@@ -38,8 +38,10 @@ import { DepositBonusSchema } from "./addOn/depositBonus";
 import { BetEsportsSchema } from "./betEsports";
 import { MatchSchema } from "./match";
 import { BetResultSchema } from "./betResult";
+import { VideogameSchema } from "./videogame";
 
 export {
+    VideogameSchema,
     BetResultSchema,
     DepositBonusSchema,
     TxFeeSchema,
