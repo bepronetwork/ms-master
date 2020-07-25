@@ -558,6 +558,22 @@ class App extends ModelComponent {
     }
 
     /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+
+   async editVideogameEdge() {
+    try {
+        //return Boolean
+        let app = await this.process('EditVideogameEdge');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
+    /**
      * @param {String} 
      * @return {bool || Exception}  
      */

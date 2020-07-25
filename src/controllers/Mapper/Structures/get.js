@@ -159,6 +159,7 @@ const get_object = (object) => {
         "description": object.description,
         "hosting_id": object.hosting_id,
         "web_url": object.web_url,
+        "videogames": object.videogames,
         "addOn": object.addOn ? {...object.addOn._doc,
             jackpot: object.addOn.jackpot ?  {
                 ...object.addOn.jackpot._doc,

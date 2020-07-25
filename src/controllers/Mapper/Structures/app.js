@@ -260,6 +260,7 @@ const app_object = (object) => {
             "hosting_id": object.app.hosting_id,
             "web_url": object.app.web_url,
             "addOn": object.app.addOn,
+            "videogames": object.app.videogames,
             "whitelistedAddresses": object.app.whitelistedAddresses,
             "__v": object.app.__v,
         }

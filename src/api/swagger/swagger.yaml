@@ -1485,6 +1485,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/videogames/editEdge:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit Videogame
+      operationId: editVideogameEdge
+      description: Change Table Limit Videogames
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppVideogameEditEdge'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
             
   /app/games/editImage:
     x-swagger-router-controller: game
@@ -3196,6 +3226,37 @@ definitions:
         example: 3245
         description: |
           New Edge
+  AppVideogameEditEdge :
+    type: object
+    required:
+      - app
+      - videogame
+      - edge
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      videogame:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Videogame id
+      edge:
+        type : number
+        example: 3245
+        description: |
+          New Edge
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin ID
   AppGameEditBackgroundImage : 
     type: object
     required:

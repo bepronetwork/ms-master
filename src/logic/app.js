@@ -28,7 +28,8 @@ import {
     TxFeeRepository,
     BackgroundRepository,
     DepositBonusRepository,
-    BetEsportsRepository
+    BetEsportsRepository,
+    VideogameRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -77,6 +78,8 @@ const processActions = {
         
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
+        let videogames = await VideogameRepository.prototype.findAllVideogame();
+
 
         // Get App by Appname
 		let normalized = {
@@ -98,7 +101,13 @@ const processActions = {
             countriesAvailable  : [], // TO DO
             restrictedCountries : [],
             isVerified          : false,
-            typography
+            typography,
+            videogames          : videogames.map(videogame => {
+                return({
+                    _id : videogame._id,
+                    edge: 0
+                })
+            })
 		}
 		return normalized;
     },
@@ -609,6 +618,25 @@ const processActions = {
             isValid
         }
 
+		return normalized;
+    },
+
+    __editVideogameEdge : async (params) => {
+        let { videogame, app, edge } = params;
+        videogame = await VideogameRepository.prototype.findVideogameById(videogame);
+        app = await AppRepository.prototype.findAppByIdNotPopulated(app);
+        if(!videogame){throwError('GAME_NOT_EXISTENT')}
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        // Verify if Videogame is part of this App
+        let isValid = app.videogames.find( app_videogame => app_videogame._id.toString() == videogame._id.toString())
+        if(!isValid){throwError('GAME_NOT_EXISTENT')}
+
+		let normalized = {
+            videogame, 
+            app,
+            edge
+        }
 		return normalized;
     },
 	__editGameImage: async (params) => {
@@ -1149,6 +1177,18 @@ const progressActions = {
 
 		return res;
     },
+
+    __editVideogameEdge : async (params) => {
+        let { videogame, edge, app} = params;
+
+        let res = await AppRepository.prototype.findByIdAndUpdateVideogameEdge({
+            _id : app._id,
+            videogame : videogame._id,
+            edge
+        });
+
+		return true;
+    },
 	__editGameImage : async (params) => {
         let { game, image_url } = params;
         let gameImageURL;
@@ -1594,6 +1634,9 @@ class AppLogic extends LogicComponent{
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
                 };
+                case 'EditVideogameEdge' : {
+                    return await library.process.__editVideogameEdge(params); break;
+                };
                 case 'EditGameImage': {
 					return await library.process.__editGameImage(params); break;
                 };
@@ -1762,6 +1805,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameEdge' : {
                     return await library.progress.__editGameEdge(params); break;
+                };
+                case 'EditVideogameEdge' : {
+                    return await library.progress.__editVideogameEdge(params); break;
                 };
                 case 'EditGameImage': {
 					return await library.progress.__editGameImage(params); break;

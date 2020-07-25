@@ -81,6 +81,23 @@ class AppRepository extends MongoComponent{
         });
     }
 
+    findByIdAndUpdateVideogameEdge({_id, videogame, edge}){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.updateOne(
+                {_id, "videogames._id": videogame},
+                {
+                    $set: {
+                        "videogames.$.edge" : parseFloat(edge)
+                    }
+                }
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     async addTypography(_id, typography){
         return new Promise( async (resolve,reject) => {
             await AppRepository.prototype.schema.model.updateOne({_id}, { typography })
