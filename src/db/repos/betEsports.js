@@ -42,6 +42,36 @@ class BetEsportsRepository extends MongoComponent{
         }
     }
 
+    async findByIdPopulated(_id) {
+        try {
+            return new Promise((resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model.findById(_id)
+                .populate([
+                    'user',
+                    {
+                        path: 'result',
+                        model: 'BetResult',
+                        select: { '__v': 0 },
+                        populate : [
+                            {
+                                 path: 'match',
+                                 model: 'Match',
+                                 select : { '__v': 0}
+                             }
+                        ]
+                    }
+                ])
+                .lean()
+                .exec((err, user) => {
+                    if (err) { reject(err) }
+                    resolve(user);
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
     async findAll() {
         try {
             return new Promise((resolve, reject) => {

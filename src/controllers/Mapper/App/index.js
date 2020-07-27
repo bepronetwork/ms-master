@@ -40,8 +40,10 @@ import { MapperAddAddonDepositBonusSingleton } from "./MapperAddDepositBonus";
 import { MapperEditAddonDepositBonusSingleton } from "./MapperEditDepositBonus";
 import { MapperEditBackgroundSingleton } from "./MapperEditBackground";
 import { MapperAppGetBetsEsportsSingleton } from "./MapperAppGetUsersBetsEsports";
+import { MapperAppGetBetInfoEsportsSingleton } from "./MapperGetBetInfoEsports";
 
 export {
+    MapperAppGetBetInfoEsportsSingleton,
     MapperAppGetBetsEsportsSingleton,
     MapperAddAddonDepositBonusSingleton,
     MapperEditAddonDepositBonusSingleton,

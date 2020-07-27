@@ -2899,6 +2899,12 @@ definitions:
         example: "43256291237846817623"
         description: |
           Unique identifier of the app, ID
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
   UserInfoGetRequest :
     type: object
     required:
