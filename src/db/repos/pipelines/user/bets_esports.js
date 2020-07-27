@@ -19,10 +19,6 @@ const pipeline_bets_esports = (_id, { size, dates, currency, type, offset, slug 
                 'foreignField': '_id',
                 'as': 'videogames'
             }
-        }, {
-            '$unwind': {
-                'path': '$videogames'
-            }
         },
         ...pipeline_by_videogame_slug({ slug }),
         {
