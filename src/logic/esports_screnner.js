@@ -119,7 +119,7 @@ class EsportsScrennerLogic extends LogicComponent {
 
 	testParams(params, action){
 		try{
-			error.EsportsScrenner(params, action);
+			error.esportsScrenner(params, action);
 		}catch(err){
 			throw err;
 		}
