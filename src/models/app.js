@@ -42,7 +42,7 @@ import {
     MapperEditThemeSingleton,
     MapperEditBackgroundSingleton
 } from '../controllers/Mapper';
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton } from '../controllers/Mapper/App';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
 
 class App extends ModelComponent {
@@ -132,8 +132,18 @@ class App extends ModelComponent {
 
     async getBetInfo() {
         try {
-            let app = await this.process('GetBetInfo');
-            return MapperGetBetSingleton.output('GetBetInfo', app);
+            var app ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetBetInfo');
+                    return MapperGetBetSingleton.output('GetBetInfo', app);
+                case "esports":
+                    app = await this.process('GetBetInfoEsports');
+                    return MapperAppGetBetInfoEsportsSingleton.output('AppGetBetInfoEsports', app);
+                default:
+                    app = await this.process('GetBetInfo');
+                    return MapperGetBetSingleton.output('GetBetInfo', app);  
+            }
         } catch (err) {
             throw err;
         }

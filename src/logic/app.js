@@ -247,6 +247,17 @@ const processActions = {
             throw err;
         }
     },
+
+    __getBetInfoEsports : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+            let bet = await BetEsportsRepository.prototype.findByIdPopulated(params.bet);
+            return bet;
+        } catch(err) {
+            throw err;
+        }
+    },
     __editRestrictedCountries : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppById(params.app, "simple");
@@ -908,6 +919,13 @@ const progressActions = {
 		return res;
     },
     __getBetInfo : async (params) => {
+        try {
+            return params;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __getBetInfoEsports : async (params) => {
         try {
             return params;
         } catch(err) {
@@ -1709,6 +1727,9 @@ class AppLogic extends LogicComponent{
                 case 'GetBetInfo' : {
 					return await library.process.__getBetInfo(params); break;
                 };
+                case 'GetBetInfoEsports' : {
+					return await library.process.__getBetInfoEsports(params); break;
+                };
                 case 'EditBackground' : {
 					return await library.process.__editBackground(params); break;
                 };
@@ -1890,6 +1911,9 @@ class AppLogic extends LogicComponent{
                 case 'GetBetInfo': {
                     return await library.progress.__getBetInfo(params); break;
                 }
+                case 'GetBetInfoEsports' : {
+					return await library.progress.__getBetInfoEsports(params); break;
+                };
                 case 'EditBackground': {
                     return await library.progress.__editBackground(params); break;
                 }
