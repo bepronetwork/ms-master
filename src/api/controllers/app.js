@@ -630,6 +630,20 @@ async function editBanners(req, res) {
     }
 }
 
+async function editEsportScrenner(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editEsportScrenner();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function editLogo(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
@@ -852,6 +866,7 @@ async function editVideogameEdge(req, res) {
 
 
 export {
+    editEsportScrenner,
     editVideogameEdge,
     addAddonDepositBonus,
     editAddonDepositBonus,

@@ -540,6 +540,16 @@ class ErrorManager {
             throw err
         }
     }
+
+    esportsScrenner = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
     
     affiliate = function (object, type){
         try{

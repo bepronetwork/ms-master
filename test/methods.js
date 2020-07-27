@@ -561,6 +561,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editEsportsScrennerCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/esportsScrenner')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editBackgroundCustomizationApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/customization/background')

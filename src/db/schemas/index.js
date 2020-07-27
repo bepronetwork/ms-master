@@ -39,8 +39,10 @@ import { BetEsportsSchema } from "./betEsports";
 import { MatchSchema } from "./match";
 import { BetResultSchema } from "./betResult";
 import { VideogameSchema } from "./videogame";
+import { EsportsScrennerSchema } from "./customization/esports_screnner";
 
 export {
+    EsportsScrennerSchema,
     VideogameSchema,
     BetResultSchema,
     DepositBonusSchema,

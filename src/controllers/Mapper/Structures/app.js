@@ -228,6 +228,7 @@ const app_object = (object) => {
                     "_id": object.app.customization.loadingGif._id,
                     "id": !object.app.customization.loadingGif.id ? '' : object.app.customization.loadingGif.id
                 },
+                "esportsScrenner": object.app.customization.esportsScrenner,
             },
             "integrations": !object.app.integrations ? {} : (!object.app.integrations.chat && !object.app.integrations.mailSender && !object.app.integrations.pusher) ? object.app.customization._id : {
                 "_id": object.app.integrations._id,

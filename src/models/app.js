@@ -702,6 +702,20 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async editEsportScrenner() {
+    try {
+        let app = await this.process('EditEsportScrenner');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
 
     /**
     * @param {String} 

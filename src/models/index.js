@@ -41,8 +41,10 @@ import LastBets from "./lastBets";
 import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
+import EsportsScrenner from "./esports_screnner";
 
 export {
+    EsportsScrenner,
     DepositBonus,
     PopularNumberLogic,
     LastBets,

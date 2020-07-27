@@ -1180,6 +1180,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/esportsScrenner : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit E-Sports Screnner Information
+      operationId: editEsportScrenner
+      description: Change E-Sports Screnner
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationEsportsScrenner'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/logo : 
     x-swagger-router-controller: app
     post:
@@ -3387,6 +3417,41 @@ definitions:
       autoDisplay:
         type : boolean
         example: true
+  AppCustomizationEsportsScrenner :
+    type: object
+    required:
+      - app
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      link_url:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      button_text:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      title:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      subtitle:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
   AppCustomizationColors : 
     type: object
     required:
