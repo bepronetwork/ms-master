@@ -81,13 +81,13 @@ class AppRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdateVideogameEdge({_id, videogame, edge}){
+    findByIdAndUpdateVideogameEdge({_id, esports_edge}){
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.updateOne(
-                {_id, "videogames._id": videogame},
+                {_id},
                 {
                     $set: {
-                        "videogames.$.edge" : parseFloat(edge)
+                        "esports_edge" : parseFloat(esports_edge)
                     }
                 }
             )
