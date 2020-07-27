@@ -20,7 +20,7 @@ context('Edit Esports Screnner', async () => {
             title: "bne2ger3hj",
             subtitle: "12e3gue",
         };
-
+        console.log(app.id)
         let res = await editEsportsScrennerCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
 
         expect(detectValidationErrors(res)).to.be.equal(false);
