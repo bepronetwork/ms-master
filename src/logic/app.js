@@ -1680,6 +1680,9 @@ class AppLogic extends LogicComponent{
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
                 };
+                case 'EditEsportScrenner' : {
+                    return await library.process.__editEsportScrenner(params); break;
+                };
                 case 'EditLogo' : {
                     return await library.process.__editLogo(params); break;
                 };
@@ -1863,6 +1866,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;
+                };
+                case 'EditEsportScrenner' : {
+                    return await library.progress.__editEsportScrenner(params); break;
                 };
                 case 'EditLogo' : {
                     return await library.progress.__editLogo(params); break;
