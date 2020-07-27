@@ -23,7 +23,7 @@ let outputs = {
                         "username": list.user.username,
                     },
                     "app": list.app,
-                    "videogames": list.videogames,
+                    "esports_edge": list.esports_edge,
                     "isWon": list.isWon,
                     "result": list.result,
                     "type": list.type,

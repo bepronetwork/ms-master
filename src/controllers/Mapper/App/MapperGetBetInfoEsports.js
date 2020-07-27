@@ -21,7 +21,7 @@ let outputs = {
                 "username": object.user.username,
             },
             "app": object.app,
-            "videogames": object.videogames,
+            "esports_edge": object.esports_edge,
             "isWon": object.isWon,
             "result": object.result,
             "type": object.type,
