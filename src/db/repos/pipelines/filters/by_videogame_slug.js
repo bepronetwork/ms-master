@@ -3,7 +3,11 @@ const pipeline_by_videogame_slug = ({ slug }) => {
     return [
         {
             '$match': {
-                'videogames.slug': slug
+                'videogames': {
+                    '$elemMatch': {
+                        'slug': slug
+                    }
+                }
             }
         }
     ]
