@@ -7,15 +7,16 @@ class CustomizationSchema{};
 CustomizationSchema.prototype.name = 'Customization';
 
 CustomizationSchema.prototype.schema =  {
-    topBar      : { type : mongoose.Schema.Types.ObjectId, ref: 'TopBar', required : true },
-    banners     : { type : mongoose.Schema.Types.ObjectId, ref: 'Banners', required : true },
-    logo        : { type : mongoose.Schema.Types.ObjectId, ref: 'Logo', required : true },
-    background  : { type : mongoose.Schema.Types.ObjectId, ref: 'Background', required : true },
-    colors      : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Color', required : true }],
-    footer      : { type : mongoose.Schema.Types.ObjectId, ref: 'Footer', required : true },
-    topIcon     : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },
-    loadingGif  : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
-    theme       : { type : String, default : "dark" },
+    topBar            : { type : mongoose.Schema.Types.ObjectId, ref: 'TopBar', required : true },
+    banners           : { type : mongoose.Schema.Types.ObjectId, ref: 'Banners', required : true },
+    logo              : { type : mongoose.Schema.Types.ObjectId, ref: 'Logo', required : true },
+    background        : { type : mongoose.Schema.Types.ObjectId, ref: 'Background', required : true },
+    colors            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Color', required : true }],
+    footer            : { type : mongoose.Schema.Types.ObjectId, ref: 'Footer', required : true },
+    topIcon           : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },
+    loadingGif        : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
+    theme             : { type : String, default : "dark" },
+    esports_screnner  : { type : mongoose.Schema.Types.ObjectId, ref: 'EsportsScrenner', required : true },
 }
 
 
