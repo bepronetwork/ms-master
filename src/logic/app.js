@@ -29,7 +29,8 @@ import {
     BackgroundRepository,
     DepositBonusRepository,
     BetEsportsRepository,
-    VideogameRepository
+    VideogameRepository,
+    EsportsScrennerRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -729,6 +730,15 @@ const processActions = {
             app
         };
     },
+    __editEsportScrenner : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editBackground : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app);
@@ -1333,6 +1343,20 @@ const progressActions = {
         })
         // Save info on Customization Part
         return params;
+    },
+    __editEsportScrenner : async (params) => {
+        let { app, link_url, button_text, title, subtitle } = params;
+        await EsportsScrennerRepository.prototype.findByIdAndUpdate({
+            _id: app.customization.esportsScrenner._id,
+            link_url,
+            button_text,
+            title,
+            subtitle
+        })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        // Save info on Customization Part
+        return true;
     },
     __editBackground: async (params) => {
         let { app, background } = params;

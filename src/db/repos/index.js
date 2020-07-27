@@ -48,8 +48,10 @@ import DepositBonusRepository from "./depositBonus";
 import BetEsportsRepository from "./betEsports";
 import MatchRepository from "./match";
 import VideogameRepository from "./videogame";
+import EsportsScrennerRepository from "./esports_screnner";
 
 export {
+    EsportsScrennerRepository,
     BetEsportsRepository,
     DepositBonusRepository,
     PopularNumberRepository,

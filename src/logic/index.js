@@ -45,8 +45,10 @@ import TxFeeLogic from "./txFee";
 import BackgroundLogic from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonusLogic from "./depositBonus";
+import EsportsScrennerLogic from "./esports_screnner"
 
 export {
+    EsportsScrennerLogic,
     DepositBonusLogic,
     PopularNumberLogic,
     TxFeeLogic,

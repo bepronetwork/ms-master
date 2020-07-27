@@ -16,7 +16,7 @@ CustomizationSchema.prototype.schema =  {
     topIcon           : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },
     loadingGif        : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
     theme             : { type : String, default : "dark" },
-    esports_screnner  : { type : mongoose.Schema.Types.ObjectId, ref: 'EsportsScrenner', required : true },
+    esportsScrenner  : { type : mongoose.Schema.Types.ObjectId, ref: 'EsportsScrenner', required : true },
 }
 
 
