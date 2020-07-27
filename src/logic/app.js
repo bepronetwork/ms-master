@@ -78,7 +78,6 @@ const processActions = {
         
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
-        let videogames = await VideogameRepository.prototype.findAllVideogame();
 
 
         // Get App by Appname
@@ -102,12 +101,7 @@ const processActions = {
             restrictedCountries : [],
             isVerified          : false,
             typography,
-            videogames          : videogames.map(videogame => {
-                return({
-                    _id : videogame._id,
-                    edge: 0
-                })
-            })
+            esports_edge        : 0,
 		}
 		return normalized;
     },
@@ -633,20 +627,13 @@ const processActions = {
     },
 
     __editVideogameEdge : async (params) => {
-        let { videogame, app, edge } = params;
-        videogame = await VideogameRepository.prototype.findVideogameById(videogame);
+        let { app, esports_edge } = params;
         app = await AppRepository.prototype.findAppByIdNotPopulated(app);
-        if(!videogame){throwError('GAME_NOT_EXISTENT')}
         if(!app){throwError('APP_NOT_EXISTENT')}
 
-        // Verify if Videogame is part of this App
-        let isValid = app.videogames.find( app_videogame => app_videogame._id.toString() == videogame._id.toString())
-        if(!isValid){throwError('GAME_NOT_EXISTENT')}
-
 		let normalized = {
-            videogame, 
             app,
-            edge
+            esports_edge
         }
 		return normalized;
     },
@@ -1197,12 +1184,11 @@ const progressActions = {
     },
 
     __editVideogameEdge : async (params) => {
-        let { videogame, edge, app} = params;
+        let { esports_edge, app} = params;
 
-        let res = await AppRepository.prototype.findByIdAndUpdateVideogameEdge({
+        await AppRepository.prototype.findByIdAndUpdateVideogameEdge({
             _id : app._id,
-            videogame : videogame._id,
-            edge
+            esports_edge
         });
 
 		return true;

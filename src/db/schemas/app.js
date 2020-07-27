@@ -38,10 +38,7 @@ AppSchema.prototype.schema =  {
     virtual             : { type : Boolean, default : false, required : true },
     licenseID           : { type : String },
     restrictedCountries : [{ type: String}],
-    videogames          : [{
-        _id               : { type: mongoose.Schema.Types.ObjectId, ref: 'Videogame' },
-        edge              : { type: Number, required : true, default : 0 }
-    }]
+    esports_edge        : { type: Number, required : true, default : 0 }
 }
 
 

@@ -188,12 +188,11 @@ context('Normal', async () =>  {
         shouldIntegrateServicesIntoApp(res.data, expect);
     }));
 
-    it('should Edit Videogame Edge', mochaAsync(async () => {
+    it('should Edit E-Sports Edge', mochaAsync(async () => {
         let postData = {
             app: app.id,
             admin: admin.id,
-            edge: 10,
-            videogame: "5ef2c7304f95d0b0d1185977"
+            esports_edge: 10
         }
         let res = await editVideogameEdge({...postData}, admin.security.bearerToken, { id: admin.id });
         detectValidationErrors(res);
