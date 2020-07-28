@@ -39,7 +39,19 @@ class BitGoClass {
     }
 
     async getWallet({ticker, id}){
+        switch(ticker.toLowerCase()){
+            case 'eth' : {
+                break;
+            };
+            case 'btc' : {
+                break;
+            };
+            default : {
+                ticker = 'eth';
+            }
+        }
         const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(ticker).toLowerCase()}`;
+        
         return await this.bitgo.coin(currencyTicker).wallets().get({id});
     }
 
