@@ -24,6 +24,7 @@ let outputs = {
                     },
                     "app": list.app,
                     "esports_edge": list.esports_edge,
+                    "videogames": list.videogames,
                     "isWon": list.isWon,
                     "result": list.result,
                     "type": list.type,
