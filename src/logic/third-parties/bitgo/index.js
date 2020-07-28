@@ -55,10 +55,12 @@ class BitGoClass {
     }
 
     async getTransaction({id, wallet_id, ticker}){
+        console.log("ticker", ticker)
         const wallet = await this.getWallet({ticker, id : wallet_id});
-        var res = await wallet.getTransfer({ id });
+        var res = await wallet.getTransfer({id});
         // Update Amount based on the type of Wei or Sats
         res.value = getCurrencyAmountFromBitGo({ticker, amount : res.value});
+        console.log("res", res)
         return res;
     }
 
