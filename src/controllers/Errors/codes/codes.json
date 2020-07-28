@@ -270,5 +270,9 @@
     "067" : {
         "key" : "ADDRESS_NOT_AVAILABLE",
         "message"   : "No Deposit Address Available"
+    },
+    "068" : {
+        "key" : "NO_ETH_WALLET",
+        "message"   : "No ETH Wallet was created"
     }
 }
