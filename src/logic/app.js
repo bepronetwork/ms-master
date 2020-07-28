@@ -863,7 +863,8 @@ const progressActions = {
     },
     __addCurrencyWallet : async (params) => {
         const { currency, passphrase, app } = params;
-        var wallet;
+        var wallet, bitgo_wallet, receiveAddress, keys;
+
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
@@ -876,52 +877,75 @@ const progressActions = {
                     }
                 })
             })).register())._doc;
-        }else{
+        }else{  
+            if(currency.erc20){
+                /* Don't create wallet for bitgo for the platform again */
 
+                /* Get ETH Wallet */
+                let wallet_eth = app.wallet.find( w => w.currency.ticker == 'ETH');
+                
+                /* No Eth Wallet was created */
+                if(!wallet_eth){throwError('NO_ETH_WALLET')};
 
-            /* Create Wallet on Bitgo */
-            var { wallet : bitgo_wallet, receiveAddress, keys } = await BitGoSingleton.createWallet({
-                label : `${app._id}-${currency.ticker}`,
-                passphrase,
-                currency : currency.ticker
-            })
-            
-            /* Record webhooks */
-            await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
+                /* Save Wallet on DB */
+                wallet = (await (new Wallet({
+                    currency : currency._id,
+                    bitgo_id : wallet_eth.bitgo_id,
+                    virtual : false,
+                    bank_address : wallet_eth.bank_address,
+                    hashed_passphrase : Security.prototype.encryptData(passphrase)
+                })).register())._doc;
 
-            /* Create Policy for Day */
-            await BitGoSingleton.addPolicyToWallet({
-                ticker : currency.ticker,
-                bitGoWalletId : bitgo_wallet.id(),
-                timeWindow : 'day'
-            })
+            }else{
+                /* Create Wallet on Bitgo */
+                let params = await BitGoSingleton.createWallet({
+                    label : `${app._id}-${currency.ticker}`,
+                    passphrase,
+                    currency : currency.ticker
+                })
 
-            /* Create Policy for Transaction */
-            await BitGoSingleton.addPolicyToWallet({
-                ticker : currency.ticker,
-                bitGoWalletId : bitgo_wallet.id(),
-                timeWindow : 'hour',
-            })
+                bitgo_wallet = params.wallet;
+                receiveAddress = params.receiveAddress;
+                keys = params.keys;
 
-            /* Create Policy for Hour */
-            await BitGoSingleton.addPolicyToWallet({
-                ticker : currency.ticker,
-                bitGoWalletId : bitgo_wallet.id(),
-                timeWindow : 'transaction',
-            })
+                /* Record webhooks */
+                await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
-            /* No Bitgo Wallet created */
-            if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+                /* Create Policy for Day */
+                await BitGoSingleton.addPolicyToWallet({
+                    ticker : currency.ticker,
+                    bitGoWalletId : bitgo_wallet.id(),
+                    timeWindow : 'day'
+                })
 
-            /* Save Wallet on DB */
-            wallet = (await (new Wallet({
-                currency : currency._id,
-                bitgo_id : bitgo_wallet.id(),
-                virtual : false,
-                bank_address : receiveAddress,
-                hashed_passphrase : Security.prototype.encryptData(passphrase)
-            })).register())._doc;
+                /* Create Policy for Transaction */
+                await BitGoSingleton.addPolicyToWallet({
+                    ticker : currency.ticker,
+                    bitGoWalletId : bitgo_wallet.id(),
+                    timeWindow : 'hour',
+                })
 
+                /* Create Policy for Hour */
+                await BitGoSingleton.addPolicyToWallet({
+                    ticker : currency.ticker,
+                    bitGoWalletId : bitgo_wallet.id(),
+                    timeWindow : 'transaction',
+                })
+
+                /* No Bitgo Wallet created */
+                if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+        
+                /* Save Wallet on DB */
+                wallet = (await (new Wallet({
+                    currency : currency._id,
+                    bitgo_id : bitgo_wallet.id(),
+                    virtual : false,
+                    bank_address : receiveAddress,
+                    hashed_passphrase : Security.prototype.encryptData(passphrase)
+                })).register())._doc;
+
+            }
+         
             let virtualWallet = app.wallet.find( w => w.currency.virtual == true);
 
             if(virtualWallet){
