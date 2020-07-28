@@ -45,7 +45,7 @@ import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
-import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
+import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL, PANDA_SCORE_TOKEN } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
 import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository, LastBetsEsportsRepository, BiggestBetWinnerEsportsRepository, BiggestUserWinnerEsportsRepository } from "../db/repos/redis";
@@ -53,6 +53,7 @@ import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
+const axios = require('axios');
 
 
 // Private fields
@@ -248,6 +249,13 @@ const processActions = {
             let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if (!app){ throwError('APP_NOT_EXISTENT') }
             let bet = await BetEsportsRepository.prototype.findByIdPopulated(params.bet);
+            bet.result = bet.result.map( async result => {
+                return({
+                    ...result,
+                    data_external_match : (await axios.get(`https://api.pandascore.co/betting/matches/${result.match.external_id}?token=${PANDA_SCORE_TOKEN}`)).data
+                })
+            });
+            bet.result = await Promise.all(bet.result);
             return bet;
         } catch(err) {
             throw err;
