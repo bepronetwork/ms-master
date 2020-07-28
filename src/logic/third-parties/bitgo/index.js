@@ -67,6 +67,7 @@ class BitGoClass {
     async addAppDepositWebhook({wallet, id, currency_id}){
         let res = await wallet.addWebhook({
             url: `${MS_MASTER_URL}/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`,
+            allToken : true,
             type: "transfer",
             numConfirmations : 3,
             listenToFailureStates : false
