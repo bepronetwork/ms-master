@@ -47,12 +47,12 @@ class BitGoClass {
                 break;
             };
             default : {
-                //ticker = 'eth';
+                ticker = 'eth';
             }
         }
         const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(ticker).toLowerCase()}`;
         
-        return await this.bitgo.coin(currencyTicker).wallets().get({id});
+        return await this.bitgo.coin(currencyTicker).wallets().get({id, allTokens : true});
     }
 
     async generateDepositAddress({wallet, id, label}){
