@@ -47,7 +47,7 @@ class BitGoClass {
                 break;
             };
             default : {
-                ticker = 'eth';
+                //ticker = 'eth';
             }
         }
         const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(ticker).toLowerCase()}`;
@@ -67,7 +67,7 @@ class BitGoClass {
     }
 
     async getTransaction({id, wallet_id, ticker}){
-        console.log("ticker", ticker, id)
+        console.log("ticker", ticker, id, wallet_id)
         const wallet = await this.getWallet({ticker, id : wallet_id});
         console.log("wallet", wallet)
         var res = await wallet.getTransfer({id});
