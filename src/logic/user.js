@@ -333,7 +333,11 @@ const processActions = {
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if (!user) { throwError('USER_NOT_EXISTENT') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-        const user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        if(user_wallet.currency.erc20){
+            // Is ERC20 Token simulate use of eth wallet
+            user_wallet = user.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toLowerCase());
+        }
 
         return {
             app_wallet,
