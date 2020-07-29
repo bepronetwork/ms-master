@@ -353,6 +353,7 @@ const processActions = {
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
+            currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             let addOn = app.addOn;
             let fee = 0;
