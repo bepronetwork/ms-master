@@ -47,7 +47,7 @@ class BitGoClass {
                 break;
             };
             default : {
-                ticker = 'eth';
+               // ticker = 'eth';
             }
         }
         const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(ticker).toLowerCase()}`;
