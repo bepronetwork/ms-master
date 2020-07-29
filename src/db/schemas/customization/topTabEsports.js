@@ -7,6 +7,7 @@ TopTabEsportsSchema.prototype.name = 'TopTabEsports';
 
 TopTabEsportsSchema.prototype.schema =  {
     topTabEsports : [{
+        _id       : { type : mongoose.Schema.Types.ObjectId, required: true},
         name      : {type : String},
         icon      : {type : String},
         link_url  : {type : String}

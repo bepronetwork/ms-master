@@ -660,6 +660,24 @@ const processActions = {
             app
         };
     },
+    __editTopTabCassino : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editTopTabEsports : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editBanners : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1233,6 +1251,34 @@ const progressActions = {
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
     __editTopBar  : async (params) => {
+        let { app, backgroundColor, textColor, text, isActive } = params;
+        const { topBar } = app.customization;
+        await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
+            textColor,
+            backgroundColor, 
+            text,
+            isActive
+        })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return params;
+    },
+    __editTopTabCassino  : async (params) => {
+        let { app, backgroundColor, textColor, text, isActive } = params;
+        const { topBar } = app.customization;
+        await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
+            textColor,
+            backgroundColor, 
+            text,
+            isActive
+        })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return params;
+    },
+    __editTopTabEsports  : async (params) => {
         let { app, backgroundColor, textColor, text, isActive } = params;
         const { topBar } = app.customization;
         await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {

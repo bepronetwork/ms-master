@@ -55,6 +55,23 @@ class TopTabCassinoRepository extends MongoComponent{
         });
     }
 
+    findByIdAndUpdateDepositFee(_id, currency, amount){
+        return new Promise( (resolve,reject) => {
+            TopTabCassinoRepository.prototype.schema.model.updateOne(
+                {_id, "deposit_fee.currency": currency},
+                {
+                    $set: {
+                        "deposit_fee.$.amount" : parseFloat(amount)
+                    }
+                }
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
 }
 
 TopTabCassinoRepository.prototype.schema = new TopTabCassinoSchema();

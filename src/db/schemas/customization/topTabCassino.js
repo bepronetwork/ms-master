@@ -7,6 +7,7 @@ TopTabCassinoSchema.prototype.name = 'TopTabCassino';
 
 TopTabCassinoSchema.prototype.schema =  {
     topTabCassino : [{
+        _id       : { type : mongoose.Schema.Types.ObjectId, required: true},
         name      : {type : String},
         icon      : {type : String},
         link_url  : {type : String}

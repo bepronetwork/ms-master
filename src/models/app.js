@@ -637,6 +637,21 @@ class App extends ModelComponent {
     }
 
     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTopTab() {
+        //output = boolean
+        try {
+            let app = await this.process('EditTopTab');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
     * @param {String} 
     * @return {bool || Exception}  
     */
