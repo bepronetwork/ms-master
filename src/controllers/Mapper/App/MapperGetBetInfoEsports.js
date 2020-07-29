@@ -27,6 +27,7 @@ let outputs = {
             "type": object.type,
             "winAmount": object.winAmount,
             "created_at": object.created_at,
+            "resolved": object.resolved,
             "__v": object.__v,
         }
     },
