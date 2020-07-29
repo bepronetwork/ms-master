@@ -71,6 +71,8 @@ export const IS_TEST = process.env.IS_TEST;
 
 export const IS_LOCAL_DEV = process.env.IS_LOCAL_DEV;
 
+export const PANDA_SCORE_TOKEN = process.env.PANDA_SCORE_TOKEN;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
