@@ -531,6 +531,26 @@ class ErrorManager {
         }
     }
 
+    topTabCassino = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    topTabEsports = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     mailSender = function (object, type){
         try{
             switch(type){
