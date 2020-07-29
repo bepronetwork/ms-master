@@ -21,6 +21,7 @@ let outputs = {
                 "currency": object.currency,
                 "videogames": object.videogames,
                 "type": object.type,
+                "resolved": object.resolved,
                 "tag": "esports"
             })
         })
