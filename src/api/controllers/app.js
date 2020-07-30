@@ -765,7 +765,7 @@ async function getUsers(req, res) {
  */
 
 async function webhookBitgoDeposit(req, res) {
-    try {
+    try { 
         req.body.id = req.query.id;
         req.body.currency = req.query.currency;
         let params = req.body;
@@ -773,6 +773,7 @@ async function webhookBitgoDeposit(req, res) {
         let data = await Promise.all(hooks.map(async wB => {
             try {
                 // Get Info from WebToken
+                console.log("wb", wB)
                 const wBT = await BitGoSingleton.getTransaction({ id: wB.transfer, wallet_id: wB.wallet, ticker: getNormalizedTicker({ ticker: wB.coin }) });
                 if (!wBT) { return null }
                 // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}

@@ -502,7 +502,7 @@ const processActions = {
         /* Get App Id */
         var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
-        const wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+        const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
         /* Verify if the transactionHash was created */

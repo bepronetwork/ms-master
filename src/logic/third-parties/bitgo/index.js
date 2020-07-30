@@ -39,8 +39,19 @@ class BitGoClass {
     }
 
     async getWallet({ticker, id}){
+        switch(ticker.toLowerCase()){
+            case 'eth' : {
+                break;
+            };
+            case 'btc' : {
+                break;
+            };
+            default : {
+               // ticker = 'eth';
+            }
+        }
         const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(ticker).toLowerCase()}`;
-        return await this.bitgo.coin(currencyTicker).wallets().get({id});
+        return await this.bitgo.coin(currencyTicker).wallets().get({id, allTokens : true});
     }
 
     async generateDepositAddress({wallet, id, label}){
@@ -55,18 +66,17 @@ class BitGoClass {
     }
 
     async getTransaction({id, wallet_id, ticker}){
-        console.log("ticker", ticker)
         const wallet = await this.getWallet({ticker, id : wallet_id});
-        var res = await wallet.getTransfer({id});
+        var res = await wallet.getTransfer({id, allTokens : true});
         // Update Amount based on the type of Wei or Sats
         res.value = getCurrencyAmountFromBitGo({ticker, amount : res.value});
-        console.log("res", res)
         return res;
     }
 
     async addAppDepositWebhook({wallet, id, currency_id}){
         let res = await wallet.addWebhook({
             url: `${MS_MASTER_URL}/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`,
+            allToken : true,
             type: "transfer",
             numConfirmations : 3,
             listenToFailureStates : false
