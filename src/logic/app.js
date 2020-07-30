@@ -27,7 +27,9 @@ import {
     CustomizationRepository,
     TxFeeRepository,
     BackgroundRepository,
-    DepositBonusRepository
+    DepositBonusRepository,
+    TopTabCassinoRepository,
+    TopTabEsportsRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -48,6 +50,7 @@ import addOnRepository from '../db/repos/addOn';
 import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
+import { TopTabCassinoSchema } from '../db/schemas';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -1265,32 +1268,52 @@ const progressActions = {
         return params;
     },
     __editTopTabCassino  : async (params) => {
-        let { app, backgroundColor, textColor, text, isActive } = params;
-        const { topBar } = app.customization;
-        await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
-            textColor,
-            backgroundColor, 
-            text,
-            isActive
-        })
+        let { app, topTabParams } = params;
+        let topTabCassino = await Promise.all(topTabParams.map( async topTab => {
+            if(topTab.icon.includes("https")){
+                /* If it is a link already */
+                return topTab;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    icon   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topTab.icon}),
+                    name    : topTab.name,
+                    link_url : topTab.link_url
+                };
+            }
+        }))
+        await TopTabCassinoRepository.prototype.findByIdAndUpdateTopTab({
+            _id: app.customization.topTabCassino._id,
+            newStructure: topTabCassino
+        });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
 
-        return params;
+        return true;
     },
     __editTopTabEsports  : async (params) => {
-        let { app, backgroundColor, textColor, text, isActive } = params;
-        const { topBar } = app.customization;
-        await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
-            textColor,
-            backgroundColor, 
-            text,
-            isActive
-        })
+        let { app, topTabParams } = params;
+        let topTabEsports = await Promise.all(topTabParams.map( async topTab => {
+            if(topTab.icon.includes("https")){
+                /* If it is a link already */
+                return topTab;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    icon   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topTab.icon}),
+                    name    : topTab.name,
+                    link_url : topTab.link_url
+                };
+            }
+        }))
+        await TopTabEsportsRepository.prototype.findByIdAndUpdateTopTab({
+            _id: app.customization.topTabEsports._id,
+            newStructure: topTabEsports
+        });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
 
-        return params;
+        return true;
     },
     __editBanners : async (params) => {
         let { app, autoDisplay, banners } = params;
@@ -1629,6 +1652,12 @@ class AppLogic extends LogicComponent{
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
+                case 'EditTopTabCassino' : {
+                    return await library.process.__editTopTabCassino(params); break;
+                };
+                case 'EditTopTabEsports' : {
+                    return await library.process.__editTopTabEsports(params); break;
+                };
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
                 };
@@ -1797,6 +1826,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;
+                };
+                case 'EditTopTabCassino' : {
+                    return await library.progress.__editTopTabCassino(params); break;
+                };
+                case 'EditTopTabEsports' : {
+                    return await library.progress.__editTopTabEsports(params); break;
                 };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;

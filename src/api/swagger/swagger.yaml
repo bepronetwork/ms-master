@@ -3528,10 +3528,8 @@ definitions:
     type: object
     required:
       - app
-      - backgroundColor
-      - textColor
-      - text
-      - isActive
+      - topTabParams
+      - tag
     properties:
       app:
         type : string
@@ -3539,29 +3537,32 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      tag:
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag of type request
       topTabParams :
-        type: object
-        properties:
-          top_tab_id :
-            type : string
-            example: "cwhuc132v2"
-            description: |
-              Top Tab Id
-          name :
-            type: string
-            example: "test"
-            description: |
-              Name of Top Tab
-          icon :
-            type: string
-            example: "hello.png"
-            description: |
-              Top Tab Icon
-          link_url :
-            type: string
-            example: "hello.com"
-            description: |
-              Top Tab Link Url
+        type : array
+        items : 
+          type: object
+          properties:
+            name :
+              type: string
+              example: "test"
+              description: |
+                Name of Top Tab
+            icon :
+              type: string
+              example: "hello.png"
+              description: |
+                Top Tab Icon
+            link_url :
+              type: string
+              example: "hello.com"
+              description: |
+                Top Tab Link Url
   AppCustomizationTopIcon : 
     type: object
     required:

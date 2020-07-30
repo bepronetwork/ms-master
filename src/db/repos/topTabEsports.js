@@ -38,13 +38,12 @@ class TopTabEsportsRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate(_id, newStructure){
+    findByIdAndUpdateTopTab({_id, newStructure}){
         return new Promise( (resolve,reject) => {
             TopTabEsportsRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "ids"          : newStructure.ids,
-                    "autoDisplay"   : newStructure.autoDisplay
+                    "topTabEsports" : newStructure
                 } },
                 { 'new': true })
                 .exec( (err, item) => {

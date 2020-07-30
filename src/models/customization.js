@@ -3,7 +3,6 @@ import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
 import { TopBar, Banners, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTabCassino, TopTabEsports } from '.';
 import { colors } from '../mocks';
-import TopTabEsports from './topTabEsports';
 
 class Customization extends ModelComponent{
 

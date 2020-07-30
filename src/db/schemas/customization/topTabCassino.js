@@ -1,5 +1,6 @@
 import { globals } from "../../../Globals";
 let db = globals.main_db;
+import mongoose from 'mongoose';
 
 class TopTabCassinoSchema{};
 
@@ -7,10 +8,9 @@ TopTabCassinoSchema.prototype.name = 'TopTabCassino';
 
 TopTabCassinoSchema.prototype.schema =  {
     topTabCassino : [{
-        _id       : { type : mongoose.Schema.Types.ObjectId, required: true},
-        name      : {type : String},
-        icon      : {type : String},
-        link_url  : {type : String}
+        name      : {type : String, required: true},
+        icon      : {type : String, required: true},
+        link_url  : {type : String, required: true}
     }]
 }
 
