@@ -608,6 +608,7 @@ const progressActions = {
         let addresses = user_wallet.depositAddresses;
         let address = addresses.find( a => a.address);
         if(!address){
+            if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
             var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
             // See if address is already provided
             let bitgo_id;

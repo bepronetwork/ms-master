@@ -82,7 +82,8 @@ ErrorHandler.prototype.KEYS =  {
     'INVALID_DEPOSIT_BONUS_MAX_DEPOSIT'     : "065",
     'INVALID_DEPOSIT_BONUS_MIN_DEPOSIT'     : "066",
     'ADDRESS_NOT_AVAILABLE'                 : "067",
-    'NO_ETH_WALLET'                         : "068"
+    'NO_ETH_WALLET'                         : "068",
+    'UNCONFIRMED_EMAIL'                     : "069"
 };
 
 /***************************

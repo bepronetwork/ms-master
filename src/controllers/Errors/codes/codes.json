@@ -274,5 +274,9 @@
     "068" : {
         "key" : "NO_ETH_WALLET",
         "message"   : "No ETH Wallet was created"
+    },
+    "069" : {
+        "key" : "UNCONFIRMED_EMAIL",
+        "message"   : "Unverified email"
     }
 }
