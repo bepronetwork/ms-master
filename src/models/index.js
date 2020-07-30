@@ -41,8 +41,12 @@ import LastBets from "./lastBets";
 import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
+import TopTabCassino from "./topTabCassino";
+import TopTabEsports from "./topTabEsports";
 
 export {
+    TopTabEsports,
+    TopTabCassino,
     DepositBonus,
     PopularNumberLogic,
     LastBets,
