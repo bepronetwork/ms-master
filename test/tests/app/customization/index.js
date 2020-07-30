@@ -10,4 +10,5 @@ context('Customization', async () => {
     require('./addTypography');
     require('./addLoadingGif');
     require('./editTheme')
+    require('./editTopTab')
 });
