@@ -44,7 +44,8 @@ class BannersRepository extends MongoComponent{
                 _id, 
                 { $set: { 
                     "ids"          : newStructure.ids,
-                    "autoDisplay"   : newStructure.autoDisplay
+                    "autoDisplay"  : newStructure.autoDisplay,
+                    "fullWidth"    : newStructure.fullWidth
                 } },
                 { 'new': true })
                 .exec( (err, item) => {

@@ -182,6 +182,7 @@ const app_object = (object) => {
                 "banners": !object.app.customization.banners ? {} : {
                     "_id": object.app.customization.banners._id,
                     "autoDisplay": object.app.customization.banners.autoDisplay,
+                    "fullWidth": object.app.customization.banners.fullWidth,
                     "ids": !object.app.customization.banners.ids ? [] : object.app.customization.banners.ids.map(id => {
                         return ({
                             "_id": id._id,
