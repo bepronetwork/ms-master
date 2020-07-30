@@ -3339,6 +3339,7 @@ definitions:
       - app
       - banners
       - autoDisplay
+      - fullWidth
     properties:
       app:
         type : string
@@ -3362,6 +3363,9 @@ definitions:
             subtitle :
               type: string
       autoDisplay:
+        type : boolean
+        example: true
+      fullWidth:
         type : boolean
         example: true
   AppCustomizationColors : 

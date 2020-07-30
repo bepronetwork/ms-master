@@ -133,6 +133,7 @@ let outputs = {
                 "banners": !object.customization.banners ? {} : {
                     "_id": object.customization.banners._id,
                     "autoDisplay": object.customization.banners.autoDisplay,
+                    "fullWidth": object.customization.banners.fullWidth,
                     "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
                         return ({
                             "_id": id._id,

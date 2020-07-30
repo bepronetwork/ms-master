@@ -1247,7 +1247,7 @@ const progressActions = {
         return params;
     },
     __editBanners : async (params) => {
-        let { app, autoDisplay, banners } = params;
+        let { app, autoDisplay, banners, fullWidth } = params;
         let ids = await Promise.all(banners.map( async b => {
             if(b.image_url.includes("https")){
                 /* If it is a link already */
@@ -1265,7 +1265,8 @@ const progressActions = {
         }))
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
             autoDisplay,
-            ids
+            ids,
+            fullWidth
         })
         // Save info on Customization Part
         return params;
