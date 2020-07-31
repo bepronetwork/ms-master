@@ -50,8 +50,11 @@ context(`${ticker}`, async () => {
 
     it('shouldnt update Wallet with already checked tx', mochaAsync(async () => {
         let body = bitgoDepositExample();
-
-        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        let res = {
+            ...body,
+            coin: "eth"
+        }
+        let res = await webhookConfirmDepositFromBitgo(res, app.id, currencyWallet.currency._id);
         detectValidationErrors(res);
         shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
     }));
