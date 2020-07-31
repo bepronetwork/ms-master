@@ -295,9 +295,9 @@ const progressActions = {
     __auto : async (params) => {
 
         const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
-
-        await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
-
+        if(points>0){
+            await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
+        }
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
         let dependentObjects = Object.keys(result).map( async key =>
