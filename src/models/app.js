@@ -383,6 +383,18 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+    async addAddonPointSystem() {
+        try {
+            return await this.process('AddAddonPointSystem');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
     async editAddonDepositBonus() {
         try {
@@ -392,6 +404,18 @@ class App extends ModelComponent {
             throw err;
         }
     }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+   async editAddonPointSystem() {
+    try {
+        return await this.process('EditAddonPointSystem');
+    } catch (err) {
+        throw err;
+    }
+}
 
     /**
     * @param {String} 

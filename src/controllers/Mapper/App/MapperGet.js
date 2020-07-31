@@ -217,7 +217,8 @@ let outputs = {
                 autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
                 balance       : !object.addOn.balance       ? null : object.addOn.balance,
                 txFee         : !object.addOn.txFee       ? null : object.addOn.txFee,
-                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus
+                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus,
+                pointSystem  : !object.addOn.pointSystem       ? null : object.addOn.pointSystem
             },
             "__v": object.__v,
         }

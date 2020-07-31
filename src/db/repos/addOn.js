@@ -116,6 +116,22 @@ class AddOnRepository extends MongoComponent{
         });
     }
 
+    addAddonPointSystem(addOn_id, pointSystem){
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn_id,
+                {
+                    $set: {pointSystem}
+                },
+                {'new': true}
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
 }
 
 AddOnRepository.prototype.schema = new AddOnSchema();

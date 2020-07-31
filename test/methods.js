@@ -110,6 +110,22 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addAddonPointSystem(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/pointSystem/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonPointSystem(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/pointSystem/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAddonTxFee(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/txFee/editTxFee')
