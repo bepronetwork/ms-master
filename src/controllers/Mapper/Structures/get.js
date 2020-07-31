@@ -45,7 +45,7 @@ const get_object = (object) => {
             "url": object.typography.url
         } : object.typography,
         "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
-        "restrictedCountries":object.restrictedCountries ? object.restrictedCountries : [],
+        "restrictedCountries": object.restrictedCountries ? object.restrictedCountries : [],
         "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
         "isWithdrawing": object.isWithdrawing,
         "name": object.name,
@@ -82,6 +82,7 @@ const get_object = (object) => {
             "banners": !object.customization.banners ? {} : {
                 "_id": object.customization.banners._id,
                 "autoDisplay": object.customization.banners.autoDisplay,
+                "fullWidth": object.customization.banners.fullWidth,
                 "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
                     return ({
                         "_id": id._id,
@@ -128,6 +129,8 @@ const get_object = (object) => {
                 "_id": object.customization.loadingGif._id,
                 "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
             },
+            "topTabCassino": object.customization.topTabCassino,
+            "topTabEsports": object.customization.topTabEsports,
         },
         "integrations": !object.integrations ? {} : {
             "_id": object.integrations._id,
@@ -159,8 +162,9 @@ const get_object = (object) => {
         "description": object.description,
         "hosting_id": object.hosting_id,
         "web_url": object.web_url,
-        "addOn": object.addOn ? {...object.addOn._doc,
-            jackpot: object.addOn.jackpot ?  {
+        "addOn": object.addOn ? {
+            ...object.addOn._doc,
+            jackpot: object.addOn.jackpot ? {
                 ...object.addOn.jackpot._doc,
                 bets: [],
                 resultSpace: []

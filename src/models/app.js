@@ -661,6 +661,31 @@ class App extends ModelComponent {
     }
 
     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTopTab() {
+        //output = boolean
+        try {
+            var app ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('EditTopTabCassino');
+                    return app
+                case "esports":
+                    app = await this.process('EditTopTabEsports');
+                    return app
+                default:
+                    app = await this.process('EditTopTabCassino');
+                    return app
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
     * @param {String} 
     * @return {bool || Exception}  
     */

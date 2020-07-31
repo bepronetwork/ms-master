@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { BannersSchema } from '../schemas';
+import { TopTabEsportsSchema } from '../schemas';
 
 /**
  * Accounts database interaction class.
@@ -13,24 +13,24 @@ import { BannersSchema } from '../schemas';
  */
 
 
-class BannersRepository extends MongoComponent{
+class TopTabEsportsRepository extends MongoComponent{
 
     constructor(){
-        super(BannersSchema)
+        super(TopTabEsportsSchema)
     }
     /**
-     * @function setBannersModel
-     * @param Banners Model
-     * @return {Schema} BannersModel
+     * @function setTopTabEsportsModel
+     * @param TopTabEsports Model
+     * @return {Schema} TopTabEsportsModel
      */
 
-    setModel = (Banners) => {
-        return BannersRepository.prototype.schema.model(Banners)
+    setModel = (TopTabEsports) => {
+        return TopTabEsportsRepository.prototype.schema.model(TopTabEsports)
     }
 
     findById(_id){ 
         return new Promise( (resolve, reject) => {
-            BannersRepository.prototype.schema.model.findById(_id)
+            TopTabEsportsRepository.prototype.schema.model.findById(_id)
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -38,14 +38,12 @@ class BannersRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate(_id, newStructure){
+    findByIdAndUpdateTopTab({_id, newStructure}){
         return new Promise( (resolve,reject) => {
-            BannersRepository.prototype.schema.model.findByIdAndUpdate(
+            TopTabEsportsRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "ids"          : newStructure.ids,
-                    "autoDisplay"  : newStructure.autoDisplay,
-                    "fullWidth"    : newStructure.fullWidth
+                    "topTabEsports" : newStructure
                 } },
                 { 'new': true })
                 .exec( (err, item) => {
@@ -58,6 +56,6 @@ class BannersRepository extends MongoComponent{
 
 }
 
-BannersRepository.prototype.schema = new BannersSchema();
+TopTabEsportsRepository.prototype.schema = new TopTabEsportsSchema();
 
-export default BannersRepository;
+export default TopTabEsportsRepository;

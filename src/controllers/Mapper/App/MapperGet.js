@@ -133,6 +133,7 @@ let outputs = {
                 "banners": !object.customization.banners ? {} : {
                     "_id": object.customization.banners._id,
                     "autoDisplay": object.customization.banners.autoDisplay,
+                    "fullWidth": object.customization.banners.fullWidth,
                     "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
                         return ({
                             "_id": id._id,
@@ -179,6 +180,8 @@ let outputs = {
                     "_id": object.customization.loadingGif._id,
                     "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
+                "topTabCassino": object.customization.topTabCassino,
+                "topTabEsports": object.customization.topTabEsports,
             },
             "integrations": !object.integrations ? {} : {
                 "_id": object.integrations._id,
