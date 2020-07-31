@@ -146,7 +146,8 @@ const processActions = {
             var user_in_app = (app._id == params.app);
 
             /* Get balance by wallet type */
-            const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            const points     = (app.addOn.pointSystem!=undefined) ? app.addOn.pointSystem.ratio.find( w => new String(w.currency).toString() == new String(currency).toString()) : 0;
+            const appWallet  = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
             let appPlayBalance                  = appWallet.playBalance;
@@ -264,7 +265,8 @@ const processActions = {
                 serverSeed          :   serverSeed,
                 amountBonus,
                 minBetAmountForBonusUnlocked,
-                incrementBetAmountForBonus
+                incrementBetAmountForBonus,
+                points: points.value
             }
             return normalized;
         }catch(err){
@@ -292,7 +294,10 @@ const processActions = {
 const progressActions = {
     __auto : async (params) => {
 
-        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual } = params;
+        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
+
+        await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
+
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
         let dependentObjects = Object.keys(result).map( async key =>

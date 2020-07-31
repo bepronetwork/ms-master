@@ -746,6 +746,16 @@ class ErrorManager {
         }
     }
 
+    pointSystem = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     autoWithdraw = function (object, type){
         try{
             switch(type){

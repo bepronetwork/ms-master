@@ -27,11 +27,12 @@ import {
     CustomizationRepository,
     TxFeeRepository,
     BackgroundRepository,
-    DepositBonusRepository
+    DepositBonusRepository,
+    PointSystemRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -431,6 +432,53 @@ const processActions = {
             app
         }
 		return res;
+    },
+    __addAddonPointSystem : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let ratio = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency : c._id,
+                value    : 0
+            }
+        }));
+        let res = {
+            ratio,
+            app
+        }
+		return res;
+    },
+    __editAddonPointSystem : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError('ADD_ON_NOT_EXISTS')}
+            let pointSystem = await PointSystemRepository.prototype.findById(addOn.pointSystem)
+            if(!pointSystem){throwError('ADD_ON_POINT_SYSTEM_NOT_EXISTS')}
+
+            let imageLogo;
+            if(params.pointSystemParams.logo.includes("https")){
+                /* If it is a link already */
+                imageLogo = params.pointSystemParams.logo;
+            }else if(params.pointSystemParams.logo!=""){
+                /* Does not have a Link and is a blob encoded64 */
+                imageLogo = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : params.pointSystemParams.logo});
+                params.pointSystemParams.logo = imageLogo
+            }
+
+            let res = {
+                pointSystem,
+                currency : params.currency,
+                pointSystemParams : params.pointSystemParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
     },
     __editAddonDepositBonus : async (params) => {
         try {
@@ -1055,6 +1103,19 @@ const progressActions = {
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
 		return depositBonusResult;
     },
+    __addAddonPointSystem : async (params) => {
+        const {ratio, app} = params;
+        let pointSystem = new PointSystem({app, ratio});
+        const pointSystemResult = await pointSystem.register();
+        await addOnRepository.prototype.addAddonPointSystem(app.addOn, pointSystemResult._doc._id);
+		return pointSystemResult;
+    },
+    __editAddonPointSystem : async (params) => {
+        const { pointSystem, currency, pointSystemParams } = params;
+        await PointSystemRepository.prototype.findByIdAndUpdate(pointSystem._id, currency, pointSystemParams)
+        let res = await PointSystemRepository.prototype.findById(pointSystem._id);
+        return res;
+    },
     __editAddonDepositBonus : async (params) => {
         const { depositBonus, currency, depositBonusParams } = params
         await DepositBonusRepository.prototype.findByIdAndUpdate(depositBonus._id, currency, depositBonusParams)
@@ -1643,6 +1704,12 @@ class AppLogic extends LogicComponent{
                 case 'GetGameStats' : {
 					return await library.process.__getGameStats(params); break;
                 };
+                case 'AddAddonPointSystem' : {
+					return await library.process.__addAddonPointSystem(params); break;
+                };
+                case 'EditAddonPointSystem' : {
+					return await library.process.__editAddonPointSystem(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1812,7 +1879,12 @@ class AppLogic extends LogicComponent{
                 case 'GetGameStats': {
                     return await library.progress.__getGameStats(params); break;
                 }
-                
+                case 'AddAddonPointSystem': {
+                    return await library.progress.__addAddonPointSystem(params); break;
+                }
+                case 'EditAddonPointSystem': {
+                    return await library.progress.__editAddonPointSystem(params); break;
+                }
 			}
 		}catch(error){
 			throw error;

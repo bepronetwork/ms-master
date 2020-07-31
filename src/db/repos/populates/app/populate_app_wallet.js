@@ -16,6 +16,11 @@ let populate_app_wallet = [
                 path : 'jackpot',
                 model : 'Jackpot',
                 select : { '__v': 0}
+            },
+            {
+                path : 'pointSystem',
+                model : 'PointSystem',
+                select : { '__v': 0}
             }
         ]
     }

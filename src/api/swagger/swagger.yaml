@@ -2373,6 +2373,69 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/pointSystem/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Point System
+      operationId: addAddonPointSystem
+      description: Add Point System
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonPointSystemRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/pointSystem/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit If has pointSystem
+      operationId: editAddonPointSystem
+      description: Edit If has pointSystem
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditAddonPointSystemRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+
   /app/depositBonus/editDepositBonus:
     x-swagger-router-controller: app
     post:
@@ -4294,7 +4357,64 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
-  
+
+  AddAddonPointSystemRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+
+  AppEditAddonPointSystemRequest:
+    type: object
+    required:
+      - app
+      - admin
+      - currency
+      - pointSystemParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          currency ID
+      pointSystemParams :
+        type: object
+        properties:
+          isValid :
+            type : boolean
+            example: true
+          logo :
+            type: string
+          name :
+            type: string
+          ratio :
+            type: number
   AppEditAddonDepositBonusRequest : 
     type: object
     required:
