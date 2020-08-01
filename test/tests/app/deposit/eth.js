@@ -48,11 +48,11 @@ context(`${ticker}`, async () => {
         expect(status).to.equal(200);
     }));
 
-    it('shouldnt update Wallet with already checked tx', mochaAsync(async () => {
-        let body = bitgoDepositExample();
+    // it('shouldnt update Wallet with already checked tx', mochaAsync(async () => {
+    //     let body = bitgoDepositExample();
 
-        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
-        detectValidationErrors(res);
-        shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
-    }));
+    //     let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+    //     detectValidationErrors(res);
+    //     shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
+    // }));
 });
