@@ -45,6 +45,7 @@ import TxFeeLogic from "./txFee";
 import BackgroundLogic from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonusLogic from "./depositBonus";
+import PointSystemLogic from "./pointSystem";
 import TopTabCassinoLogic from "./topTabCassino";
 import TopTabEsportsLogic from "./topTabEsports";
 
@@ -97,6 +98,7 @@ export {
     LoadingGifLogic,
     PermissionLogic,
     AutoWithdrawLogic,
-    BackgroundLogic
+    BackgroundLogic,
+    PointSystemLogic,
 }
 

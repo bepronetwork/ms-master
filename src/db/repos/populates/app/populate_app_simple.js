@@ -30,6 +30,11 @@ let populate_app_simple = [
                 path : 'depositBonus',
                 model : 'DepositBonus',
                 select : { '__v': 0}
+            },
+            {
+                path : 'pointSystem',
+                model : 'PointSystem',
+                select : { '__v': 0}
             }
         ]
     },

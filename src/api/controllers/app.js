@@ -275,12 +275,39 @@ async function editAddonTxFee(req, res) {
     }
 }
 
+async function addAddonPointSystem(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addAddonPointSystem();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
 async function addAddonDepositBonus(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         let params = req.body;
         let app = new App(params);
         let data = await app.addAddonDepositBonus();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function editAddonPointSystem(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editAddonPointSystem();
         MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -867,6 +894,7 @@ async function generateAddresses(req, res) {
 
 
 export {
+    addAddonPointSystem,
     editTopTab,
     addAddonDepositBonus,
     editAddonDepositBonus,
@@ -920,5 +948,6 @@ export {
     getBetInfo,
     editBackground,
     modifyBalance,
-    getGameStats
+    getGameStats,
+    editAddonPointSystem,
 };

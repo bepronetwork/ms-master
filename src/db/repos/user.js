@@ -91,6 +91,23 @@ class UsersRepository extends MongoComponent{
         }
     }
 
+    async insertPoints(user, point){
+        try{
+            return new Promise( (resolve,reject) => {
+                UsersRepository.prototype.schema.model.findByIdAndUpdate(
+                    user,
+                    { $inc : { points : parseFloat(point) } } ,{ new: true }
+                )
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                })
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
     getBets({_id, size, dates, currency, game, offset}){
         try{
             return new Promise( (resolve, reject) => {
