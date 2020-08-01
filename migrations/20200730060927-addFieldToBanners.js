@@ -29,7 +29,7 @@ module.exports = {
         break;
       }
       let processIndex = banners.length;
-      let processObj = new Progress(processIndex, "ADD_THEME_FOR_APP_CUSTOMIZATION");
+      let processObj = new Progress(processIndex, "ADD_FULL_WIDTH_FOR_BANNERS_CUSTOMIZATION");
       for (let banner of banners) {
         processObj.setProcess(processIndex);
         processIndex--;

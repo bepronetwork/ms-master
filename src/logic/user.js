@@ -332,6 +332,7 @@ const processActions = {
         app = await AppRepository.prototype.findAppById(app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if (!user) { throwError('USER_NOT_EXISTENT') }
+        if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         if(user_wallet.currency.erc20){
