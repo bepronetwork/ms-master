@@ -48,6 +48,7 @@ class UsersRepository extends MongoComponent{
                 id,
                 { $set : param },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -66,6 +67,7 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findById(_id)
                 .populate(populate_type)
+                .lean()
                 .exec( (err, user) => {
                     if(err) { resolve(null)}
                     resolve(user);
