@@ -15,6 +15,7 @@ let outputs = {
     authUser: (object) => {
         return {
             "username": object.username,
+            "points": !object.points ? 0 : object.points,
             "email": object.email,
             "bearerToken": object.security.bearerToken,
             "id": object._id,
