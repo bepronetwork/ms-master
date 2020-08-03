@@ -59,45 +59,45 @@ context(`${ticker}`, async () => {
         expect(status).to.equal(200);
     }));
 
-    it('should amount > max deposit', mochaAsync(async () => {
+    // it('should amount > max deposit', mochaAsync(async () => {
 
-        let dataMaxDeposit = await setAppMaxDeposit({
-            app: app.id,
-            wallet_id: currencyWallet._id,
-            amount: 0.01,
-            admin: admin.id
-        }, admin.security.bearerToken, {id : admin.id});
+    //     let dataMaxDeposit = await setAppMaxDeposit({
+    //         app: app.id,
+    //         wallet_id: currencyWallet._id,
+    //         amount: 0.01,
+    //         admin: admin.id
+    //     }, admin.security.bearerToken, {id : admin.id});
         
-        let body = bitgoDepositExampleMaxDeposit();
-        await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash);
+    //     let body = bitgoDepositExampleMaxDeposit();
+    //     await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash);
 
-        // Get User Deposit Address - create deposit address on bitgo
-        var res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
-        //expect(res.data.status).to.equal(200);
+    //     // Get User Deposit Address - create deposit address on bitgo
+    //     var res = await getDepositAddress({app : app.id, currency : currencyWallet.currency._id, id : user.id});
+    //     //expect(res.data.status).to.equal(200);
 
-        res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+    //     res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
 
-        await setAppMaxDeposit({
-            admin: admin.id,
-            app: app.id,
-            wallet_id: currencyWallet._id,
-            amount: 0.4,
-        }, admin.security.bearerToken, {id : admin.id});
+    //     await setAppMaxDeposit({
+    //         admin: admin.id,
+    //         app: app.id,
+    //         wallet_id: currencyWallet._id,
+    //         amount: 0.4,
+    //     }, admin.security.bearerToken, {id : admin.id});
 
-        expect(res.data.status).to.not.be.null;
-        expect(res.data.message[0].code).to.equal(51);
+    //     expect(res.data.status).to.not.be.null;
+    //     expect(res.data.message[0].code).to.equal(51);
 
-        expect(dataMaxDeposit.data.status).to.be.equal(200);
-        expect(dataMaxDeposit.data.status).to.not.be.null;
-        detectValidationErrors(res);
+    //     expect(dataMaxDeposit.data.status).to.be.equal(200);
+    //     expect(dataMaxDeposit.data.status).to.not.be.null;
+    //     detectValidationErrors(res);
 
-    }));
+    // }));
     
-    it('should not allow double deposit after first confirmed', mochaAsync(async () => {
-        let body = bitgoDepositExample();
-        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
-        expect(res.data.message[0].code).to.equal(11);
+    // it('should not allow double deposit after first confirmed', mochaAsync(async () => {
+    //     let body = bitgoDepositExample();
+    //     let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+    //     expect(res.data.message[0].code).to.equal(11);
 
-    }));
+    // }));
 
 });
