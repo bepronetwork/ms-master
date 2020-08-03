@@ -549,13 +549,13 @@ const progressActions = {
     __register: async (params) => {
         try {
             const { affiliate, app, balanceInitial } = params;
-
+            console.log("wallet:: ",app.wallet)
             /* Register of Available Wallets on App */
             let teste = params.wallet = await Promise.all(app.wallet.map(async w => {
                 let ok = await (new Wallet({
                     currency : w.currency,
                     playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
-                })).register()._doc._id;
+                })).register()._id;
                 console.log("Ok:: ",ok)
                 return ok;
             }));
