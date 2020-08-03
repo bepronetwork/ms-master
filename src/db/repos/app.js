@@ -56,6 +56,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, games : {$nin : [game._id] } },
                 { $push: { "games" : game } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -74,6 +75,7 @@ class AppRepository extends MongoComponent{
                     }
                 }
             )
+            .lean()
             .exec( (err, item) => {
                 console.log(err);
                 if(err){reject(err)}
@@ -85,6 +87,7 @@ class AppRepository extends MongoComponent{
     async addTypography(_id, typography){
         return new Promise( async (resolve,reject) => {
             await AppRepository.prototype.schema.model.updateOne({_id}, { typography })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -99,6 +102,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, users : {$nin : [user._id] } }, 
                 { $push: { "users" : user, "external_users" : user.external_id} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -113,6 +117,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, listAdmins : {$nin : [admin._id] } }, 
                 { $push: { "listAdmins" : admin} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -127,6 +132,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, wallet : {$nin : [wallet._id] } }, 
                 { $push: { "wallet" : wallet._id} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -141,6 +147,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, currencies : {$nin : [currency._id] } }, 
                 { $push: { "currencies" : currency} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -156,6 +163,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, deposits : {$nin : [deposit._id] } }, 
                 { $push: { "deposits" : deposit } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -172,6 +180,7 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model.findByIdAndUpdate(
                     { _id: _id}, 
                     { $set:  {  isWithdrawing : state} } )
+                    .lean()
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{
@@ -195,6 +204,7 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model.findByIdAndUpdate(
                     { _id: _id}, 
                     { $set:  {  "isUsersAllLocked" : state} } )
+                    .lean()
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{
@@ -371,6 +381,7 @@ class AppRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
+                .lean()
                 .exec( (err, App) => {
                     if(err) { reject(err)}
                     resolve(App);
@@ -387,7 +398,8 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model.findByIdAndUpdate(
                     _id, 
                     { $set: { "typography" : [] }})
-                .exec( (err, item) => {
+                    .lean()
+                    .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
                 });
@@ -403,6 +415,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, services : {$nin : services } }, 
                 { $set : { "services" : services } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (true);
@@ -419,6 +432,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "affiliateSetup" : affiliate_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -435,6 +449,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "integrations" : integrations_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -451,6 +466,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "customization" : customization_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -467,6 +483,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "typography" : typography_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -483,6 +500,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : {  "hosting_id" : hosting_id, "web_url" :  web_url} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -499,6 +517,7 @@ class AppRepository extends MongoComponent{
                 app_id, 
                 { $set: { "wallet" : [] } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -542,6 +561,7 @@ class AppRepository extends MongoComponent{
     findApp = (App_name) => {
         return new Promise( (resolve, reject) => {
             AppRepository.prototype.schema.model.findOne({'name' : App_name})
+            .lean()
             .exec( (err, App) => {
                 if(err) {reject(err)}
                 resolve(App);
