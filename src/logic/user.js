@@ -555,7 +555,7 @@ const progressActions = {
                 let ok = await (new Wallet({
                     currency : w.currency,
                     playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
-                })).register()._id;
+                })).register().doc._id;
                 console.log("Ok:: ",ok)
                 return ok;
             }));
