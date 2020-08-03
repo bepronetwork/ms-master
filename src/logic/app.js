@@ -1315,13 +1315,14 @@ const progressActions = {
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
     __editTopBar  : async (params) => {
-        let { app, backgroundColor, textColor, text, isActive } = params;
+        let { app, backgroundColor, textColor, text, isActive, isTransparent } = params;
         const { topBar } = app.customization;
         await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
             textColor,
             backgroundColor, 
             text,
-            isActive
+            isActive,
+            isTransparent
         })
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})

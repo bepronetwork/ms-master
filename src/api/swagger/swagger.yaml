@@ -3569,6 +3569,7 @@ definitions:
       - textColor
       - text
       - isActive
+      - isTransparent
     properties:
       app:
         type : string
@@ -3589,6 +3590,9 @@ definitions:
         format: name
         example: "Hey the website is up!"
       isActive : 
+        type : boolean
+        example: true
+      isTransparent : 
         type : boolean
         example: true
   AppCustomizationTopTab : 
