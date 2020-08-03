@@ -551,13 +551,15 @@ const progressActions = {
             const { affiliate, app, balanceInitial } = params;
 
             /* Register of Available Wallets on App */
-            params.wallet = await Promise.all(app.wallet.map(async w => {
-                return (await (new Wallet({
+            let teste = params.wallet = await Promise.all(app.wallet.map(async w => {
+                let ok = await (new Wallet({
                     currency : w.currency,
                     playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
-                })).register())._doc._id;
+                })).register()._doc._id;
+                console.log("Ok:: ",ok)
+                return ok;
             }));
-
+            console.log("Teste:: ",teste)
             let user = await self.save(params);
 
             /* Register of Affiliate Link */
