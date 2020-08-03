@@ -129,6 +129,7 @@ let outputs = {
                     "backgroundColor": object.customization.topBar.backgroundColor,
                     "text": object.customization.topBar.text,
                     "textColor": object.customization.topBar.textColor,
+                    "isTransparent": object.customization.topBar.isTransparent,
                 },
                 "banners": !object.customization.banners ? {} : {
                     "_id": object.customization.banners._id,

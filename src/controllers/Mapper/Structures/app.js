@@ -178,6 +178,7 @@ const app_object = (object) => {
                     "backgroundColor": object.app.customization.topBar.backgroundColor,
                     "text": object.app.customization.topBar.text,
                     "textColor": object.app.customization.topBar.textColor,
+                    "isTransparent": object.app.customization.topBar.isTransparent,
                 },
                 "banners": !object.app.customization.banners ? {} : {
                     "_id": object.app.customization.banners._id,
