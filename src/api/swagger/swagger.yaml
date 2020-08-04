@@ -3600,7 +3600,6 @@ definitions:
     required:
       - app
       - topTabParams
-      - tag
     properties:
       app:
         type : string
@@ -3608,12 +3607,6 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
-      tag:
-        type : string
-        format: name
-        example: "cassino or esports"
-        description: |
-          Tag of type request
       topTabParams :
         type : array
         items : 

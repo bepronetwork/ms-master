@@ -46,12 +46,10 @@ import TxFeeRepository from "./txFee";
 import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
 import PointSystemRepository from "./pointSystem";
-import TopTabCassinoRepository from "./topTabCassino";
-import TopTabEsportsRepository from "./topTabEsports";
+import TopTabRepository from "./topTab";
 
 export {
-    TopTabCassinoRepository,
-    TopTabEsportsRepository,
+    TopTabRepository,
     DepositBonusRepository,
     PopularNumberRepository,
     TxFeeRepository,

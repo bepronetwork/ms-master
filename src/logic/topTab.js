@@ -40,11 +40,11 @@ const progressActions = {
 	__register : async (params) => {
 		try{
             
-            let topTabCassino = await self.save(params);
+            let topTab = await self.save(params);
         
 			return {
-				...topTabCassino,
-				type : 'topTabCassino'
+				...topTab,
+				type : 'topTab'
 			};
 		}catch(err){
 			throw err;
@@ -53,7 +53,7 @@ const progressActions = {
 }
 
 /**
- * Main TopTabCassino logic.
+ * Main TopTab logic.
  *
  * @class
  * @memberof logic
@@ -66,14 +66,14 @@ const progressActions = {
  * @param {ZSchema} schema
  * @param {Object} logger
  * @param {function} cb - Callback function
- * @property {TopTabCassino_model} model
- * @property {TopTabCassino_schema} schema
+ * @property {TopTab_model} model
+ * @property {TopTab_schema} schema
  * @returns {setImmediate} error, this
  * @todo Add description for the params
  */
 
 
-class TopTabCassinoLogic extends LogicComponent {
+class TopTabLogic extends LogicComponent {
 	constructor(scope) {
 		super(scope);
 		self = this;
@@ -91,10 +91,10 @@ class TopTabCassinoLogic extends LogicComponent {
 
 
     /**
-	 * Validates TopTabCassino schema.
+	 * Validates TopTab schema.
 	 *
-	 * @param {TopTabCassino} TopTabCassino
-	 * @returns {TopTabCassino} TopTabCassino
+	 * @param {TopTab} TopTab
+	 * @returns {TopTab} TopTab
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
@@ -110,16 +110,16 @@ class TopTabCassinoLogic extends LogicComponent {
 	}
 
 	 /**
-	 * Tests TopTabCassino schema.
+	 * Tests TopTab schema.
 	 *
-	 * @param {TopTabCassino} TopTabCassino
-	 * @returns {TopTabCassino} TopTabCassino
+	 * @param {TopTab} TopTab
+	 * @returns {TopTab} TopTab
 	 * @throws {string} On schema.validate failure
 	 */
 
 	testParams(params, action){
 		try{
-			error.topTabCassino(params, action);
+			error.topTab(params, action);
 		}catch(err){
 			throw err;
 		}
@@ -141,4 +141,4 @@ class TopTabCassinoLogic extends LogicComponent {
 }
 
 // Export Default Module
-export default TopTabCassinoLogic;
+export default TopTabLogic;

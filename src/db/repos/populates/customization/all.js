@@ -26,13 +26,8 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
-        path : 'topTabCassino',
-        model : 'TopTabCassino',
-        select : { '__v': 0},
-    },
-    {
-        path : 'topTabEsports',
-        model : 'TopTabEsports',
+        path : 'topTab',
+        model : 'TopTab',
         select : { '__v': 0},
     },
     {

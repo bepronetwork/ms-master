@@ -16,8 +16,7 @@ CustomizationSchema.prototype.schema =  {
     topIcon        : { type : mongoose.Schema.Types.ObjectId, ref: 'TopIcon', required : true },
     loadingGif     : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
     theme          : { type : String, default : "dark" },
-    topTabCassino  : { type : mongoose.Schema.Types.ObjectId, ref: 'TopTabCassino', required : true },
-    topTabEsports  : { type : mongoose.Schema.Types.ObjectId, ref: 'TopTabEsports', required : true },
+    topTab         : { type : mongoose.Schema.Types.ObjectId, ref: 'TopTab', required : true },
 }
 
 

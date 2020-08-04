@@ -181,8 +181,7 @@ let outputs = {
                     "_id": object.customization.loadingGif._id,
                     "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
-                "topTabCassino": object.customization.topTabCassino,
-                "topTabEsports": object.customization.topTabEsports,
+                "topTab": object.customization.topTab
             },
             "integrations": !object.integrations ? {} : {
                 "_id": object.integrations._id,
