@@ -42,12 +42,10 @@ import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
 import PointSystem from "./pointSystem";
-import TopTabCassino from "./topTabCassino";
-import TopTabEsports from "./topTabEsports";
+import TopTab from "./topTab";
 
 export {
-    TopTabEsports,
-    TopTabCassino,
+    TopTab,
     DepositBonus,
     PopularNumberLogic,
     LastBets,

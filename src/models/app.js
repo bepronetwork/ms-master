@@ -94,14 +94,14 @@ class App extends ModelComponent {
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
     async modifyBalance() {
-         // output Boolean
+        // output Boolean
         try {
             let res = await this.process('ModifyBalance');
             return res;
@@ -156,10 +156,10 @@ class App extends ModelComponent {
         }
     }
 
-   /**
-   * @param {String} 
-   * @return {bool || Exception}  
-   */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
     async get() {
         try {
@@ -194,7 +194,7 @@ class App extends ModelComponent {
     async getAuth() {
         try {
             let app = await this.process('GetAuth');
-            return MapperGetAuthSingleton.output('GetAuth', {...app._doc, storeAddOn : app.storeAddOn});
+            return MapperGetAuthSingleton.output('GetAuth', { ...app._doc, storeAddOn: app.storeAddOn });
         } catch (err) {
             throw err;
         }
@@ -208,13 +208,13 @@ class App extends ModelComponent {
     async summary() {
         try {
             let app = await this.process('Summary');
-            switch (app.type){
-                case 'users' : return MapperSummaryUsersSingleton.output('SummaryUsers', app);
-                case 'games' : return MapperSummaryGamesSingleton.output('SummaryGames', app);
-                case 'revenue' : return MapperSummaryRevenueSingleton.output('SummaryRevenue', app);
-                case 'bets' : return MapperSummaryBetsSingleton.output('SummaryBets', app);
-                case 'wallet' : return MapperSummaryWalletSingleton.output('SummaryWallet', app);
-                default : return app;    
+            switch (app.type) {
+                case 'users': return MapperSummaryUsersSingleton.output('SummaryUsers', app);
+                case 'games': return MapperSummaryGamesSingleton.output('SummaryGames', app);
+                case 'revenue': return MapperSummaryRevenueSingleton.output('SummaryRevenue', app);
+                case 'bets': return MapperSummaryBetsSingleton.output('SummaryBets', app);
+                case 'wallet': return MapperSummaryWalletSingleton.output('SummaryWallet', app);
+                default: return app;
             }
         } catch (err) {
             throw err;
@@ -409,13 +409,13 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
-   async editAddonPointSystem() {
-    try {
-        return await this.process('EditAddonPointSystem');
-    } catch (err) {
-        throw err;
+    async editAddonPointSystem() {
+        try {
+            return await this.process('EditAddonPointSystem');
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     /**
     * @param {String} 
@@ -435,15 +435,15 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
     async generateAddresses() {
-        
+
         const { app } = this.self.params;
-        try{
+        try {
             await AppRepository.prototype.changeWithdrawPosition(app, true);
             let res = await this.process('GenerateAddresses');
             AppRepository.prototype.changeWithdrawPosition(app, false);
             return MapperGenerateAddressSingleton.output('GenerateAddresses', res);
-        }catch(err){
-            if(parseInt(err.code) != 14){
+        } catch (err) {
+            if (parseInt(err.code) != 14) {
                 /* If not betting/withdrawing atm */
                 /* Open Mutex */
                 AppRepository.prototype.changeWithdrawPosition(app, false);
@@ -668,18 +668,8 @@ class App extends ModelComponent {
     async editTopTab() {
         //output = boolean
         try {
-            var app ="";
-            switch (this.self.params.tag) {
-                case "cassino":
-                    app = await this.process('EditTopTabCassino');
-                    return app
-                case "esports":
-                    app = await this.process('EditTopTabEsports');
-                    return app
-                default:
-                    app = await this.process('EditTopTabCassino');
-                    return app
-            }
+            let app = await this.process('EditTopTab');
+            return app
         } catch (err) {
             throw err;
         }
@@ -720,7 +710,7 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-   async editBackground() {
+    async editBackground() {
         try {
             let app = await this.process('EditBackground');
             return MapperEditBackgroundSingleton.output('EditBackground', app);

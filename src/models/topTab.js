@@ -1,17 +1,17 @@
-import { TopTabCassinoLogic } from '../logic';
-import { TopTabCassinoRepository } from '../db/repos';
+import { TopTabLogic } from '../logic';
+import { TopTabRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
 
-class TopTabCassino extends ModelComponent{
+class TopTab extends ModelComponent{
 
     constructor(params){
 
-        let db = new TopTabCassinoRepository();
+        let db = new TopTabRepository();
 
         super(
             {
-                name : 'TopTabCassino', 
-                logic : new TopTabCassinoLogic({db : db}), 
+                name : 'TopTab', 
+                logic : new TopTabLogic({db : db}), 
                 db : db,
                 self : null, 
                 params : params,
@@ -29,4 +29,4 @@ class TopTabCassino extends ModelComponent{
     }
 }
 
-export default TopTabCassino;
+export default TopTab;

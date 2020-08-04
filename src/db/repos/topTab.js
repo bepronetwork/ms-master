@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { TopTabCassinoSchema } from '../schemas';
+import { TopTabSchema } from '../schemas';
 
 /**
  * Accounts database interaction class.
@@ -13,24 +13,25 @@ import { TopTabCassinoSchema } from '../schemas';
  */
 
 
-class TopTabCassinoRepository extends MongoComponent{
+class TopTabRepository extends MongoComponent{
 
     constructor(){
-        super(TopTabCassinoSchema)
+        super(TopTabSchema)
     }
     /**
-     * @function setTopTabCassinoModel
-     * @param TopTabCassino Model
-     * @return {Schema} TopTabCassinoModel
+     * @function setTopTabModel
+     * @param TopTab Model
+     * @return {Schema} TopTabModel
      */
 
-    setModel = (TopTabCassino) => {
-        return TopTabCassinoRepository.prototype.schema.model(TopTabCassino)
+    setModel = (TopTab) => {
+        return TopTabRepository.prototype.schema.model(TopTab)
     }
 
     findById(_id){ 
         return new Promise( (resolve, reject) => {
-            TopTabCassinoRepository.prototype.schema.model.findById(_id)
+            TopTabRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -40,12 +41,13 @@ class TopTabCassinoRepository extends MongoComponent{
 
     findByIdAndUpdateTopTab({_id, newStructure}){
         return new Promise( (resolve,reject) => {
-            TopTabCassinoRepository.prototype.schema.model.findByIdAndUpdate(
+            TopTabRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "topTabCassino" : newStructure
+                    "ids" : newStructure
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -55,6 +57,6 @@ class TopTabCassinoRepository extends MongoComponent{
     }
 }
 
-TopTabCassinoRepository.prototype.schema = new TopTabCassinoSchema();
+TopTabRepository.prototype.schema = new TopTabSchema();
 
-export default TopTabCassinoRepository;
+export default TopTabRepository;

@@ -14,30 +14,9 @@ context('Edit Top Tab', async () => {
     });
 
 
-    it('should be able to edit app Top Tab - Cassino', mochaAsync(async () => {
-
+    it('should be able to edit app Top Tab', mochaAsync(async () => {
+        console.log("App Id: ",app.id)
         const postData = {
-            tag: "cassino",
-            app: app.id,
-            topTabParams: [{
-                name: "test",
-                icon: image_data,
-                link_url: "test.com"
-            }]
-        };
-
-        let res = await editTopTabCustomizationApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
-
-        expect(detectValidationErrors(res)).to.be.equal(false);
-
-        const { status } = res.data;
-        expect(status).to.be.equal(200);
-    }));
-
-    it('should be able to edit app Top Tab - Esports', mochaAsync(async () => {
-
-        const postData = {
-            tag: "esports",
             app: app.id,
             topTabParams: [{
                 name: "test",
