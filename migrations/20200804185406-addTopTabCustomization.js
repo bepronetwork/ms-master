@@ -25,7 +25,7 @@ module.exports = {
     let index = -1;
     while (true) {
       index++;
-      let customizations = await db.collection('customizations').find({topTab: null}).skip(1000 * index).limit(1000).toArray();
+      let customizations = await db.collection('customizations').find().skip(1000 * index).limit(1000).toArray();
       if (customizations.length === 0) {
         break;
       }
@@ -42,13 +42,13 @@ module.exports = {
                 _id: new ObjectId(),
                 icon: "https://i.ibb.co/h96g1bx/Casino.png",
                 name: "Casino",
-                link_url: "/"
+                link_url: "/casino"
               },
               {
                 _id: new ObjectId(),
                 icon: "https://i.ibb.co/F6RLGVz/Esports.png",
                 name: "Esports",
-                link_url: "/"
+                link_url: "/esports"
               }
             ],
             __v: 0
