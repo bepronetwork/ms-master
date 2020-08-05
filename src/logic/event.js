@@ -27,7 +27,7 @@ const processActions = {
 	__register : async (params) => {
 
 		//Get App by Name
-		let app = await AppRepository.prototype.findAppById(params.app);
+		let app = await AppRepository.prototype.findAppById(params.app, "simple");
         //Get App by Name
         let game = await GamesRepository.prototype.findGameById(params.game);
 

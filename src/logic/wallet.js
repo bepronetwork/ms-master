@@ -56,7 +56,7 @@ const processActions = {
 	},
 	__editVirtualCurrency : async (params) => {
 		try{
-			const app = await AppRepository.prototype.findAppById(params.app);
+			const app = await AppRepository.prototype.findAppById(params.app, "simple");
 			if(!app){throwError('APP_NOT_EXISTENT')}
 			const wallet = (app.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == "gold"));
 			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
@@ -100,7 +100,7 @@ const processActions = {
 	},
 	__updateMaxDeposit : async (params) => {
 		try{
-			const app = await AppRepository.prototype.findAppById(params.app);
+			const app = await AppRepository.prototype.findAppById(params.app, "simple");
 			if(!app){throwError('APP_NOT_EXISTENT')}
 			const wallet = app.wallet.find( w => new String(w._id).toString() == new String(params.wallet_id).toString());
 			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
