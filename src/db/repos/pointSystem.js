@@ -28,6 +28,24 @@ class PointSystemRepository extends MongoComponent{
         return PointSystemRepository.prototype.schema.model(PointSystem)
     }
 
+    pushNewCurrency(_id, currency) {
+        return new Promise( (resolve, reject) => {
+            PointSystemRepository.prototype.schema.model.update(
+                {_id},
+                { $push: {
+                    ratio : {
+                        currency,
+                        value : 0
+                    }
+                }} 
+            )
+            .exec( async (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             PointSystemRepository.prototype.schema.model.findById(_id)

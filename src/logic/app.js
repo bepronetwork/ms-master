@@ -30,7 +30,9 @@ import {
     DepositBonusRepository,
     PointSystemRepository,
     TopTabRepository,
-    TopTabEsportsRepository
+    TopTabEsportsRepository,
+    JackpotRepository,
+    BalanceRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -238,7 +240,7 @@ const processActions = {
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
 
-        app = await AppRepository.prototype.findAppById(app, "simple");
+        app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
@@ -1028,6 +1030,14 @@ const progressActions = {
                 });
             }
         }
+
+        /* add currencies in addons */
+        await JackpotRepository.prototype.pushNewCurrency(app.jackpot._id, currency._id);
+        await PointSystemRepository.prototype.pushNewCurrency(app.pointSystem._id, currency._id);
+        await AutoWithdrawRepository.prototype.pushNewCurrency(app.autoWithdraw._id, currency._id);
+        await TxFeeRepository.prototype.pushNewCurrency(app.txFee._id, currency._id);
+        await BalanceRepository.prototype.pushNewCurrency(app.balance._id, currency._id);
+        await DepositBonusRepository.prototype.pushNewCurrency(app.depositBonus._id, currency._id);
 
         console.log("setting user")
 
