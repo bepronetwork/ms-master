@@ -29,7 +29,7 @@ const processActions = {
     },
     __editAddonBalance: async (params) => {
         try {
-            let app = await AppRepository.prototype.findAppById(params.app);
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if(!app){throwError('APP_NOT_EXISTENT')}
             const currency = await CurrencyRepository.prototype.findById(params.currency);
             if(!currency){

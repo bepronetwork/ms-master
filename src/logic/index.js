@@ -46,12 +46,10 @@ import BackgroundLogic from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonusLogic from "./depositBonus";
 import PointSystemLogic from "./pointSystem";
-import TopTabCassinoLogic from "./topTabCassino";
-import TopTabEsportsLogic from "./topTabEsports";
+import TopTabLogic from "./topTab";
 
 export {
-    TopTabEsportsLogic,
-    TopTabCassinoLogic,
+    TopTabLogic,
     DepositBonusLogic,
     PopularNumberLogic,
     TxFeeLogic,

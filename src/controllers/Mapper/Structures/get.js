@@ -78,6 +78,7 @@ const get_object = (object) => {
                 "backgroundColor": object.customization.topBar.backgroundColor,
                 "text": object.customization.topBar.text,
                 "textColor": object.customization.topBar.textColor,
+                "isTransparent": object.customization.topBar.isTransparent,
             },
             "banners": !object.customization.banners ? {} : {
                 "_id": object.customization.banners._id,
@@ -129,8 +130,7 @@ const get_object = (object) => {
                 "_id": object.customization.loadingGif._id,
                 "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
             },
-            "topTabCassino": object.customization.topTabCassino,
-            "topTabEsports": object.customization.topTabEsports,
+            "topTab": object.customization.topTab
         },
         "integrations": !object.integrations ? {} : {
             "_id": object.integrations._id,

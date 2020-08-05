@@ -42,6 +42,7 @@ context('Normal', async () =>  {
         detectValidationErrors(res);
         shouldCreateTheApp(res.data, expect);
         expect(res.data.message.virtual).to.equal(false);
+        console.log(res.data.message)
     }));
 
     it('Should update a contact', mochaAsync(async () => {

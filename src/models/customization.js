@@ -1,23 +1,23 @@
 import { CustomizationLogic } from '../logic';
 import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
-import { TopBar, Banners, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTabCassino, TopTabEsports } from '.';
+import { TopBar, Banners, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab } from '.';
 import { colors } from '../mocks';
 
-class Customization extends ModelComponent{
+class Customization extends ModelComponent {
 
-    constructor(params){
+    constructor(params) {
 
         let db = new CustomizationRepository();
 
         super(
             {
-                name : 'Customization', 
-                logic : new CustomizationLogic({db : db}), 
-                db : db,
-                self : null, 
-                params : {...params, colors : colors},
-                children : [
+                name: 'Customization',
+                logic: new CustomizationLogic({ db: db }),
+                db: db,
+                self: null,
+                params: { ...params, colors: colors },
+                children: [
                     new TopBar(params),
                     new Banners(params),
                     new Logo(params),
@@ -25,17 +25,29 @@ class Customization extends ModelComponent{
                     new TopIcon(params),
                     new LoadingGif(params),
                     new Background(params),
-                    new TopTabCassino(params),
-                    new TopTabEsports(params),
+                    new TopTab({
+                        ids: [
+                            {
+                                name: "Casino",
+                                icon: "https://i.ibb.co/h96g1bx/Casino.png",
+                                link_url: "/casino"
+                            },
+                            {
+                                name: "Esports",
+                                icon: "https://i.ibb.co/F6RLGVz/Esports.png",
+                                link_url: "/esports"
+                            }
+                        ]
+                    }),
                 ]
             }
-            );
+        );
     }
 
-    async register(){
-        try{
+    async register() {
+        try {
             return await this.process('Register');
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }

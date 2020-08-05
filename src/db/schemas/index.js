@@ -36,12 +36,10 @@ import { TxFeeSchema } from "./addOn/txFee";
 import { BackgroundSchema }  from './customization/background';
 import { DepositBonusSchema } from "./addOn/depositBonus";
 import { PointSystemSchema } from "./addOn/pointSystem";
-import { TopTabCassinoSchema } from "./customization/topTabCassino";
-import { TopTabEsportsSchema } from "./customization/topTabEsports";
+import { TopTabSchema } from "./customization/topTab";
 
 export {
-    TopTabCassinoSchema,
-    TopTabEsportsSchema,
+    TopTabSchema,
     DepositBonusSchema,
     TxFeeSchema,
     BalanceSchema,
