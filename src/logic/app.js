@@ -1326,8 +1326,7 @@ const progressActions = {
             textColor,
             backgroundColor, 
             text,
-            isActive,
-            isTransparent
+            isActive
         })
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -1335,7 +1334,7 @@ const progressActions = {
         return params;
     },
     __editTopTab  : async (params) => {
-        let { app, topTabParams } = params;
+        let { app, topTabParams, isTransparent } = params;
         let topTab = await Promise.all(topTabParams.map( async topTab => {
             if(topTab.icon.includes("https")){
                 /* If it is a link already */
@@ -1351,7 +1350,8 @@ const progressActions = {
         }))
         await TopTabRepository.prototype.findByIdAndUpdateTopTab({
             _id: app.customization.topTab._id,
-            newStructure: topTab
+            newStructure: topTab,
+            isTransparent
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})

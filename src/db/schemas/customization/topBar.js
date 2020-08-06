@@ -10,7 +10,6 @@ TopBarSchema.prototype.schema =  {
     backgroundColor       : { type : String},
     textColor             : { type : String},
     isActive              : { type : Boolean, default : false},
-    isTransparent         : { type : Boolean, default : false},
 }
 
 
