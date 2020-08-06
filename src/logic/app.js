@@ -54,6 +54,7 @@ import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerReposi
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
+import { IS_DEVELOPMENT } from '../config'
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
