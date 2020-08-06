@@ -86,7 +86,7 @@ const processActions = {
         return normalized;
     },
     __getAdminAll: async (params) => {
-        let app = await AppRepository.prototype.findAppById(params.app);
+        let app = await AppRepository.prototype.findAppById(params.app, "simple");
         let res = await __private.db.findAdminByApp(app._id);
         return res;
     },
@@ -163,7 +163,7 @@ const processActions = {
     __addAdmin: async (params) => {
         let admin = await __private.db.findAdminById(params.admin);
         if (!admin) { throwError('USER_NOT_EXISTENT') };
-        let app = await AppRepository.prototype.findAppById(admin.app._id);
+        let app = await AppRepository.prototype.findAppById(admin.app._id, "simple");
         if (!app) { throwError('USER_NOT_EXISTENT') };
         if (String(app._id) !== String(params.app)) { throwError('APP_INVALID') };
         let adminEmail = (await __private.db.findAdminEmail(params.email));
@@ -189,7 +189,7 @@ const processActions = {
     __editAdminType: async (params) => {
         let admin = await __private.db.findAdminById(params.admin);
         if (!admin) { throwError('USER_NOT_EXISTENT') };
-        let app = await AppRepository.prototype.findAppById(admin.app._id);
+        let app = await AppRepository.prototype.findAppById(admin.app._id, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') };
         const adminFind = app.listAdmins.find(a => new String(a).toString() == new String(params.adminToModify).toString())
         let adminToChangeType = await __private.db.findAdminById(adminFind);

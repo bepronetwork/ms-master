@@ -733,7 +733,7 @@ const processActions = {
     },
     __editBackground : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
