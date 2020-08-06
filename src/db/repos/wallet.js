@@ -34,6 +34,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { [currency] : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -50,6 +51,7 @@ class WalletsRepository extends MongoComponent{
                 } },
                 {'new' : true}
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -66,6 +68,7 @@ class WalletsRepository extends MongoComponent{
                 } },
                 {'new' : true}
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -78,6 +81,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
                 max_deposit: amount
             })
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -95,6 +99,7 @@ class WalletsRepository extends MongoComponent{
                 } } },
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -113,6 +118,7 @@ class WalletsRepository extends MongoComponent{
                 } },
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -132,6 +138,7 @@ class WalletsRepository extends MongoComponent{
                 }},
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -146,6 +153,7 @@ class WalletsRepository extends MongoComponent{
                 { $set: {playBalance : newBalance}},
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -158,6 +166,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { playBalance : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -170,6 +179,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { bonusAmount : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -182,6 +192,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { incrementBetAmountForBonus : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -194,6 +205,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { minBetAmountForBonusUnlocked : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -217,6 +229,7 @@ class WalletsRepository extends MongoComponent{
                 { _id: wallet_id, "depositAddresses" : {$nin : [address] } }, 
                 { $push: { "depositAddresses" : address } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -233,6 +246,7 @@ class WalletsRepository extends MongoComponent{
                     "playBalance" : playBalance,
                     "bonusAmount" : bonusAmount
                 } })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);

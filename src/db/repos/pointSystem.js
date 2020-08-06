@@ -31,6 +31,7 @@ class PointSystemRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             PointSystemRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -48,6 +49,7 @@ class PointSystemRepository extends MongoComponent{
                     "name"    : newStructure.name
                 }}
                 )
+                .lean()
             .exec( async (err, item) => {
                 await this.findByIdAndUpdateRatio(_id, currency, newStructure.ratio)
                 if(err) { reject(err)}

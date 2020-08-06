@@ -31,6 +31,7 @@ class TxFeeRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             TxFeeRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

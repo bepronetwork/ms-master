@@ -52,7 +52,9 @@ class JackpotRepository extends MongoComponent{
                 {
                     $set: { edge }
                 }
-            ).exec( (err, item) => {
+            )
+            .lean()
+            .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
             });
@@ -71,6 +73,7 @@ class JackpotRepository extends MongoComponent{
                     }
                 ]
             )
+            .lean()
             .exec( (err, jackpot) => {
                 if(err) { reject(err) }
                 resolve(jackpot);

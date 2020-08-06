@@ -35,6 +35,7 @@ class WithdrawRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             WithdrawRepository.prototype.schema.model.findById(_id)
             .populate(foreignKeys)
+            .lean()
             .exec( (err, Withdraw) => {
                 if(err) { reject(err)}
                 resolve(Withdraw);
@@ -63,6 +64,7 @@ class WithdrawRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             WithdrawRepository.prototype.schema.model
             .findOne({ transactionHash })
+            .lean()
             .exec( (err, Withdraw) => {
                 if(err) { reject(err)}
                 resolve(Withdraw)            
@@ -85,6 +87,7 @@ class WithdrawRepository extends MongoComponent{
                         last_update_timestamp   : new_Withdraw_params.last_update_timestamp
                 }},{ new: true }
             )
+            .lean()
             .exec( (err, Withdraw) => {
                 if(err) { reject(err)}
                 resolve(Withdraw);

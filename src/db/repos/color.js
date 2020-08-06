@@ -31,6 +31,7 @@ class ColorRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             ColorRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -47,6 +48,7 @@ class ColorRepository extends MongoComponent{
                     "hex"           : newStructure.hex
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

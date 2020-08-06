@@ -31,6 +31,7 @@ class IntegrationsRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             IntegrationsRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

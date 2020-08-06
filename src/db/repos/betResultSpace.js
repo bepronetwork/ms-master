@@ -32,6 +32,7 @@ class BetResultSpacesRepository extends MongoComponent{
     findBetResultSpaceById(_id){ 
         return new Promise( (resolve, reject) => {
             BetResultSpacesRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, BetResultSpace) => {
                 if(err) { reject(err)}
                 resolve(BetResultSpace);

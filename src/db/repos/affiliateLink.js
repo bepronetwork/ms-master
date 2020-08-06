@@ -47,6 +47,7 @@ class AffiliateLinkRepository extends MongoComponent{
                 { _id: _id },
                 { $set: { "affiliate" : affiliateId} },
                 { 'new': true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -60,6 +61,7 @@ class AffiliateLinkRepository extends MongoComponent{
                 { _id: _id },
                 { $set: { "affiliateStructure" : affiliateStructureId, isCustom : true } },
                 { 'new': true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);

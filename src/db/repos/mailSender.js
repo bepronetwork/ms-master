@@ -33,6 +33,7 @@ class MailSenderRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             MailSenderRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -57,6 +58,7 @@ class MailSenderRepository extends MongoComponent{
                     "templateIds" : newStructure.templateIds,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

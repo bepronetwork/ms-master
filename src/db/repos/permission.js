@@ -31,6 +31,7 @@ class PermissionRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             PermissionRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -50,6 +51,7 @@ class PermissionRepository extends MongoComponent{
                     "financials"  : newStructure.financials,
                 }} 
                 )
+                .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
