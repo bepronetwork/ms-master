@@ -73,7 +73,7 @@ context('Bet', async () => {
         /* Creater User Bet */
         while(wasWon){
             var BET_RESULT = [{
-                place: 0, value: betAmount
+                place: 1, value: betAmount
             }];
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
             /* Verify that was Lost */
