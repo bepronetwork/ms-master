@@ -828,9 +828,9 @@ context('Bet Errors Exploit - Prevention', async () => {
             metaName : 'european_roulette_simple'
         })
 
-        let result = game.resultSpace.map( (r, i) => {return {
-            place: 1, value: (betAmount/(game.resultSpace.length))
-        }});
+        let result = [{
+            place: 1, value: betAmount
+        }];
 
         result.pop();
 
