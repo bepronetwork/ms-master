@@ -802,7 +802,6 @@ async function webhookBitgoDeposit(req, res) {
                 // Get Info from WebToken
                 console.log("wb", wB)
                 const wBT = await BitGoSingleton.getTransaction({ id: wB.transfer, wallet_id: wB.wallet, ticker: getNormalizedTicker({ ticker: wB.coin }) });
-                console.log("wBT::", wBT)
                 if (!wBT) { return null }
                 // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
                 var isApp = !wBT.label;
