@@ -758,9 +758,9 @@ context('Bet Errors Exploit - Prevention', async () => {
         let postData = {  
             ...postDataDefault,
             game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: 1, value : betAmount/10
-            }})
+            result:  [{
+                place: 1, value : betAmount
+            }]
         };
 
         let { res } = await insideBetFunction({ postData});
