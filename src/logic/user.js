@@ -355,9 +355,10 @@ const processActions = {
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             console.log("wBT.coin:: ",wBT.coin)
-            if((new String(wBT.coin).toLowerCase() == 'teth') && IS_DEVELOPMENT){
-                wBT.coin = 'eth'
+            if(IS_DEVELOPMENT){
+                wBT.coin = (wBT.coin).substring(1)
             }
+            console.log("wBT.coinAfter:: ",wBT.coin)
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };

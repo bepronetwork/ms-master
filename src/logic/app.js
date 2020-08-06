@@ -552,6 +552,9 @@ const processActions = {
         /* Get App Id */
         var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
+        if(IS_DEVELOPMENT){
+            wBT.coin = (wBT.coin).substring(1)
+        }
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
