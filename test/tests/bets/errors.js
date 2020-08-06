@@ -759,7 +759,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: i, value : betAmount/10
+                place: 1, value : betAmount/10
             }})
         };
 
@@ -777,7 +777,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: [{
-                place: 0, value : betAmount/10,
+                place: 1, value : betAmount/10,
                 place: 4, value : betAmount/10
             }]
         };
@@ -796,7 +796,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: 0, value: betAmount/(game.resultSpace.length)
+                place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
 
@@ -829,7 +829,7 @@ context('Bet Errors Exploit - Prevention', async () => {
         })
 
         let result = game.resultSpace.map( (r, i) => {return {
-            place: i, value: (betAmount/(game.resultSpace.length))
+            place: 1, value: (betAmount/(game.resultSpace.length))
         }});
 
         result.pop();
