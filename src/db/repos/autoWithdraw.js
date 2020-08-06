@@ -38,6 +38,22 @@ class AutoWithdrawRepository extends MongoComponent{
         });
     }
 
+    pushNewCurrency(_id, currency) {
+        return new Promise( (resolve, reject) => {
+            AutoWithdrawRepository.prototype.schema.model.update(
+                {_id},
+                { $push: {
+                    "maxWithdrawAmountCumulative"     : { currency, amount: 0 },
+                    "maxWithdrawAmountPerTransaction" : { currency, amount: 0 }
+                }} 
+                )
+            .exec( async (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     findByIdAndUpdate(_id, currency, newStructure){ 
         return new Promise( (resolve, reject) => {
             AutoWithdrawRepository.prototype.schema.model.findByIdAndUpdate(
