@@ -1032,12 +1032,12 @@ const progressActions = {
         }
 
         /* add currencies in addons */
-        await JackpotRepository.prototype.pushNewCurrency(app.jackpot._id, currency._id);
-        await PointSystemRepository.prototype.pushNewCurrency(app.pointSystem._id, currency._id);
-        await AutoWithdrawRepository.prototype.pushNewCurrency(app.autoWithdraw._id, currency._id);
-        await TxFeeRepository.prototype.pushNewCurrency(app.txFee._id, currency._id);
-        await BalanceRepository.prototype.pushNewCurrency(app.balance._id, currency._id);
-        await DepositBonusRepository.prototype.pushNewCurrency(app.depositBonus._id, currency._id);
+        if(app.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.jackpot._id, currency._id);
+        if(app.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.pointSystem._id, currency._id);
+        if(app.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.autoWithdraw._id, currency._id);
+        if(app.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.txFee._id, currency._id);
+        if(app.balance)         await BalanceRepository.prototype.pushNewCurrency(app.balance._id, currency._id);
+        if(app.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.depositBonus._id, currency._id);
 
         console.log("setting user")
 
