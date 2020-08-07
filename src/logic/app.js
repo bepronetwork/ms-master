@@ -54,6 +54,7 @@ import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerReposi
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
+import { IS_DEVELOPMENT } from '../config'
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -552,6 +553,9 @@ const processActions = {
         /* Get App Id */
         var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
+        if(IS_DEVELOPMENT){
+            wBT.coin = (wBT.coin).substring(1)
+        }
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
@@ -1322,8 +1326,7 @@ const progressActions = {
             textColor,
             backgroundColor, 
             text,
-            isActive,
-            isTransparent
+            isActive
         })
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -1331,7 +1334,7 @@ const progressActions = {
         return params;
     },
     __editTopTab  : async (params) => {
-        let { app, topTabParams } = params;
+        let { app, topTabParams, isTransparent } = params;
         let topTab = await Promise.all(topTabParams.map( async topTab => {
             if(topTab.icon.includes("https")){
                 /* If it is a link already */
@@ -1347,7 +1350,8 @@ const progressActions = {
         }))
         await TopTabRepository.prototype.findByIdAndUpdateTopTab({
             _id: app.customization.topTab._id,
-            newStructure: topTab
+            newStructure: topTab,
+            isTransparent
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})

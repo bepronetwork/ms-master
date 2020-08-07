@@ -46,8 +46,7 @@ class TopBarRepository extends MongoComponent{
                     "isActive"          : newStructure.isActive,
                     "backgroundColor"   : newStructure.backgroundColor,
                     "textColor"         : newStructure.textColor,
-                    "text"              : newStructure.text,
-                    "isTransparent"     : newStructure.isTransparent 
+                    "text"              : newStructure.text
                 } },
                 { 'new': true })
                 .exec( (err, item) => {

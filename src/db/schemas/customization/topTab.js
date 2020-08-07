@@ -11,7 +11,8 @@ TopTabSchema.prototype.schema =  {
         name      : {type : String, required: true},
         icon      : {type : String, required: true},
         link_url  : {type : String, required: true}
-    }]
+    }],
+    isTransparent : { type : Boolean, default : false},
 }
 
 
