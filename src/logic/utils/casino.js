@@ -288,7 +288,7 @@ class CasinoLogic{
                 case 'european_roulette_simple' : {
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin, probability, place, value } = userResultSpace.reduce( (object, result) => {
-                        if((result.place <= 0) || (result.place > resultSpace.length)){ throwError('BAD_BET')}
+                        if((result.place <= 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}
                         let probability = resultSpace[result.place].probability;
                         let maxWin = parseFloat(result.value)/parseFloat(probability);
                         if(maxWin > object.maxWin){
