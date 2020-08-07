@@ -48,6 +48,7 @@ class UsersRepository extends MongoComponent{
                 id,
                 { $set : param },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -98,6 +99,7 @@ class UsersRepository extends MongoComponent{
                     user,
                     { $inc : { points : parseFloat(point) } } ,{ new: true }
                 )
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -159,6 +161,7 @@ class UsersRepository extends MongoComponent{
                 user_id, 
                 { $set: { "wallet" : [] } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -239,6 +242,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id },
                 { $set: { "affiliateLink" : affiliateLinkId} },
                 { 'new': true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -252,6 +256,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id },
                 { $set: { "affiliate" : affiliateId} },
                 { 'new': true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -265,6 +270,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id, wallet : {$nin : [wallet._id] } }, 
                 { $push: { "wallet" : wallet} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -279,6 +285,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id },
                 { $set: { "security": securityId } },
                 { 'new' : true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -312,7 +319,8 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findByIdAndUpdate(
                     { _id: _id },
-                    { $set: { "isWithdrawing" : state} }) 
+                    { $set: { "isWithdrawing" : state} })
+                    .lean() 
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{
@@ -354,6 +362,7 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.find({external_id : external_id})
                 .populate(foreignKeys)
+                .lean()
                 .exec( (err, user) => {
                     if(err) { reject(err)}
                     resolve(user);
@@ -370,6 +379,7 @@ class UsersRepository extends MongoComponent{
                 UsersRepository.prototype.schema.model.find(
                     { $and: [ { address: address}, { app_id: app} ] })
                 .populate(foreignKeys)
+                .lean()
                 .exec( (err, users) => {
                     if(err) { reject(err)}
                     var res;

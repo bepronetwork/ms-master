@@ -31,6 +31,7 @@ class AffiliateStructureRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             AffiliateStructureRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -48,6 +49,7 @@ class AffiliateStructureRepository extends MongoComponent{
                     "isActive"   : newStructure.isActive,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

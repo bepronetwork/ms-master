@@ -31,6 +31,7 @@ class AddOnRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             AddOnRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -46,6 +47,7 @@ class AddOnRepository extends MongoComponent{
                     $set: {jackpot}
                 }
             )
+            .lean()
             .exec((err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -61,6 +63,7 @@ class AddOnRepository extends MongoComponent{
                     $set: {balance}
                 }
             )
+            .lean()
             .exec((err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -77,6 +80,7 @@ class AddOnRepository extends MongoComponent{
                 },
                 {'new': true}
             )
+            .lean()
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -93,6 +97,7 @@ class AddOnRepository extends MongoComponent{
                 },
                 {'new': true}
             )
+            .lean()
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -109,6 +114,7 @@ class AddOnRepository extends MongoComponent{
                 },
                 {'new': true}
             )
+            .lean()
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -125,6 +131,7 @@ class AddOnRepository extends MongoComponent{
                 },
                 {'new': true}
             )
+            .lean()
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
