@@ -39,12 +39,13 @@ class TopTabRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdateTopTab({_id, newStructure}){
+    findByIdAndUpdateTopTab({_id, newStructure, isTransparent}){
         return new Promise( (resolve,reject) => {
             TopTabRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "ids" : newStructure
+                    "ids"            : newStructure,
+                    "isTransparent"  : isTransparent 
                 } },
                 { 'new': true })
                 .lean()
