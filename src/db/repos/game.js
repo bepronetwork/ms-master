@@ -35,6 +35,7 @@ class GamesRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             GamesRepository.prototype.schema.model.findById(_id)
             .populate(foreignKeys)
+            .lean()
             .exec( (err, Game) => {
                 if(err) { resolve(null)}
                 resolve(Game);
@@ -45,6 +46,7 @@ class GamesRepository extends MongoComponent{
     findGameByIdAndNotPopulate = async(_id) => {
         return new Promise((resolve, reject) => {
             GamesRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -55,6 +57,7 @@ class GamesRepository extends MongoComponent{
     findGameByApp(app) {
         return new Promise((resolve, reject) => {
             GamesRepository.prototype.schema.model.find({app})
+            .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -72,6 +75,7 @@ class GamesRepository extends MongoComponent{
                     }
                 }
             )
+            .lean()
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 const result= await GamesRepository.prototype.schema.model.findById(id);
@@ -94,6 +98,7 @@ class GamesRepository extends MongoComponent{
                     }
                 }
             )
+            .lean()
             .exec( async (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -107,6 +112,7 @@ class GamesRepository extends MongoComponent{
                 id, 
                 { $set: { "rules" : rules } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -121,6 +127,7 @@ class GamesRepository extends MongoComponent{
                 id, 
                 { $set: { "edge" : parseFloat(edge) } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -160,6 +167,7 @@ class GamesRepository extends MongoComponent{
                 { $set: { "maxBet" : parseFloat(params.maxBet) } },
                 { 'new': true }
             )
+            .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -173,6 +181,7 @@ class GamesRepository extends MongoComponent{
                 id, 
                 { $set: { "image_url" : image_url } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -187,6 +196,7 @@ class GamesRepository extends MongoComponent{
                 id, 
                 { $set: { "background_url" : background_url } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

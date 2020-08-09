@@ -129,10 +129,12 @@ let outputs = {
                     "backgroundColor": object.customization.topBar.backgroundColor,
                     "text": object.customization.topBar.text,
                     "textColor": object.customization.topBar.textColor,
+                    "isTransparent": object.customization.topBar.isTransparent,
                 },
                 "banners": !object.customization.banners ? {} : {
                     "_id": object.customization.banners._id,
                     "autoDisplay": object.customization.banners.autoDisplay,
+                    "fullWidth": object.customization.banners.fullWidth,
                     "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
                         return ({
                             "_id": id._id,
@@ -179,6 +181,7 @@ let outputs = {
                     "_id": object.customization.loadingGif._id,
                     "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
+                "topTab": object.customization.topTab
             },
             "integrations": !object.integrations ? {} : {
                 "_id": object.integrations._id,
@@ -214,7 +217,8 @@ let outputs = {
                 autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
                 balance       : !object.addOn.balance       ? null : object.addOn.balance,
                 txFee         : !object.addOn.txFee       ? null : object.addOn.txFee,
-                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus
+                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus,
+                pointSystem  : !object.addOn.pointSystem       ? null : object.addOn.pointSystem
             },
             "__v": object.__v,
         }

@@ -91,6 +91,7 @@ class AdminsRepository{
                 admin._id,
                 { $set : param },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -105,6 +106,7 @@ class AdminsRepository{
                 id,
                 { $set : param },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -132,6 +134,7 @@ class AdminsRepository{
                 admin_id,
                 { $set : { "app" : app } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

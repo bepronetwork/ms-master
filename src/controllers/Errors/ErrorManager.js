@@ -531,6 +531,16 @@ class ErrorManager {
         }
     }
 
+    topTab = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     mailSender = function (object, type){
         try{
             switch(type){
@@ -737,6 +747,16 @@ class ErrorManager {
 
 
     jackpot = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    pointSystem = function (object, type){
         try{
             switch(type){
                

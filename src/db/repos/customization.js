@@ -31,6 +31,7 @@ class CustomizationRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             CustomizationRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -46,6 +47,7 @@ class CustomizationRepository extends MongoComponent{
                     "colors" : _ids,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -62,6 +64,7 @@ class CustomizationRepository extends MongoComponent{
                     "banners" : banner_id,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -78,6 +81,7 @@ class CustomizationRepository extends MongoComponent{
                     "logo" : logo_id,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -94,6 +98,7 @@ class CustomizationRepository extends MongoComponent{
                     "footer" : footer_id,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -110,6 +115,7 @@ class CustomizationRepository extends MongoComponent{
                     "topIcon" : topIcon_id,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -126,6 +132,7 @@ class CustomizationRepository extends MongoComponent{
                     "loadingGif" : loadingGif_id,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -142,6 +149,7 @@ class CustomizationRepository extends MongoComponent{
                     "theme" : theme,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

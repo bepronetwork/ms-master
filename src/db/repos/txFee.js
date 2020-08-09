@@ -28,9 +28,32 @@ class TxFeeRepository extends MongoComponent{
         return TxFeeRepository.prototype.schema.model(TxFee)
     }
 
+    pushNewCurrency(_id, currency) {
+        return new Promise( (resolve, reject) => {
+            TxFeeRepository.prototype.schema.model.update(
+                {_id},
+                { $push: {
+                    deposit_fee: {
+                        currency,
+                        amount: 0,
+                    },
+                    withdraw_fee: {
+                        currency,
+                        amount: 0,
+                    }
+                }} 
+            )
+            .exec( async (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             TxFeeRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

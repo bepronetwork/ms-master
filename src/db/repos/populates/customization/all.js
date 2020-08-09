@@ -26,6 +26,11 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'topTab',
+        model : 'TopTab',
+        select : { '__v': 0},
+    },
+    {
         path : 'loadingGif',
         model : 'LoadingGif',
         select : { '__v': 0},

@@ -62,6 +62,7 @@ class DepositRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             DepositRepository.prototype.schema.model
             .findOne({ transactionHash })
+            .lean()
             .exec( (err, Deposit) => {
                 if(err) { reject(err)}
                 resolve(Deposit)            
@@ -73,6 +74,7 @@ class DepositRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             DepositRepository.prototype.schema.model
             .findOneAndDelete({ transactionHash })
+            .lean()
             .exec( (err, Deposit) => {
                 if(err) { reject(err)}
                 resolve(Deposit)            
@@ -95,6 +97,7 @@ class DepositRepository extends MongoComponent{
                         last_update_timestamp   : new_deposit_params.last_update_timestamp
                 }},{ new: true }
             )
+            .lean()
             .exec( (err, Deposit) => {
                 if(err) { reject(err)}
                 resolve(Deposit);

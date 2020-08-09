@@ -45,8 +45,11 @@ import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsReposi
 import TxFeeRepository from "./txFee";
 import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
+import PointSystemRepository from "./pointSystem";
+import TopTabRepository from "./topTab";
 
 export {
+    TopTabRepository,
     DepositBonusRepository,
     PopularNumberRepository,
     TxFeeRepository,
@@ -96,5 +99,6 @@ export {
     LoadingGifRepository,
     PermissionRepository,
     AutoWithdrawRepository,
-    BackgroundRepository
+    BackgroundRepository,
+    PointSystemRepository,
 }

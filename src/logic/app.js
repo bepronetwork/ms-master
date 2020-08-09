@@ -27,11 +27,16 @@ import {
     CustomizationRepository,
     TxFeeRepository,
     BackgroundRepository,
-    DepositBonusRepository
+    DepositBonusRepository,
+    PointSystemRepository,
+    TopTabRepository,
+    TopTabEsportsRepository,
+    JackpotRepository,
+    BalanceRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -48,6 +53,8 @@ import addOnRepository from '../db/repos/addOn';
 import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
+import { TopTabSchema } from '../db/schemas';
+import { IS_DEVELOPMENT } from '../config'
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -234,7 +241,7 @@ const processActions = {
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
 
-        app = await AppRepository.prototype.findAppById(app, "simple");
+        app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
@@ -432,6 +439,53 @@ const processActions = {
         }
 		return res;
     },
+    __addAddonPointSystem : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+        let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+        let ratio = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency : c._id,
+                value    : 0
+            }
+        }));
+        let res = {
+            ratio,
+            app
+        }
+		return res;
+    },
+    __editAddonPointSystem : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            let addOn = await AddOnRepository.prototype.findById(app.addOn)
+            if(!addOn){throwError('ADD_ON_NOT_EXISTS')}
+            let pointSystem = await PointSystemRepository.prototype.findById(addOn.pointSystem)
+            if(!pointSystem){throwError('ADD_ON_POINT_SYSTEM_NOT_EXISTS')}
+
+            let imageLogo;
+            if(params.pointSystemParams.logo.includes("https")){
+                /* If it is a link already */
+                imageLogo = params.pointSystemParams.logo;
+            }else if(params.pointSystemParams.logo!=""){
+                /* Does not have a Link and is a blob encoded64 */
+                imageLogo = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : params.pointSystemParams.logo});
+                params.pointSystemParams.logo = imageLogo
+            }
+
+            let res = {
+                pointSystem,
+                currency : params.currency,
+                pointSystemParams : params.pointSystemParams
+            }
+		    return res;
+        } catch (err) {
+            throw err
+        }
+    },
     __editAddonDepositBonus : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -499,6 +553,9 @@ const processActions = {
         /* Get App Id */
         var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
+        if(IS_DEVELOPMENT){
+            wBT.coin = (wBT.coin).substring(1)
+        }
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
@@ -660,6 +717,15 @@ const processActions = {
             app
         };
     },
+    __editTopTab : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editBanners : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -671,7 +737,7 @@ const processActions = {
     },
     __editBackground : async (params) => {
         let { app } = params;
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {
             ...params,
@@ -969,6 +1035,14 @@ const progressActions = {
             }
         }
 
+        /* add currencies in addons */
+        if(app.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.jackpot._id, currency._id);
+        if(app.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.pointSystem._id, currency._id);
+        if(app.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.autoWithdraw._id, currency._id);
+        if(app.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.txFee._id, currency._id);
+        if(app.balance)         await BalanceRepository.prototype.pushNewCurrency(app.balance._id, currency._id);
+        if(app.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.depositBonus._id, currency._id);
+
         console.log("setting user")
 
         /* Add Wallet to all Users */
@@ -1054,6 +1128,19 @@ const progressActions = {
         const depositBonusResult = await depositBonus.register();
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
 		return depositBonusResult;
+    },
+    __addAddonPointSystem : async (params) => {
+        const {ratio, app} = params;
+        let pointSystem = new PointSystem({app, ratio});
+        const pointSystemResult = await pointSystem.register();
+        await addOnRepository.prototype.addAddonPointSystem(app.addOn, pointSystemResult._doc._id);
+		return pointSystemResult;
+    },
+    __editAddonPointSystem : async (params) => {
+        const { pointSystem, currency, pointSystemParams } = params;
+        await PointSystemRepository.prototype.findByIdAndUpdate(pointSystem._id, currency, pointSystemParams)
+        let res = await PointSystemRepository.prototype.findById(pointSystem._id);
+        return res;
     },
     __editAddonDepositBonus : async (params) => {
         const { depositBonus, currency, depositBonusParams } = params
@@ -1233,7 +1320,7 @@ const progressActions = {
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
     __editTopBar  : async (params) => {
-        let { app, backgroundColor, textColor, text, isActive } = params;
+        let { app, backgroundColor, textColor, text, isActive, isTransparent } = params;
         const { topBar } = app.customization;
         await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
             textColor,
@@ -1246,8 +1333,33 @@ const progressActions = {
 
         return params;
     },
+    __editTopTab  : async (params) => {
+        let { app, topTabParams, isTransparent } = params;
+        let topTab = await Promise.all(topTabParams.map( async topTab => {
+            if(topTab.icon.includes("https")){
+                /* If it is a link already */
+                return topTab;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    icon   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topTab.icon}),
+                    name    : topTab.name,
+                    link_url : topTab.link_url
+                };
+            }
+        }))
+        await TopTabRepository.prototype.findByIdAndUpdateTopTab({
+            _id: app.customization.topTab._id,
+            newStructure: topTab,
+            isTransparent
+        });
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return true;
+    },
     __editBanners : async (params) => {
-        let { app, autoDisplay, banners } = params;
+        let { app, autoDisplay, banners, fullWidth } = params;
         let ids = await Promise.all(banners.map( async b => {
             if(b.image_url.includes("https")){
                 /* If it is a link already */
@@ -1265,7 +1377,8 @@ const progressActions = {
         }))
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
             autoDisplay,
-            ids
+            ids,
+            fullWidth
         })
         // Save info on Customization Part
         return params;
@@ -1583,6 +1696,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
+                case 'EditTopTab' : {
+                    return await library.process.__editTopTab(params); break;
+                };
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
                 };
@@ -1642,6 +1758,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetGameStats' : {
 					return await library.process.__getGameStats(params); break;
+                };
+                case 'AddAddonPointSystem' : {
+					return await library.process.__addAddonPointSystem(params); break;
+                };
+                case 'EditAddonPointSystem' : {
+					return await library.process.__editAddonPointSystem(params); break;
                 };
 			}
 		}catch(error){
@@ -1752,6 +1874,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;
                 };
+                case 'EditTopTab' : {
+                    return await library.progress.__editTopTab(params); break;
+                };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;
                 };
@@ -1812,7 +1937,12 @@ class AppLogic extends LogicComponent{
                 case 'GetGameStats': {
                     return await library.progress.__getGameStats(params); break;
                 }
-                
+                case 'AddAddonPointSystem': {
+                    return await library.progress.__addAddonPointSystem(params); break;
+                }
+                case 'EditAddonPointSystem': {
+                    return await library.progress.__editAddonPointSystem(params); break;
+                }
 			}
 		}catch(error){
 			throw error;

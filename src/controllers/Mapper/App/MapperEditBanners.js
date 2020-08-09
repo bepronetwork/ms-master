@@ -24,6 +24,7 @@ let outputs = {
             }),
             ...app_object(object),
             "autoDisplay": object.autoDisplay,
+            "fullWidth": object.fullWidth,
             "admin": object.admin,
         }
     },

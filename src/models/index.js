@@ -41,8 +41,11 @@ import LastBets from "./lastBets";
 import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
+import PointSystem from "./pointSystem";
+import TopTab from "./topTab";
 
 export {
+    TopTab,
     DepositBonus,
     PopularNumberLogic,
     LastBets,
@@ -85,5 +88,6 @@ export {
     Token,
     MailSender,
     LoadingGif,
-    Background
+    Background,
+    PointSystem,
 }

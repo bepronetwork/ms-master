@@ -274,5 +274,13 @@
     "068" : {
         "key" : "NO_ETH_WALLET",
         "message"   : "No ETH Wallet was created"
+    },
+    "069" : {
+        "key" : "ADD_ON_POINT_SYSTEM_NOT_EXISTS",
+        "message"   : "Point System AddOn not exists"
+    },
+    "070" : {
+        "key" : "UNCONFIRMED_EMAIL",
+        "message"   : "Unverified email"
     }
 }

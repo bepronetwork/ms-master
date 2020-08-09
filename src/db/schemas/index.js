@@ -35,8 +35,11 @@ import { BalanceSchema } from "./addOn/balance";
 import { TxFeeSchema } from "./addOn/txFee";
 import { BackgroundSchema }  from './customization/background';
 import { DepositBonusSchema } from "./addOn/depositBonus";
+import { PointSystemSchema } from "./addOn/pointSystem";
+import { TopTabSchema } from "./customization/topTab";
 
 export {
+    TopTabSchema,
     DepositBonusSchema,
     TxFeeSchema,
     BalanceSchema,
@@ -73,5 +76,6 @@ export {
     JackpotSchema,
     PermissionSchema,
     AutoWithdrawSchema,
-    BackgroundSchema
+    BackgroundSchema,
+    PointSystemSchema,
 }
