@@ -44,6 +44,7 @@ jobs: # a collection of steps
             echo 'export IS_LOCAL_DEV=false' >> $BASH_ENV
             echo 'export LIMIT=1' >> $BASH_ENV
             echo 'export RATE=100' >> $BASH_ENV
+            echo 'export LOGOWL_TICKET=B9859FA6E8288AC5854C68E9751F90BFEC94E04D517676CD18' >> $BASH_ENV
             source $BASH_ENV
       - run: # run tests
           name: test
