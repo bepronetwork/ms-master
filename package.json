@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "@google-cloud/storage": "^4.1.0",
+        "@logowl/adapter-nodejs": "^2.0.3",
         "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
         "amqplib": "^0.5.5",

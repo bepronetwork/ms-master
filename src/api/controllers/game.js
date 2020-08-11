@@ -15,7 +15,7 @@ async function editGameTableLimit (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -29,7 +29,7 @@ async function editGameEdge(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -43,7 +43,7 @@ async function editGameImage(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -57,7 +57,7 @@ async function editGameBackgroundImage(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
