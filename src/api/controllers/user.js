@@ -26,7 +26,7 @@ async function registUser (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -40,7 +40,7 @@ async function resendEmail (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -54,7 +54,7 @@ async function loginUser (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -67,7 +67,7 @@ async function setPassword(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -80,7 +80,7 @@ async function confirmEmail(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -93,7 +93,7 @@ async function resetPassword(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -107,7 +107,7 @@ async function setUser2FA(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -121,7 +121,7 @@ async function loginUser2FA(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -136,7 +136,7 @@ async function authUser (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -150,7 +150,7 @@ async function getUserInfo (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -164,7 +164,7 @@ async function userGetBets (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -178,7 +178,7 @@ async function getPotJackpot (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -192,7 +192,7 @@ async function userSummary (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -206,7 +206,7 @@ async function getBets (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -219,7 +219,7 @@ async function getDepositAddress(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "user", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -234,7 +234,7 @@ async function pusherNotificationsAuth(req, res) {
 
         res.send(data);
 	}catch(err){
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -252,7 +252,7 @@ async function pingPushNotifications(req, res) {
 
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 

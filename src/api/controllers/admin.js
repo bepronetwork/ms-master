@@ -24,7 +24,7 @@ async function registAdmin(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -38,7 +38,7 @@ async function getAdminAll(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 async function loginAdmin(req, res) {
@@ -50,7 +50,7 @@ async function loginAdmin(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -64,7 +64,7 @@ async function setAdmin2FA(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -78,7 +78,7 @@ async function editAdminType(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -92,7 +92,7 @@ async function loginAdmin2FA(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -108,7 +108,7 @@ async function authAdmin(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -122,7 +122,7 @@ async function addAdmin(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -135,7 +135,7 @@ async function resetAdminPassword(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -148,7 +148,7 @@ async function setAdminPassword(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
