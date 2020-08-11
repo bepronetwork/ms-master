@@ -212,7 +212,7 @@ const test = async () => {
             describe('tests', async () => {
                 // Wait for all Connection on App to bet set
                 await beforeTests();
-                await delay(5*1000);                    
+                await delay(20*1000);                    
                 let res = await getEcosystemCasinoGames();
                 global.test.ECOSYSTEM_GAMES = res.data.message;
                 
