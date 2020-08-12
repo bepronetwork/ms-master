@@ -150,7 +150,7 @@ const runTests = async () => {
         });
     })();
     mocha.addFile('./test/tests/middlewares');
-    mocha.addFile('./test/tests/bets');
+    // mocha.addFile('./test/tests/bets');
     mocha.addFile('./test/tests/ecosystem');
     mocha.addFile('./test/tests/admin');
     mocha.addFile('./test/tests/app');
@@ -212,7 +212,7 @@ const test = async () => {
             describe('tests', async () => {
                 // Wait for all Connection on App to bet set
                 await beforeTests();
-                await delay(5*1000);                    
+                await delay(30*1000);                    
                 let res = await getEcosystemCasinoGames();
                 global.test.ECOSYSTEM_GAMES = res.data.message;
                 

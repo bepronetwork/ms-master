@@ -45,29 +45,29 @@ context('Normal', async () =>  {
         console.log(res.data.message)
     }));
 
-    it('Should update a contact', mochaAsync(async () => {
-        try {
-            const email = admin.email;
-            const attributes = {
-                NAME: faker.name.firstName()
-            };
-            SendinBlueSingleton.updateContact(email, attributes);
-        } catch (err) {
-            console.log(err)
-        }
-    }));
+    // it('Should update a contact', mochaAsync(async () => {
+    //     try {
+    //         const email = admin.email;
+    //         const attributes = {
+    //             NAME: faker.name.firstName()
+    //         };
+    //         SendinBlueSingleton.updateContact(email, attributes);
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }));
 
-    it('Shouldnt update a contact that not exists', mochaAsync(async () => {
-        try {
-            const email = faker.internet.email();
-            const attributes = {
-                NAME: faker.name.firstName()
-            };
-            SendinBlueSingleton.updateContact(email, attributes);
-        } catch (err) {
-            expect(err.status).to.equal(404);
-        }
-    }));
+    // it('Shouldnt update a contact that not exists', mochaAsync(async () => {
+    //     try {
+    //         const email = faker.internet.email();
+    //         const attributes = {
+    //             NAME: faker.name.firstName()
+    //         };
+    //         SendinBlueSingleton.updateContact(email, attributes);
+    //     } catch (err) {
+    //         expect(err.status).to.equal(404);
+    //     }
+    // }));
 
     it('should auth admin', mochaAsync(async () => {
         let res = await authAdmin({

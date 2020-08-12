@@ -55,6 +55,7 @@ import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
+import { cryptoEth } from './third-parties/cryptoFactory';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -843,8 +844,8 @@ const progressActions = {
             APP: app._id
         };
         let templateId = mail.registerApp.templateId;
-        SendinBlueSingleton.updateContact(email, attributes);
-        SendinBlueSingleton.sendTemplate(templateId, [email]);
+        // SendinBlueSingleton.updateContact(email, attributes);
+        // SendinBlueSingleton.sendTemplate(templateId, [email]);
 		return app;
     },
     __getGameStats : async (params) => {
@@ -964,40 +965,17 @@ const progressActions = {
                 })).register())._doc;
 
             }else{
-                /* Create Wallet on Bitgo */
-                let params = await BitGoSingleton.createWallet({
-                    label : `${app._id}-${currency.ticker}`,
-                    passphrase,
-                    currency : currency.ticker
+                /* Create Wallet on Crypto API */
+                let params = await cryptoEth.CryptoEthSingleton.generateAccount({
+                    passphrase
                 })
 
-                bitgo_wallet = params.wallet;
+                cryptoEth_wallet = params.wallet;
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
 
-                /* Record webhooks */
-                await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
-
-                /* Create Policy for Day */
-                await BitGoSingleton.addPolicyToWallet({
-                    ticker : currency.ticker,
-                    bitGoWalletId : bitgo_wallet.id(),
-                    timeWindow : 'day'
-                })
-
-                /* Create Policy for Transaction */
-                await BitGoSingleton.addPolicyToWallet({
-                    ticker : currency.ticker,
-                    bitGoWalletId : bitgo_wallet.id(),
-                    timeWindow : 'hour',
-                })
-
-                /* Create Policy for Hour */
-                await BitGoSingleton.addPolicyToWallet({
-                    ticker : currency.ticker,
-                    bitGoWalletId : bitgo_wallet.id(),
-                    timeWindow : 'transaction',
-                })
+                // /* Record webhooks */
+                // await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
                 /* No Bitgo Wallet created */
                 if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
