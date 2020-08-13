@@ -241,7 +241,6 @@ const processActions = {
     },
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
-
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
@@ -965,25 +964,48 @@ const progressActions = {
                 })).register())._doc;
 
             }else{
-                /* Create Wallet on Crypto API */
-                let params = await cryptoEth.CryptoEthSingleton.generateAccount({
-                    passphrase
-                })
+                switch ((currency.ticker).toLowerCase()) {
+                    case 'eth':
+                        /* Create ETH Account on Crypto API */
+                        let params = await cryptoEth.CryptoEthSingleton.generateAccount({
+                            passphrase
+                        })
+                        receiveAddress = params.payload.address;
+                        console.log("receiveAddress::", receiveAddress)
 
-                cryptoEth_wallet = params.wallet;
-                receiveAddress = params.receiveAddress;
-                keys = params.keys;
+                        /* Record webhooks */
+                        await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
+                            address     : receiveAddress,
+                            app_id      : app._id, 
+                            currency_id : currency._id
+                        });
+
+                        /* No Crypto ETH Account created */
+                        if(!receiveAddress){throwError('UNKNOWN')};
+                        break;
+                
+                    default:
+                        break;
+                }
+                // /* Create Wallet on Crypto API */
+                // let params = await cryptoEth.CryptoEthSingleton.generateAccount({
+                //     passphrase
+                // })
+
+                // cryptoEth_wallet = params.wallet;
+                // receiveAddress = params.receiveAddress;
+                // keys = params.keys;
 
                 // /* Record webhooks */
                 // await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
 
-                /* No Bitgo Wallet created */
-                if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
+                /* No Crypto ETH Account created */
+                if(!receiveAddress){throwError('UNKNOWN')};
         
                 /* Save Wallet on DB */
                 wallet = (await (new Wallet({
                     currency : currency._id,
-                    bitgo_id : bitgo_wallet.id(),
+                    // bitgo_id : bitgo_wallet.id(),
                     virtual : false,
                     bank_address : receiveAddress,
                     hashed_passphrase : Security.prototype.encryptData(passphrase)

@@ -674,7 +674,7 @@ module.exports = {
     },
     async webhookConfirmDepositFromBitgo(params, id, currency_id){
         return request(global.server)
-        .post(`/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`)
+        .post(`/api/app/webhookDeposit?id=${id}&currency=${currency_id}`)
         .send(params)
         .then(res => detectServerError(res))
     },

@@ -1915,7 +1915,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/webhookBitgoDeposit: 
+  /app/webhookDeposit: 
     x-swagger-router-controller: app
     post:
       tags:

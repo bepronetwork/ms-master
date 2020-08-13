@@ -282,5 +282,9 @@
     "070" : {
         "key" : "UNCONFIRMED_EMAIL",
         "message"   : "Unverified email"
+    },
+    "071" : {
+        "key" : "WEAK_PASSWORD",
+        "message"   : "Password is too weak! It should be at least 7 characters and should contain at least one letter and one digit"
     }
 }

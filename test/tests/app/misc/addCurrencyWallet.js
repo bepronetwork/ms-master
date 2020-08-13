@@ -21,7 +21,7 @@ context('Add Currency Wallet', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test123',
             currency_id : currency._id
         };
 

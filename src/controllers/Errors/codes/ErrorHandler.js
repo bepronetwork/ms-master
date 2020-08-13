@@ -84,7 +84,8 @@ ErrorHandler.prototype.KEYS =  {
     'ADDRESS_NOT_AVAILABLE'                 : "067",
     'NO_ETH_WALLET'                         : "068",
     'ADD_ON_POINT_SYSTEM_NOT_EXISTS'        : "069",
-    'UNCONFIRMED_EMAIL'                     : "070"
+    'UNCONFIRMED_EMAIL'                     : "070",
+    'WEAK_PASSWORD'                         : "071"
 };
 
 /***************************

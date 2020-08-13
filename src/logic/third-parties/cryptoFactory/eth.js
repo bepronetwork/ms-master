@@ -1,35 +1,32 @@
 const CryptoApis = require('cryptoapis.io');
-import { CRYPTO_API } from "../../../config";
+import { CRYPTO_API, MS_MASTER_URL } from "../../../config";
 
 class CryptoEthClass {
     constructor() {
         this.cryptoApi = new CryptoApis(CRYPTO_API)
     }
 
-    async generateAccount({passphrase}){
-        let account = await this.cryptoApi.BC.ETH.address.generateAccount({ password : passphrase })
-        return account;
+    async generateAccount({ passphrase }) {
+        try {
+            let account = await this.cryptoApi.BC.ETH.address.generateAccount({ password: passphrase })
+            return account;
+        } catch (err) {
+            throwError('WEAK_PASSWORD')
+        }
     }
 
-    async createWalletBitgo({label, passphrase, currency}){
-        const currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(currency).toLowerCase()}`;
-        /* All test wallets start with t${currency_name} --- t behind the currency ex : tbtc */
-        var { wallet, userKeychain, backupKeychain, bitgoKeychain } = await this.bitgo.coin(currencyTicker).wallets().generateWallet({label, passphrase, enterprise : BITGO_ENTERPRISE_ID});
+    async addAppDepositWebhook({ address, app_id, currency_id }) {
+        // try {
+            let url = `${MS_MASTER_URL}/api/app/webhookBitgoDeposit?id=${app_id}&currency=${currency_id}`
+            let event = "ADDRESS"
+            let confirmations = 3
+            let webhook = await this.cryptoApi.BC.ETH.webhook.createAddressTransactionWebHook( url, event, confirmations, address)
+            console.log("webhook:: ",webhook)
+            return webhook;
+        // } catch (err) {
+        //     console.log(err)
+        // }
 
-        // Wait for wallet tx init - force delay
-        wallet = await this.getWallet({ticker : currency, id : wallet.id()});
-
-        let receiveAddress = (wallet._wallet.receiveAddress && wallet._wallet.receiveAddress.address) ? wallet._wallet.receiveAddress.address : wallet._wallet.coinSpecific.baseAddress;
-
-        return { 
-            wallet, 
-            receiveAddress,
-            keys : { 
-                user : userKeychain, 
-                backup : backupKeychain, 
-                bitgo : bitgoKeychain
-            } 
-        };
     }
 }
 
