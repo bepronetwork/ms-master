@@ -793,6 +793,7 @@ async function getUsers(req, res) {
 
 async function webhookBitgoDeposit(req, res) {
     try { 
+        console.log(":::Init webhook::: ", req);
         req.body.id = req.query.id;
         req.body.currency = req.query.currency;
         let params = req.body;
