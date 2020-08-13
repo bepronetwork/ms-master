@@ -17,8 +17,8 @@ class CryptoEthClass {
 
     async addAppDepositWebhook({ address, app_id, currency_id }) {
         // try {
-            MS_MASTER_URL="https://ms-master-issue-666-zw4rzsgd95.herokuapp.com"; //TODO remove
-            let url = `${MS_MASTER_URL}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}`
+            let urlMaster="https://ms-master-issue-666-zw4rzsgd95.herokuapp.com"; //TODO remove
+            let url = `${urlMaster}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}`
             let event = "ADDRESS"
             let confirmations = 3
             let webhook = await this.cryptoApi.BC.ETH.webhook.createAddressTransactionWebHook( url, event, confirmations, address)
