@@ -1,5 +1,6 @@
 const CryptoApis = require('cryptoapis.io');
 import { CRYPTO_API, MS_MASTER_URL } from "../../../config";
+import { throwError } from "../../../controllers/Errors/ErrorManager";
 
 class CryptoEthClass {
     constructor() {
