@@ -12,6 +12,7 @@ class CryptoEthClass {
             let account = await this.cryptoApi.BC.ETH.address.generateAccount({ password: passphrase })
             return account;
         } catch (err) {
+            console.log("Error:: ",err)
             throwError('WEAK_PASSWORD')
         }
     }
