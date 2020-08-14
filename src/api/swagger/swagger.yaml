@@ -1915,22 +1915,22 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /app/webhookDeposit:
+  /app/webhookDeposit: 
     x-swagger-router-controller: app
-    get:
+    post:
       tags:
       - app
       summary: Update Wallet Amount for the App
       operationId: webhookBitgoDeposit
       description: Update Wallet Amount for the App
-      # consumes:
-      #   - application/json
+      consumes:
+        - application/json
       produces:
         - application/json
-      # parameters:
-      #   - in: query
-      #     name : id
-      #     type : string
+      parameters:
+        - in: query
+          name : id
+          type : string
       responses:
         "200":
           description: Success
