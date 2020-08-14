@@ -22,37 +22,37 @@ context(`${ticker}`, async () => {
         depositAmount = 0.2;
     });
 
-    it('should update wallet with deposit (webhook)', mochaAsync(async () => {
-        let body = bitgoDepositExample();
-        // Remove Test Wallet Transaction Example
-        await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
+    // it('should update wallet with deposit (webhook)', mochaAsync(async () => {
+    //     let body = bitgoDepositExample();
+    //     // Remove Test Wallet Transaction Example
+    //     await DepositRepository.prototype.deleteDepositByTransactionHash(body.hash)
 
-        // User master address of app to work as the Bank Address
-        let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
-        /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
-        tx = await new Promise( async  (resolve, reject) => {
-            try{
-                await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 23592}, async (tx) => {
-                    resolve(tx);
-                });
-            }catch(err){reject(err)}
-        });
-        /* Wait for wallet to be created */
+    //     // User master address of app to work as the Bank Address
+    //     let bankContract = globalsTest.getCasinoETHContract(currencyWallet.bank_address, global.ownerAccount);
+    //     /* Create Deposit App Transaction - Tokens Sent with not wrong token amount */ 
+    //     tx = await new Promise( async  (resolve, reject) => {
+    //         try{
+    //             await bankContract.sendFundsToCasinoContract(depositAmount, {gasPrice : 1, gas : 23592}, async (tx) => {
+    //                 resolve(tx);
+    //             });
+    //         }catch(err){reject(err)}
+    //     });
+    //     /* Wait for wallet to be created */
 
-        await delay(100* 1000);
-        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
-        /** provide funds for furthger testing */
-        await provideFunds({wallet : currencyWallet._id, amount : 1});
-        const { status } = res.data;
-        detectValidationErrors(res);
-        expect(status).to.equal(200);
-    }));
+    //     await delay(100* 1000);
+    //     let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+    //     /** provide funds for furthger testing */
+    //     await provideFunds({wallet : currencyWallet._id, amount : 1});
+    //     const { status } = res.data;
+    //     detectValidationErrors(res);
+    //     expect(status).to.equal(200);
+    // }));
 
-    it('shouldnt update Wallet with already checked tx', mochaAsync(async () => {
-        let body = bitgoDepositExample();
+    // it('shouldnt update Wallet with already checked tx', mochaAsync(async () => {
+    //     let body = bitgoDepositExample();
 
-        let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
-        detectValidationErrors(res);
-        shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
-    }));
+    //     let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+    //     detectValidationErrors(res);
+    //     shouldntUpdateWalletWithAlreadyPresentTransaction(res.data, expect);
+    // }));
 });

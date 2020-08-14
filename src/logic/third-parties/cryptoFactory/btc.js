@@ -1,15 +1,18 @@
-import { throwError } from "../../../controllers/Errors/ErrorManager";
 import { CryptoSingleton } from "./crypto";
+import { throwError } from "../../../controllers/Errors/ErrorManager";
 
-class CryptoEthClass {
+class CryptoBtcClass {
     constructor() {
         this.cryptoApi = CryptoSingleton.init();
     }
 
-    async generateAccount({ passphrase }) {
+    async createHDWallet({ label, passphrase }) {
         try {
-            let account = await this.cryptoApi.BC.ETH.address.generateAccount(passphrase);
-            return account;
+            let name = label;
+            let addressCount = 1;
+            let password = passphrase;
+            let wallet = await this.cryptoApi.BC.BTC.wallet.createHDWallet(name, addressCount, password);
+            return wallet;
         } catch (err) {
             console.log("Error:: ", err)
             throwError('WEAK_PASSWORD')
@@ -29,9 +32,8 @@ class CryptoEthClass {
         try {
             let urlMaster = "https://ms-master-issue-666-zw4rzsgd95.herokuapp.com"; //TODO remove
             let url = `${urlMaster}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
-            // let url = `https://webhook.site/74f3ff3d-2b88-4c3a-8f17-583be05633e4?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
             let confirmations = 3
-            let webhook = await this.cryptoApi.BC.ETH.webhook.createAddressTransactionWebHook(url, address, confirmations)
+            let webhook = await this.cryptoApi.BC.BTC.webhook.createAddressTransactionWebHook(url, address, confirmations)
             console.log("webhook:: ", webhook)
             return webhook;
         } catch (err) {
@@ -40,7 +42,7 @@ class CryptoEthClass {
     }
     async generateDepositAddress() {
         try {
-            let depositAddress = await this.cryptoApi.BC.ETH.address.generateAddress()
+            let depositAddress = await this.cryptoApi.BC.BTC.address.generateAddress()
             return depositAddress;
         } catch (err) {
             console.log(err)
@@ -49,7 +51,7 @@ class CryptoEthClass {
 
     async getAddressInfo(address) {
         try {
-            let addressInfo = await this.cryptoApi.BC.ETH.address.getInfo(address)
+            let addressInfo = await this.cryptoApi.BC.BTC.address.getInfo(address)
             return addressInfo;
         } catch (err) {
             console.log(err)
@@ -57,8 +59,8 @@ class CryptoEthClass {
     }
 }
 
-var CryptoEthSingleton = new CryptoEthClass();
+var CryptoBtcSingleton = new CryptoBtcClass();
 
 export {
-    CryptoEthSingleton
+    CryptoBtcSingleton
 }

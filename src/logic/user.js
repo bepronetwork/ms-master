@@ -31,6 +31,7 @@ import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT } from "../config";
+import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
 
 let error = new ErrorManager();
 
@@ -351,13 +352,11 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
-            var { currency, id, wBT } = params;
+            var { currency, id } = params;
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
-            if(IS_DEVELOPMENT){
-                wBT.coin = (wBT.coin).substring(1)
-            }
-            const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
+            let ticker = params.chain.split(".")[0];
+            const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             let addOn = app.addOn;
@@ -365,22 +364,22 @@ const processActions = {
             if(addOn && addOn.txFee && addOn.txFee.isTxFee){
                 fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
             }
-            /* Verify if the transactionHash was created */
-            const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
+            // /* Verify if the transactionHash was created */
+            // const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
-            const from = entries[0].address;
-            const to = entries[1].address;
+            const from  = params.from;
+            const to    = params.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
-            const isValid = ((state == 'confirmed') && (type == 'receive'));
+            const isValid = (params.status === "0x1");
 
             /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(label);
+            let user = await UsersRepository.prototype.findUserById(param.id);
             if (!user) { throwError('USER_NOT_EXISTENT') }
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
 
             /* Verify if this transactionHashs was already added */
-            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
@@ -425,10 +424,10 @@ const processActions = {
                 user_id: user._id,
                 wallet: wallet,
                 creationDate: new Date(),
-                transactionHash: transactionHash,
+                transactionHash: params.txHash,
                 from: from,
                 currencyTicker: wallet.currency.ticker,
-                amount: amount,
+                amount: (params.value/1000000000000000000),
                 isValid,
                 fee,
                 depositBonusValue,
@@ -613,20 +612,31 @@ const progressActions = {
         let addresses = user_wallet.depositAddresses;
         let address = addresses.find( a => a.address);
         if(!address){
-            var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-            // See if address is already provided
-            let bitgo_id;
-            if(addresses.length > 0){
-                bitgo_id = addresses.find( a => a.bitgo_id).bitgo_id;
+
+
+            // let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
+            var crypto_address = null;
+            switch ((app_wallet.currency.ticker).toLowerCase()) {
+                case 'btc': {
+                    crypto_address = await cryptoBtc.CryptoBtcSingleton.generateDepositAddress(); break;
+                };
+                case 'eth': {
+                    crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress(); break;
+                };
             }
-            let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
-            address = bitgo_address;
-            if((!bitgo_id) || bitgo_address.address){
-                // Bitgo has created the address
-                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
-                // Add Deposit Address to User Deposit Addresses
-                await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
-            }
+
+            address = {address: crypto_address.payload.address};
+            /* Record webhooks */
+            await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
+                address     : address.address,
+                app_id      : user._id,
+                currency_id : user_wallet.currency._id,
+                isApp       : false
+            });
+            // Bitgo has created the address
+            let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address})).register())._doc;
+            // Add Deposit Address to User Deposit Addresses
+            await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
         }else{
             // System already has an address
         }

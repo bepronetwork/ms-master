@@ -8,6 +8,7 @@ import { BitGoSingleton } from '../../logic/third-parties';
 import { getNormalizedTicker } from '../../logic/third-parties/bitgo/helpers';
 import { workerQueueSingleton } from '../../logic/third-parties/rabbit';
 import PerfomanceMonitor from '../../helpers/performance';
+import { cryptoEth } from '../../logic/third-parties/cryptoFactory';
 const perf = require('execution-time')();
 
 /**
@@ -797,18 +798,15 @@ async function webhookBitgoDeposit(req, res) {
         req.body.id = req.query.id;
         req.body.currency = req.query.currency;
         let params = req.body;
+
+        let dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
+        if (!dataTransaction) { return null }
+        params = {...params, ...dataTransaction};
+
         let hooks = Array.isArray(params) ? params : [params];
         let data = await Promise.all(hooks.map(async wB => {
             try {
-                // Get Info from WebToken
-                console.log("wb", wB)
-                const wBT = await BitGoSingleton.getTransaction({ id: wB.transfer, wallet_id: wB.wallet, ticker: getNormalizedTicker({ ticker: wB.coin }) });
-                if (!wBT) { return null }
-                // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
-                var isApp = !wBT.label;
-                params.wBT = wBT;
-
-                if (isApp) {
+                if (params.isApp) {
                     let app = new App(params);
                     return await app.updateWallet();
                 } else {

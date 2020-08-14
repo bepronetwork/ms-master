@@ -55,7 +55,7 @@ import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
-import { cryptoEth } from './third-parties/cryptoFactory';
+import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -549,33 +549,28 @@ const processActions = {
 		return res;
     },
     __updateWallet : async (params) => {
-        var { currency, id, wBT } = params;
+        var { currency, id } = params;
         /* Get App Id */
         var app = await AppRepository.prototype.findAppById(id, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
-        if(IS_DEVELOPMENT){
-            wBT.coin = (wBT.coin).substring(1)
-        }
-        const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
+        let ticker = params.chain.split(".")[0];
+        const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
-        /* Verify if the transactionHash was created */
-        const { state, entries, value : amount, type, txid : transactionHash } = wBT;
-        
-        const from = entries[0].address;
-        const isValid = ((state == 'confirmed') && (type == 'receive'));
+        const from = params.from;
+        const isValid = (params.status === "0x1");
 
         /* Verify if this transactionHashs was already added */
-        let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+        let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
         let wasAlreadyAdded = deposit ? true : false;
 
         return  {
             app                 : app,
             wallet              : wallet,
             creationDate        : new Date(),
-            transactionHash     : transactionHash,
+            transactionHash     : params.txHash,
             from                : from,
-            amount              : amount,
+            amount              : (params.value/1000000000000000000),
             wasAlreadyAdded,
             isValid
         }
@@ -976,7 +971,8 @@ const progressActions = {
                         await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
                             address     : receiveAddress,
                             app_id      : app._id,
-                            currency_id : currency._id
+                            currency_id : currency._id,
+                            isApp       : true
                         });
 
                         /* No Crypto ETH Account created */
@@ -984,7 +980,23 @@ const progressActions = {
                         break;
                     }
                     case 'btc': {
-                        
+                        let params = await cryptoBtc.CryptoBtcSingleton.createHDWallet({
+                            label : `${app._id}-${currency.ticker}`,
+                            passphrase
+                        })
+                        receiveAddress = params.payload.addresses[0].address;
+                        console.log("receiveAddress::", receiveAddress)
+
+                        /* Record webhooks */
+                        await cryptoBtc.CryptoBtcSingleton.addAppDepositWebhook({
+                            address     : receiveAddress,
+                            app_id      : app._id,
+                            currency_id : currency._id,
+                            isApp       : true
+                        });
+
+                        /* No Crypto ETH Account created */
+                        if(!receiveAddress){throwError('UNKNOWN')};
                         break;
                     }
                     default:
@@ -1180,9 +1192,9 @@ const progressActions = {
         let deposit = new Deposit({
             app                     : params.app._id,
             transactionHash         : params.transactionHash,
-            creation_timestamp      : params.creationDate,                    
-            last_update_timestamp   : params.creationDate,                             
-            address                 : params.from,                         
+            creation_timestamp      : params.creationDate,
+            last_update_timestamp   : params.creationDate,
+            address                 : params.from,
             currency                : params.wallet.currency._id,
             amount                  : params.amount,
         })
@@ -1537,7 +1549,8 @@ const progressActions = {
             case 'eth':
                 wallet = await cryptoEth.CryptoEthSingleton.getAddressInfo(app_wallet.bank_address)
                 break;
-            default:
+            case 'btc':
+                wallet = await cryptoBtc.CryptoBtcSingleton.getAddressInfo(app_wallet.bank_address)
                 break;
         }
         // var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
@@ -1561,7 +1574,15 @@ const progressActions = {
                 // }
             }else{
                 // Not on the system (1st call)
-                var crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                var crypto_address = ''
+                switch ((app_wallet.currency.ticker).toLowerCase()) {
+                    case 'eth':
+                        crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                        break;
+                    case 'btc':
+                        crypto_address = await cryptoBtc.CryptoBtcSingleton.generateDepositAddress();
+                        break;
+                }
                 console.log("a")
                 // new label - save it
                 // If the system does not have this address saved still - bitgo has the address already
