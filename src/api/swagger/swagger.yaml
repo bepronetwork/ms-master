@@ -1917,7 +1917,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /app/webhookDeposit: 
     x-swagger-router-controller: app
-    post:
+    get:
       tags:
       - app
       summary: Update Wallet Amount for the App
