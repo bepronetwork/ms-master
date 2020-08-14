@@ -957,7 +957,6 @@ const progressActions = {
                 /* Save Wallet on DB */
                 wallet = (await (new Wallet({
                     currency : currency._id,
-                    bitgo_id : wallet_eth.bitgo_id,
                     virtual : false,
                     bank_address : wallet_eth.bank_address,
                     hashed_passphrase : Security.prototype.encryptData(passphrase)
@@ -965,7 +964,7 @@ const progressActions = {
 
             }else{
                 switch ((currency.ticker).toLowerCase()) {
-                    case 'eth':
+                    case 'eth': {
                         /* Create ETH Account on Crypto API */
                         let params = await cryptoEth.CryptoEthSingleton.generateAccount({
                             passphrase
@@ -976,14 +975,18 @@ const progressActions = {
                         /* Record webhooks */
                         await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
                             address     : receiveAddress,
-                            app_id      : app._id, 
+                            app_id      : app._id,
                             currency_id : currency._id
                         });
 
                         /* No Crypto ETH Account created */
                         if(!receiveAddress){throwError('UNKNOWN')};
                         break;
-                
+                    }
+                    case 'btc': {
+                        
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -1529,7 +1532,15 @@ const progressActions = {
     __generateAddresses  : async (params) => {
 
         const { app_wallet, availableDepositAddresses, amount, app } = params;
-        var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+        var wallet = ''
+        switch ((app_wallet.currency.ticker).toLowerCase()) {
+            case 'eth':
+                wallet = await cryptoEth.CryptoEthSingleton.getAddressInfo(app_wallet.bank_address)
+                break;
+            default:
+                break;
+        }
+        // var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
         const currentAddressAmount = availableDepositAddresses.length;
         console.log("currentAddressAmount", currentAddressAmount)
 
@@ -1540,21 +1551,21 @@ const progressActions = {
             if(availableDeposit){
                 // Already is on the system
                 // Bitgo already has the address
-                var bitgo_address = await BitGoSingleton.getDepositAddress({ wallet,  id: availableDeposit.address.bitgo_id });
-                if(bitgo_address.id && bitgo_address.address){
-                // Add Deposit Address to User Deposit Addresses
-                    await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
-                }else{
-                    // Address is not generated still
-                    console.log("nothing still", i)
-                }
+                // var bitgo_address = await BitGoSingleton.getDepositAddress({ wallet,  id: availableDeposit.address.bitgo_id });
+                // if(bitgo_address.id && bitgo_address.address){
+                // // Add Deposit Address to User Deposit Addresses
+                //     await AddressRepository.prototype.editAddress(availableDeposit.address._id, bitgo_address.address);
+                // }else{
+                //     // Address is not generated still
+                //     console.log("nothing still", i)
+                // }
             }else{
                 // Not on the system (1st call)
-                var bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: `${i}` /* label type */, id: app_wallet.bitgo_id });
+                var crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
                 console.log("a")
                 // new label - save it
                 // If the system does not have this address saved still - bitgo has the address already
-                let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                let addressObject = (await (new Address({ currency: app_wallet.currency._id, address: crypto_address.payload.address})).register())._doc;
                 // Add Deposit Address to User Deposit Addresses
                 console.log("addressObject", addressObject, app_wallet._id)
                 await WalletsRepository.prototype.addAvailableDepositAddress(app_wallet._id, addressObject._id);
