@@ -14,6 +14,7 @@ WalletSchema.prototype.schema = {
     min_withdraw                : { type: Number, default: 0.000001},
     affiliate_min_withdraw      : { type: Number, default: 0.000001},
     bank_address                : { type: String},
+    bank_address_not_webhook    : { type: String},
     bitgo_id                    : { type: String},
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
     hashed_passphrase           : { type: String},

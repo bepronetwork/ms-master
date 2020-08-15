@@ -970,8 +970,12 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
-
                 bitgo_wallet = params.wallet;
+
+                var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
+                let bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
+
+
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
 
@@ -1008,6 +1012,7 @@ const progressActions = {
                     bitgo_id : bitgo_wallet.id(),
                     virtual : false,
                     bank_address : receiveAddress,
+                    bank_address_not_webhook : bitgo_address2.address,
                     hashed_passphrase : Security.prototype.encryptData(passphrase)
                 })).register())._doc;
 
