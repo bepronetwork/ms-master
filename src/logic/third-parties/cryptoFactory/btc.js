@@ -19,9 +19,9 @@ class CryptoBtcClass {
         }
     }
 
-    async getTransaction({ txHash }) {
+    async getTransaction( txHash ) {
         try {
-            let transaction = await this.cryptoApi.BC.ETH.transaction.getTransaction(txHash) ;
+            let transaction = await this.cryptoApi.BC.BTC.transaction.getTransaction(txHash) ;
             console.log("webhook:: ", transaction)
             return transaction;
         } catch (err) {

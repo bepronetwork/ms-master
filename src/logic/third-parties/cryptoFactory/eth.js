@@ -18,7 +18,7 @@ class CryptoEthClass {
         }
     }
 
-    async getTransaction({ txHash }) {
+    async getTransaction(txHash) {
         try {
             let network = await this.cryptoApi.BC.ETH.getSelectedNetwork();
             console.log(":::network::::", network)
