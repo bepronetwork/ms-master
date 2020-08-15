@@ -39,7 +39,7 @@ class BitGoClass {
     }
 
     async getWallet({ticker, id}){
-        var currencyTicker = new String(currency).toLowerCase();
+        var currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(ticker).toLowerCase()}`;
         switch(ticker.toLowerCase()){
             case 'eth' : {
                 break;
