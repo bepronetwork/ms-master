@@ -1,10 +1,11 @@
 import { throwError } from "../../../controllers/Errors/ErrorManager";
 import { CryptoSingleton } from "./crypto";
-import { USER_KEY } from "../../../config";
+import { USER_KEY, IS_DEVELOPMENT} from "../../../config";
 
 class CryptoEthClass {
     constructor() {
         this.cryptoApi = CryptoSingleton.init();
+        if(IS_DEVELOPMENT){ this.cryptoApi.BC.ETH.switchNetwork('rinkeby')}
     }
 
     async generateAccount({ passphrase }) {
@@ -19,6 +20,8 @@ class CryptoEthClass {
 
     async getTransaction({ txHash }) {
         try {
+            let network = await this.cryptoApi.BC.ETH.getSelectedNetwork();
+            console.log(":::network::::", network)
             let transaction = await this.cryptoApi.BC.ETH.transaction.getTransaction(txHash) ;
             console.log("webhook:: ", transaction)
             return transaction;
