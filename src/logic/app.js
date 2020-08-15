@@ -558,8 +558,8 @@ const processActions = {
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
-        const from = params.from;
-        const isValid = (params.status === "0x1");
+        const from = params.payload.from;
+        const isValid = (params.payload.status === "0x1");
 
         /* Verify if this transactionHashs was already added */
         let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
@@ -572,7 +572,7 @@ const processActions = {
             creationDate        : new Date(),
             transactionHash     : params.txHash,
             from                : from,
-            amount              : (params.value/1000000000000000000),
+            amount              : (params.payload.value/1000000000000000000),
             wasAlreadyAdded,
             isValid
         }
@@ -1209,7 +1209,7 @@ const progressActions = {
         
         /* Add Deposit to App */
         await AppRepository.prototype.addDeposit(params.app._id, depositSaveObject._id)
-
+        console.log("FIMMM::: ",params)
         return params;
     },
     __editGameTableLimit : async (params) => {
