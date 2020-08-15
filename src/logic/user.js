@@ -32,6 +32,7 @@ import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
+import { getCurrencyAmountToBitGo } from "./third-parties/bitgo/helpers";
 
 let error = new ErrorManager();
 
@@ -356,6 +357,10 @@ const processActions = {
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             let ticker = params.ticker;
+            var amount = getCurrencyAmountToBitGo({
+                amount: params.payload.value,
+                ticker
+            });
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
@@ -367,10 +372,10 @@ const processActions = {
             // /* Verify if the transactionHash was created */
             // const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
-            const from  = params.from;
-            const to    = params.to;
+            const from  = params.payload.from;
+            const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
-            const isValid = (params.status === "0x1");
+            const isValid = (params.payload.status === "0x1");
 
             /* Get User Info */
             let user = await UsersRepository.prototype.findUserById(param.id);
@@ -427,7 +432,7 @@ const processActions = {
                 transactionHash: params.txHash,
                 from: from,
                 currencyTicker: wallet.currency.ticker,
-                amount: (params.value/1000000000000000000),
+                amount,
                 isValid,
                 fee,
                 depositBonusValue,
