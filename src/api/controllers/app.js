@@ -799,6 +799,7 @@ async function webhookBitgoDeposit(req, res) {
         req.body.currency = req.query.currency;
         let params = req.body;
         console.log(1)
+        console.log("params.txHash:::", params.txHash)
         let dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
         console.log(2)
         console.log("::::dataTransaction::::",dataTransaction)
