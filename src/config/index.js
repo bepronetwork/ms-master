@@ -73,6 +73,8 @@ export const LOGOWL_TICKET = process.env.LOGOWL_TICKET;
 
 export const CRYPTO_API = process.env.CRYPTO_API;
 
+export const USER_KEY = process.env.USER_KEY;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 

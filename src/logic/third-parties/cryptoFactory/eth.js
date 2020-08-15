@@ -1,5 +1,6 @@
 import { throwError } from "../../../controllers/Errors/ErrorManager";
 import { CryptoSingleton } from "./crypto";
+import { USER_KEY } from "../../../config";
 
 class CryptoEthClass {
     constructor() {
@@ -40,7 +41,7 @@ class CryptoEthClass {
     }
     async generateDepositAddress() {
         try {
-            let depositAddress = await this.cryptoApi.BC.ETH.address.generateAddress()
+            let depositAddress = await this.cryptoApi.BC.ETH.address.generateAccount(USER_KEY)
             return depositAddress;
         } catch (err) {
             console.log(err)
