@@ -60,7 +60,7 @@ class CryptoEthClass {
 
     async createPaymentForwarding({from, to, callbackURL, wallet, password, confirmations}) {
         try {
-            let createPaymentForwarding = await this.cryptoApi.BC.ETH.address.createPaymentForwarding(from, to, callbackURL, wallet, password, confirmations)
+            let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, password, confirmations)
             return createPaymentForwarding;
         } catch (err) {
             console.log(err)

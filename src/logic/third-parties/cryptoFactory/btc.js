@@ -82,7 +82,7 @@ class CryptoBtcClass {
 
     async createPaymentForwarding({from, to, callbackURL, wallet, password, confirmations}) {
         try {
-            let createPaymentForwarding = await this.cryptoApi.BC.BTC.address.createPaymentForwarding(from, to, callbackURL, wallet, password, confirmations)
+            let createPaymentForwarding = await this.cryptoApi.BC.BTC.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, password, confirmations)
             return createPaymentForwarding;
         } catch (err) {
             console.log(err)
