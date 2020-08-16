@@ -357,7 +357,7 @@ const processActions = {
             var { currency, id } = params;
 
             /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(param.id);
+            let user = await UsersRepository.prototype.findUserById(id);
             if (!user) { throwError('USER_NOT_EXISTENT') }
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
