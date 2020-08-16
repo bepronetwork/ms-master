@@ -32,7 +32,7 @@ import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
-import { getCurrencyAmountToBitGo } from "./third-parties/bitgo/helpers";
+import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
 
 let error = new ErrorManager();
 
@@ -366,7 +366,7 @@ const processActions = {
             var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             let ticker = params.ticker;
-            var amount = getCurrencyAmountToBitGo({
+            var amount = getCurrencyAmountFromBitGo({
                 amount: params.payload.value,
                 ticker
             });
