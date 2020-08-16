@@ -970,6 +970,11 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
+                await (()=>{
+                    return new Promise((resolve) => {
+                        setTimeout(()=>{resolve(true)}, 40000);
+                    });
+                })();
                 bitgo_wallet = params.wallet;
                 console.log("11 ", params)
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
