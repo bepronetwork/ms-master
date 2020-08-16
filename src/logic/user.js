@@ -366,10 +366,18 @@ const processActions = {
             var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             let ticker = params.ticker;
-            var amount = getCurrencyAmountFromBitGo({
-                amount: params.payload.value,
-                ticker
-            });
+            var amount = null;
+            switch (ticker.toLowerCase()) {
+                case 'eth':
+                    amount = getCurrencyAmountFromBitGo({
+                        amount: params.payload.value,
+                        ticker
+                    });
+                    break;
+                default:
+                    amount = params.payload.value
+                    break;
+            }
             console.log("amount:::", amount)
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             currency = app_wallet.currency._id;

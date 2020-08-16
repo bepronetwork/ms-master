@@ -93,6 +93,16 @@ class CryptoBtcClass {
             console.log(err)
         }
     }
+
+    async getTransaction(txHash) {
+        try {
+            let transaction = await this.cryptoApi.BC.BTC.transaction.getTransaction(txHash) ;
+            console.log("getTransactionBTC:: ", transaction)
+            return transaction;
+        } catch (err) {
+            console.log(err)
+        }
+    }
 }
 
 var CryptoBtcSingleton = new CryptoBtcClass();

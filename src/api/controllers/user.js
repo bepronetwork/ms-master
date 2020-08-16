@@ -4,7 +4,7 @@ import {
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
 import PusherSingleton from '../../logic/third-parties/pusher';
-import { cryptoEth } from '../../logic/third-parties/cryptoFactory';
+import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
 
 /**
  * Description of the function.
@@ -273,7 +273,27 @@ async function webhookDeposit(req, res) {
         let params = req.body;
         console.log(1)
         console.log("params.txHash:::", params.txHash)
-        let dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
+        var dataTransaction = null;
+        switch ((req.body.ticker).toLowerCase()) {
+            case 'eth':
+                dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
+                break;
+            case 'btc':
+                dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
+                dataTransaction = {
+                    payload: {
+                        hash: dataTransaction.payload.txid,
+                        status: "0x1",
+                        to: dataTransaction.payload.txouts[0].addresses[0],
+                        from: dataTransaction.payload.txins[0].addresses[0],
+                        value: dataTransaction.payload.txouts[0].amount
+                    }
+                }
+                break;
+        
+            default:
+                break;
+        }
         console.log(2)
         console.log("::::dataTransaction::::", dataTransaction)
         if (!dataTransaction) { return null }
