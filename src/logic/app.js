@@ -973,7 +973,7 @@ const progressActions = {
                 console.log("start create wallet>>>>>>")
                 await (async ()=>{
                     return new Promise((resolve) => {
-                        setTimeout(()=>{resolve(true)}, 30000);
+                        setTimeout(()=>{resolve(true)}, 1000*60*5);
                     });
                 })();
                 bitgo_wallet = params.wallet;
@@ -981,7 +981,7 @@ const progressActions = {
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
                 await (async ()=>{
                     return new Promise((resolve) => {
-                        setTimeout(()=>{resolve(true)}, 30000);
+                        setTimeout(()=>{resolve(true)}, 1000*60*5);
                     });
                 })();
                 console.log(walletToAddress2)
