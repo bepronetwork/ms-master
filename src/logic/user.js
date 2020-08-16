@@ -353,6 +353,7 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
+            console.log("paramsUpdateWallet:::",params)
             var { currency, id } = params;
             var app = await AppRepository.prototype.findAppById(id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }

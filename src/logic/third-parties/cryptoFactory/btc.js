@@ -12,6 +12,7 @@ class CryptoBtcClass {
             let addressCount = 1;
             let password = passphrase;
             let wallet = await this.cryptoApi.BC.BTC.wallet.createHDWallet(name, addressCount, password);
+            console.log("walletHD:: ", wallet)
             return wallet;
         } catch (err) {
             console.log("Error:: ", err)
@@ -22,7 +23,7 @@ class CryptoBtcClass {
     async getTransaction( txHash ) {
         try {
             let transaction = await this.cryptoApi.BC.BTC.transaction.getTransaction(txHash) ;
-            console.log("webhook:: ", transaction)
+            console.log("transactionBTC:: ", transaction)
             return transaction;
         } catch (err) {
             console.log(err)
@@ -34,7 +35,7 @@ class CryptoBtcClass {
             let url = `${urlMaster}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
             let confirmations = 3
             let webhook = await this.cryptoApi.BC.BTC.webhook.createAddressTransactionWebHook(url, address, confirmations)
-            console.log("webhook:: ", webhook)
+            console.log("addAppDepositWebhookBTC:: ", webhook)
             return webhook;
         } catch (err) {
             console.log(err)
@@ -43,6 +44,7 @@ class CryptoBtcClass {
     async generateDepositAddress() {
         try {
             let depositAddress = await this.cryptoApi.BC.BTC.address.generateAddress()
+            console.log("depositAddressBTC:: ", depositAddress)
             return depositAddress;
         } catch (err) {
             console.log(err)
@@ -52,6 +54,7 @@ class CryptoBtcClass {
     async importAddressAsWallet({ walletName, password, privateKey, address }) {
         try {
             let addressAsWallet = await this.cryptoApi.BC.BTC.wallet.importAddressAsWallet(walletName, password, privateKey, address)
+            console.log("addressAsWallet:: ", addressAsWallet)
             return addressAsWallet;
         } catch (err) {
             console.log(err)
@@ -61,6 +64,7 @@ class CryptoBtcClass {
     async getAddressInfo(address) {
         try {
             let addressInfo = await this.cryptoApi.BC.BTC.address.getInfo(address)
+            console.log("addressInfoBTC:: ", addressInfo)
             return addressInfo;
         } catch (err) {
             console.log(err)
@@ -73,7 +77,7 @@ class CryptoBtcClass {
             let url = `${urlMaster}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
             let confirmations = 3
             let webhook = await this.cryptoApi.BC.BTC.webhook.createAddressTransactionWebHook(url, address, confirmations)
-            console.log("webhook:: ", webhook)
+            console.log("webhookBTC:: ", webhook)
             return webhook;
         } catch (err) {
             console.log(err)
@@ -83,6 +87,7 @@ class CryptoBtcClass {
     async createPaymentForwarding({from, to, callbackURL, wallet, password, confirmations}) {
         try {
             let createPaymentForwarding = await this.cryptoApi.BC.BTC.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, password, confirmations)
+            console.log("createPaymentForwardingBTC:: ", createPaymentForwarding)
             return createPaymentForwarding;
         } catch (err) {
             console.log(err)
