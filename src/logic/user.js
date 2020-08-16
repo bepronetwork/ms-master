@@ -347,7 +347,7 @@ const processActions = {
             app_wallet,
             user,
             app,
-            user_wallets
+            user_wallet
         };
 
     },
