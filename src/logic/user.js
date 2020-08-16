@@ -32,7 +32,7 @@ import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
-import { getCurrencyAmountToBitGo } from "./third-parties/bitgo/helpers";
+import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
 
 let error = new ErrorManager();
 
@@ -353,14 +353,24 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
+            console.log("paramsUpdateWallet:::",params)
             var { currency, id } = params;
-            var app = await AppRepository.prototype.findAppById(id, "simple");
+
+            /* Get User Info */
+            let user = await UsersRepository.prototype.findUserById(id);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            
+            /* Get App Info */
+            var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             let ticker = params.ticker;
-            var amount = getCurrencyAmountToBitGo({
+            var amount = getCurrencyAmountFromBitGo({
                 amount: params.payload.value,
                 ticker
             });
+            console.log("amount:::", amount)
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
@@ -376,12 +386,6 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
-
-            /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(param.id);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
@@ -417,7 +421,7 @@ const processActions = {
             }
 
             let res = {
-                maxDeposit: (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
+                maxDeposit: (app_wallet.max_deposit == undefined) ? 1 : app_wallet.max_deposit,
                 app,
                 app_wallet,
                 user_in_app,

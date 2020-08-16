@@ -4,6 +4,7 @@ import {
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
 import PusherSingleton from '../../logic/third-parties/pusher';
+import { cryptoEth } from '../../logic/third-parties/cryptoFactory';
 
 /**
  * Description of the function.
