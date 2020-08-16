@@ -279,6 +279,7 @@ async function webhookDeposit(req, res) {
                 dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
                 break;
             case 'btc':
+                params.txHash = params.txid;
                 dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
                 console.log("dataTransactionBTCBeforeJson::", dataTransaction)
                 dataTransaction = {
