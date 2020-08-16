@@ -355,7 +355,15 @@ const processActions = {
         try {
             console.log("paramsUpdateWallet:::",params)
             var { currency, id } = params;
-            var app = await AppRepository.prototype.findAppById(id, "simple");
+
+            /* Get User Info */
+            let user = await UsersRepository.prototype.findUserById(param.id);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            
+            /* Get App Info */
+            var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
             let ticker = params.ticker;
             var amount = getCurrencyAmountToBitGo({
@@ -377,12 +385,6 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
-
-            /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(param.id);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
