@@ -1005,7 +1005,7 @@ const progressActions = {
 
                 /* No Bitgo Wallet created */
                 if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
-        
+                console.log(bitgo_address2.address);
                 /* Save Wallet on DB */
                 wallet = (await (new Wallet({
                     currency : currency._id,
