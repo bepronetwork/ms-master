@@ -974,14 +974,14 @@ const progressActions = {
                 console.log("11 ", params)
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
                 let bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
-
+                console.log(bitgo_address2)
 
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
-
+                console.log(">>>1")
                 /* Record webhooks */
                 await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
-
+                console.log(">>>2")
                 /* Create Policy for Day */
                 await BitGoSingleton.addPolicyToWallet({
                     ticker : currency.ticker,
