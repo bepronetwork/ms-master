@@ -1,6 +1,6 @@
 import { throwError } from "../../../controllers/Errors/ErrorManager";
 import { CryptoSingleton } from "./crypto";
-import { USER_KEY, IS_DEVELOPMENT} from "../../../config";
+import { USER_KEY, IS_DEVELOPMENT, MS_MASTER_URL} from "../../../config";
 
 class CryptoEthClass {
     constructor() {
@@ -31,8 +31,7 @@ class CryptoEthClass {
     }
     async addAppDepositWebhook({ address, app_id, currency_id, isApp }) {
         try {
-            let urlMaster = "https://ms-master-issue-666-zw4rzsgd95.herokuapp.com"; //TODO remove
-            let url = `${urlMaster}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
+            let url = `${MS_MASTER_URL}/api/app/webhookDeposit?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
             let confirmations = 3
             let webhook = await this.cryptoApi.BC.ETH.webhook.createAddressTransactionWebHook(url, address, confirmations)
             console.log("addAppDepositWebhook:: ", webhook)
