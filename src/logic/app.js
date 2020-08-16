@@ -970,9 +970,10 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
-                await (()=>{
+                console.log("start create wallet>>>>>>")
+                await (async ()=>{
                     return new Promise((resolve) => {
-                        setTimeout(()=>{resolve(true)}, 40000);
+                        setTimeout(()=>{resolve(true)}, 90000);
                     });
                 })();
                 bitgo_wallet = params.wallet;
