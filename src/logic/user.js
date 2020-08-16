@@ -370,6 +370,7 @@ const processActions = {
                 amount: params.payload.value,
                 ticker
             });
+            console.log("amount:::", amount)
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
@@ -420,7 +421,7 @@ const processActions = {
             }
 
             let res = {
-                maxDeposit: (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
+                maxDeposit: (app_wallet.max_deposit == undefined) ? 1 : app_wallet.max_deposit,
                 app,
                 app_wallet,
                 user_in_app,
