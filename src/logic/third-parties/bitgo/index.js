@@ -12,7 +12,7 @@ class BitGoClass {
     }
 
     async createWallet({label, passphrase, currency}){
-        var currencyTicker = new String(currency).toLowerCase();
+        var currencyTicker = `${IS_DEVELOPMENT ? 't' : ''}${new String(currency).toLowerCase()}`;
         /* All test wallets start with t${currency_name} --- t behind the currency ex : tbtc */
         var { wallet, userKeychain, backupKeychain, bitgoKeychain } = await this.bitgo.coin(currencyTicker).wallets().generateWallet({label, passphrase, enterprise : BITGO_ENTERPRISE_ID});
 
