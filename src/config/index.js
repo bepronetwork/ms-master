@@ -9,17 +9,11 @@ export const ENV = process.env.ENV;
 
 export const CLOUDAMQP_URL =  process.env.CLOUDAMQP_URL || "amqp://localhost:5672";
 
-export const DB_USER =  process.env.DB_USER;
-
 export const LIMIT =  process.env.LIMIT || 1;
 
 export const RATE =  process.env.RATE || 100;
 
-export const DB_PASSWORD =  process.env.DB_PASSWORD;
-
-export const ETH_TEST_NET = process.env.ETH_NET; 
-
-export const MONGO_ID = process.env.MONGO_ID; 
+export const ETH_TEST_NET = process.env.ETH_NET;
 
 export const INFURA_KEY = process.env.INFURA_KEY; 
 
@@ -83,11 +77,14 @@ var DB_MONGO = config.mongo;
  */
 
 
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_USER', DB_USER);
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_PASSWORD', DB_PASSWORD);
-        
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'MONGO_ID', MONGO_ID);
+DB_MONGO = {
+    "connection_string" : process.env.MONGO_URL,
+    "dbs" : {
+        "main" : process.env.MONGO_MAIN,
+        "ecosystem" : process.env.MONGO_ECOSYSTEM,
+        "redis" : process.env.MONGO_REDIS
+    }
+};
 
 if(ETH_RPC_URL){
     ETH_NETWORK = ETH_RPC_URL
