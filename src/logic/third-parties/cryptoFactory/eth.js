@@ -64,6 +64,8 @@ class CryptoEthClass {
 
     async createPaymentForwarding({ from, to, callbackURL, wallet, privateKey, confirmations }) {
         try {
+            let network = this.cryptoApi.BC.ETH.getSelectedNetwork();
+            console.log("NETWORK createPaymentForwarding : ", network)
             const headers = {
                 'Content-Type': 'application/json',
                 'X-API-Key': CRYPTO_API
@@ -75,7 +77,7 @@ class CryptoEthClass {
                 "privateKey": privateKey,
                 "confirmations": confirmations
             }
-            let url = 'https://api.cryptoapis.io/v1/bc/eth/mainnet/payments'
+            let url = `https://api.cryptoapis.io/v1/bc/eth/${network}/payments`
             let createPaymentForwarding = await axios.post(url, data, { headers: headers });
             // let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
             console.log("createPaymentForwarding:: ", createPaymentForwarding.data)

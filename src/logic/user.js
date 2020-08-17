@@ -689,6 +689,7 @@ const progressActions = {
             address = {
                 address: crypto_address.payload.address,
                 hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
+                unhashed_private_key: Security.prototype.decryptData(hashed_private_key),
                 wif: !crypto_address.payload.wif ? '' : crypto_address.payload.wif
             };
             console.log("address::", address)
