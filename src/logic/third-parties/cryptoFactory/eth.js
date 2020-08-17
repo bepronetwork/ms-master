@@ -75,7 +75,7 @@ class CryptoEthClass {
                 "privateKey": privateKey,
                 "confirmations": confirmations
             }
-            url = 'https://api.cryptoapis.io/v1/bc/eth/mainnet/payments'
+            let url = 'https://api.cryptoapis.io/v1/bc/eth/mainnet/payments'
             let createPaymentForwarding = await axios.post(url, data, { headers: headers });
             // let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
             console.log("createPaymentForwarding:: ", createPaymentForwarding)
