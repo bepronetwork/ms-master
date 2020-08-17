@@ -631,6 +631,7 @@ const progressActions = {
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
                 let bitgo_address2   = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`});
                 console.log(bitgo_address2.address);
+                console.log(bitgo_address2);
                 await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
             } catch(err) {
                 console.log(err);
