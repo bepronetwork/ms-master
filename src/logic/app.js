@@ -73,7 +73,6 @@ const processRecursive = {
         console.log("2 ", currency);
         console.log("3 ", walletToAddress2);
         console.log("4 ", bitgo_wallet);
-        if(i>=3) return;
         setTimeout(async ()=>{
             try {
                 const appUpdate     = await AppRepository.prototype.findAppById(app._id);
