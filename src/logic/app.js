@@ -976,7 +976,7 @@ const progressActions = {
                 keys = params.keys;
 
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
-                setTimeout(()=>{
+                setTimeout(async ()=>{
                     let bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
                     await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
                 }, 1000*60*5);
