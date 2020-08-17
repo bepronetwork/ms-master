@@ -686,10 +686,11 @@ const progressActions = {
 
             address = {
                 address: crypto_address.payload.address,
+                hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
                 wif: !crypto_address.payload.wif ? '' : crypto_address.payload.wif
             };
             // Bitgo has created the address
-            let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif})).register())._doc;
+            let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
             // Add Deposit Address to User Deposit Addresses
             await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
         }else{

@@ -10,7 +10,8 @@ AddressSchema.prototype.schema = {
     address                     : { type: String },
     user                        : { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     currency                    : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true},
-    bitgo_id                    : { type: String },
+    wif_btc                     : { type: String },
+    hashed_private_key          : { type: String },
 }
 
 AddressSchema.prototype.model = db.model(AddressSchema.prototype.name, new db.Schema(AddressSchema.prototype.schema));
