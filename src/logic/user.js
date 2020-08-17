@@ -394,7 +394,9 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
-            if(wallet.bank_address == from){return;}
+            console.log("wallet.bank_address:: ", wallet.bank_address)
+            console.log("From:: ", from)
+            if(wallet.bank_address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
@@ -685,17 +687,15 @@ const progressActions = {
                     break;
                 };
             }
-            let hashed_private_key = Security.prototype.encryptData(crypto_address.payload.privateKey),
+
             address = {
                 address: crypto_address.payload.address,
                 hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
                 unhashed_private_key: Security.prototype.decryptData(hashed_private_key),
                 wif: !crypto_address.payload.wif ? '' : crypto_address.payload.wif
             };
-            console.log("address::", address)
             // Bitgo has created the address
             let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
-            console.log("addressObject::", addressObject)
             // Add Deposit Address to User Deposit Addresses
             await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
         }else{
