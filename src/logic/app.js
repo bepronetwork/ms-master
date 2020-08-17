@@ -931,10 +931,6 @@ const progressActions = {
         const { currency, passphrase, app } = params;
         var wallet, bitgo_wallet, receiveAddress, keys;
 
-        const app_wallet = app.wallet.find(w => new String(w.currency).toString() == new String(currency._id).toString());
-        console.log(app_wallet);
-        console.log(app);
-        console.log(currency._id);
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
@@ -980,7 +976,9 @@ const progressActions = {
 
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
                 setTimeout(async ()=>{
-                    let bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
+                    const appUpdate     = await AppRepository.prototype.findAppById(app._id);
+                    const app_wallet    = appUpdate.wallet.find(w => new String(w.currency).toString() == new String(currency._id).toString());
+                    let bitgo_address2  = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
                     await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
                 }, 1000*60*5);
 
