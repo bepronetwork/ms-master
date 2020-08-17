@@ -394,6 +394,7 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
+            console.log("wallet:: ", wallet)
             console.log("wallet.bank_address:: ", wallet.bank_address)
             console.log("From:: ", from)
             if(wallet.bank_address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
