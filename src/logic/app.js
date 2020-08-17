@@ -71,12 +71,12 @@ const processRecursive = {
     __generate2Address: (app, currency, bitgo_wallet, i) => {
         console.log("1 ",app);
         console.log("2 ", currency);
-        console.log("3 ", walletToAddress2);
         console.log("4 ", bitgo_wallet);
         if(i>=3) return;
         setTimeout(async ()=>{
             try {
                 var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
+                console.log("3 ", walletToAddress2);
                 const appUpdate     = await AppRepository.prototype.findAppById(app._id);
                 console.log("5 ",appUpdate);
                 const app_wallet    = appUpdate.wallet.find(w => new String(w.currency._id).toString() == new String(currency._id).toString());
