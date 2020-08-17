@@ -68,25 +68,23 @@ let __private = {};
 
 
 const processRecursive = {
-    __generate2Address: (app, currency, bitgo_wallet, i) => {
+    __generate2Address: (app, currency, walletToAddress2, bitgo_wallet, i) => {
         console.log("1 ",app);
         console.log("2 ", currency);
+        console.log("3 ", walletToAddress2);
         console.log("4 ", bitgo_wallet);
         if(i>=3) return;
         setTimeout(async ()=>{
             try {
-                var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
-                console.log("3 ", walletToAddress2);
                 const appUpdate     = await AppRepository.prototype.findAppById(app._id);
                 console.log("5 ",appUpdate);
                 const app_wallet    = appUpdate.wallet.find(w => new String(w.currency._id).toString() == new String(currency._id).toString());
                 console.log("6 ",app_wallet);
                 let bitgo_address2  = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
                 console.log(bitgo_address2);
-                if(!bitgo_address2.address) throw true;
                 await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
             } catch (err) {
-                processRecursive.__generate2Address(app, currency, bitgo_wallet, 1+i);
+                processRecursive.__generate2Address(app, currency, walletToAddress2, bitgo_wallet, 1+i);
             }
         }, 1000*60*5);
     }
@@ -999,7 +997,8 @@ const progressActions = {
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
 
-                processRecursive.__generate2Address(app, currency, bitgo_wallet, 0);
+                var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
+                processRecursive.__generate2Address(app, currency, walletToAddress2, bitgo_wallet, 0);
 
                 /* Record webhooks */
                 await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
