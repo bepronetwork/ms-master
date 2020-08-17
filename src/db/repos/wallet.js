@@ -42,6 +42,22 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updateAddress2(id, address) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $set: {
+                    "bank_address_not_webhook" : address
+                } },
+                { new: true }
+            )
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePriceCurrencyVirtual({wallet, price, currency}) {
         return new Promise((resolve, reject)=>{
             WalletsRepository.prototype.schema.model.updateOne(

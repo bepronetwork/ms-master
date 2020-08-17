@@ -970,30 +970,13 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
-                console.log("start create wallet>>>>>>")
-                await (async ()=>{
-                    return new Promise((resolve) => {
-                        setTimeout(()=>{resolve(true)}, 1000*60*5);
-                    });
-                })();
+
                 bitgo_wallet = params.wallet;
-                console.log("11 ", params)
-                var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
-                await (async ()=>{
-                    return new Promise((resolve) => {
-                        setTimeout(()=>{resolve(true)}, 1000*60*5);
-                    });
-                })();
-                console.log(walletToAddress2)
-                let bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`});
-                console.log(bitgo_address2)
 
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
-                console.log(">>>1")
                 /* Record webhooks */
                 await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
-                console.log(">>>2")
                 /* Create Policy for Day */
                 await BitGoSingleton.addPolicyToWallet({
                     ticker : currency.ticker,
@@ -1017,14 +1000,12 @@ const progressActions = {
 
                 /* No Bitgo Wallet created */
                 if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
-                console.log(bitgo_address2.address);
                 /* Save Wallet on DB */
                 wallet = (await (new Wallet({
                     currency : currency._id,
                     bitgo_id : bitgo_wallet.id(),
                     virtual : false,
                     bank_address : receiveAddress,
-                    bank_address_not_webhook : bitgo_address2.address,
                     hashed_passphrase : Security.prototype.encryptData(passphrase)
                 })).register())._doc;
 
