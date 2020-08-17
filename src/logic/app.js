@@ -932,6 +932,9 @@ const progressActions = {
         var wallet, bitgo_wallet, receiveAddress, keys;
 
         const app_wallet = app.wallet.find(w => new String(w.currency).toString() == new String(currency._id).toString());
+        console.log(app_wallet);
+        console.log(app);
+        console.log(currency._id);
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
