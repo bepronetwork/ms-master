@@ -83,6 +83,7 @@ const processRecursive = {
                 console.log("6 ",app_wallet);
                 let bitgo_address2  = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
                 console.log(bitgo_address2);
+                if(!bitgo_address2.address) throw true;
                 await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
             } catch (err) {
                 processRecursive.__generate2Address(app, currency, bitgo_wallet, 1+i);
