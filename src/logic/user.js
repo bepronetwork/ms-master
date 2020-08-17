@@ -663,7 +663,7 @@ const progressActions = {
                     break;
                 };
                 case 'eth': {
-                    crypto_address = await cryptoEth.CryptoEthSingleton.generateAccount(USER_KEY);
+                    crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
                     /* Record webhooks */
                     await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
                         address     : crypto_address.payload.address,
@@ -677,7 +677,7 @@ const progressActions = {
                         to: app_wallet.bank_address_not_webhook, 
                         callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
                         wallet: crypto_address.payload.address, 
-                        password: USER_KEY, 
+                        privateKey: crypto_address.payload.privateKey,
                         confirmations: 3
                     }); 
                     break;

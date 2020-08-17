@@ -1,10 +1,13 @@
 import { CryptoSingleton } from "./crypto";
 import { throwError } from "../../../controllers/Errors/ErrorManager";
-import { MS_MASTER_URL } from "../../../config";
+import { MS_MASTER_URL, IS_DEVELOPMENT } from "../../../config";
 
 class CryptoBtcClass {
     constructor() {
         this.cryptoApi = CryptoSingleton.init();
+        if(IS_DEVELOPMENT){this.cryptoApi.BC.BTC.switchNetwork(this.cryptoApi.BC.BTC.NETWORKS.TESTNET)}
+        let network = this.cryptoApi.BC.BTC.getSelectedNetwork();
+        console.log("NETWORK BTC : ", network)
     }
 
     async createHDWallet({ label, passphrase }) {

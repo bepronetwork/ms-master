@@ -5,6 +5,9 @@ import { USER_KEY, IS_DEVELOPMENT, MS_MASTER_URL} from "../../../config";
 class CryptoEthClass {
     constructor() {
         this.cryptoApi = CryptoSingleton.init();
+        if(IS_DEVELOPMENT){this.cryptoApi.BC.ETH.switchNetwork('rinkeby')}
+        let network = this.cryptoApi.BC.ETH.getSelectedNetwork();
+        console.log("NETWORK ETH : ", network)
     }
 
     async generateAccount(passphrase) {
@@ -40,7 +43,7 @@ class CryptoEthClass {
     }
     async generateDepositAddress() {
         try {
-            let depositAddress = await this.cryptoApi.BC.ETH.address.generateAccount(USER_KEY)
+            let depositAddress = await this.cryptoApi.BC.ETH.address.generateAddress()
             console.log("depositAddress:: ", depositAddress)
             return depositAddress;
         } catch (err) {
@@ -58,9 +61,9 @@ class CryptoEthClass {
         }
     }
 
-    async createPaymentForwarding({from, to, callbackURL, wallet, password, confirmations}) {
+    async createPaymentForwarding({from, to, callbackURL, wallet, privateKey, confirmations}) {
         try {
-            let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, password, confirmations)
+            let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
             console.log("createPaymentForwarding:: ", createPaymentForwarding)
             return createPaymentForwarding;
         } catch (err) {
