@@ -282,5 +282,9 @@
     "070" : {
         "key" : "UNCONFIRMED_EMAIL",
         "message"   : "Unverified email"
+    },
+    "071" : {
+        "key" : "WALLET_WAIT",
+        "message"   : "We are updating a new currency, please wait a few minutes or try later"
     }
 }
