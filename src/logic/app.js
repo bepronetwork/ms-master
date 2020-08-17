@@ -78,7 +78,7 @@ const processRecursive = {
             try {
                 const appUpdate     = await AppRepository.prototype.findAppById(app._id);
                 console.log("5 ",appUpdate);
-                const app_wallet    = appUpdate.wallet.find(w => new String(w.currency).toString() == new String(currency._id).toString());
+                const app_wallet    = appUpdate.wallet.find(w => new String(w.currency._id).toString() == new String(currency._id).toString());
                 console.log("6 ",app_wallet);
                 let bitgo_address2  = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
                 await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
