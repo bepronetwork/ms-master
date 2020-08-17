@@ -637,6 +637,7 @@ const progressActions = {
             switch ((app_wallet.currency.ticker).toLowerCase()) {
                 case 'btc': {
                     crypto_address = await cryptoBtc.CryptoBtcSingleton.generateDepositAddress();
+                    console.log("app_wallet.bank_address_not_webhook::", app_wallet.bank_address_not_webhook)
                     /* Import address to HD Wallet */
                     await cryptoBtc.CryptoBtcSingleton.importAddressAsWallet({
                         walletName  : `${user._id}-${user_wallet.currency.ticker}`, 
