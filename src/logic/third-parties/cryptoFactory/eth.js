@@ -1,11 +1,12 @@
+const axios = require('axios');
 import { throwError } from "../../../controllers/Errors/ErrorManager";
 import { CryptoSingleton } from "./crypto";
-import { USER_KEY, IS_DEVELOPMENT, MS_MASTER_URL} from "../../../config";
+import { USER_KEY, IS_DEVELOPMENT, MS_MASTER_URL, CRYPTO_API } from "../../../config";
 
 class CryptoEthClass {
     constructor() {
         this.cryptoApi = CryptoSingleton.init();
-        if(IS_DEVELOPMENT){this.cryptoApi.BC.ETH.switchNetwork('rinkeby')}
+        if (IS_DEVELOPMENT) { this.cryptoApi.BC.ETH.switchNetwork('rinkeby') }
         let network = this.cryptoApi.BC.ETH.getSelectedNetwork();
         console.log("NETWORK ETH : ", network)
     }
@@ -23,7 +24,7 @@ class CryptoEthClass {
 
     async getTransaction(txHash) {
         try {
-            let transaction = await this.cryptoApi.BC.ETH.transaction.getTransaction(txHash) ;
+            let transaction = await this.cryptoApi.BC.ETH.transaction.getTransaction(txHash);
             console.log("getTransaction:: ", transaction)
             return transaction;
         } catch (err) {
@@ -61,9 +62,22 @@ class CryptoEthClass {
         }
     }
 
-    async createPaymentForwarding({from, to, callbackURL, wallet, privateKey, confirmations}) {
+    async createPaymentForwarding({ from, to, callbackURL, wallet, privateKey, confirmations }) {
         try {
-            let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-API-Key': CRYPTO_API
+              }
+            const data = {
+                "callback": callbackURL,
+                "from": from,
+                "to": to,
+                "privateKey": privateKey,
+                "confirmations": confirmations
+            }
+            url = 'https://api.cryptoapis.io/v1/bc/eth/mainnet/payments'
+            let createPaymentForwarding = await axios.post(url, data, { headers: headers });
+            // let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
             console.log("createPaymentForwarding:: ", createPaymentForwarding)
             return createPaymentForwarding;
         } catch (err) {
