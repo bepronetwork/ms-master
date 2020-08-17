@@ -685,7 +685,7 @@ const progressActions = {
                     break;
                 };
             }
-
+            let hashed_private_key = Security.prototype.encryptData(crypto_address.payload.privateKey),
             address = {
                 address: crypto_address.payload.address,
                 hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
