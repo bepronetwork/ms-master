@@ -931,7 +931,7 @@ const progressActions = {
         const { currency, passphrase, app } = params;
         var wallet, bitgo_wallet, receiveAddress, keys;
 
-        const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toString() == new String(currency.ticker).toString());
+        const app_wallet = app.wallet.find(w => new String(w.currency).toString() == new String(currency._id).toString());
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
