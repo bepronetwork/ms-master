@@ -689,7 +689,7 @@ const progressActions = {
                 hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
                 wif: !crypto_address.payload.wif ? '' : crypto_address.payload.wif
             };
-            console.log("address::", addressObject)
+            console.log("address::", address)
             // Bitgo has created the address
             let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
             console.log("addressObject::", addressObject)
