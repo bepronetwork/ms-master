@@ -931,6 +931,7 @@ const progressActions = {
         const { currency, passphrase, app } = params;
         var wallet, bitgo_wallet, receiveAddress, keys;
 
+        const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toString() == new String(currency.ticker).toString());
         if(currency.virtual){
             /* Save Wallet on DB */
             wallet = (await (new Wallet({
@@ -973,6 +974,13 @@ const progressActions = {
                 bitgo_wallet = params.wallet;
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
+
+                var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: currency.ticker, id: bitgo_wallet.id() });
+                setTimeout(()=>{
+                    let bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${currency.ticker}`, id: bitgo_wallet.id() });
+                    await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
+                }, 1000*60*5);
+
                 /* Record webhooks */
                 await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
                 /* Create Policy for Day */

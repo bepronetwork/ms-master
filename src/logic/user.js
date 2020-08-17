@@ -625,20 +625,6 @@ const progressActions = {
     },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user, app } = params;
-    
-        if(app_wallet.bank_address_not_webhook==null || app_wallet.bank_address_not_webhook==undefined) {
-            try {
-                var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-                let bitgo_address2   = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`});
-                console.log(bitgo_address2.address);
-                console.log(bitgo_address2);
-                await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
-            } catch(err) {
-                console.log(err);
-                throwError("WALLET_WAIT");
-            }
-        }
-        console.log("generateDepositAddress 2 App");
 
         let addresses = user_wallet.depositAddresses;
         let address = addresses.find( a => a.address);
