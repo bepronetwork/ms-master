@@ -970,9 +970,7 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
-
                 bitgo_wallet = params.wallet;
-
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
                 /* Record webhooks */
