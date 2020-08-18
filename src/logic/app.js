@@ -557,6 +557,7 @@ const processActions = {
         }
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+        if( new String(`${app._id}-${wallet.currency.ticker}-second_wallet`).toLowerCase().toString() == wBT.label) {throwError('PAYMENT_FORWARDING_TRANSACTION')};
 
         /* Verify if the transactionHash was created */
         const { state, entries, value : amount, type, txid : transactionHash } = wBT;
