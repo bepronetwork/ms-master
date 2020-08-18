@@ -353,7 +353,6 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
-            console.log("paramsUpdateWallet:::",params)
             var { currency, id } = params;
 
             /* Get User Info */
@@ -378,7 +377,6 @@ const processActions = {
                     amount = params.payload.value
                     break;
             }
-            console.log("amount:::", amount)
             const app_wallet = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
@@ -394,9 +392,6 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
-            console.log("wallet:: ", wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address )
-            console.log("wallet.bank_address:: ", wallet.bank_address)
-            console.log("From:: ", from)
             if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
@@ -631,22 +626,16 @@ const progressActions = {
         const { app_wallet, user_wallet, user, app } = params;
 
         let walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-        console.log("1 ", walletToAddress2);
         let bitgo_address2;
-        console.log("2 ", app_wallet.bitgo_id_not_webhook);
         if(!app_wallet.bitgo_id_not_webhook) {
             try {
                 bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`});
             } catch(err) {console.log("test error ", err)}
-            console.log("bitgo_address2::: ", bitgo_address2);
-            console.log("3 ", bitgo_address2.id);
             await WalletsRepository.prototype.updateBitgoIdNotWebhook(app_wallet._id, bitgo_address2.id);
             throwError('WALLET_WAIT');
         }
         if(!app_wallet.bank_address_not_webhook) {
-            console.log("4");
             bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`, id: app_wallet.bitgo_id_not_webhook});
-            console.log("5 ", bitgo_address2);
             if(!bitgo_address2.address) throwError('WALLET_WAIT');
             await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address)
         }
@@ -661,8 +650,6 @@ const progressActions = {
             switch ((app_wallet.currency.ticker).toLowerCase()) {
                 case 'btc': {
                     crypto_address = await cryptoBtc.CryptoBtcSingleton.generateDepositAddress();
-                    console.log("app_wallet.::", app_wallet)
-                    console.log("app_wallet.bank_address_not_webhook::", app_wallet.bank_address_not_webhook)
                     /* Import address to HD Wallet */
                     await cryptoBtc.CryptoBtcSingleton.importAddressAsWallet({
                         walletName  : `${user._id}-${user_wallet.currency.ticker}`, 

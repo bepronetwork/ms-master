@@ -7,7 +7,6 @@ class CryptoBtcClass {
         this.cryptoApi = CryptoSingleton.init();
         if(IS_DEVELOPMENT){this.cryptoApi.BC.BTC.switchNetwork(this.cryptoApi.BC.BTC.NETWORKS.TESTNET)}
         let network = this.cryptoApi.BC.BTC.getSelectedNetwork();
-        console.log("NETWORK BTC : ", network)
     }
 
     async createHDWallet({ label, passphrase }) {
@@ -16,7 +15,6 @@ class CryptoBtcClass {
             let addressCount = 1;
             let password = passphrase;
             let wallet = await this.cryptoApi.BC.BTC.wallet.createHDWallet(name, addressCount, password);
-            console.log("walletHD:: ", wallet)
             return wallet;
         } catch (err) {
             console.log("Error:: ", err)
@@ -26,8 +24,7 @@ class CryptoBtcClass {
 
     async getTransaction( txHash ) {
         try {
-            let transaction = await this.cryptoApi.BC.BTC.transaction.getTransaction(txHash) ;
-            console.log("transactionBTC:: ", transaction)
+            let transaction = await this.cryptoApi.BC.BTC.transaction.getTransaction(txHash);
             return transaction;
         } catch (err) {
             console.log(err)
