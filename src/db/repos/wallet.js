@@ -74,6 +74,22 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updateBitgoIdNotWebhook(_id, bitgoIdNotWebhook) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(_id,
+                { $set: {
+                    "bitgo_id_not_webhook" : bitgoIdNotWebhook
+                } },
+                { new: true }
+            )
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePriceCurrencyVirtual({wallet, price, currency}) {
         return new Promise((resolve, reject)=>{
             WalletsRepository.prototype.schema.model.updateOne(
