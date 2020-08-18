@@ -337,7 +337,6 @@ const processActions = {
         if (!user) { throwError('USER_NOT_EXISTENT') }
         if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-        if(app_wallet.isPending){throwError('WALLET_WAIT')}
         var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         if(user_wallet.currency.erc20){
             // Is ERC20 Token simulate use of eth wallet
@@ -630,24 +629,20 @@ const progressActions = {
     },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user, app } = params;
-        if(!app_wallet.bank_address_not_webhook) {
-            console.log(1)
-            console.log("app_wallet:: ",app_wallet)
-            await WalletsRepository.prototype.updateIsPending(app_wallet._id, true)
-            console.log(2)
-            var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-            console.log(3)
-            console.log("walletToAddress2:: ", walletToAddress2);
-            let bitgo_address2  = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}-NOWEBHOOK` });
-            console.log(4)
-            console.log("bitgo_address2:: ",bitgo_address2);
-            if(!bitgo_address2.address){
-                await WalletsRepository.prototype.updateIsPending(app_wallet._id, false)
-                throwError('WALLET_WAIT')
-            };
-            await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
-            await WalletsRepository.prototype.updateIsPending(app_wallet._id, false)
+
+        let walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+        let bitgo_address2;
+        if(!app_wallet.bitgo_id_not_webhook) {
+            bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`});
+            await WalletsRepository.prototype.updateBitgoIdNotWebhook(app_wallet._id, bitgo_address2.id);
+            throwError('WALLET_WAIT');
         }
+        if(!app_wallet.bank_address_not_webhook) {
+            bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`, id: app_wallet.bitgo_id_not_webhook});
+            if(!bitgo_address2.address) throwError('WALLET_WAIT');
+            await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address)
+        }
+
         let addresses = user_wallet.depositAddresses;
         let address = addresses.find( a => a.address);
         if(!address){
