@@ -83,7 +83,8 @@ class CryptoEthClass {
             console.log("createPaymentForwarding:: ", createPaymentForwarding.data)
             return createPaymentForwarding;
         } catch (err) {
-            console.log(err)
+            console.log(err);
+            return false;
         }
     }
 }

@@ -663,14 +663,15 @@ const progressActions = {
                         isApp       : false
                     });
                     /* Record Payment Forwarding webhooks */
-                    await cryptoBtc.CryptoBtcSingleton.createPaymentForwarding({
-                        from: crypto_address.payload.address, 
-                        to: app_wallet.bank_address_not_webhook, 
-                        callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
-                        wallet: `${user._id}-${user_wallet.currency.ticker}`, 
-                        password: USER_KEY, 
+                    let resCreatePaymentForwarding = await cryptoBtc.CryptoBtcSingleton.createPaymentForwarding({
+                        from: crypto_address.payload.address,
+                        to: app_wallet.bank_address_not_webhook,
+                        callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                        wallet: `${user._id}-${user_wallet.currency.ticker}`,
+                        password: USER_KEY,
                         confirmations: 3
-                    }); 
+                    });
+                    if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
                     break;
                 };
                 case 'eth': {
@@ -683,7 +684,7 @@ const progressActions = {
                         isApp       : false
                     });
                     /* Record Payment Forwarding webhooks */
-                    await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
+                    let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
                         from: crypto_address.payload.address, 
                         to: app_wallet.bank_address_not_webhook, 
                         callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
@@ -691,6 +692,7 @@ const progressActions = {
                         privateKey: crypto_address.payload.privateKey,
                         confirmations: 3
                     }); 
+                    if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
                     break;
                 };
             }

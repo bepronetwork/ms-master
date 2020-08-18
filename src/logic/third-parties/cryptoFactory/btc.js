@@ -90,7 +90,8 @@ class CryptoBtcClass {
             console.log("createPaymentForwardingBTC:: ", createPaymentForwarding)
             return createPaymentForwarding;
         } catch (err) {
-            console.log(err)
+            console.log(err);
+            return false;
         }
     }
 
