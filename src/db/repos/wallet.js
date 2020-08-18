@@ -58,6 +58,22 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updateIsPending(_id, isPending) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(_id,
+                { $set: {
+                    "isPending" : isPending
+                } },
+                { new: true }
+            )
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updatePriceCurrencyVirtual({wallet, price, currency}) {
         return new Promise((resolve, reject)=>{
             WalletsRepository.prototype.schema.model.updateOne(

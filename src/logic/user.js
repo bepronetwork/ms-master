@@ -337,6 +337,7 @@ const processActions = {
         if (!user) { throwError('USER_NOT_EXISTENT') }
         if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        if(app_wallet.isPending){throwError('WALLET_WAIT')}
         var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         if(user_wallet.currency.erc20){
             // Is ERC20 Token simulate use of eth wallet
@@ -394,10 +395,10 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
-            console.log("wallet:: ", wallet)
+            console.log("wallet:: ", wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address )
             console.log("wallet.bank_address:: ", wallet.bank_address)
             console.log("From:: ", from)
-            if(wallet.bank_address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
+            if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
             let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
@@ -629,7 +630,19 @@ const progressActions = {
     },
     __getDepositAddress: async (params) => {
         const { app_wallet, user_wallet, user, app } = params;
-
+        if(!app_wallet.bank_address_not_webhook) {
+            await WalletsRepository.prototype.updateIsPending(app_wallet._id, true)
+            var walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+            console.log("3 ", walletToAddress2);
+            let bitgo_address2  = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}`, id: app_wallet.bitgo_id });
+            console.log(bitgo_address2);
+            if(!bitgo_address2.address){
+                await WalletsRepository.prototype.updateIsPending(app_wallet._id, false)
+                throwError('WALLET_WAIT')
+            };
+            await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address);
+            await WalletsRepository.prototype.updateIsPending(app_wallet._id, false)
+        }
         let addresses = user_wallet.depositAddresses;
         let address = addresses.find( a => a.address);
         if(!address){
