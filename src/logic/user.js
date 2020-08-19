@@ -711,20 +711,21 @@ const progressActions = {
             // Add Deposit Address to User Deposit Addresses
             await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
         }else if(erc20){
-            var walletErc20 = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-            if(!walletErc20){
-                
-            } else {
+            var walletUserErc20 = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
 
+            if(!(walletUserErc20.depositAddresses.find( a => a.address))){
+
+                let addressObject = (await (new Address({ currency: walletUserErc20.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
+                await WalletsRepository.prototype.addDepositAddress(walletUserErc20._id, addressObject._id);
+
+                /* Record ERC-20 webhooks */
+                await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
+                    address     : address.address,
+                    app_id      : user._id,
+                    currency_id : walletUserErc20.currency._id,
+                    isApp       : false
+                });
             }
-
-            /* Record ERC-20 webhooks */
-            await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
-                address     : address.address,
-                app_id      : user._id,
-                currency_id : user_wallet.currency._id,
-                isApp       : false
-            });
         }
 
         if (address.address) {
