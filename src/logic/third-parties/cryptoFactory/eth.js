@@ -117,7 +117,8 @@ class CryptoEthClass {
                 },
                 "confirmations": confirmations
             }
-            let url = `https://api.cryptoapis.io/v1/bc/eth/${network}/payments`;
+            let url = `https://api.cryptoapis.io/v1/bc/eth/${network}/tokens-forwarding/automations`;
+
             let createPaymentForwarding = await axios.post(url, data, { headers: headers });
             // let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
             console.log("createPaymentForwarding:: ", createPaymentForwarding.data)
