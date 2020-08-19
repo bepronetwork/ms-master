@@ -717,7 +717,6 @@ const progressActions = {
             if(!(walletUserErc20.depositAddresses.find( a => a.address))){
 
                 let addressObject = (await (new Address({ currency: walletUserErc20.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
-                await WalletsRepository.prototype.addDepositAddress(walletUserErc20._id, addressObject._id);
 
                 /* Record ERC-20 webhooks */
                 await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
@@ -737,6 +736,8 @@ const progressActions = {
                     token: walletUserErc20.currency.address
                 });
                 if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+
+                await WalletsRepository.prototype.addDepositAddress(walletUserErc20._id, addressObject._id);
             }
         }
 
