@@ -101,6 +101,7 @@ class CryptoEthClass {
 
     async createPaymentForwardingToken({ from, to, callbackURL, wallet, privateKey, confirmations, token }) {
         try {
+            console.log(privateKey);
             let network = this.cryptoApi.BC.ETH.getSelectedNetwork();
             console.log("NETWORK createPaymentForwarding : ", network)
             const headers = {
