@@ -728,11 +728,11 @@ const progressActions = {
                 });
                 /* Record Payment Forwarding webhooks */
                 let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwardingToken({
-                    from: crypto_address.payload.address,
+                    from: address.address,
                     to: app_wallet.bank_address_not_webhook,
                     callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
-                    wallet: crypto_address.payload.address,
-                    privateKey: crypto_address.payload.privateKey,
+                    wallet: address.address,
+                    privateKey: address.privateKey,
                     confirmations: 3,
                     token: walletUserErc20.currency.address
                 });
