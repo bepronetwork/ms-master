@@ -115,6 +115,7 @@ class CryptoEthClass {
                 "from_address_credentials": {
                     "private_key": privateKey
                 },
+                "minimum_transfer_amount": 0.5,
                 "confirmations": confirmations
             }
             let url = `https://api.cryptoapis.io/v1/bc/eth/${network}/tokens-forwarding/automations`;
