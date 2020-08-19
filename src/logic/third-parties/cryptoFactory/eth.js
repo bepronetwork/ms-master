@@ -98,6 +98,35 @@ class CryptoEthClass {
             return false;
         }
     }
+
+    async createPaymentForwardingToken({ from, to, callbackURL, wallet, privateKey, confirmations, token }) {
+        try {
+            let network = this.cryptoApi.BC.ETH.getSelectedNetwork();
+            console.log("NETWORK createPaymentForwarding : ", network)
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-API-Key': CRYPTO_API
+            }
+            const data = {
+                "from_address": from,
+                "to_address": to,
+                "token": token,
+                "callback_url": callbackURL,
+                "from_address_credentials": {
+                    "private_key": privateKey
+                },
+                "confirmations": confirmations
+            }
+            let url = `https://api.cryptoapis.io/v1/bc/eth/${network}/payments`;
+            let createPaymentForwarding = await axios.post(url, data, { headers: headers });
+            // let createPaymentForwarding = await this.cryptoApi.BC.ETH.paymentForwarding.createPaymentForwarding(from, to, callbackURL, wallet, privateKey, confirmations)
+            console.log("createPaymentForwarding:: ", createPaymentForwarding.data)
+            return createPaymentForwarding;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
 }
 
 var CryptoEthSingleton = new CryptoEthClass();
