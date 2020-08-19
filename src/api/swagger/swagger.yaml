@@ -1210,12 +1210,42 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/subSections : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit SubSections Information
+      operationId: editSubSections
+      description: Change SubSections
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationSubSections'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/logo : 
     x-swagger-router-controller: app
     post:
       tags:
       - app
-      summary: Edit Banner Information
+      summary: Edit Logo Information
       operationId: editLogo
       description: Change Logo
       consumes:
@@ -3461,6 +3491,37 @@ definitions:
       fullWidth:
         type : boolean
         example: true
+  AppCustomizationSubSections :
+    type: object
+    required:
+      - app
+      - subSections
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      subSections:
+        type : array
+        items : 
+          type: object
+          properties:
+            title :
+              type: string
+            text :
+              type: string
+            image_url :
+              type: string
+            background_url :
+              type: string
+            background_color :
+              type: string
+            position :
+              type: number
+            location :
+              type: number
   AppCustomizationColors : 
     type: object
     required:

@@ -21,6 +21,7 @@ import ChatLogic from './chat';
 import CustomizationLogic from './customization';
 import TopBarLogic from './topBar';
 import BannersLogic from './banners';
+import SubSectionsLogic from './subSections';
 import LogoLogic from './logo';
 import LogLogic from './log';
 import ColorLogic from './color';
@@ -71,6 +72,7 @@ export {
     LogLogic,
     EventsLogic,
     BannersLogic,
+    SubSectionsLogic,
     AppLogic,
     IntegrationsLogic,
     CustomizationLogic,

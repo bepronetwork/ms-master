@@ -769,6 +769,20 @@ async function editTypography(req, res) {
     }
 }
 
+async function editSubSections(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editSubSections();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function getUsers(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
@@ -950,4 +964,5 @@ export {
     modifyBalance,
     getGameStats,
     editAddonPointSystem,
+    editSubSections,
 };

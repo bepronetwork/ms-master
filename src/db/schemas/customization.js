@@ -9,6 +9,7 @@ CustomizationSchema.prototype.name = 'Customization';
 CustomizationSchema.prototype.schema =  {
     topBar         : { type : mongoose.Schema.Types.ObjectId, ref: 'TopBar', required : true },
     banners        : { type : mongoose.Schema.Types.ObjectId, ref: 'Banners', required : true },
+    subSections    : { type : mongoose.Schema.Types.ObjectId, ref: 'SubSections', required : true },
     logo           : { type : mongoose.Schema.Types.ObjectId, ref: 'Logo', required : true },
     background     : { type : mongoose.Schema.Types.ObjectId, ref: 'Background', required : true },
     colors         : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Color', required : true }],

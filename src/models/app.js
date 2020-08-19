@@ -7,6 +7,7 @@ import {
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
     MapperEditBannersSingleton,
+    MapperEditSubSectionsSingleton,
     MapperEditColorsSingleton,
     MapperEditFooterSingleton,
     MapperEditGameBackgroundImageSingleton,
@@ -689,6 +690,19 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async editSubSections() {
+    try {
+        let app = await this.process('EditSubSections');
+        return MapperEditSubSectionsSingleton.output('EditSubSections', app);
+    } catch (err) {
+        throw err;
+    }
+}
 
     /**
     * @param {String} 
