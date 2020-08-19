@@ -667,6 +667,7 @@ const progressActions = {
                         currency_id : user_wallet.currency._id,
                         isApp       : false
                     });
+                    console.log(app_wallet.bank_address_not_webhook);
                     /* Record Payment Forwarding webhooks */
                     let resCreatePaymentForwarding = await cryptoBtc.CryptoBtcSingleton.createPaymentForwarding({
                         from: crypto_address.payload.address,
