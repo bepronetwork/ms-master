@@ -42,6 +42,17 @@ class CryptoEthClass {
             console.log(err)
         }
     }
+    async addAppDepositERC20Webhook({ address, app_id, currency_id, isApp }) {
+        try {
+            let url = `${MS_MASTER_URL}/api/user/webhookDeposit?id=${app_id}&currency=${currency_id}&isApp=${isApp}`
+            let confirmations = 3
+            let webhook = await this.cryptoApi.BC.ETH.webhook.createTokenWebHook(url, address, confirmations)
+            console.log("addAppDepositWebhookERC20:: ", webhook)
+            return webhook;
+        } catch (err) {
+            console.log(err)
+        }
+    }
     async generateDepositAddress() {
         try {
             let depositAddress = await this.cryptoApi.BC.ETH.address.generateAddress()

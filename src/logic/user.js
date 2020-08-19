@@ -338,16 +338,20 @@ const processActions = {
         if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
         const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
         var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        var erc20 = false;
         if(user_wallet.currency.erc20){
             // Is ERC20 Token simulate use of eth wallet
             user_wallet = user.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toLowerCase());
+            erc20 = true
         }
 
         return {
             app_wallet,
             user,
             app,
-            user_wallet
+            user_wallet,
+            erc20,
+            currency
         };
 
     },
@@ -623,7 +627,7 @@ const progressActions = {
         return params;
     },
     __getDepositAddress: async (params) => {
-        const { app_wallet, user_wallet, user, app } = params;
+        const { app_wallet, user_wallet, user, app, erc20, currency } = params;
 
         let walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
         let bitgo_address2;
@@ -706,8 +710,21 @@ const progressActions = {
             let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
             // Add Deposit Address to User Deposit Addresses
             await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
-        }else{
-            // System already has an address
+        }else if(erc20){
+            var walletErc20 = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!walletErc20){
+                
+            } else {
+
+            }
+
+            /* Record ERC-20 webhooks */
+            await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
+                address     : address.address,
+                app_id      : user._id,
+                currency_id : user_wallet.currency._id,
+                isApp       : false
+            });
         }
 
         if (address.address) {
