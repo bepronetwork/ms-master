@@ -696,9 +696,11 @@ class App extends ModelComponent {
     */
 
    async editSubSections() {
+       //output = boolean
     try {
         let app = await this.process('EditSubSections');
-        return MapperEditSubSectionsSingleton.output('EditSubSections', app);
+        return app;
+        // return MapperEditSubSectionsSingleton.output('EditSubSections', app);
     } catch (err) {
         throw err;
     }
