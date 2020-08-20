@@ -1555,7 +1555,7 @@ const progressActions = {
             ids
         })
         // Save info on Customization Part
-        return params;
+        return true;
     },
     __getUsers : async (params) => {
         let res = await UsersRepository.prototype.getAllFiltered(params);
