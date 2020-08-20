@@ -736,7 +736,7 @@ const progressActions = {
                     let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwardingToken({
                         from: address.address,
                         to: app_wallet.bank_address_not_webhook,
-                        callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                        callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${walletUserErc20.currency._id}&isApp=${false}`,
                         wallet: address.address,
                         privateKey: address.hashed_private_key,
                         confirmations: 3,
