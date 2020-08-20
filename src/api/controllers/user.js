@@ -267,13 +267,12 @@ async function webhookDeposit(req, res) {
     try {
         console.log(":::Init webhook::: ", req);
         req.body.id = req.query.id;
-        req.body.ticker = req.body.currency==req.body.token_symbol ? req.body.currency : req.body.token_symbol;
+        req.body.ticker = req.body.currency;
         req.body.currency = req.query.currency;
         req.body.isApp = req.query.isApp;
         let params = req.body;
         console.log(1)
         console.log("params.txHash:::", params.txHash)
-
         var dataTransaction = null;
         switch ((req.body.ticker).toLowerCase()) {
             case 'eth':
