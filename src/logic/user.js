@@ -744,7 +744,7 @@ const progressActions = {
                         to: app_wallet.bank_address_not_webhook,
                         callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${walletUserErc20.currency._id}&isApp=${false}`,
                         wallet: address.address,
-                        privateKey: address.hashed_private_key,
+                        privateKey: Security.prototype.decryptData(address.hashed_private_key),
                         confirmations: 3,
                         token: walletUserErc20.currency.address
                     });
