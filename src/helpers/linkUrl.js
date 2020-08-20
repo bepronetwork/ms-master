@@ -5,7 +5,11 @@ export const setLinkUrl = ({ ticker, address, isTransactionHash }) => {
     if (ENV === "development") {
         switch (new String(ticker).toLowerCase().trim()) {
             case 'eth': {
-                link_url = `https://kovan.etherscan.io/${isTransactionHash ? 'tx' : 'address'}/${address}`;
+                link_url = `https://rinkeby.etherscan.io/${isTransactionHash ? 'tx' : 'address'}/${address}`;
+                return link_url;
+            };
+            case 'fau': {
+                link_url = `https://rinkeby.etherscan.io/${isTransactionHash ? 'tx' : 'address'}/${address}`;
                 return link_url;
             };
             case 'btc': {
@@ -19,6 +23,10 @@ export const setLinkUrl = ({ ticker, address, isTransactionHash }) => {
     } else {
         switch (new String(ticker).toLowerCase().trim()) {
             case 'eth': {
+                link_url = `https://etherscan.io/${isTransactionHash ? 'tx' : 'address'}/${address}`;
+                return link_url;
+            };
+            case 'fau': {
                 link_url = `https://etherscan.io/${isTransactionHash ? 'tx' : 'address'}/${address}`;
                 return link_url;
             };
