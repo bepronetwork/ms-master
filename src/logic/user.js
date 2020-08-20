@@ -381,7 +381,7 @@ const processActions = {
                         });
                     }else{
                         console.log(params.token_symbol);
-                        amount = params.payload.value;
+                        amount = parseFloat(params.payload.token_transfers[0].value)
                     }
                     break;
                 default:
