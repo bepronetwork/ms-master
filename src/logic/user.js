@@ -374,11 +374,13 @@ const processActions = {
             switch (ticker.toLowerCase()) {
                 case 'eth':
                     if(params.token_symbol==null || params.token_symbol==undefined) {
+                        console.log(params.token_symbol);
                         amount = getCurrencyAmountFromBitGo({
                             amount: params.payload.value,
                             ticker
                         });
                     }else{
+                        console.log(params.token_symbol);
                         amount = params.payload.value;
                     }
                     break;
