@@ -11,7 +11,7 @@ let self;
 
 
 let outputs = {
-    editBanners: (object) => {
+    editSubSections: (object) => {
         return {
             "subSections": !object.subSections ? [] : object.subSections.map(subSection => {
                 return ({

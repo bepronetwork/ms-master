@@ -195,9 +195,9 @@ const app_object = (object) => {
                         })
                     })
                 },
-                "subSections": !object.customization.subSections ? {} : {
-                    "_id": object.customization.subSections._id,
-                    "ids": !object.customization.subSections.ids ? [] : object.customization.subSections.ids.map(id => {
+                "subSections": !object.app.customization.subSections ? {} : {
+                    "_id": object.app.customization.subSections._id,
+                    "ids": !object.app.customization.subSections.ids ? [] : object.app.customization.subSections.ids.map(id => {
                         return ({
                             "_id": id._id,
                             "title": id.title,
