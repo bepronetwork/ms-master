@@ -26,6 +26,8 @@ class CryptoEthClass {
         try {
             let transaction = await this.cryptoApi.BC.ETH.transaction.getTransaction(txHash);
             console.log("getTransaction:: ", transaction)
+            console.log("getTransactionPayload:: ", transaction.payload.token_transfers)
+            console.log("getTransactionPayload2:: ", transaction.payload.token_transfers[0])
             return transaction;
         } catch (err) {
             console.log(err)
