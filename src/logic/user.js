@@ -397,6 +397,9 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
+            console.log(currency);
+            console.log(wallet.depositAddresses);
+
             if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
