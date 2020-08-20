@@ -373,10 +373,14 @@ const processActions = {
             var amount = null;
             switch (ticker.toLowerCase()) {
                 case 'eth':
-                    amount = getCurrencyAmountFromBitGo({
-                        amount: params.payload.value,
-                        ticker
-                    });
+                    if(params.token_symbol==null || params.token_symbol==undefined) {
+                        amount = getCurrencyAmountFromBitGo({
+                            amount: params.payload.value,
+                            ticker
+                        });
+                    }else{
+                        amount = params.payload.value;
+                    }
                     break;
                 default:
                     amount = params.payload.value
