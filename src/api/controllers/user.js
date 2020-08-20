@@ -273,9 +273,7 @@ async function webhookDeposit(req, res) {
         let params = req.body;
         console.log(1)
         console.log("params.txHash:::", params.txHash)
-        if(){
 
-        }
         var dataTransaction = null;
         switch ((req.body.ticker).toLowerCase()) {
             case 'eth':
