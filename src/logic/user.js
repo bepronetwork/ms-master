@@ -30,7 +30,7 @@ import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
 import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
-import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL } from "../config";
+import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL, ETH_FEE_VARIABLE } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
 import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
 
@@ -406,6 +406,7 @@ const processActions = {
             console.log(currency);
             console.log(wallet.depositAddresses);
 
+            if(ETH_FEE_VARIABLE == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
             if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */

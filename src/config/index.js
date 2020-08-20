@@ -11,6 +11,8 @@ export const CLOUDAMQP_URL =  process.env.CLOUDAMQP_URL || "amqp://localhost:567
 
 export const DB_USER =  process.env.DB_USER;
 
+export const ETH_FEE_VARIABLE =  process.env.ETH_FEE_VARIABLE;
+
 export const LIMIT =  process.env.LIMIT || 1;
 
 export const RATE =  process.env.RATE || 100;
