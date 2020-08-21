@@ -67,7 +67,6 @@ let modules;
 let __private = {};
 
 
-
 /**
  * Login logic.
  *
@@ -558,6 +557,7 @@ const processActions = {
         }
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+        if( new String(`${app._id}-${wallet.currency.ticker}-second_wallet`).toLowerCase().toString() == wBT.label) {throwError('PAYMENT_FORWARDING_TRANSACTION')};
 
         /* Verify if the transactionHash was created */
         const { state, entries, value : amount, type, txid : transactionHash } = wBT;
@@ -970,14 +970,13 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
-
                 bitgo_wallet = params.wallet;
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
 
+
                 /* Record webhooks */
                 await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
-
                 /* Create Policy for Day */
                 await BitGoSingleton.addPolicyToWallet({
                     ticker : currency.ticker,
@@ -1001,7 +1000,6 @@ const progressActions = {
 
                 /* No Bitgo Wallet created */
                 if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
-        
                 /* Save Wallet on DB */
                 wallet = (await (new Wallet({
                     currency : currency._id,

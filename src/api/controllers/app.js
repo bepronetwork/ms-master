@@ -495,10 +495,10 @@ async function editBackground(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editBackground();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err, req);
     }
 }
@@ -792,7 +792,7 @@ async function getUsers(req, res) {
  */
 
 async function webhookBitgoDeposit(req, res) {
-    try { 
+    try {
         req.body.id = req.query.id;
         req.body.currency = req.query.currency;
         let params = req.body;
@@ -806,15 +806,8 @@ async function webhookBitgoDeposit(req, res) {
                 // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
                 var isApp = !wBT.label;
                 params.wBT = wBT;
-
-                if (isApp) {
-                    let app = new App(params);
-                    return await app.updateWallet();
-                } else {
-                    // is User
-                    let user = new User(params);
-                    return await user.updateWallet();
-                }
+                let app = new App(params);
+                return await app.updateWallet();
             } catch (err) {
                 console.log(err);
                 return err;
@@ -881,13 +874,13 @@ async function getLogs(req, res) {
 async function generateAddresses(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        let body  = req.body;
+        let body = req.body;
         let app = new App(body);
         let data = await app.generateAddresses();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err, req);
     }
 }
