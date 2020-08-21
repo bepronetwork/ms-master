@@ -35,7 +35,7 @@ export const setLinkUrl = ({ ticker, address, isTransactionHash }) => {
                 return link_url;
             };
             default:
-                link_url = address;
+                link_url = `https://etherscan.io/${isTransactionHash ? 'tx' : 'address'}/${address}`;
                 return link_url;
         }
     }
