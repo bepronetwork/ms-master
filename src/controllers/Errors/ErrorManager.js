@@ -594,6 +594,16 @@ class ErrorManager {
         }
     }
 
+    subSection = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     logo = function (object, type){
         try{
             switch(type){

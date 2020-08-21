@@ -73,6 +73,23 @@ class CustomizationRepository extends MongoComponent{
         });
     }
 
+    setSubSectionId(_id, subSection_id){
+        return new Promise( (resolve,reject) => {
+            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $set: { 
+                    "subSections" : subSection_id,
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     setLogoId(_id, logo_id){
         return new Promise( (resolve,reject) => {
             CustomizationRepository.prototype.schema.model.findByIdAndUpdate(

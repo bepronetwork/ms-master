@@ -101,7 +101,7 @@ module.exports = {
         expect(data.message.services).to.not.be.null;
         expect(data.message.customization).to.not.be.null;
         expect(data.message.customization).to.be.an('object');
-        expect(data.message.customization).to.include({ _id: data.message.customization._id, topBar: data.message.customization.topBar, banners: data.message.customization.banners });
+        expect(data.message.customization).to.include({ _id: data.message.customization._id, topBar: data.message.customization.topBar, banners: data.message.customization.banners, subSections: data.message.customization.subSections });
         expect(data.message.customization._id).to.not.be.null;
         expect(data.message.customization._id).to.be.an('string');
         expect(data.message.customization.topBar).to.not.be.null;
@@ -218,6 +218,13 @@ module.exports = {
         expect(data.message.app.customization.banners.autoDisplay).to.be.false;
         expect(data.message.app.customization.banners._id).to.not.be.null;
         expect(data.message.app.customization.banners._id).to.be.an('string');
+        expect(data.message.app.customization.subSections).to.not.be.null;
+        expect(data.message.app.customization.subSections).to.be.an('object');
+        expect(data.message.app.customization.subSections).to.include({ ids: data.message.app.customization.subSections.ids, _id: data.message.app.customization.subSections._id });
+        expect(data.message.app.customization.subSections.ids).to.not.be.null;
+        expect(data.message.app.customization.subSections.ids).to.be.an('array').that.is.empty;
+        expect(data.message.app.customization.subSections._id).to.not.be.null;
+        expect(data.message.app.customization.subSections._id).to.be.an('string');
         expect(data.message.app.integrations).to.not.be.null;
         expect(data.message.app.integrations).to.be.an('object');
         expect(data.message.app.integrations).to.include({ _id: data.message.app.integrations._id, chat: data.message.app.integrations.chat });

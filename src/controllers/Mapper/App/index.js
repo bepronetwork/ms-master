@@ -41,6 +41,7 @@ import { MapperEditAddonDepositBonusSingleton } from "./MapperEditDepositBonus";
 import { MapperEditBackgroundSingleton } from "./MapperEditBackground";
 import { MapperSummaryOneGamesSingleton } from "./MapperGetGameStats";
 import { MapperGetUserInfoSingleton } from "./MapperGetUserInfo";
+import { MapperEditSubSectionsSingleton } from "./MapperEditSubSections";
 
 export {
     MapperAddAddonDepositBonusSingleton,
@@ -85,5 +86,6 @@ export {
     MapperEditThemeSingleton,
     MapperEditBackgroundSingleton,
     MapperSummaryOneGamesSingleton,
-    MapperGetUserInfoSingleton
+    MapperGetUserInfoSingleton,
+    MapperEditSubSectionsSingleton
 }
