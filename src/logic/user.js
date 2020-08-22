@@ -670,7 +670,7 @@ const progressActions = {
                         await cryptoBtc.CryptoBtcSingleton.importAddressAsWallet({
                             walletName  : `${user._id}-${user_wallet.currency.ticker}`, 
                             address     : crypto_address.payload.address,
-                            password    : USER_KEY,
+                            password    : Security.prototype.encryptData(app_wallet.hashed_passphrase),
                             privateKey  : crypto_address.payload.privateKey
                         });
                         /* Record webhooks */
@@ -687,7 +687,7 @@ const progressActions = {
                             to: app_wallet.bank_address_not_webhook,
                             callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
                             wallet: `${user._id}-${user_wallet.currency.ticker}`,
-                            password: USER_KEY,
+                            password: Security.prototype.encryptData(app_wallet.hashed_passphrase),
                             confirmations: 3
                         });
                         if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
