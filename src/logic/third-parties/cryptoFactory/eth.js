@@ -87,6 +87,7 @@ class CryptoEthClass {
                 "callback": callbackURL,
                 "from": from,
                 "to": to,
+                "gasLimit" : 61000,
                 "privateKey": privateKey,
                 "confirmations": confirmations
             }
