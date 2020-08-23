@@ -77,6 +77,8 @@ export const USER_KEY = process.env.USER_KEY;
 
 export const CRYPTO_API = process.env.CRYPTO_API;
 
+export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
@@ -84,18 +86,11 @@ export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
 var ETH_NETWORK = config.eth;
 
-var DB_MONGO = config.mongo;
 
 /**
  * @function SET_ENV
  */
 
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_USER', DB_USER);
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_PASSWORD', DB_PASSWORD);
-        
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'MONGO_ID', MONGO_ID);
 
 if(ETH_RPC_URL){
     ETH_NETWORK = ETH_RPC_URL
@@ -105,6 +100,5 @@ if(ETH_RPC_URL){
 }
 
 export {
-    ETH_NETWORK,
-    DB_MONGO
+    ETH_NETWORK
 }
