@@ -88,6 +88,7 @@ class CryptoEthClass {
                 "from": from,
                 "to": to,
                 "gasLimit" : 40000,
+                "gasPrice" : 90000000000,
                 "privateKey": privateKey,
                 "confirmations": confirmations
             }
@@ -120,6 +121,7 @@ class CryptoEthClass {
                     "private_key": privateKey
                 },
                 "gasLimit" : 40000,
+                "gasPrice" : 90000000000,
                 "minimum_transfer_amount": 0.001,
                 "confirmations": confirmations
             }
