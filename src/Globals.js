@@ -83,7 +83,6 @@ class Globals{
         // Main DB
         this.main_db = new Mongoose();
         this.main_db.set('useFindAndModify', false);
-        console.log(MONGO_CONNECTION_STRING + "/main")
         await this.main_db.connect(`${MONGO_CONNECTION_STRING}/main`, { useNewUrlParser: true, useUnifiedTopology: true});
         this.main_db.Promise = bluebird;
         // Ecosystem DB
