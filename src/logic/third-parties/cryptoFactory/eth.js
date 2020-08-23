@@ -87,7 +87,7 @@ class CryptoEthClass {
                 "callback": callbackURL,
                 "from": from,
                 "to": to,
-                "gasLimit" : 61000,
+                "gasLimit" : 40000,
                 "privateKey": privateKey,
                 "confirmations": confirmations
             }
@@ -119,7 +119,7 @@ class CryptoEthClass {
                 "from_address_credentials": {
                     "private_key": privateKey
                 },
-                "gasLimit" : 61000,
+                "gasLimit" : 40000,
                 "minimum_transfer_amount": 0.001,
                 "confirmations": confirmations
             }
