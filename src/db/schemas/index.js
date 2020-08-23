@@ -37,6 +37,7 @@ import { BackgroundSchema }  from './customization/background';
 import { DepositBonusSchema } from "./addOn/depositBonus";
 import { PointSystemSchema } from "./addOn/pointSystem";
 import { TopTabSchema } from "./customization/topTab";
+import { SubSectionsSchema } from './customization/subSections';
 
 export {
     TopTabSchema,
@@ -78,4 +79,5 @@ export {
     AutoWithdrawSchema,
     BackgroundSchema,
     PointSystemSchema,
+    SubSectionsSchema,
 }

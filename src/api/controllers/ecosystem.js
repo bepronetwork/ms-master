@@ -23,7 +23,7 @@ async function getEcosystemData(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 
@@ -35,7 +35,7 @@ async function getCasinoGames(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "global", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 

@@ -80,6 +80,10 @@ export const getCurrencyAmountFromBitGo = ({ticker, amount}) => {
             // to wei
             return parseFloat(amount)/1000000000000000000;
         };
+        case 'fau' : {
+            // to wei
+            return parseFloat(amount)/1000000000000000000;
+        };
         case 'usdc' : {
             // 6 decimals
             return parseFloat(amount)/1000000;

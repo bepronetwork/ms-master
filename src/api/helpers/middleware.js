@@ -3,6 +3,7 @@ import Log from '../../models/log';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { writeFile } from './file';
 import {Security as SecurityCrypt} from "../../controllers/Security";
+import { LogOwlSingleton } from "../../logic/third-parties";
 
 const geoip = require("geoip-lite");
 const jwt   = require('jsonwebtoken');
@@ -88,7 +89,7 @@ class Middleware{
         }
     }
 
-    respondError(res, err){
+    respondError(res, err, req){
         try{
             // Unknown Error
             if(!err.code){throw err}
@@ -99,6 +100,12 @@ class Middleware{
                 }
             });
         }catch(err){
+            LogOwlSingleton.pushError(err, {
+                admin: !req.body.admin ? '' : req.body.admin,
+                user: !req.body.user ? '' : req.body.user,
+                app: !req.body.app ? '' : req.body.app,
+                route: req.originalUrl 
+            })
             console.log(err)
             res.json({
                 data : {
