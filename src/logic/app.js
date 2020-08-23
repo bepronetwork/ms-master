@@ -33,6 +33,7 @@ import {
     TopTabEsportsRepository,
     JackpotRepository,
     BalanceRepository,
+    SubSectionsRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -65,7 +66,6 @@ let library;
 let modules;
 
 let __private = {};
-
 
 
 /**
@@ -558,6 +558,7 @@ const processActions = {
         }
         const wallet = app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(wBT.coin).toLowerCase());
         if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+        if( new String(`${app._id}-${wallet.currency.ticker}-second_wallet`).toLowerCase().toString() == wBT.label) {throwError('PAYMENT_FORWARDING_TRANSACTION')};
 
         /* Verify if the transactionHash was created */
         const { state, entries, value : amount, type, txid : transactionHash } = wBT;
@@ -802,6 +803,15 @@ const processActions = {
             oldTypography: typography
         };
     },
+    __editSubSections : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __getUsers : async (params) => {
         return params;
     },
@@ -970,14 +980,13 @@ const progressActions = {
                     passphrase,
                     currency : currency.ticker
                 })
-
                 bitgo_wallet = params.wallet;
                 receiveAddress = params.receiveAddress;
                 keys = params.keys;
 
+
                 /* Record webhooks */
                 await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
-
                 /* Create Policy for Day */
                 await BitGoSingleton.addPolicyToWallet({
                     ticker : currency.ticker,
@@ -1001,7 +1010,6 @@ const progressActions = {
 
                 /* No Bitgo Wallet created */
                 if(!bitgo_wallet.id() || !receiveAddress){throwError('UNKNOWN')};
-        
                 /* Save Wallet on DB */
                 wallet = (await (new Wallet({
                     currency : currency._id,
@@ -1522,6 +1530,31 @@ const progressActions = {
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
         return params;
     },
+    __editSubSections : async (params) => {
+        let { app, subSections } = params;
+        let ids = await Promise.all(subSections.map( async s => {
+            if(s.image_url.includes("https") && s.image_url.includes("https")){
+                /* If it is a link already */
+                return s;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    title            : s.title,
+                    text             : s.text,
+                    image_url        : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : s.image_url}),
+                    background_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : s.background_url}),
+                    background_color : s.background_color,
+                    position         : s.position,
+                    location         : s.location
+                };
+            }
+        }))
+        await SubSectionsRepository.prototype.findByIdAndUpdate(app.customization.subSections._id, {
+            ids
+        })
+        // Save info on Customization Part
+        return true;
+    },
     __getUsers : async (params) => {
         let res = await UsersRepository.prototype.getAllFiltered(params);
         return res;
@@ -1765,6 +1798,9 @@ class AppLogic extends LogicComponent{
                 case 'EditAddonPointSystem' : {
 					return await library.process.__editAddonPointSystem(params); break;
                 };
+                case 'EditSubSections' : {
+                    return await library.process.__editSubSections(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -1942,6 +1978,9 @@ class AppLogic extends LogicComponent{
                 }
                 case 'EditAddonPointSystem': {
                     return await library.progress.__editAddonPointSystem(params); break;
+                }
+                case 'EditSubSections' : {
+                    return await library.progress.__editSubSections(params); break;
                 }
 			}
 		}catch(error){

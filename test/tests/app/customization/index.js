@@ -3,6 +3,7 @@ context('Customization', async () => {
     require('./addTopBarInformation');
     require('./addBackground');
     require('./addBanner');
+    require('./addSubSection');
     require('./addLogo');
     require('./editColors');
     require('./editFooter');

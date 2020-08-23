@@ -48,7 +48,8 @@ const processActions = {
                 currency : p.currency
             }}) : null,
             virtual : params.virtual,
-            bank_address : params.bank_address,
+			bank_address : params.bank_address,
+			bank_address_not_webhook : params.bank_address_not_webhook,
 			hashed_passphrase : params.hashed_passphrase,
 			link_url : link_url
 		}

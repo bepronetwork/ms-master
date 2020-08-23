@@ -47,6 +47,7 @@ import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
 import PointSystemRepository from "./pointSystem";
 import TopTabRepository from "./topTab";
+import SubSectionsRepository from "./subSections";
 
 export {
     TopTabRepository,
@@ -101,4 +102,5 @@ export {
     AutoWithdrawRepository,
     BackgroundRepository,
     PointSystemRepository,
+    SubSectionsRepository,
 }

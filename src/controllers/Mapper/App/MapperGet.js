@@ -146,6 +146,21 @@ let outputs = {
                         })
                     })
                 },
+                "subSections": !object.customization.subSections ? {} : {
+                    "_id": object.customization.subSections._id,
+                    "ids": !object.customization.subSections.ids ? [] : object.customization.subSections.ids.map(id => {
+                        return ({
+                            "_id": id._id,
+                            "title": id.title,
+                            "text": id.text,
+                            "image_url": id.image_url,
+                            "background_url": id.background_url,
+                            "background_color": id.background_color,
+                            "position": id.position,
+                            "location": id.location
+                        })
+                    })
+                },
                 "logo": !object.customization.logo ? {} : {
                     "_id": object.customization.logo._id,
                     "id": !object.customization.logo.id ? '' : object.customization.logo.id

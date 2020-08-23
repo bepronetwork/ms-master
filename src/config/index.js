@@ -11,6 +11,8 @@ export const CLOUDAMQP_URL =  process.env.CLOUDAMQP_URL || "amqp://localhost:567
 
 export const DB_USER =  process.env.DB_USER;
 
+export const ETH_FEE_VARIABLE =  process.env.ETH_FEE_VARIABLE;
+
 export const LIMIT =  process.env.LIMIT || 1;
 
 export const RATE =  process.env.RATE || 100;
@@ -68,6 +70,12 @@ export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
 export const IS_TEST = process.env.IS_TEST;
 
 export const IS_LOCAL_DEV = process.env.IS_LOCAL_DEV;
+
+export const LOGOWL_TICKET = process.env.LOGOWL_TICKET;
+
+export const USER_KEY = process.env.USER_KEY;
+
+export const CRYPTO_API = process.env.CRYPTO_API;
 
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;

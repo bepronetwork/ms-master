@@ -20,6 +20,7 @@ import Chat from './chat';
 import Customization from './customization';
 import TopBar from './topBar';
 import Banners from './banners';
+import SubSections from './subSections';
 import Color from './color';
 import Logo from './logo';
 import Footer from './footer';
@@ -66,6 +67,7 @@ export {
     TopBar,
     Wallet,
     Banners,
+    SubSections,
     Deposit,
     Customization,
     Integrations,
