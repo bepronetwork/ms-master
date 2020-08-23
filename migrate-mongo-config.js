@@ -4,7 +4,7 @@ require('dotenv').config();
 const config = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: `${process.env.MONGO_CONNECTION_STRING}/admin`,
+    url: `${process.env.MONGO_CONNECTION_STRING}/admin?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=true`,
 
     // TODO Change this to your database name:
     databaseName: "main",
