@@ -374,13 +374,11 @@ const processActions = {
             switch (ticker.toLowerCase()) {
                 case 'eth':
                     if(params.token_symbol==null || params.token_symbol==undefined) {
-                        console.log(params.token_symbol);
                         amount = getCurrencyAmountFromBitGo({
                             amount: params.payload.value,
                             ticker
                         });
                     }else{
-                        console.log(params.token_symbol);
                         amount = parseFloat(params.payload.token_transfers[0].value)
                     }
                     break;
@@ -403,8 +401,6 @@ const processActions = {
             const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
             const isValid = (params.payload.status === "0x1");
-            console.log(currency);
-            console.log(wallet.depositAddresses);
 
             if(ETH_FEE_VARIABLE == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
             if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
@@ -433,7 +429,6 @@ const processActions = {
                     let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
-                    console.log(addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()))
                     let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
                     if (amount >= min_deposit && amount <= max_deposit){
                         depositBonusValue = (amount * (percentage/100));
@@ -642,9 +637,7 @@ const progressActions = {
         try {
             let walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
             let bitgo_address2;
-            console.log("111 ", app_wallet.bitgo_id_not_webhook);
             if(!app_wallet.bitgo_id_not_webhook) {
-                console.log(">>>>>>>>>>>>");
                 bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}-second_wallet`});
                 await WalletsRepository.prototype.updateBitgoIdNotWebhook(app_wallet._id, bitgo_address2.id);
                 throwError('WALLET_WAIT');
@@ -680,7 +673,6 @@ const progressActions = {
                             currency_id : user_wallet.currency._id,
                             isApp       : false
                         });
-                        console.log(app_wallet.bank_address_not_webhook);
                         /* Record Payment Forwarding webhooks */
                         let resCreatePaymentForwarding = await cryptoBtc.CryptoBtcSingleton.createPaymentForwarding({
                             from: crypto_address.payload.address,
