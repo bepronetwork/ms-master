@@ -18,6 +18,8 @@ jobs: # a collection of steps
       - run:
           name: Define Environment Variable at Runtime
           command: |
+          
+            echo 'export MONGO_CONNECTION_STRING=mongodb+srv://BetProtocolAdmin:wNmm4OmASXEp8UXi@cluster0.2gxjd.mongodb.net' >> $BASH_ENV
             echo 'export CLOUDAMQP_URL=amqp://tseaeunl:jIMDudJ9mke8KtK6wveKrAmKZlIcnZUE@squid.rmq.cloudamqp.com/tseaeunl' >> $BASH_ENV
             echo 'export ETH_NET_NAME=rinkeby' >> $BASH_ENV
             echo 'export DB_USER=BetProtocolAdmin' >> $BASH_ENV
