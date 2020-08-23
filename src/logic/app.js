@@ -959,7 +959,6 @@ const progressActions = {
                 /* Don't create wallet for bitgo for the platform again */
                 /* Get ETH Wallet */
                 let wallet_eth = app.wallet.find( w => w.currency.ticker == 'ETH');
-                console.log("wallet_eth", wallet_eth)
 
                 /* No Eth Wallet was created */
                 if(!wallet_eth){throwError('NO_ETH_WALLET')};
