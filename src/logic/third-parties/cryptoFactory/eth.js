@@ -118,6 +118,7 @@ class CryptoEthClass {
                 "from_address_credentials": {
                     "private_key": privateKey
                 },
+                "gasLimit" : 61000,
                 "minimum_transfer_amount": 0.001,
                 "confirmations": confirmations
             }
