@@ -17,7 +17,7 @@ const get_object = (object) => {
         }) : object.listAdmins,
         "services": object.services ? object.services.map(service => service) : object.services,
         ...currencies_object(object),
-        "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
+        "external_users": object.external_users ? object.external_users.length : 0,
         ...wallet_object(object),
         "deposits": object.deposits ? object.deposits.map(deposit => {
             return ({
