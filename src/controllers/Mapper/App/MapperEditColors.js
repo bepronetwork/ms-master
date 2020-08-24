@@ -18,9 +18,7 @@ let outputs = {
                     "type": color.type,
                     "hex": color.hex
                 })
-            }),
-            ...app_object(object),
-            "admin": object.admin,
+            })
         }
     },
 }

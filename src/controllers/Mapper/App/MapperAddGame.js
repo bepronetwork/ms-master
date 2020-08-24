@@ -32,8 +32,7 @@ let outputs = {
                     })
                 }),
                 "__v": object.gameEcosystem.__v,
-            },
-            ...app_object(object),
+            }
         }
     },
 }
