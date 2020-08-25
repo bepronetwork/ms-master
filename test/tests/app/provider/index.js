@@ -14,6 +14,25 @@ context('Provider', async () => {
         admin = global.test.admin;
     });
 
+    it('should be able to create app Provider', mochaAsync(async () => {
+        console.log("App Id: ",app.id)
+        const postData = {
+            app: app.id,
+            api_key: "0X32DGQW182DFVGDW1",
+            activated: true,
+            name: "test",
+            logo: image_data,
+            api_url: "test.com"
+        };
+
+        let res = await editProvider({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
+
+        expect(detectValidationErrors(res)).to.be.equal(false);
+
+        const { status } = res.data;
+        expect(status).to.be.equal(200);
+    }));
+
 
     it('should be able to edit app Provider', mochaAsync(async () => {
         console.log("App Id: ",app.id)
