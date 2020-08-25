@@ -185,6 +185,20 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+  async editProvider() {
+    try {
+        let app = await this.process('EditProvider');
+        // output Boolean
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
 
     /**
    * @param {String} 

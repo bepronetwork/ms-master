@@ -4546,6 +4546,11 @@ definitions:
       providerParams :
         type: object
         properties:
+          _id :
+            type : string
+            example: "0xhi834ty2034thg"
+            description: |
+              Provider ID
           api_key :
             type : string
             example: "0xhi834ty2034thg"
