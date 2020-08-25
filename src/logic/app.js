@@ -34,6 +34,7 @@ import {
     JackpotRepository,
     BalanceRepository,
     SubSectionsRepository,
+    ProviderRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -781,6 +782,15 @@ const processActions = {
             app
         };
     },
+    __editProvider : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editLoadingGif : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1502,6 +1512,31 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editProvider : async (params) => {
+        let { app, providerParams } = params;
+        let logoURL;
+        if(providerParams.logo.includes("https")){
+            /* If it is a link already */
+            logoURL = providerParams.logo;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : providerParams.logo});
+        }
+
+        await ProviderRepository.prototype.findByIdAndUpdate({
+            _id: providerParams._id,
+            logo : logoURL,
+            api_key : Security.prototype.encryptData(providerParams.api_key),
+            api_url : providerParams.api_url,
+            name : providerParams.name,
+            activated : providerParams.activated
+        })
+
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        
+        // Save info on Customization Part
+        return params;
+    },
     __editLoadingGif : async (params) => {
         let { app, loadingGif } = params;
         let loadingGifURL;
@@ -1746,6 +1781,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopIcon' : {
                     return await library.process.__editTopIcon(params); break;
                 };
+                case 'EditProvider' : {
+                    return await library.process.__editProvider(params); break;
+                };
                 case 'EditLoadingGif' : {
                     return await library.process.__editLoadingGif(params); break;
                 };
@@ -1926,6 +1964,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTopIcon' : {
                     return await library.progress.__editTopIcon(params); break;
+                };
+                case 'EditProvider' : {
+                    return await library.progress.__editProvider(params); break;
                 };
                 case 'EditLoadingGif' : {
                     return await library.progress.__editLoadingGif(params); break;

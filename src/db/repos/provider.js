@@ -39,15 +39,16 @@ class ProviderRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate(_id, newStructure){
+    findByIdAndUpdate({_id, logo, api_key, api_url, name, activated}){
         return new Promise( (resolve,reject) => {
             ProviderRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "isActive"          : newStructure.isActive,
-                    "backgroundColor"   : newStructure.backgroundColor,
-                    "textColor"         : newStructure.textColor,
-                    "text"              : newStructure.text
+                    "api_key"    : api_key,
+                    "api_url"    : api_url,
+                    "logo"       : logo,
+                    "name"       : name,
+                    "activated"  : activated
                 } },
                 { 'new': true })
                 .lean()
