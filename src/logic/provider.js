@@ -101,7 +101,7 @@ class ProviderLogic extends LogicComponent {
         try {
             switch (processAction) {
                 case 'Register': {
-                    return await library.process.__register({...params, logo:" ",name:" "}); break;
+                    return await library.process.__register(params); break;
                 };
             }
         } catch (error) {
