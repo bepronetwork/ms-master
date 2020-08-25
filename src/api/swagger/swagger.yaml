@@ -2396,6 +2396,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/provider/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Provider
+      operationId: editProvider
+      description: Edit Provider
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditProviderRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
   /app/txFee/add:
     x-swagger-router-controller: app
@@ -4470,7 +4501,51 @@ definitions:
             type: number
           maxWithdrawAmountPerTransaction :
             type: number
-  
+  AppEditProviderRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - providerParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      providerParams :
+        type: object
+        properties:
+          api_key :
+            type : string
+            example: "0xhi834ty2034thg"
+            description: |
+              API Key
+          api_url :
+            type : string
+            example: "test.com"
+            description: |
+              API URL
+          logo :
+            type : string
+            example: "test.png"
+            description: |
+              Logo
+          name :
+            type : string
+            example: "test"
+            description: |
+              Name
+          activated :
+            type : boolean
+            example: true
   AddAddonTxFeeRequest : 
     type: object
     required:
