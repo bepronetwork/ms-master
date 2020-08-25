@@ -2,6 +2,8 @@ const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import { AppRepository } from '../db/repos';
+import { Security } from '../controllers/Security';
+import { GoogleStorageSingleton } from './third-parties';
 
 let error = new ErrorManager();
 
@@ -40,6 +42,16 @@ const processActions = {
 const progressActions = {
     __register: async (params) => {
         try {
+            let logoURL;
+            if(params.logo.includes("https")){
+                /* If it is a link already */
+                logoURL = params.logo;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : params.logo});
+            }
+            params.api_key  = Security.prototype.encryptData(params.api_key);
+            params.logo     = logoURL;
             let Provider = await self.save(params);
             await AppRepository.prototype.pushProvider(params.app, Provider);
             return {

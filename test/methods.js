@@ -80,6 +80,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async createProvider(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/provider/create')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getBetInfo(params) {
         return request(global.server)
         .post('/api/app/bet/get')

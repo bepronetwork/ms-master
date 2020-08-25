@@ -4139,6 +4139,7 @@ definitions:
       - logo
       - name
       - activated
+      - admin
     properties:
       app :
         type : string
@@ -4170,6 +4171,11 @@ definitions:
         format : boolean
         description: |
           activated
+      admin :
+        type : string
+        format : name
+        description: |
+          admin
   AppUserDepositAddressRequest : 
     type: object
     required:
