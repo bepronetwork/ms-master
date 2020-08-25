@@ -1,6 +1,7 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
+import { AppRepository } from '../db/repos';
 
 let error = new ErrorManager();
 
@@ -40,6 +41,7 @@ const progressActions = {
     __register: async (params) => {
         try {
             let Provider = await self.save(params);
+            await AppRepository.prototype.pushProvider(params.app, Provider);
             return {
 				...Provider,
 				type : 'provider'

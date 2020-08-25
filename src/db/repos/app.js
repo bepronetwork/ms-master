@@ -338,6 +338,19 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    pushProvider(_id, provider) {
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id },
+                { $push: { "providers" : provider } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
+    }
+
     findAppById(_id, populate_type=populate_app_all){
         let type = populate_type;
         switch(populate_type){

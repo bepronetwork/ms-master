@@ -2047,7 +2047,7 @@ paths:
           description: App Information
           required: true
           schema:
-            $ref: '#/definitions/AppLastBetsRequest'
+            $ref: '#/definitions/CreateProviderRequest'
       responses:
         "200":
           description: Success
@@ -4130,23 +4130,46 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-  AppLastBetsRequest : 
+  CreateProviderRequest :
     type: object
     required:
       - app
+      - api_key
+      - api_url
+      - logo
+      - name
+      - activated
     properties:
       app :
         type : string
         format : name
-        example : "5cuedgq7e6t334t34" 
         description: |
           App ID
-      game :
+      api_key :
         type : string
         format : name
-        example : "5cuedgq7e6t334t34" 
         description: |
-          Game ID
+          api key
+      api_url :
+        type : string
+        format : name
+        description: |
+          api url
+      logo :
+        type : string
+        format : name
+        description: |
+          logo
+      name :
+        type : string
+        format : name
+        description: |
+          name
+      activated :
+        type : boolean
+        format : boolean
+        description: |
+          activated
   AppUserDepositAddressRequest : 
     type: object
     required:

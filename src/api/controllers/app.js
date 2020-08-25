@@ -1,6 +1,6 @@
 
 import {
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance
+    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance, Provider
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -394,6 +394,20 @@ async function editEdgeJackpot(req, res) {
         let params = req.body;
         let jackpot = new Jackpot(params);
         let data = await jackpot.editEdgeJackpot();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function createProvider(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let provider = new Provider(params);
+        let data = await provider.register();
         MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -972,4 +986,5 @@ export {
     getGameStats,
     editAddonPointSystem,
     editSubSections,
+    createProvider,
 };
