@@ -48,8 +48,10 @@ import DepositBonusRepository from "./depositBonus";
 import PointSystemRepository from "./pointSystem";
 import TopTabRepository from "./topTab";
 import SubSectionsRepository from "./subSections";
+import ProviderRepository from "./provider";
 
 export {
+    ProviderRepository,
     TopTabRepository,
     DepositBonusRepository,
     PopularNumberRepository,

@@ -44,8 +44,10 @@ import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
 import PointSystem from "./pointSystem";
 import TopTab from "./topTab";
+import Provider from "./provider";
 
 export {
+    Provider,
     TopTab,
     DepositBonus,
     PopularNumberLogic,
