@@ -1534,8 +1534,7 @@ const progressActions = {
 
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
         
-        // Save info on Customization Part
-        return params;
+        return true;
     },
     __editLoadingGif : async (params) => {
         let { app, loadingGif } = params;
