@@ -4597,6 +4597,11 @@ definitions:
           activated :
             type : boolean
             example: true
+          partner_id :
+            type : string
+            example: "test"
+            description: |
+              Partner ID
   AddAddonTxFeeRequest : 
     type: object
     required:

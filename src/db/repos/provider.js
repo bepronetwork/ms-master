@@ -39,7 +39,7 @@ class ProviderRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate({_id, logo, api_key, api_url, name, activated}){
+    findByIdAndUpdate({_id, logo, api_key, api_url, name, activated, partner_id}){
         return new Promise( (resolve,reject) => {
             ProviderRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
@@ -48,7 +48,8 @@ class ProviderRepository extends MongoComponent{
                     "api_url"    : api_url,
                     "logo"       : logo,
                     "name"       : name,
-                    "activated"  : activated
+                    "activated"  : activated,
+                    "partner_id" : partner_id
                 } },
                 { 'new': true })
                 .lean()

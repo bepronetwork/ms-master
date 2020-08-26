@@ -8,12 +8,13 @@ class ProviderSchema{};
 ProviderSchema.prototype.name = 'Provider';
 
 ProviderSchema.prototype.schema = {
-    api_key   : { type: String, required: true },
-    api_url   : { type: String, required: true },
-    logo      : { type: String, required: true },
-    name      : { type: String, required: true },
-    app       : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true},
-    activated : { type: Boolean, default: true },
+    api_key    : { type: String, required: true },
+    api_url    : { type: String, required: true },
+    logo       : { type: String, required: true },
+    name       : { type: String, required: true },
+    app        : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true},
+    activated  : { type: Boolean, default: true },
+    partner_id : { type: String, required: true },
  };
 
 // Mongoose o only allows once per type
