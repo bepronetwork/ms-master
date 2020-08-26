@@ -4130,6 +4130,23 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
+  AppLastBetsRequest : 
+    type: object
+    required:
+      - app
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      game :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Game ID
   CreateProviderRequest :
     type: object
     required:
