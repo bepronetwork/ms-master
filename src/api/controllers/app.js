@@ -419,14 +419,14 @@ async function createProvider(req, res) {
 
 async function getGamesProvider(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let provider = new Provider(params);
         let data = await provider.getGamesProvider();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.log({ type: "user", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.log({ type: "user", req, code: err.code });
         MiddlewareSingleton.respondError(res, err, req);
     }
 }

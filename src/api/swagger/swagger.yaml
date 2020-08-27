@@ -4581,7 +4581,7 @@ definitions:
     type: object
     required:
       - app
-      - admin
+      - user
     properties:
       app :
         type : string
@@ -4589,12 +4589,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           App ID
-      admin :
+      user :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Admin ID
+          User ID
   AppEditProviderRequest : 
     type: object
     required:
