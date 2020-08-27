@@ -31,7 +31,18 @@ const processActions = {
         return params;
     },
     __getGamesProvider: async (params) => {
-        return params;
+        let listProviders = await ProviderRepository.prototype.findByApp(params.app);
+        console.log("listProviders:: ", listProviders)
+        let res = listProviders.map(async (provider) => {
+            let listGames = await axios.get(`${provider.api_url}/GetListGames`, {
+                partner_id: provider.partner_id,
+                type: "web_slot",
+                hash: md5("GetListGames/" + provider.partner_id + "web_slot" + provider.api_key)
+            });
+            console.log("ListGames:: ", listGames);
+            return { name: provider.name, list: listGames };
+        })
+        return await Promise.all(res);
     }
 }
 
@@ -48,37 +59,27 @@ const progressActions = {
     __register: async (params) => {
         try {
             let logoURL;
-            if(params.logo.includes("https")){
+            if (params.logo.includes("https")) {
                 /* If it is a link already */
                 logoURL = params.logo;
-            }else{
+            } else {
                 /* Does not have a Link and is a blob encoded64 */
-                logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : params.logo});
+                logoURL = await GoogleStorageSingleton.uploadFile({ bucketName: 'betprotocol-apps', file: params.logo });
             }
-            params.api_key  = Security.prototype.encryptData(params.api_key);
-            params.logo     = logoURL;
+            params.api_key = Security.prototype.encryptData(params.api_key);
+            params.logo = logoURL;
             let Provider = await self.save(params);
             await AppRepository.prototype.pushProvider(params.app, Provider);
             return {
-				...Provider,
-				type : 'provider'
-			};
+                ...Provider,
+                type: 'provider'
+            };
         } catch (err) {
             throw err;
         }
     },
     __getGamesProvider: async (params) => {
-        let listProviders = await ProviderRepository.prototype.findByApp(params.app);
-        let res = listProviders.map(async (provider)=>{
-            let listGames = await axios.get(`${provider.api_url}/GetListGames`, {
-                partner_id: provider.partner_id,
-                type: "web_slot",
-                hash: md5("GetListGames/" + provider.partner_id + "web_slot" + provider.api_key)
-            });
-            console.log(listGames);
-            return {name: provider.name, list: listGames };
-        })
-        return await Promise.all(res);
+        return params;
     }
 }
 
