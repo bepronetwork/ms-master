@@ -23,9 +23,7 @@ let outputs = {
                     "position": subSection.position,
                     "location": subSection.location
                 })
-            }),
-            ...app_object(object),
-            "admin": object.admin,
+            })
         }
     },
 }

@@ -14,7 +14,6 @@ let self;
 let outputs = {
     updateWallet: (object) => {
         return {
-            ...app_object(object),
             "wallet": !object.wallet ? {} : {
                 "playBalance": object.wallet.playBalance,
                 "max_deposit": object.wallet.max_deposit,

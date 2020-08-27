@@ -32,9 +32,6 @@ module.exports = {
         expect(data.message.name).to.be.an('string');
         expect(data.message.id).to.not.be.null;
         expect(data.message.id).to.be.an('string');
-        expect(data.message.app).to.not.be.null;
-        expect(data.message.app).to.be.an('object');
-        expect(data.message.app.wallet).to.not.be.null;
         expect(data.message.security).to.not.be.null;
         expect(data.message.security).to.be.an('object');
         expect(data.message.security.id).to.not.be.null;

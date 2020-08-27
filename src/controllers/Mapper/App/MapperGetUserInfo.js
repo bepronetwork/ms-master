@@ -84,7 +84,7 @@ let outputs = {
                 "services": object.app_id.services,
                 "currencies": object.app_id.currencies,
                 "users": object.app_id.users,
-                "external_users": object.app_id.external_users,
+                "external_users": object.app_id.external_users.length,
                 "wallet": object.app_id.wallet,
                 "deposits": object.app_id.deposits,
                 "withdraws": object.app_id.withdraws,

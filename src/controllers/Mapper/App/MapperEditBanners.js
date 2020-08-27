@@ -22,10 +22,8 @@ let outputs = {
                     "subtitle": banner.subtitle,
                 })
             }),
-            ...app_object(object),
             "autoDisplay": object.autoDisplay,
-            "fullWidth": object.fullWidth,
-            "admin": object.admin,
+            "fullWidth": object.fullWidth
         }
     },
 }

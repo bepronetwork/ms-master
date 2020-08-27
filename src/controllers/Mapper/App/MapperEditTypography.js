@@ -13,9 +13,7 @@ let self;
 let outputs = {
     editTypography: (object) => {
         return {
-            "typography": object.typography ? { name: object.typography.name, url: object.typography.url } : object.typography,
-            ...app_object(object),
-            "admin": object.admin,
+            "typography": object.typography ? { name: object.typography.name, url: object.typography.url } : object.typography
         }
     },
 }

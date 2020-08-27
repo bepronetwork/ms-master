@@ -67,7 +67,7 @@ let outputs = {
                     "virtual": currency.virtual
                 })
             }) : object.currencies,
-            "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
+            "external_users": object.external_users ? object.external_users.length : 0,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,

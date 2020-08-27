@@ -104,7 +104,7 @@ const app_object = (object) => {
                     "affiliateLink": user.affiliateLink
                 })
             }) : object.app.users,
-            "external_users": object.app.external_users ? object.app.external_users.map(external_user_id => external_user_id) : object.app.external_users,
+            "external_users": object.app.external_users ? object.app.external_users.length : 0,
             "wallet": object.app.wallet ? object.app.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
