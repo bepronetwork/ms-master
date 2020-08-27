@@ -101,7 +101,7 @@ class Middleware{
             });
         }catch(err){
             LogOwlSingleton.pushError(err, {
-                admin: !req.body.admin ? '' : req.body.admin,
+                admin: !req.body ? '' : req.body.admin,
                 user: !req.body.user ? '' : req.body.user,
                 app: !req.body.app ? '' : req.body.app,
                 route: req.originalUrl 

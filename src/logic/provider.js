@@ -34,13 +34,9 @@ const processActions = {
         let listProviders = await ProviderRepository.prototype.findByApp(params.app);
         console.log("listProviders:: ", listProviders)
         let res = listProviders.map(async (provider) => {
-            let listGames = await axios.get(`${provider.api_url}/GetListGames`, {
-                partner_id: provider.partner_id,
-                type: "web_slot",
-                hash: md5("GetListGames/" + provider.partner_id + "web_slot" + provider.api_key)
-            });
-            console.log("ListGames:: ", listGames);
-            return { name: provider.name, list: listGames };
+            let listGames = await axios.get(`${provider.api_url}/GetListGames?partner_id=${provider.partner_id}&type=web_slot&hash=${md5("GetListGames/" + provider.partner_id + "web_slot" + provider.api_key)}`);
+            console.log("ListGames:: ", listGames.data);
+            return { name: provider.name, list: listGames.data };
         })
         return await Promise.all(res);
     }
