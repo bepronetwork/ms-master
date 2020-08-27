@@ -416,6 +416,21 @@ async function createProvider(req, res) {
     }
 }
 
+
+async function getGamesProvider(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let provider = new Provider(params);
+        let data = await provider.getGamesProvider();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function createBet(req, res) {
     try {
         let perf = new PerfomanceMonitor({ id: 'createBet' });
@@ -987,4 +1002,5 @@ export {
     editAddonPointSystem,
     editSubSections,
     createProvider,
+    getGamesProvider,
 };

@@ -1,9 +1,11 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AppRepository } from '../db/repos';
+import { AppRepository, ProviderRepository } from '../db/repos';
 import { Security } from '../controllers/Security';
 import { GoogleStorageSingleton } from './third-parties';
+import axios from 'axios';
+var md5 = require('md5');
 
 let error = new ErrorManager();
 
@@ -28,6 +30,9 @@ const processActions = {
     __register: async (params) => {
         return params;
     },
+    __getGamesProvider: async (params) => {
+        return params;
+    }
 }
 
 /**
@@ -62,6 +67,19 @@ const progressActions = {
             throw err;
         }
     },
+    __getGamesProvider: async (params) => {
+        let listProviders = await ProviderRepository.prototype.findByApp(params.app);
+        let res = listProviders.map(async (provider)=>{
+            let listGames = await axios.get(`${provider.api_url}/GetListGames`, {
+                partner_id: provider.partner_id,
+                type: "web_slot",
+                hash: md5("GetListGames/" + provider.partner_id + "web_slot" + provider.api_key)
+            });
+            console.log(listGames);
+            return {name: provider.name, list: listGames };
+        })
+        return await Promise.all(res);
+    }
 }
 
 /**
@@ -115,6 +133,9 @@ class ProviderLogic extends LogicComponent {
                 case 'Register': {
                     return await library.process.__register(params); break;
                 };
+                case 'GetGamesProvider': {
+                    return await library.process.__getGamesProvider(params); break;
+                };
             }
         } catch (error) {
             throw error;
@@ -142,6 +163,9 @@ class ProviderLogic extends LogicComponent {
             switch (progressAction) {
                 case 'Register': {
                     return await library.progress.__register(params); break;
+                };
+                case 'GetGamesProvider': {
+                    return await library.progress.__getGamesProvider(params); break;
                 };
             }
         } catch (error) {

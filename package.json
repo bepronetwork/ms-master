@@ -101,6 +101,7 @@
         "lodash.unescape": "^4.0.1",
         "log-update": "^2.3.0",
         "logger": "0.0.1",
+        "md5": "^2.3.0",
         "mf-utils-node": "^1.0.14",
         "migrate": "^1.6.2",
         "migrate-mongo": "7.2.1",

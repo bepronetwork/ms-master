@@ -39,6 +39,17 @@ class ProviderRepository extends MongoComponent{
         });
     }
 
+    findByApp(app){ 
+        return new Promise( (resolve, reject) => {
+            ProviderRepository.prototype.schema.model.find({app})
+            .lean()
+            .exec( (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     findByIdAndUpdate({_id, logo, api_key, api_url, name, activated}){
         return new Promise( (resolve,reject) => {
             ProviderRepository.prototype.schema.model.findByIdAndUpdate(

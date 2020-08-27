@@ -27,6 +27,14 @@ class Provider extends ModelComponent{
             throw err;
         }
     }
+
+    async getGamesProvider(){
+        try{
+            return await this.process('GetGamesProvider');
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default Provider;

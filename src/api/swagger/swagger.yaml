@@ -2427,6 +2427,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/providerGame/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Games Provider
+      operationId: getGamesProvider
+      description: Get Games Provider
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGetProviderRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
   /app/txFee/add:
     x-swagger-router-controller: app
@@ -4530,6 +4560,24 @@ definitions:
             type: number
           maxWithdrawAmountPerTransaction :
             type: number
+  AppGetProviderRequest:
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
   AppEditProviderRequest : 
     type: object
     required:
