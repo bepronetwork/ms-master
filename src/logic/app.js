@@ -41,7 +41,7 @@ import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
-import { throwError } from '../controllers/Errors/ErrorManager';
+import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
@@ -79,6 +79,44 @@ let __private = {};
 
   
 const processActions = {
+    __providerAuthorization : async (params) => {
+
+        let user     = await UsersRepository.prototype.findUserById(params.player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+        let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String("eth").toLowerCase()) // TODO PROVIDER
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(params.token!=user.security.bearerToken){
+            throwErrorProvider("14");
+        }
+        if(md5("Authorization/"+ params.player_id + params.game_id + params.token + provider.api_key) != params.hash){
+            throwErrorProvider("10");
+        }
+        return {
+            code      : 0,
+            message   : "Success",
+            player_id : params.player_id,
+            nick      : user.username,
+            balance   : wallet.playBalance,
+            currency  : "ETH" // TODO PROVIDER
+        };
+    },
+    __providerCredit : async (params) => {
+        return params;
+    },
+    __providerDebit : async (params) => {
+        return params;
+    },
+    __providerRollback : async (params) => {
+        return params;
+    },
+    __providerBalance : async (params) => {
+        return params;
+    },
 	__register : async (params) => {
         const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
         
@@ -855,6 +893,21 @@ const processActions = {
 
   
 const progressActions = {
+    __providerAuthorization : async (params) => {
+        return params;
+    },
+    __providerCredit : async (params) => {
+        return params;
+    },
+    __providerDebit : async (params) => {
+        return params;
+    },
+    __providerRollback : async (params) => {
+        return params;
+    },
+    __providerBalance : async (params) => {
+        return params;
+    },
 	__register : async (params) => {
         let app = await self.save(params);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
@@ -1838,6 +1891,22 @@ class AppLogic extends LogicComponent{
                 case 'EditSubSections' : {
                     return await library.process.__editSubSections(params); break;
                 };
+                case 'ProviderAuthorization' : {
+                    return await library.process.__providerAuthorization(params); break;
+                };
+                case 'ProviderCredit' : {
+                    return await library.process.__providerCredit(params); break;
+                };
+                case 'ProviderDebit' : {
+                    return await library.process.__providerDebit(params); break;
+                };
+                case 'ProviderRollback' : {
+                    return await library.process.__providerRollback(params); break;
+                };
+                case 'ProviderBalance' : {
+                    return await library.process.__providerBalance(params); break;
+                };
+
 			}
 		}catch(error){
 			throw error
@@ -2022,6 +2091,21 @@ class AppLogic extends LogicComponent{
                 case 'EditSubSections' : {
                     return await library.progress.__editSubSections(params); break;
                 }
+                case 'ProviderAuthorization' : {
+                    return await library.progress.__providerAuthorization(params); break;
+                };
+                case 'ProviderCredit' : {
+                    return await library.progress.__providerCredit(params); break;
+                };
+                case 'ProviderDebit' : {
+                    return await library.progress.__providerDebit(params); break;
+                };
+                case 'ProviderRollback' : {
+                    return await library.progress.__providerRollback(params); break;
+                };
+                case 'ProviderBalance' : {
+                    return await library.progress.__providerBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error;

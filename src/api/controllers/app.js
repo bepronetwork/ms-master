@@ -431,6 +431,71 @@ async function getGamesProvider(req, res) {
     }
 }
 
+async function providerAuthorization(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerAuthorization();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function providerCredit(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerCredit();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function providerDebit(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerDebit();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function providerRollback(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerRollback();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function providerBalance(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerBalance();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function createBet(req, res) {
     try {
         let perf = new PerfomanceMonitor({ id: 'createBet' });
@@ -1003,4 +1068,9 @@ export {
     editSubSections,
     createProvider,
     getGamesProvider,
+    providerAuthorization,
+    providerCredit,
+    providerDebit,
+    providerRollback,
+    providerBalance,
 };

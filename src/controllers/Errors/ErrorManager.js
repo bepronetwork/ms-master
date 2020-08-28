@@ -949,6 +949,11 @@ const throwError = (typeError='UNKNOWN') => {
     throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS[typeError]));
 }
 
+const throwErrorProvider = (typeError='UNKNOWN') => {
+    throw libraries.throwError(libraries.handler.getErrorProvider(typeError));
+}
+
 export {
-    throwError
+    throwError,
+    throwErrorProvider
 }
