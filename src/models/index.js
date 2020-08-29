@@ -44,8 +44,11 @@ import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
 import PointSystem from "./pointSystem";
 import TopTab from "./topTab";
+import Provider from "./provider";
+import ProviderToken from "./providerToken";
 
 export {
+    Provider,
     TopTab,
     DepositBonus,
     PopularNumberLogic,
@@ -92,4 +95,5 @@ export {
     LoadingGif,
     Background,
     PointSystem,
+    ProviderToken,
 }

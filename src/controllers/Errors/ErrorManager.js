@@ -776,6 +776,16 @@ class ErrorManager {
         }
     }
 
+    provider = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     autoWithdraw = function (object, type){
         try{
             switch(type){
@@ -939,6 +949,11 @@ const throwError = (typeError='UNKNOWN') => {
     throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS[typeError]));
 }
 
+const throwErrorProvider = (typeError='UNKNOWN') => {
+    throw libraries.throwError(libraries.handler.getErrorProvider(typeError));
+}
+
 export {
-    throwError
+    throwError,
+    throwErrorProvider
 }

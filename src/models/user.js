@@ -36,6 +36,14 @@ class User extends ModelComponent {
         );
     }
 
+
+    async providerToken() {
+        try {
+            return await this.process('ProviderToken');
+        } catch (err) {
+            throw err;
+        }
+    }
     async auth() {
         try {
             let res = await this.process('Auth');

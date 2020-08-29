@@ -34,13 +34,14 @@ import {
     JackpotRepository,
     BalanceRepository,
     SubSectionsRepository,
+    ProviderRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
-import { throwError } from '../controllers/Errors/ErrorManager';
+import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
@@ -56,6 +57,7 @@ import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
+import MiddlewareSingleton from '../api/helpers/middleware';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -78,6 +80,115 @@ let __private = {};
 
   
 const processActions = {
+    __providerAuthorization : async (params) => {
+
+        let user     = await UsersRepository.prototype.findUserById(params.player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+        let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
+        let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        // if(params.token!=user.security.bearerToken){
+        //     throwErrorProvider("14");
+        // }
+        if(md5("Authorization/"+ params.player_id + params.game_id + params.token + provider.api_key) != params.hash){
+            throwErrorProvider("10");
+        }
+        return {
+            code      : 0,
+            message   : "Success",
+            player_id : params.player_id,
+            nick      : user.username,
+            balance   : wallet.playBalance,
+            currency  : (new String(ticker).toUpCase())
+        };
+    },
+    __providerCredit : async (params) => {
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            hash
+        } = params;
+
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let user      = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Credit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+        if(wallet.playBalance < amount) {
+            throwErrorProvider("2");
+        }
+        return {...params, wallet, dataToken};
+    },
+    __providerDebit : async (params) => {
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            is_close,
+            hash
+        } = params;
+
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let user      = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Debit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+
+        return {...params, wallet, dataToken};
+    },
+    __providerRollback : async (params) => {
+        return params;
+    },
+    __providerBalance : async (params) => {
+        var {token, player_id, hash} = params;
+        let user = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Balance/"+ player_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+        return wallet;
+    },
 	__register : async (params) => {
         const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
         
@@ -781,6 +892,15 @@ const processActions = {
             app
         };
     },
+    __editProvider : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editLoadingGif : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -845,6 +965,54 @@ const processActions = {
 
   
 const progressActions = {
+    __providerAuthorization : async (params) => {
+        return params;
+    },
+    __providerCredit : async (params) => {
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            hash,
+            wallet,
+            dataToken
+        } = params;
+        await WalletsRepository.prototype.updatePlayBalance(wallet._id, -amount);
+
+        return {
+            code: 0,
+            message: "success",
+            balance: wallet.playBalance - amount
+        };
+    },
+    __providerDebit : async (params) => {
+        let {
+            amount,
+            wallet,
+            is_close
+        } = params;
+        if(is_close) {
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
+        }
+        return {
+            code: 0,
+            message: "success",
+            balance: wallet.playBalance + amount
+        };
+    },
+    __providerRollback : async (params) => {
+        return params;
+    },
+    __providerBalance : async (params) => {
+        return {
+            code: 0,
+            message: "success",
+            balance: params.wallet.playBalance
+        };
+    },
 	__register : async (params) => {
         let app = await self.save(params);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
@@ -1502,6 +1670,31 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editProvider : async (params) => {
+        let { app, providerParams } = params;
+        let logoURL;
+        if(providerParams.logo.includes("https")){
+            /* If it is a link already */
+            logoURL = providerParams.logo;
+        }else{
+            /* Does not have a Link and is a blob encoded64 */
+            logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : providerParams.logo});
+        }
+
+        await ProviderRepository.prototype.findByIdAndUpdate({
+            _id: providerParams._id,
+            logo : logoURL,
+            api_key : Security.prototype.encryptData(providerParams.api_key),
+            api_url : providerParams.api_url,
+            name : providerParams.name,
+            activated : providerParams.activated,
+            partner_id : providerParams.partner_id
+        })
+
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        
+        return true;
+    },
     __editLoadingGif : async (params) => {
         let { app, loadingGif } = params;
         let loadingGifURL;
@@ -1746,6 +1939,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopIcon' : {
                     return await library.process.__editTopIcon(params); break;
                 };
+                case 'EditProvider' : {
+                    return await library.process.__editProvider(params); break;
+                };
                 case 'EditLoadingGif' : {
                     return await library.process.__editLoadingGif(params); break;
                 };
@@ -1800,6 +1996,22 @@ class AppLogic extends LogicComponent{
                 case 'EditSubSections' : {
                     return await library.process.__editSubSections(params); break;
                 };
+                case 'ProviderAuthorization' : {
+                    return await library.process.__providerAuthorization(params); break;
+                };
+                case 'ProviderCredit' : {
+                    return await library.process.__providerCredit(params); break;
+                };
+                case 'ProviderDebit' : {
+                    return await library.process.__providerDebit(params); break;
+                };
+                case 'ProviderRollback' : {
+                    return await library.process.__providerRollback(params); break;
+                };
+                case 'ProviderBalance' : {
+                    return await library.process.__providerBalance(params); break;
+                };
+
 			}
 		}catch(error){
 			throw error
@@ -1927,6 +2139,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopIcon' : {
                     return await library.progress.__editTopIcon(params); break;
                 };
+                case 'EditProvider' : {
+                    return await library.progress.__editProvider(params); break;
+                };
                 case 'EditLoadingGif' : {
                     return await library.progress.__editLoadingGif(params); break;
                 };
@@ -1981,6 +2196,21 @@ class AppLogic extends LogicComponent{
                 case 'EditSubSections' : {
                     return await library.progress.__editSubSections(params); break;
                 }
+                case 'ProviderAuthorization' : {
+                    return await library.progress.__providerAuthorization(params); break;
+                };
+                case 'ProviderCredit' : {
+                    return await library.progress.__providerCredit(params); break;
+                };
+                case 'ProviderDebit' : {
+                    return await library.progress.__providerDebit(params); break;
+                };
+                case 'ProviderRollback' : {
+                    return await library.progress.__providerRollback(params); break;
+                };
+                case 'ProviderBalance' : {
+                    return await library.progress.__providerBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error;

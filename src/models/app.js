@@ -143,6 +143,71 @@ class App extends ModelComponent {
         }
     }
 
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerAuthorization() {
+        try {
+            return await this.process('ProviderAuthorization');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerCredit() {
+        try {
+            return await this.process('ProviderCredit');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerDebit() {
+        try {
+            return await this.process('ProviderDebit');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerRollback() {
+        try {
+            return await this.process('ProviderRollback');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async providerBalance() {
+        try {
+            return await this.process('ProviderBalance');
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
    * @param {String} 
    * @return {bool || Exception}  
@@ -184,6 +249,20 @@ class App extends ModelComponent {
             throw err;
         }
     }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+  async editProvider() {
+    try {
+        let app = await this.process('EditProvider');
+        // output Boolean
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
 
 
     /**
