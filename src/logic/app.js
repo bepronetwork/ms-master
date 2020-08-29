@@ -980,7 +980,7 @@ const progressActions = {
             wallet,
             dataToken
         } = params;
-        await WalletsRepository.prototype.playBalance(wallet._id, -amount);
+        await WalletsRepository.prototype.updatePlayBalance(wallet._id, -amount);
 
         return {
             code: 0,
@@ -995,7 +995,7 @@ const progressActions = {
             is_close
         } = params;
         if(is_close) {
-            await WalletsRepository.prototype.playBalance(wallet._id, amount);
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
         }
         return {
             code: 0,
