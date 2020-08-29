@@ -172,7 +172,22 @@ const processActions = {
         return params;
     },
     __providerBalance : async (params) => {
-        return params;
+        var {token, player_id, hash} = params;
+        let user = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Balance/"+ player_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+        return wallet;
     },
 	__register : async (params) => {
         const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
@@ -992,7 +1007,11 @@ const progressActions = {
         return params;
     },
     __providerBalance : async (params) => {
-        return params;
+        return {
+            code: 0,
+            message: "success",
+            balance: params.wallet.playBalance
+        };
     },
 	__register : async (params) => {
         let app = await self.save(params);
