@@ -49,6 +49,7 @@ import DepositBonusLogic from "./depositBonus";
 import PointSystemLogic from "./pointSystem";
 import TopTabLogic from "./topTab";
 import ProviderLogic from "./provider";
+import ProviderTokenLogic from "./providerToken";
 
 export {
     ProviderLogic,
@@ -102,5 +103,6 @@ export {
     AutoWithdrawLogic,
     BackgroundLogic,
     PointSystemLogic,
+    ProviderTokenLogic,
 }
 

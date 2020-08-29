@@ -57,6 +57,7 @@ import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
+import MiddlewareSingleton from '../api/helpers/middleware';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 
@@ -85,14 +86,15 @@ const processActions = {
         if(!user){
             throwErrorProvider("11");
         }
-        let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String("eth").toLowerCase()) // TODO PROVIDER
+        let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
+        let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         let app      = await AppRepository.prototype.findAppById(user.app_id._id);
         let provider = await ProviderRepository.prototype.findByApp(app._id);
         provider     = provider[0];
 
-        if(params.token!=user.security.bearerToken){
-            throwErrorProvider("14");
-        }
+        // if(params.token!=user.security.bearerToken){
+        //     throwErrorProvider("14");
+        // }
         if(md5("Authorization/"+ params.player_id + params.game_id + params.token + provider.api_key) != params.hash){
             throwErrorProvider("10");
         }
@@ -102,14 +104,69 @@ const processActions = {
             player_id : params.player_id,
             nick      : user.username,
             balance   : wallet.playBalance,
-            currency  : "ETH" // TODO PROVIDER
+            currency  : (new String(ticker).toUpCase())
         };
     },
     __providerCredit : async (params) => {
-        return params;
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            hash
+        } = params;
+
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let user      = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Credit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+        if(wallet.playBalance < amount) {
+            throwErrorProvider("2");
+        }
+        return {...params, wallet, dataToken};
     },
     __providerDebit : async (params) => {
-        return params;
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            is_close,
+            hash
+        } = params;
+
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let user      = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Debit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+
+        return {...params, wallet, dataToken};
     },
     __providerRollback : async (params) => {
         return params;
@@ -897,10 +954,39 @@ const progressActions = {
         return params;
     },
     __providerCredit : async (params) => {
-        return params;
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            hash,
+            wallet,
+            dataToken
+        } = params;
+        await WalletsRepository.prototype.playBalance(wallet._id, -amount);
+
+        return {
+            code: 0,
+            message: "success",
+            balance: wallet.playBalance - amount
+        };
     },
     __providerDebit : async (params) => {
-        return params;
+        let {
+            amount,
+            wallet,
+            is_close
+        } = params;
+        if(is_close) {
+            await WalletsRepository.prototype.playBalance(wallet._id, amount);
+        }
+        return {
+            code: 0,
+            message: "success",
+            balance: wallet.playBalance + amount
+        };
     },
     __providerRollback : async (params) => {
         return params;

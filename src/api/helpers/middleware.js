@@ -35,6 +35,25 @@ class Middleware{
         }
     };
 
+    generateTokenByJson(json){
+        try{
+            //expires in 30 days
+            let token = jwt.sign(json, privateKEY, { algorithm: 'RS256' });
+            return token;
+        }catch(err){
+            throw err;
+        }
+    };
+
+    decodeTokenToJson(token){
+        try{
+            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+            return response;
+        }catch (err) {
+            throw err;
+        }
+    };
+
     generateTokenDate(time) {
         try{
             let token = jwt.sign({ time }, privateKEY, { algorithm: 'RS256' });

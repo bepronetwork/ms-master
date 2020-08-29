@@ -2549,6 +2549,25 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/provider/token:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Provider Token
+      operationId: providerToken
+      description: Provider Token
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: user Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderTokenRequest'
   /app/Rollback:
     x-swagger-router-controller: app
     post:
@@ -4754,6 +4773,31 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+  ProviderTokenRequest:
+    type: object
+    required:
+      - user
+      - ticker
+      - game_id
+    properties:
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          user ID
+      ticker :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Ticker currency. Example ETH
+      game_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Game ID
   ProviderRollbackRequest:
     type: object
     required:

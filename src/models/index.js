@@ -45,6 +45,7 @@ import DepositBonus from "./depositBonus";
 import PointSystem from "./pointSystem";
 import TopTab from "./topTab";
 import Provider from "./provider";
+import ProviderToken from "./providerToken";
 
 export {
     Provider,
@@ -94,4 +95,5 @@ export {
     LoadingGif,
     Background,
     PointSystem,
+    ProviderToken,
 }

@@ -49,6 +49,7 @@ import PointSystemRepository from "./pointSystem";
 import TopTabRepository from "./topTab";
 import SubSectionsRepository from "./subSections";
 import ProviderRepository from "./provider";
+import ProviderTokenRepository from "./providerToken";
 
 export {
     ProviderRepository,
@@ -105,4 +106,5 @@ export {
     BackgroundRepository,
     PointSystemRepository,
     SubSectionsRepository,
+    ProviderTokenRepository,
 }
