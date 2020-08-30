@@ -22,7 +22,8 @@ class Provider extends ModelComponent{
 
     async register(){
         try{
-            return await this.process('Register');
+            let provider = await this.process('Register');
+            return provider._doc;
         }catch(err){
             throw err;
         }

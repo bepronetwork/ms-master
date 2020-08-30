@@ -1672,21 +1672,10 @@ const progressActions = {
     },
     __editProvider : async (params) => {
         let { app, providerParams } = params;
-        let logoURL;
-        if(providerParams.logo.includes("https")){
-            /* If it is a link already */
-            logoURL = providerParams.logo;
-        }else{
-            /* Does not have a Link and is a blob encoded64 */
-            logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : providerParams.logo});
-        }
-
+        
         await ProviderRepository.prototype.findByIdAndUpdate({
             _id: providerParams._id,
-            logo : logoURL,
             api_key : Security.prototype.encryptData(providerParams.api_key),
-            api_url : providerParams.api_url,
-            name : providerParams.name,
             activated : providerParams.activated,
             partner_id : providerParams.partner_id
         })

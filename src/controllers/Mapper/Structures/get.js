@@ -8,6 +8,7 @@ const get_object = (object) => {
         "isValid": object.isValid,
         "storeAddOn": object.storeAddOn,
         "virtual": object.virtual,
+        "casino_providers" : object.casino_providers,
         "licenseID": object.licenseID,
         ...games_object(object),
         "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => {

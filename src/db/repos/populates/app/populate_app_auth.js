@@ -10,6 +10,11 @@ let populate_app_auth = [
         select : { '__v': 0},
     },
     {
+        path : 'casino_providers',
+        model : 'Provider',
+        select : { '__v': 0},
+    },
+    {
         path : 'addOn',
         model : 'AddOn',
         select : { '__v': 0},

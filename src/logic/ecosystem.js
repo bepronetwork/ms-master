@@ -1,6 +1,6 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
-import { BlockchainsRepository, AuthorizedsRepository, CurrencyRepository } from '../db/repos';
+import { BlockchainsRepository, AuthorizedsRepository, CurrencyRepository, CasinoProviderEcoRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 let error = new ErrorManager();
@@ -26,6 +26,11 @@ let __private = {};
 
   
 const processActions = {
+	__getProviderEcosystem: async () => {
+		// Get Games
+		let providers = await CasinoProviderEcoRepository.prototype.getAll();
+		return providers;
+	},
     __getEcosystemData : async () => {
 
         // Get Currencies
@@ -62,6 +67,9 @@ const processActions = {
 
   
 const progressActions = {
+	__getProviderEcosystem: async (params) => {
+		return params;
+	},
 	__getEcosystemData : async (params) => {
         return params;
     },
@@ -123,6 +131,9 @@ class EcosystemLogic extends LogicComponent{
                 case 'GetCasinoGames' : {
 					return await library.process.__getCasinoGames(params); break;
 				};
+				case 'GetProviderEcosystem' : {
+					return await library.process.__getProviderEcosystem(params); break;
+				};
 			}
 		}catch(error){
 			throw error;
@@ -153,6 +164,9 @@ class EcosystemLogic extends LogicComponent{
                 };
                 case 'GetCasinoGames' : {
 					return await library.progress.__getCasinoGames(params); break;
+				};
+				case 'GetProviderEcosystem' : {
+					return await library.progress.__getProviderEcosystem(params); break;
 				};
 			}
 		}catch(error){
