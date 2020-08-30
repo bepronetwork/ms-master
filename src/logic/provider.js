@@ -1,7 +1,7 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
-import { AppRepository, ProviderRepository } from '../db/repos';
+import { AppRepository, ProviderRepository, CasinoProviderEcoRepository } from '../db/repos';
 import { Security } from '../controllers/Security';
 import { GoogleStorageSingleton } from './third-parties';
 import axios from 'axios';
@@ -28,7 +28,9 @@ let __private = {};
 
 const processActions = {
     __register: async (params) => {
-        return params;
+        let providerEco = await CasinoProviderEcoRepository.prototype.getById(params.provider_id);
+        delete providerEco["_id"];
+        return {...providerEco, app: params.app, providerEco: params.provider_id};
     },
     __getGamesProvider: async (params) => {
         let listProviders = await ProviderRepository.prototype.findByApp(params.app);
@@ -55,16 +57,6 @@ const processActions = {
 const progressActions = {
     __register: async (params) => {
         try {
-            let logoURL;
-            if (params.logo.includes("https")) {
-                /* If it is a link already */
-                logoURL = params.logo;
-            } else {
-                /* Does not have a Link and is a blob encoded64 */
-                logoURL = await GoogleStorageSingleton.uploadFile({ bucketName: 'betprotocol-apps', file: params.logo });
-            }
-            params.api_key = Security.prototype.encryptData(params.api_key);
-            params.logo = logoURL;
             let Provider = await self.save(params);
             await AppRepository.prototype.pushProvider(params.app, Provider);
             return {

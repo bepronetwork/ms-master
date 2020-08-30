@@ -213,6 +213,7 @@ async function getBets(req, res) {
 
 async function providerToken(req, res) {
     try {
+        await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let user = new User(params);
         let data = await user.providerToken();

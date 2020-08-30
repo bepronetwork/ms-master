@@ -2029,6 +2029,56 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/providerEcosystem/get:
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Register User Data
+      operationId: getProviderEcosystem
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/provider/create:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: create provider
+      operationId: createProvider
+      description: create provider
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/CreateProviderRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/biggestBetWinners:
     x-swagger-router-controller: app
     post:
@@ -2366,7 +2416,250 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/provider/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Provider
+      operationId: editProvider
+      description: Edit Provider
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditProviderRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/providerGame/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Games Provider
+      operationId: getGamesProvider
+      description: Get Games Provider
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppGetProviderRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
+  /app/Authorization:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Provider Authorization
+      operationId: providerAuthorization
+      description: Provider Authorization
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderAuthorizationRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/Credit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Provider Credit
+      operationId: providerCredit
+      description: Provider Credit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderCreditRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/Debit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Provider Debit
+      operationId: providerDebit
+      description: Provider Debit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderDebitRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/provider/token:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Provider Token
+      operationId: providerToken
+      description: Provider Token
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: user Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderTokenRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/Rollback:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Provider Rollback
+      operationId: providerRollback
+      description: Provider Rollback
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderRollbackRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/Balance:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Provider Balance
+      operationId: providerBalance
+      description: Provider Balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderBalanceRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/txFee/add:
     x-swagger-router-controller: app
     post:
@@ -4086,6 +4379,28 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           Game ID
+  CreateProviderRequest :
+    type: object
+    required:
+      - app
+      - provider_id
+      - admin
+    properties:
+      app :
+        type : string
+        format : name
+        description: |
+          App ID
+      provider_id :
+        type : string
+        format : name
+        description: |
+          provider_id key
+      admin :
+        type : string
+        format : name
+        description: |
+          admin
   AppUserDepositAddressRequest : 
     type: object
     required:
@@ -4440,7 +4755,313 @@ definitions:
             type: number
           maxWithdrawAmountPerTransaction :
             type: number
-  
+  ProviderBalanceRequest:
+    type: object
+    required:
+      - token
+      - player_id
+      - hash
+    properties:
+      token :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      player_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      hash :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  ProviderTokenRequest:
+    type: object
+    required:
+      - user
+      - ticker
+      - game_id
+    properties:
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          user ID
+      ticker :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Ticker currency. Example ETH
+      game_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Game ID
+  ProviderRollbackRequest:
+    type: object
+    required:
+      - token
+      - player_id
+      - rollback_id
+      - transaction_id
+      - hash
+    properties:
+      token :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      player_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      rollback_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      transaction_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      hash :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  ProviderDebitRequest:
+    type: object
+    required:
+      - token
+      - player_id
+      - round_id
+      - game_id
+      - transaction_id
+      - amount
+      - is_close
+      - hash
+    properties:
+      token :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      player_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      round_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      game_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      transaction_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      amount :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      is_close :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      hash :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  ProviderAuthorizationRequest:
+    type: object
+    required:
+      - player_id
+      - game_id
+      - token
+      - hash
+    properties:
+      player_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      game_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      token :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      hash :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  ProviderCreditRequest:
+    type: object
+    required:
+      - Token
+      - player_id
+      - round_id
+      - game_id
+      - transaction_id
+      - amount
+      - hash
+    properties:
+      Token :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      player_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      round_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      game_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      transaction_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      amount :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      hash :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  AppGetProviderRequest:
+    type: object
+    required:
+      - app
+      - user
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+  AppEditProviderRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - providerParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      providerParams :
+        type: object
+        properties:
+          _id :
+            type : string
+            example: "0xhi834ty2034thg"
+            description: |
+              Provider ID
+          api_key :
+            type : string
+            example: "0xhi834ty2034thg"
+            description: |
+              API Key
+          api_url :
+            type : string
+            example: "test.com"
+            description: |
+              API URL
+          logo :
+            type : string
+            example: "test.png"
+            description: |
+              Logo
+          name :
+            type : string
+            example: "test"
+            description: |
+              Name
+          activated :
+            type : boolean
+            example: true
+          partner_id :
+            type : string
+            example: "test"
+            description: |
+              Partner ID
   AddAddonTxFeeRequest : 
     type: object
     required:
