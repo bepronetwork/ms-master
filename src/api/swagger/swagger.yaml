@@ -5039,21 +5039,6 @@ definitions:
             example: "0xhi834ty2034thg"
             description: |
               API Key
-          api_url :
-            type : string
-            example: "test.com"
-            description: |
-              API URL
-          logo :
-            type : string
-            example: "test.png"
-            description: |
-              Logo
-          name :
-            type : string
-            example: "test"
-            description: |
-              Name
           activated :
             type : boolean
             example: true
