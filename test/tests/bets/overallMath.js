@@ -94,6 +94,43 @@ context('Bets (Overall Math)', async () => {
             nonce: getRandom(123,2384723),
         }
     });
+
+/*
+    it(`it should do a normal bet for the User - Diamonds Simple (Win)`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: betAmount/100/(game.resultSpace.length)
+            }})
+        };
+
+        let __isWon = false, __res;
+        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
+        
+        while(!__isWon){
+            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
+                postData
+            });
+            __isWon = isWon;
+            __res = res;
+            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
+            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
+        }
+
+        await afterBetFunction({
+            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
+            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
+            res : __res
+        })
+    }));*/
+
+
   
     it(`it should do a normal bet for the User - Wheel Classic (Win)`, mochaAsync(async () => {
 
@@ -129,39 +166,7 @@ context('Bets (Overall Math)', async () => {
         })
     }));
 
-    it(`it should do a normal bet for the User - Wheel Classic (Lost)`, mochaAsync(async () => {
 
-        await beforeBetFunction({
-            metaName : 'wheel_simple'
-        })
-
-        let postData = {  
-            ...postDataDefault,
-            game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value: betAmount/(game.resultSpace.length)
-            }})
-        };
-
-        let __isWon = true, __res;
-        var __appPreBetCurrencyWallet, __userPreBetCurrencyWallet;
-        
-        while(__isWon){
-            var { isWon, res, appPreBetCurrencyWallet, userPreBetCurrencyWallet } = await insideBetFunction({
-                postData
-            });
-            __isWon = isWon;
-            __res = res;
-            __appPreBetCurrencyWallet = appPreBetCurrencyWallet;
-            __userPreBetCurrencyWallet = userPreBetCurrencyWallet;
-        }
-
-        await afterBetFunction({
-            appPreBetCurrencyWallet : __appPreBetCurrencyWallet,
-            userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
-            res : __res
-        })
-    }));
 
     it(`it should do a normal bet for the User - Wheel Variation (Win)`, mochaAsync(async () => {
 
