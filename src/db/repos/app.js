@@ -342,7 +342,7 @@ class AppRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             AppRepository.prototype.schema.model.findOneAndUpdate(
                 { _id },
-                { $push: { "providers" : provider } },
+                { $push: { "casino_providers" : provider } },
                 (err, item) => {
                     if(err){reject(err)}
                     resolve(true);

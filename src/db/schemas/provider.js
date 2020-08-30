@@ -13,7 +13,7 @@ ProviderSchema.prototype.schema = {
     logo       : { type: String, required: true },
     name       : { type: String, required: true },
     app        : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true},
-    activated  : { type: Boolean, default: true },
+    activated  : { type: Boolean, default: false },
     partner_id : { type: String },
     providerEco: { type: String, required: true },
  };
