@@ -4993,7 +4993,6 @@ definitions:
     type: object
     required:
       - app
-      - user
     properties:
       app :
         type : string
@@ -5001,12 +5000,6 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           App ID
-      user :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
   AppEditProviderRequest : 
     type: object
     required:
