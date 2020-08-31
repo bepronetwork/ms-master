@@ -5000,6 +5000,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           App ID
+      providerEco:
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Provider Ecosystem ID
   AppEditProviderRequest : 
     type: object
     required:

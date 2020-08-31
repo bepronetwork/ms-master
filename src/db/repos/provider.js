@@ -39,9 +39,12 @@ class ProviderRepository extends MongoComponent{
         });
     }
 
-    findByApp(app){ 
+    findByApp({app, providerEco}){ 
         return new Promise( (resolve, reject) => {
-            ProviderRepository.prototype.schema.model.find({app})
+            ProviderRepository.prototype.schema.model.find({
+                app,
+                ...providerEco
+            })
             .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
