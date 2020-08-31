@@ -34,12 +34,10 @@ const processActions = {
     },
     __getGamesProvider: async (params) => {
         let listProviders = await ProviderRepository.prototype.findByApp(params.app);
-        console.log("listProviders:: ", listProviders)
         let res = listProviders.map(async (provider) => {
             let providerKey = Security.prototype.decryptData(provider.api_key);
             let listGames = await axios.get(`${provider.api_url}/GetListGames?partner_id=${provider.partner_id}&type=web_slot&hash=${md5("GetListGames/" + provider.partner_id + "web_slot" + providerKey)}`);
-            console.log("ListGames:: ", listGames.data);
-            return { name: provider.name, list: listGames.data };
+            return { name: provider.name, api_url: provider.api_url , list: listGames.data };
         })
         return await Promise.all(res);
     }
