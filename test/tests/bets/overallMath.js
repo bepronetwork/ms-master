@@ -95,7 +95,6 @@ context('Bets (Overall Math)', async () => {
         }
     });
 
-/*
     it(`it should do a normal bet for the User - Diamonds Simple (Win)`, mochaAsync(async () => {
 
         await beforeBetFunction({
@@ -105,7 +104,7 @@ context('Bets (Overall Math)', async () => {
         let postData = {  
             ...postDataDefault,
             game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
+            result: new Array(7).fill(0).map( (r, i) => {return {
                 place: i, value: betAmount/100/(game.resultSpace.length)
             }})
         };
@@ -128,7 +127,7 @@ context('Bets (Overall Math)', async () => {
             userPreBetCurrencyWallet : __userPreBetCurrencyWallet,
             res : __res
         })
-    }));*/
+    }));
 
 
   

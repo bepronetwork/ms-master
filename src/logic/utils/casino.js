@@ -402,7 +402,8 @@ class CasinoLogic{
                     break;
                 };
                 case 'diamonds_simple' : {
-                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
+                    const DIAMONDS_RESULT_SPACE_LENGTH = 7;
+                    if(userResultSpace.length != DIAMONDS_RESULT_SPACE_LENGTH){ throw throwError('BAD_BET')}
                     /* Calculate Multipliers on Odd (Example Roulette) */
                     let { maxWin } = userResultSpace.reduce( (object, result, index) => {
                         if((result.place < 0) || (result.place >= resultSpace.length)){ throwError('BAD_BET')}

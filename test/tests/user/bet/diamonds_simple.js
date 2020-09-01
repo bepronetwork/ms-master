@@ -101,6 +101,9 @@ Object.keys(currenciesBetAmount).forEach( async key => {
         res = await placeBet(postData, user.bearerToken, {id : user.id});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(29);
+
+        await editTableLimit({...postData, tableLimit : 10000000, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+
     }));
     
 });
