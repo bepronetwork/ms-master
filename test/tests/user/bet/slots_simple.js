@@ -76,8 +76,16 @@ Object.keys(currenciesBetAmount).forEach( async key => {
     it(`${metaName} - ${key} - should allow bet for the User`, mochaAsync(async () => {
  
         await beforeBetFunction();
+        let postData = {
+            app : app.id,
+            game : game._id,
+            tableLimit : 34563456,
+            wallet : walletApp._id
+        }
 
-        let postData = {  
+        let res = await editTableLimit({...postData, admin: admin.id}, admin.security.bearerToken, {id : admin.id});
+
+        postData = {  
             game: game._id,
             user: user.id,
             app: app.id,
@@ -99,8 +107,9 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 {place: 12, value: betAmount/13}
             ]
         };
+        console.log("a", postData.result[0].value);
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
-        var res = await placeBet(postData, user.bearerToken, {id : user.id});
+        res = await placeBet(postData, user.bearerToken, {id : user.id});
 
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
