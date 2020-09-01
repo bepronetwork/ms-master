@@ -456,6 +456,26 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    async editAppNameDescription({app_id, name, description}){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                {_id: app_id}, 
+                { $set : { 
+                    "name" : name,
+                    "description" : description
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
+
     async setIntegrationsId(app_id, integrations_id){
         try{
             await AppRepository.prototype.schema.model.findOneAndUpdate(

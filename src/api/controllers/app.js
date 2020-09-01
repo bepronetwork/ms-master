@@ -388,6 +388,20 @@ async function editAddonBalance(req, res) {
     }
 }
 
+async function editApp(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editApp();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editEdgeJackpot(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -1007,6 +1021,7 @@ async function generateAddresses(req, res) {
 
 
 export {
+    editApp,
     editProvider,
     addAddonPointSystem,
     editTopTab,

@@ -798,6 +798,12 @@ const processActions = {
             structures
         }
     },
+    __editApp : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return params;
+    },
     __editIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1444,6 +1450,16 @@ const progressActions = {
         /* Create Affiliate Structures */
         return await AppRepository.prototype.editAffiliateSetup(app_id, affiliateSetupId)
     },
+    __editApp : async (params) => {
+        let { app, editParams } = params;
+        await AppRepository.prototype.editAppNameDescription({
+            app_id: app,
+            name: editParams.name,
+            description: editParams.app_description
+        })
+
+        return true;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         /* Update Integrations Id Type */
@@ -1904,6 +1920,9 @@ class AppLogic extends LogicComponent{
                 case 'EditGameBackgroundImage': {
 					return await library.process.__editGameBackgroundImage(params); break;
                 };
+                case 'EditApp' : {
+                    return await library.process.__editApp(params); break;
+                };
                 case 'EditTheme' : {
                     return await library.process.__editTheme(params); break;
                 };
@@ -2103,6 +2122,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;
+                };
+                case 'EditApp' : {
+                    return await library.progress.__editApp(params); break;
                 };
                 case 'EditTheme' : {
                     return await library.progress.__editTheme(params); break;

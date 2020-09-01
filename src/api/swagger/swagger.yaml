@@ -2847,6 +2847,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit App
+      operationId: editApp
+      description: Edit App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/games/getAll:
     x-swagger-router-controller: app
     post:
@@ -5219,6 +5250,34 @@ definitions:
           multiplier :
             type: number
 
+  AppEditRequest:
+    type: object
+    required:
+      - app
+      - admin
+      - editParams
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      editParams :
+        type: object
+        properties:
+          name :
+            type : string
+            example: "test"
+          app_description :
+            type : string
+            example: "It's a test"
   AppServicesRequest : 
     type: object
     required:
