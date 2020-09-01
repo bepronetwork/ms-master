@@ -4906,36 +4906,36 @@ definitions:
           User ID
   ProviderAuthorizationRequest:
     type: object
-    required:
-      - player_id
-      - game_id
-      - token
-      - hash
+    # required:
+    #   - player_id
+    #   - game_id
+    #   - token
+    #   - hash
     properties:
       player_id :
         type : number
         format: number
         example: 1
         description: |
-          App ID
+          player_id
       game_id :
         type : number
         format: number
         example: 1
         description: |
-          User ID
+          game_id
       token :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          User ID
+          token
       hash :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          User ID
+          hash
   ProviderCreditRequest:
     type: object
     required:
