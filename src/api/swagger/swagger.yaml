@@ -4788,29 +4788,29 @@ definitions:
             type: number
   ProviderBalanceRequest:
     type: object
-    required:
-      - token
-      - player_id
-      - hash
-    properties:
-      token :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      player_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      hash :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
+    # required:
+    #   - token
+    #   - player_id
+    #   - hash
+    # properties:
+    #   token :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       App ID
+    #   player_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   hash :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
   ProviderTokenRequest:
     type: object
     required:
@@ -4838,103 +4838,103 @@ definitions:
           Game ID
   ProviderRollbackRequest:
     type: object
-    required:
-      - token
-      - player_id
-      - rollback_id
-      - transaction_id
-      - hash
-    properties:
-      token :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      player_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      rollback_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      transaction_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      hash :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
+    # required:
+    #   - token
+    #   - player_id
+    #   - rollback_id
+    #   - transaction_id
+    #   - hash
+    # properties:
+    #   token :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       App ID
+    #   player_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   rollback_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   transaction_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   hash :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
   ProviderDebitRequest:
     type: object
-    required:
-      - token
-      - player_id
-      - round_id
-      - game_id
-      - transaction_id
-      - amount
-      - is_close
-      - hash
-    properties:
-      token :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      player_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      round_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      game_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      transaction_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      amount :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      is_close :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      hash :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
+    # required:
+    #   - token
+    #   - player_id
+    #   - round_id
+    #   - game_id
+    #   - transaction_id
+    #   - amount
+    #   - is_close
+    #   - hash
+    # properties:
+    #   token :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       App ID
+    #   player_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   round_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   game_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   transaction_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       App ID
+    #   amount :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   is_close :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   hash :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
   ProviderAuthorizationRequest:
     type: object
     # required:
@@ -4942,84 +4942,84 @@ definitions:
     #   - game_id
     #   - token
     #   - hash
-    properties:
-      player_id :
-        type : number
-        format: number
-        example: 1
-        description: |
-          player_id
-      game_id :
-        type : number
-        format: number
-        example: 1
-        description: |
-          game_id
-      token :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          token
-      hash :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          hash
+    # properties:
+    #   player_id :
+    #     type : number
+    #     format: number
+    #     example: 1
+    #     description: |
+    #       player_id
+    #   game_id :
+    #     type : number
+    #     format: number
+    #     example: 1
+    #     description: |
+    #       game_id
+    #   token :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       token
+    #   hash :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       hash
   ProviderCreditRequest:
     type: object
-    required:
-      - Token
-      - player_id
-      - round_id
-      - game_id
-      - transaction_id
-      - amount
-      - hash
-    properties:
-      Token :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          App ID
-      player_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      round_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      game_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      transaction_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      amount :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
-      hash :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          User ID
+    # required:
+    #   - Token
+    #   - player_id
+    #   - round_id
+    #   - game_id
+    #   - transaction_id
+    #   - amount
+    #   - hash
+    # properties:
+    #   Token :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       App ID
+    #   player_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   round_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   game_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   transaction_id :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   amount :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
+    #   hash :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       User ID
   AppGetProviderRequest:
     type: object
     required:

@@ -93,31 +93,40 @@ class Middleware{
         return jwt.decode(token, {complete: true});
         //returns null if token is invalid
     }
-    respond(res, req, data){        
+    respond(res, req, data, provider=null){        
         try{
             var process = req.swagger.operation.definition.operationId;
-            writeFile({functionName : process, content : data});
-            res.json({
-                data : {
-                    status : 200,
-                    message : data
-                }
-            });
+            if(provider){
+                writeFile({functionName : process, content : data});
+                res.json(data);
+            }else{
+                writeFile({functionName : process, content : data});
+                res.json({
+                    data : {
+                        status : 200,
+                        message : data
+                    }
+                });
+            }
         }catch(err){
             this.respondError(res, err)
         }
     }
 
-    respondError(res, err, req){
+    respondError(res, err, req, provider=null){
         try{
             // Unknown Error
             if(!err.code){throw err}
-            res.json({
-                data : {
-                    status : err.code,
-                    message : err.message
-                }
-            });
+            if(provider) {
+                res.json(err.message);
+            }else{
+                res.json({
+                    data : {
+                        status : err.code,
+                        message : err.message
+                    }
+                });
+            }
         }catch(err){
             LogOwlSingleton.pushError(err, {
                 admin: !req.body ? '' : req.body.admin,

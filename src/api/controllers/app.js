@@ -450,10 +450,10 @@ async function providerAuthorization(req, res) {
         let app = new App(params);
         let data = await app.providerAuthorization();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
-        MiddlewareSingleton.respond(res, req, data);
+        MiddlewareSingleton.respond(res, req, data, true);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err, req);
+        MiddlewareSingleton.respondError(res, err, req, true);
     }
 }
 
@@ -463,10 +463,10 @@ async function providerCredit(req, res) {
         let app = new App(params);
         let data = await app.providerCredit();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
-        MiddlewareSingleton.respond(res, req, data);
+        MiddlewareSingleton.respond(res, req, data, true);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err, req);
+        MiddlewareSingleton.respondError(res, err, req, true);
     }
 }
 
@@ -476,10 +476,10 @@ async function providerDebit(req, res) {
         let app = new App(params);
         let data = await app.providerDebit();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
-        MiddlewareSingleton.respond(res, req, data);
+        MiddlewareSingleton.respond(res, req, data, true);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err, req);
+        MiddlewareSingleton.respondError(res, err, req, true);
     }
 }
 
@@ -489,10 +489,10 @@ async function providerRollback(req, res) {
         let app = new App(params);
         let data = await app.providerRollback();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
-        MiddlewareSingleton.respond(res, req, data);
+        MiddlewareSingleton.respond(res, req, data, true);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err, req);
+        MiddlewareSingleton.respondError(res, err, req, true);
     }
 }
 
@@ -502,10 +502,10 @@ async function providerBalance(req, res) {
         let app = new App(params);
         let data = await app.providerBalance();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
-        MiddlewareSingleton.respond(res, req, data);
+        MiddlewareSingleton.respond(res, req, data, true);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err, req);
+        MiddlewareSingleton.respondError(res, err, req, true);
     }
 }
 
