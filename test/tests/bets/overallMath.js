@@ -105,7 +105,7 @@ context('Bets (Overall Math)', async () => {
             ...postDataDefault,
             game: game._id,
             result: new Array(7).fill(0).map( (r, i) => {return {
-                place: i, value: betAmount/100/(game.resultSpace.length)
+                place: i, value: betAmount/7
             }})
         };
 
