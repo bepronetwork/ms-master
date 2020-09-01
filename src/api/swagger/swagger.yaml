@@ -4944,15 +4944,15 @@ definitions:
       - hash
     properties:
       player_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
+        type : number
+        format: number
+        example: 1
         description: |
           App ID
       game_id :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
+        type : number
+        format: number
+        example: 1
         description: |
           User ID
       token :
