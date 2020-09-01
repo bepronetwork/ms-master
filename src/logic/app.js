@@ -81,31 +81,41 @@ let __private = {};
   
 const processActions = {
     __providerAuthorization : async (params) => {
+        try {
+            console.log("0 ",params);
+            let user     = await UsersRepository.prototype.findUserById(params.player_id);
+            console.log("1 ", user);
+            if(!user){
+                throwErrorProvider("11");
+            }
+            let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
+            console.log("2 ",ticker);
+            let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+            console.log("3 ",wallet);
+            let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+            console.log("4 ",app);
+            let provider = await ProviderRepository.prototype.findByApp(app._id);
+            console.log("5 ",provider);
+            provider     = provider[0];
 
-        let user     = await UsersRepository.prototype.findUserById(params.player_id);
-        if(!user){
-            throwErrorProvider("11");
+            // if(params.token!=user.security.bearerToken){
+            //     throwErrorProvider("14");
+            // }
+            if(md5("Authorization/"+ params.player_id + params.game_id + params.token + provider.api_key) != params.hash){
+                throwErrorProvider("10");
+            }
+            return {
+                code      : 0,
+                message   : "Success",
+                player_id : params.player_id,
+                nick      : user.username,
+                balance   : wallet.playBalance,
+                currency  : (new String(ticker).toUpCase())
+            };
+        } catch(err) {
+            console.log("6 ",err);
+            throw err;
         }
-        let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
-        let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
-        let provider = await ProviderRepository.prototype.findByApp(app._id);
-        provider     = provider[0];
-
-        // if(params.token!=user.security.bearerToken){
-        //     throwErrorProvider("14");
-        // }
-        if(md5("Authorization/"+ params.player_id + params.game_id + params.token + provider.api_key) != params.hash){
-            throwErrorProvider("10");
-        }
-        return {
-            code      : 0,
-            message   : "Success",
-            player_id : params.player_id,
-            nick      : user.username,
-            balance   : wallet.playBalance,
-            currency  : (new String(ticker).toUpCase())
-        };
     },
     __providerCredit : async (params) => {
         let {
