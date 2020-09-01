@@ -60,6 +60,7 @@ import { IS_DEVELOPMENT } from '../config'
 import MiddlewareSingleton from '../api/helpers/middleware';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
+var md5 = require('md5');
 
 
 // Private fields
@@ -82,26 +83,18 @@ let __private = {};
 const processActions = {
     __providerAuthorization : async (params) => {
         try {
-            console.log("0 ",params);
             let user     = await UsersRepository.prototype.findUserById(params.player_id);
-            console.log("1 ", user);
             if(!user){
                 throwErrorProvider("11");
             }
             let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
-            console.log("2 ",ticker);
             let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
-            console.log("3 ",wallet);
             let app      = await AppRepository.prototype.findAppById(user.app_id._id);
-            console.log("4 ",app);
-            let provider = await ProviderRepository.prototype.findByApp(app._id);
-            console.log("5 ",provider);
+            let provider = await ProviderRepository.prototype.findByApp({app: app._id});
+            console.log("provider::  ",provider);
             provider     = provider[0];
-
-            // if(params.token!=user.security.bearerToken){
-            //     throwErrorProvider("14");
-            // }
-            if(md5("Authorization/"+ params.player_id + params.game_id + params.token + provider.api_key) != params.hash){
+            let apiKey = await Security.prototype.decryptData(provider.api_key);
+            if(md5("Authorization/"+ params.player_id + params.game_id + params.token + apiKey) != params.hash){
                 throwErrorProvider("10");
             }
             return {
@@ -110,7 +103,7 @@ const processActions = {
                 player_id : params.player_id,
                 nick      : user.username,
                 balance   : wallet.playBalance,
-                currency  : (new String(ticker).toUpCase())
+                currency  : (new String(ticker).toUpperCase())
             };
         } catch(err) {
             console.log("6 ",err);

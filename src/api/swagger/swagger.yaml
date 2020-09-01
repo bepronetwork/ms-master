@@ -4942,31 +4942,31 @@ definitions:
     #   - game_id
     #   - token
     #   - hash
-    properties:
-      player_id :
-        type : number
-        format: number
-        example: 1
-        description: |
-          player_id
-      game_id :
-        type : number
-        format: number
-        example: 1
-        description: |
-          game_id
-      token :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          token
-      hash :
-        type : string
-        format: name
-        example: "0xhi834ty2034thg"
-        description: |
-          hash
+    # properties:
+    #   player_id :
+    #     type : number
+    #     format: number
+    #     example: 1
+    #     description: |
+    #       player_id
+    #   game_id :
+    #     type : number
+    #     format: number
+    #     example: 1
+    #     description: |
+    #       game_id
+    #   token :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       token
+    #   hash :
+    #     type : string
+    #     format: name
+    #     example: "0xhi834ty2034thg"
+    #     description: |
+    #       hash
   ProviderCreditRequest:
     type: object
     required:
