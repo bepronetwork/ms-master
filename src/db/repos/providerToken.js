@@ -30,7 +30,7 @@ class ProviderTokenRepository extends MongoComponent{
 
     findByToken(token){ 
         return new Promise( (resolve, reject) => {
-            ProviderRepository.prototype.schema.model.findOne({token})
+            ProviderTokenRepository.prototype.schema.model.findOne({token})
             .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
