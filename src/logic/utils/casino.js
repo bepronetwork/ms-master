@@ -271,7 +271,7 @@ class CasinoLogic{
                     const SLOTS_RESULT_SPACE = 5; /* Amount of results needed */
                     const USER_RESULT_SPACE = 13; /* User Results */
 
-                    console.log("2");
+                    console.log("2", userResultSpace.length, outcomeResultSpace.length);
                     if(userResultSpace.length != USER_RESULT_SPACE){ throw throwError('BAD_BET')}
                     if(outcomeResultSpace.length != SLOTS_RESULT_SPACE){throwError('BAD_BET')} /* Result Space has to be 10 diff values */
                     var n = resultSpace.length; /* Number of total icons -  resultSpace.length ex : 13 icons*/

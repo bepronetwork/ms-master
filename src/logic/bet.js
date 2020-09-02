@@ -67,7 +67,7 @@ const betResolvingActions = {
             case 'slots_simple' : {
                 outcomeResultSpace = [];
                 /* 5 Outcome Result Spaces */
-                while(outcomeResultSpace.length < 10){
+                while(outcomeResultSpace.length < 5){
                     serverSeed = CryptographySingleton.generateSeed();
                     hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
                     outcome = CryptographySingleton.hexToInt(hmca_hash);
