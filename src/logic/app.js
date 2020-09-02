@@ -35,6 +35,7 @@ import {
     BalanceRepository,
     SubSectionsRepository,
     ProviderRepository,
+    CripsrRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -820,6 +821,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editCripsrIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return params;
+    },
     __editMailSenderIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1486,6 +1493,16 @@ const progressActions = {
         }
         return params;
     },
+    __editCripsrIntegration : async (params) => {
+        let { key, cripsr_id, isActive } = params;
+        let hashedKey = await Security.prototype.encryptData(key)
+        await CripsrRepository.prototype.findByIdAndUpdate({
+            cripsr_id: cripsr_id,
+            key: hashedKey,
+            isActive: isActive
+        });
+        return true;
+    },
     __editMailSenderIntegration : async (params) => {
         let { apiKey, templateIds } = params;
         let encryptedAPIKey = await Security.prototype.encryptData(apiKey);
@@ -1918,6 +1935,9 @@ class AppLogic extends LogicComponent{
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
+                case 'EditCripsrIntegration' : {
+                    return await library.process.__editCripsrIntegration(params); break;
+                };
                 case 'EditMailSenderIntegration' : {
                     return await library.process.__editMailSenderIntegration(params); break;
                 };
@@ -2129,6 +2149,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditIntegration' : {
                     return await library.progress.__editIntegration(params); break;
+                };
+                case 'EditCripsrIntegration' : {
+                    return await library.progress.__editCripsrIntegration(params); break;
                 };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;

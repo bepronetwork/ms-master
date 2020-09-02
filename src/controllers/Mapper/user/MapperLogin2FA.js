@@ -1,4 +1,5 @@
 import { wallet_object, security_object, bets_object } from "../Structures";
+import { Security } from "../../Security";
 
 let self;
 
@@ -55,7 +56,14 @@ let outputs = {
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
-                }
+                },
+                "cripsr": !object.integrations.cripsr ? {} : {
+                    "_id": object.integrations.cripsr._id,
+                    "key": Security.prototype.decryptData(object.integrations.cripsr.key),
+                    "isActive": object.integrations.cripsr.isActive,
+                    "name": object.integrations.cripsr.name,
+                    "metaName": object.integrations.cripsr.metaName,
+                },
             },
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {
