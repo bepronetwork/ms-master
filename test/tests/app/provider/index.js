@@ -18,11 +18,7 @@ context('Provider', async () => {
         console.log("App Id: ",app.id)
         const postData = {
             app: app.id,
-            api_key: "0X32DGQW182DFVGDW1",
-            activated: true,
-            name: "test",
-            logo: image_data,
-            api_url: "test.com"
+            provider_id: "5f4654f2415776008dd23d1d"
         };
 
         let res = await createProvider({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
@@ -30,6 +26,8 @@ context('Provider', async () => {
         expect(detectValidationErrors(res)).to.be.equal(false);
 
         const { status } = res.data;
+        console.log("res.data:: ", res.data)
+
         expect(status).to.be.equal(200);
     }));
 
