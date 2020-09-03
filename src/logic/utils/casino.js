@@ -549,7 +549,16 @@ class CasinoLogic{
                 };
                 case 'slots_simple' : {
                     console.log("1");
-                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')}
+                    if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')};
+                    let medianValue = userResultSpace[0].value;   
+                    totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
+                        if(typeof item.value != 'number'){ throwError('BAD_BET')} /* Not a Number */
+                        if(item.value <= 0){ throw throwError('BAD_BET')} /* Neg or 0 */
+                        if(item.value != medianValue){throwError('BAD_BET')} /* All values should be the same */
+                        medianValue = item.value;
+                        return acc+item.value;
+                    }, 0));
+
                     /* is Won */
                     let winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, 1000);
                     let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
