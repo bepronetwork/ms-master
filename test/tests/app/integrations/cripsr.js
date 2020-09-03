@@ -25,10 +25,10 @@ context('Cripsr', async () =>  {
         let integrations = await IntegrationsRepository.prototype.findById(app.integrations)
         let postData = {
             app: app.id,
-            admin = admin.id,
+            admin: admin.id,
             cripsr_id: integrations.cripsr,
-            key = "test",
-            isActive = true
+            key: "test",
+            isActive: true
         }
         let res = await editCripsrIntegration(postData , admin.security.bearerToken , {id : admin.id})
         expect(res.data.status).to.equal(200);
