@@ -818,7 +818,7 @@ const processActions = {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
-        return params;
+        return {...params, app};
     },
     __editMailSenderIntegration : async (params) => {
         let { app } = params;
@@ -1487,13 +1487,17 @@ const progressActions = {
         return params;
     },
     __editCripsrIntegration : async (params) => {
-        let { key, cripsr_id, isActive } = params;
+        let { key, cripsr_id, isActive, app } = params;
         let hashedKey = await Security.prototype.encryptData(key)
         await CripsrRepository.prototype.findByIdAndUpdate({
             cripsr_id: cripsr_id,
             key: hashedKey,
             isActive: isActive
         });
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id});
+
         return true;
     },
     __editMailSenderIntegration : async (params) => {

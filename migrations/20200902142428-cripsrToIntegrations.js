@@ -36,16 +36,17 @@ module.exports = {
         processIndex--;
         let cripsr = await db.collection('cripsrs').findOne({ _id: integration.cripsr });
         if (cripsr === null) {
-          let newSubSection = await db.collection('cripsrs').insertOne({
+          let newCripsr = await db.collection('cripsrs').insertOne({
             key: '',
             name: 'Cripsr',
             metaName: 'cripsr',
             isActive: false,
+            link: 'https://crisp.chat',
             __v: 0
           });
           await db.collection('integrations').updateOne(
             { _id: integration._id },
-            { $set: { "cripsr": newSubSection.ops[0]._id } }
+            { $set: { "cripsr": newCripsr.ops[0]._id } }
           )
         }
       }

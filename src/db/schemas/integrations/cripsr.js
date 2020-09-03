@@ -10,6 +10,7 @@ CripsrSchema.prototype.schema =  {
     isActive              : { type : Boolean, default : false},
     name                  : { type : String, default : 'Cripsr'},
     metaName              : { type : String, default : 'cripsr'},
+    link                  : { type : String, default : 'https://crisp.chat'}, 
 }
 
 
