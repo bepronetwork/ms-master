@@ -41,6 +41,7 @@ module.exports = {
             name: 'Cripsr',
             metaName: 'cripsr',
             isActive: false,
+            link: 'https://crisp.chat',
             __v: 0
           });
           await db.collection('integrations').updateOne(
