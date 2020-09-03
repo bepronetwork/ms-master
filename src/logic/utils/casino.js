@@ -550,6 +550,7 @@ class CasinoLogic{
                 case 'slots_simple' : {
                     console.log("1");
                     if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')};
+                    let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
                         if(typeof item.value != 'number'){ throwError('BAD_BET')} /* Not a Number */
                         if(item.value <= 0){ throw throwError('BAD_BET')} /* Neg or 0 */
