@@ -51,8 +51,10 @@ import TopTabRepository from "./topTab";
 import SubSectionsRepository from "./subSections";
 import ProviderRepository from "./provider";
 import ProviderTokenRepository from "./providerToken";
+import CripsrRepository from "./cripsr";
 
 export {
+    CripsrRepository,
     ProviderRepository,
     TopTabRepository,
     DepositBonusRepository,

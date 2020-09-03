@@ -1,6 +1,7 @@
 import { games_object } from "./games"
 import { currencies_object } from "./currencies"
 import { wallet_object } from "./wallet"
+import { Security } from "../../Security"
 
 const get_object = (object) => {
     return {
@@ -159,6 +160,13 @@ const get_object = (object) => {
                 "privateKey": object.integrations.chat.privateKey,
                 "publicKey": object.integrations.chat.publicKey,
                 "token": object.integrations.chat.token
+            },
+            "cripsr": !object.integrations.cripsr ? {} : {
+                "_id": object.integrations.cripsr._id,
+                "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
+                "isActive": object.integrations.cripsr.isActive,
+                "name": object.integrations.cripsr.name,
+                "metaName": object.integrations.cripsr.metaName,
             },
             "mailSender": !object.integrations.mailSender ? {} : {
                 "_id": object.integrations.mailSender._id,

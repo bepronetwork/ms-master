@@ -3,6 +3,7 @@ import { IntegrationsRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
 import { Chat } from '.';
 import { MailSender} from '.';
+import { Cripsr } from '.';
 
 class Integrations extends ModelComponent{
 
@@ -19,7 +20,8 @@ class Integrations extends ModelComponent{
                 params : params,
                 children : [
                     new Chat,
-                    new MailSender
+                    new MailSender,
+                    new Cripsr
                 ]
             }
             );

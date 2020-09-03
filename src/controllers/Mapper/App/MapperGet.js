@@ -1,4 +1,5 @@
 import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
+import { Security } from "../../Security";
 
 let self;
 
@@ -209,6 +210,13 @@ let outputs = {
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
+                },
+                "cripsr": !object.integrations.cripsr ? {} : {
+                    "_id": object.integrations.cripsr._id,
+                    "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
+                    "isActive": object.integrations.cripsr.isActive,
+                    "name": object.integrations.cripsr.name,
+                    "metaName": object.integrations.cripsr.metaName,
                 },
                 "mailSender": !object.integrations.mailSender ? {} : {
                     "_id": object.integrations.mailSender._id,

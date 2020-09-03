@@ -50,8 +50,10 @@ import PointSystemLogic from "./pointSystem";
 import TopTabLogic from "./topTab";
 import ProviderLogic from "./provider";
 import ProviderTokenLogic from "./providerToken";
+import CripsrLogic from "./cripsr";
 
 export {
+    CripsrLogic,
     ProviderLogic,
     TopTabLogic,
     DepositBonusLogic,

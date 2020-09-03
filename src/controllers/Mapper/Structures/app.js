@@ -1,3 +1,4 @@
+import { Security } from "../../Security"
 
 const app_object = (object) => {
     return {
@@ -258,6 +259,13 @@ const app_object = (object) => {
                     "privateKey": object.app.integrations.chat.privateKey,
                     "publicKey": object.app.integrations.chat.publicKey,
                     "token": object.app.integrations.chat.token
+                },
+                "cripsr": !object.app.integrations.cripsr ? {} : {
+                    "_id": object.app.integrations.cripsr._id,
+                    "key": !object.app.integrations.cripsr.key ? object.app.integrations.cripsr.key : Security.prototype.decryptData(object.app.integrations.cripsr.key),
+                    "isActive": object.app.integrations.cripsr.isActive,
+                    "name": object.app.integrations.cripsr.name,
+                    "metaName": object.app.integrations.cripsr.metaName,
                 },
                 "mailSender": !object.app.integrations.mailSender ? {} : {
                     "_id": object.app.integrations.mailSender._id,

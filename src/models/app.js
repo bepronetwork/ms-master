@@ -712,6 +712,22 @@ class App extends ModelComponent {
     }
 
     /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+
+
+  async editCripsrIntegration() {
+    // Output Boolean
+    try {
+        let app = await this.process('EditCripsrIntegration');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
+    /**
     * @param {String} 
     * @return {bool || Exception}  
     */
