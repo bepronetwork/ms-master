@@ -262,7 +262,7 @@ const app_object = (object) => {
                 },
                 "cripsr": !object.app.integrations.cripsr ? {} : {
                     "_id": object.app.integrations.cripsr._id,
-                    "key": Security.prototype.decryptData(object.app.integrations.cripsr.key),
+                    "key": !object.app.integrations.cripsr.key ? object.app.integrations.cripsr.key : Security.prototype.decryptData(object.app.integrations.cripsr.key),
                     "isActive": object.app.integrations.cripsr.isActive,
                     "name": object.app.integrations.cripsr.name,
                     "metaName": object.app.integrations.cripsr.metaName,

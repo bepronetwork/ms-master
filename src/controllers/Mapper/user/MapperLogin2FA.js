@@ -59,7 +59,7 @@ let outputs = {
                 },
                 "cripsr": !object.integrations.cripsr ? {} : {
                     "_id": object.integrations.cripsr._id,
-                    "key": Security.prototype.decryptData(object.integrations.cripsr.key),
+                    "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
                     "isActive": object.integrations.cripsr.isActive,
                     "name": object.integrations.cripsr.name,
                     "metaName": object.integrations.cripsr.metaName,
