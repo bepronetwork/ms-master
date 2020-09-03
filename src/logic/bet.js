@@ -306,7 +306,8 @@ const progressActions = {
     __auto : async (params) => {
 
         const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
-        if(points>0){
+        console.log("params", params.totalBetAmount, points);
+        if(points > 0){
             await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
         }
         /* Save all ResultSpaces */
