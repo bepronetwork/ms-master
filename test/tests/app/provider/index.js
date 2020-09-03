@@ -26,8 +26,7 @@ context('Provider', async () => {
         expect(detectValidationErrors(res)).to.be.equal(false);
 
         const { status } = res.data;
-        console.log("res.data:: ", res.data)
-
+        provider_id = res.data.message._id
         expect(status).to.be.equal(200);
     }));
 
