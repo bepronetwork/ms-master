@@ -313,7 +313,7 @@ class CasinoLogic{
                         /* is Won */
                         isWon = true;
                         let winBalance = y.reduce( (acc, item) => {
-                            let odd = parseFloat(resultSpace[item.key].multiplier);
+                            let odd = parseFloat(resultSpace[item.place].multiplier);
                             let _winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd, item.times);
                             return acc+_winBalance;
                         }, 0);
