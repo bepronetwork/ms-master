@@ -640,14 +640,25 @@ class AppRepository extends MongoComponent{
             default : throw new Error(` Type : ${type} is not accepted as a Summary Type API Call`);
         }
 
-        return new Promise( (resolve, reject) => {
-            AppRepository.prototype.schema.model
+        if(type == 'wallet'){
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model
+                .aggregate(pipeline(_id, { dates, currency }))
+                .exec( (err, item) => {
+                    if(err) { reject(err)}
+                    resolve({item, type});
+                    });
+                }); 
+        } else { 
+            return new Promise( (resolve, reject) => {
+            BetRepository.prototype.schema.model
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve({item, type});
-            });
-        });
+                });
+            }); 
+        }
     }
 
     async getAll(){
