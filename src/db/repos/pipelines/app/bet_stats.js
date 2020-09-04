@@ -1,116 +1,74 @@
 import mongoose from 'mongoose';
-import { pipeline_bets_by_date,pipeline_bets_by_currency } from '../filters';
+import { pipeline_match_by_currency, pipeline_by_timestamp } from '../filters';
 
 
-const pipeline_bet_stats = (_id, { dates, currency }) => 
-    [
-        //Stage 0
+const pipeline_bet_stats = (_id, { dates, currency }) =>
+  [
     {
-        '$match' : {
-            "_id" : mongoose.Types.ObjectId(_id)
-        }
+      '$match': {
+        'app': mongoose.Types.ObjectId(_id)
+      }
     },
+    ...pipeline_match_by_currency({ currency }),
+    ...pipeline_by_timestamp({ from_date: dates.from, to_date: dates.to }),
     {
-      '$lookup': {
-        'from': 'games', 
-        'localField': 'games', 
-        'foreignField': '_id', 
-        'as': 'games'
-      }
-    }, {
-      '$project': {
-        'games.bets': true, 
-        '_id': false
-      }
-    }, {
-      '$unwind': {
-        'path': '$games'
-      }
-    }, {
-        '$project': {
-            'bets': '$games.bets'
-        }
-    }, {
-        '$unwind': {
-            'path': '$bets'
-        }
-    }, {
-      '$lookup': {
-        'from': 'bets', 
-        'localField': 'bets', 
-        'foreignField': '_id', 
-        'as': 'bet'
-      }
-    }, {
-      '$project': {
-        'bet': {
-          '$arrayElemAt': [
-            '$bet', 0
-          ]
-        }
-      }
-    },         
-        ...pipeline_bets_by_currency({currency}) 
-        ,
-        ...pipeline_bets_by_date({from_date : dates.from, to_date : dates.to})    
-    ,{
       '$group': {
         '_id': {
           'week': {
-            '$week': '$bet.timestamp'
-          }, 
+            '$week': '$timestamp'
+          },
           'year': {
-            '$year': '$bet.timestamp'
+            '$year': '$timestamp'
           }
-        }, 
+        },
         'averageBet': {
-          '$avg': '$bet.betAmount'
-        }, 
+          '$avg': '$betAmount'
+        },
         'averageBetReturn': {
           '$avg': {
             '$subtract': [
-              '$bet.betAmount', '$bet.winAmount'
+              '$betAmount', '$winAmount'
             ]
           }
-        }, 
+        },
         'betsWon': {
           '$sum': {
             '$cond': {
               'if': {
                 '$eq': [
-                  '$bet.isWon', true
+                  '$isWon', true
                 ]
-              }, 
-              'then': 1, 
+              },
+              'then': 1,
               'else': 0
             }
           }
-        }, 
+        },
         'betsAmount': {
           '$sum': 1
         }
       }
     }, {
-        '$project': {
-            '_id': false, 
-            'date': {
-            'week': '$_id.week', 
-            'year': '$_id.year'
-            }, 
-            'bets': {
-            'avg_bet': '$averageBet', 
-            'avg_bet_return': '$averageBetReturn', 
-            'won': '$betsWon', 
-            'percentage_won': {
-                '$divide': [
-                '$betsWon', '$betsAmount'
-                ]
-            }, 
-            'amount': '$betsAmount'
-            }
+      '$project': {
+        '_id': false,
+        'date': {
+          'week': '$_id.week',
+          'year': '$_id.year'
+        },
+        'bets': {
+          'avg_bet': '$averageBet',
+          'avg_bet_return': '$averageBetReturn',
+          'won': '$betsWon',
+          'percentage_won': {
+            '$divide': [
+              '$betsWon', '$betsAmount'
+            ]
+          },
+          'amount': '$betsAmount'
         }
+      }
     }
-]
+  ]
 
 
 export default pipeline_bet_stats;
