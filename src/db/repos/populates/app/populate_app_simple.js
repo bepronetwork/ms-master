@@ -90,6 +90,11 @@ let populate_app_simple = [
         model : 'Typography',
         select : { '__v': 0 },
         populate : populate_typography
+    },
+    {
+        path : 'casino_providers',
+        model : 'Provider',
+        select : { '__v': 0}
     }
 ] 
 
