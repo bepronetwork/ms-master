@@ -7,9 +7,20 @@ const get_object = (object) => {
     return {
         "id": object._id,
         "isValid": object.isValid,
+        "casino_providers": object.casino_providers ? object.casino_providers.map(casino_provider => {
+            return ({
+                "_id": casino_provider._id,
+                "activated": casino_provider.activated,
+                "api_key": !casino_provider.api_key ? casino_provider.api_key : Security.prototype.decryptData(casino_provider.api_key),
+                "name": casino_provider.name,
+                "logo": casino_provider.logo,
+                "api_url": casino_provider.api_url,
+                "partner_id": casino_provider.partner_id,
+                "providerEco": casino_provider.providerEco,
+            })
+        }) : object.casino_providers,
         "storeAddOn": object.storeAddOn,
         "virtual": object.virtual,
-        "casino_providers" : object.casino_providers,
         "licenseID": object.licenseID,
         ...games_object(object),
         "listAdmins": object.listAdmins ? object.listAdmins.map(list_admin_id => {

@@ -20,6 +20,17 @@ let outputs = {
             "storeAddOn": object.storeAddOn,
             "virtual": object.virtual,
             "licenseID": object.licenseID,
+            "casino_providers": object.casino_providers ? object.casino_providers.map(casino_provider => {
+                return ({
+                    "_id": casino_provider._id,
+                    "activated": casino_provider.activated,
+                    "name": casino_provider.name,
+                    "logo": casino_provider.logo,
+                    "api_url": casino_provider.api_url,
+                    "partner_id": casino_provider.partner_id,
+                    "providerEco": casino_provider.providerEco,
+                })
+            }) : object.casino_providers,
             "games": object.games ? object.games.map(game => {
                 return ({
                     "_id": game._id,
