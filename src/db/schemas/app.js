@@ -37,7 +37,8 @@ AppSchema.prototype.schema =  {
     addOn               : { type: mongoose.Schema.Types.ObjectId, ref: 'AddOn'},
     virtual             : { type : Boolean, default : false, required : true },
     licenseID           : { type : String },
-    restrictedCountries : [{ type: String}]
+    restrictedCountries : [{ type: String}],
+    casino_providers    : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider'}]
 }
 
 

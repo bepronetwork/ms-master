@@ -34,13 +34,15 @@ import {
     JackpotRepository,
     BalanceRepository,
     SubSectionsRepository,
+    ProviderRepository,
+    CripsrRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
-import { throwError } from '../controllers/Errors/ErrorManager';
+import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
@@ -56,8 +58,10 @@ import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
+import MiddlewareSingleton from '../api/helpers/middleware';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
+var md5 = require('md5');
 
 
 // Private fields
@@ -78,6 +82,117 @@ let __private = {};
 
   
 const processActions = {
+    __providerAuthorization : async (params) => {
+        try {
+            let user     = await UsersRepository.prototype.findUserById(params.player_id);
+            if(!user){
+                throwErrorProvider("11");
+            }
+            let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
+            let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+            let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+            let provider = await ProviderRepository.prototype.findByApp({app: app._id});
+            console.log("provider::  ",provider);
+            provider     = provider[0];
+            let apiKey = await Security.prototype.decryptData(provider.api_key);
+            if(md5("Authorization/"+ params.player_id + params.game_id + params.token + apiKey) != params.hash){
+                throwErrorProvider("10");
+            }
+            return {
+                code      : 0,
+                message   : "Success",
+                player_id : params.player_id,
+                nick      : user.username,
+                balance   : wallet.playBalance,
+                currency  : (new String(ticker).toUpperCase())
+            };
+        } catch(err) {
+            console.log("6 ",err);
+            throw err;
+        }
+    },
+    __providerCredit : async (params) => {
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            hash
+        } = params;
+
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let user      = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Credit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+        if(wallet.playBalance < amount) {
+            throwErrorProvider("2");
+        }
+        return {...params, wallet, dataToken};
+    },
+    __providerDebit : async (params) => {
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            is_close,
+            hash
+        } = params;
+
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let user      = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Debit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+
+        return {...params, wallet, dataToken};
+    },
+    __providerRollback : async (params) => {
+        return params;
+    },
+    __providerBalance : async (params) => {
+        var {token, player_id, hash} = params;
+        let user = await UsersRepository.prototype.findUserById(player_id);
+        if(!user){
+            throwErrorProvider("11");
+        }
+        let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
+        let app      = await AppRepository.prototype.findAppById(user.app_id._id);
+        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        provider     = provider[0];
+
+        if(md5("Balance/"+ player_id + token + provider.api_key) != hash){
+            throwErrorProvider("10");
+        }
+
+        let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
+        return wallet;
+    },
 	__register : async (params) => {
         const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
         
@@ -687,11 +802,23 @@ const processActions = {
             structures
         }
     },
+    __editApp : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return params;
+    },
     __editIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
+    },
+    __editCripsrIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
     },
     __editMailSenderIntegration : async (params) => {
         let { app } = params;
@@ -781,6 +908,15 @@ const processActions = {
             app
         };
     },
+    __editProvider : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editLoadingGif : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -845,6 +981,54 @@ const processActions = {
 
   
 const progressActions = {
+    __providerAuthorization : async (params) => {
+        return params;
+    },
+    __providerCredit : async (params) => {
+        let {
+            token,
+            player_id,
+            round_id,
+            game_id,
+            transaction_id,
+            amount,
+            hash,
+            wallet,
+            dataToken
+        } = params;
+        await WalletsRepository.prototype.updatePlayBalance(wallet._id, -amount);
+
+        return {
+            code: 0,
+            message: "success",
+            balance: wallet.playBalance - amount
+        };
+    },
+    __providerDebit : async (params) => {
+        let {
+            amount,
+            wallet,
+            is_close
+        } = params;
+        if(is_close) {
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
+        }
+        return {
+            code: 0,
+            message: "success",
+            balance: wallet.playBalance + amount
+        };
+    },
+    __providerRollback : async (params) => {
+        return params;
+    },
+    __providerBalance : async (params) => {
+        return {
+            code: 0,
+            message: "success",
+            balance: params.wallet.playBalance
+        };
+    },
 	__register : async (params) => {
         let app = await self.save(params);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
@@ -1276,6 +1460,16 @@ const progressActions = {
         /* Create Affiliate Structures */
         return await AppRepository.prototype.editAffiliateSetup(app_id, affiliateSetupId)
     },
+    __editApp : async (params) => {
+        let { app, editParams } = params;
+        await AppRepository.prototype.editAppNameDescription({
+            app_id: app,
+            name: editParams.name,
+            description: editParams.app_description
+        })
+
+        return true;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         /* Update Integrations Id Type */
@@ -1291,6 +1485,20 @@ const progressActions = {
             }
         }
         return params;
+    },
+    __editCripsrIntegration : async (params) => {
+        let { key, cripsr_id, isActive, app } = params;
+        let hashedKey = await Security.prototype.encryptData(key)
+        await CripsrRepository.prototype.findByIdAndUpdate({
+            cripsr_id: cripsr_id,
+            key: hashedKey,
+            isActive: isActive
+        });
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id});
+
+        return true;
     },
     __editMailSenderIntegration : async (params) => {
         let { apiKey, templateIds } = params;
@@ -1502,6 +1710,20 @@ const progressActions = {
         // Save info on Customization Part
         return params;
     },
+    __editProvider : async (params) => {
+        let { app, providerParams } = params;
+        
+        await ProviderRepository.prototype.findByIdAndUpdate({
+            _id: providerParams._id,
+            api_key : Security.prototype.encryptData(providerParams.api_key),
+            activated : providerParams.activated,
+            partner_id : providerParams.partner_id
+        })
+
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        
+        return true;
+    },
     __editLoadingGif : async (params) => {
         let { app, loadingGif } = params;
         let loadingGifURL;
@@ -1710,6 +1932,9 @@ class AppLogic extends LogicComponent{
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
+                case 'EditCripsrIntegration' : {
+                    return await library.process.__editCripsrIntegration(params); break;
+                };
                 case 'EditMailSenderIntegration' : {
                     return await library.process.__editMailSenderIntegration(params); break;
                 };
@@ -1721,6 +1946,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameBackgroundImage': {
 					return await library.process.__editGameBackgroundImage(params); break;
+                };
+                case 'EditApp' : {
+                    return await library.process.__editApp(params); break;
                 };
                 case 'EditTheme' : {
                     return await library.process.__editTheme(params); break;
@@ -1745,6 +1973,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTopIcon' : {
                     return await library.process.__editTopIcon(params); break;
+                };
+                case 'EditProvider' : {
+                    return await library.process.__editProvider(params); break;
                 };
                 case 'EditLoadingGif' : {
                     return await library.process.__editLoadingGif(params); break;
@@ -1800,6 +2031,22 @@ class AppLogic extends LogicComponent{
                 case 'EditSubSections' : {
                     return await library.process.__editSubSections(params); break;
                 };
+                case 'ProviderAuthorization' : {
+                    return await library.process.__providerAuthorization(params); break;
+                };
+                case 'ProviderCredit' : {
+                    return await library.process.__providerCredit(params); break;
+                };
+                case 'ProviderDebit' : {
+                    return await library.process.__providerDebit(params); break;
+                };
+                case 'ProviderRollback' : {
+                    return await library.process.__providerRollback(params); break;
+                };
+                case 'ProviderBalance' : {
+                    return await library.process.__providerBalance(params); break;
+                };
+
 			}
 		}catch(error){
 			throw error
@@ -1900,8 +2147,14 @@ class AppLogic extends LogicComponent{
                 case 'EditIntegration' : {
                     return await library.progress.__editIntegration(params); break;
                 };
+                case 'EditCripsrIntegration' : {
+                    return await library.progress.__editCripsrIntegration(params); break;
+                };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;
+                };
+                case 'EditApp' : {
+                    return await library.progress.__editApp(params); break;
                 };
                 case 'EditTheme' : {
                     return await library.progress.__editTheme(params); break;
@@ -1926,6 +2179,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTopIcon' : {
                     return await library.progress.__editTopIcon(params); break;
+                };
+                case 'EditProvider' : {
+                    return await library.progress.__editProvider(params); break;
                 };
                 case 'EditLoadingGif' : {
                     return await library.progress.__editLoadingGif(params); break;
@@ -1981,6 +2237,21 @@ class AppLogic extends LogicComponent{
                 case 'EditSubSections' : {
                     return await library.progress.__editSubSections(params); break;
                 }
+                case 'ProviderAuthorization' : {
+                    return await library.progress.__providerAuthorization(params); break;
+                };
+                case 'ProviderCredit' : {
+                    return await library.progress.__providerCredit(params); break;
+                };
+                case 'ProviderDebit' : {
+                    return await library.progress.__providerDebit(params); break;
+                };
+                case 'ProviderRollback' : {
+                    return await library.progress.__providerRollback(params); break;
+                };
+                case 'ProviderBalance' : {
+                    return await library.progress.__providerBalance(params); break;
+                };
 			}
 		}catch(error){
 			throw error;

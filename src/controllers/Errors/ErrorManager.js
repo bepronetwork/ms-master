@@ -531,6 +531,16 @@ class ErrorManager {
         }
     }
 
+    cripsr = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     topTab = function (object, type){
         try{
             switch(type){
@@ -776,6 +786,16 @@ class ErrorManager {
         }
     }
 
+    provider = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     autoWithdraw = function (object, type){
         try{
             switch(type){
@@ -878,20 +898,24 @@ class ErrorManager {
                     }
                     /* Verify if betAmount is less or equal than 0.0000001 */
                     if(bet.betAmount <= 0){
+                        console.log("2.1")
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
                     /* Verify if maxWinAmount is less or equal than 0 */
                     if(bet.maxWinAmount < 0){
+                        console.log("2.2")
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
                     /* Minimum Bet Amount not passed  */
                     if(bet.betAmount < 0.000001){
+                        console.log("2.3")
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                     }
                     /* Verify if appPlayBalance is less than 0 */
                     if(bet.appPlayBalance < 0){
+                        console.log("2.4")
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                         break;
                     }
@@ -908,6 +932,7 @@ class ErrorManager {
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
                     // Verify if Result Space is low
                     if(bet.result.length < 1){
+                        console.log("2.5")
                         throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.BAD_BET));
                     }
                     // Table Limit Suprassed
@@ -939,6 +964,11 @@ const throwError = (typeError='UNKNOWN') => {
     throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS[typeError]));
 }
 
+const throwErrorProvider = (typeError='UNKNOWN') => {
+    throw libraries.throwError(libraries.handler.getErrorProvider(typeError));
+}
+
 export {
-    throwError
+    throwError,
+    throwErrorProvider
 }

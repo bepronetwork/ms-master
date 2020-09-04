@@ -12,7 +12,6 @@ let self;
 let outputs = {
     editTheme: (object) => {
         return {
-            "app": object.app,
             "customization": object.customization,
             "theme": object.theme,
         }

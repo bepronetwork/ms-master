@@ -7,7 +7,8 @@ import {
     addAdmin,
     registerAdmin,
     getAdminByApp,
-    editAdminType
+    editAdminType,
+    editApp
 } from '../../../methods';
 
 import faker from 'faker';
@@ -184,6 +185,19 @@ context('Normal', async () =>  {
     it('should Integrate Services into App', mochaAsync(async () => {
         let service_call_add_model = models.apps.add_services(app.id, [101, 201]);
         let res = await addAppServices({...service_call_add_model, admin: admin.id}, admin.security.bearerToken, { id: admin.id });
+        detectValidationErrors(res);
+        shouldIntegrateServicesIntoApp(res.data, expect);
+    }));
+
+    it('should Edit App Name And Description', mochaAsync(async () => {
+        let res = await editApp({
+            app: app.id, 
+            admin: admin.id, 
+            editParams: {
+                name: "test",
+                app_description: "It's a test"
+            }
+        }, admin.security.bearerToken, { id: admin.id });
         detectValidationErrors(res);
         shouldIntegrateServicesIntoApp(res.data, expect);
     }));

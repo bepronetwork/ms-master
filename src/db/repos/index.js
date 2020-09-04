@@ -40,6 +40,7 @@ import JackpotRepository from "./jackpot";
 import PermissionRepository from "./permission";
 import AutoWithdrawRepository from "./autoWithdraw";
 import AddOnsEcoRepository from "./ecosystem/addon";
+import CasinoProviderEcoRepository from "./ecosystem/casinoProvider";
 import BalanceRepository from "./balance";
 import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsRepository,  PopularNumberRepository} from "./redis";
 import TxFeeRepository from "./txFee";
@@ -48,8 +49,13 @@ import DepositBonusRepository from "./depositBonus";
 import PointSystemRepository from "./pointSystem";
 import TopTabRepository from "./topTab";
 import SubSectionsRepository from "./subSections";
+import ProviderRepository from "./provider";
+import ProviderTokenRepository from "./providerToken";
+import CripsrRepository from "./cripsr";
 
 export {
+    CripsrRepository,
+    ProviderRepository,
     TopTabRepository,
     DepositBonusRepository,
     PopularNumberRepository,
@@ -103,4 +109,6 @@ export {
     BackgroundRepository,
     PointSystemRepository,
     SubSectionsRepository,
+    ProviderTokenRepository,
+    CasinoProviderEcoRepository,
 }

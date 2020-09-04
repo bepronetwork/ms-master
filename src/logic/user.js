@@ -4,7 +4,7 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 
 import {
-    Token
+    Token, ProviderToken
 } from '../../src/models';
 
 import {
@@ -15,7 +15,8 @@ import {
     AffiliateLinkRepository,
     AffiliateRepository,
     SecurityRepository,
-    TokenRepository
+    TokenRepository,
+    ProviderTokenRepository
 } from '../db/repos';
 import { Deposit, AffiliateLink, Wallet, Address } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
@@ -57,6 +58,14 @@ let __private = {};
 
 const processActions = {
 
+    __providerToken: async (params) => {
+        let token    = MiddlewareSingleton.generateTokenByJson(params);
+        let resToken = await ProviderTokenRepository.prototype.findByToken(token);
+        return {
+            tokenIsNotInDB: !resToken,
+            token
+        }
+    },
     __resendEmail: async (params) => {
 
         const user = await UsersRepository.prototype.findUserById(params.user);
@@ -508,7 +517,13 @@ const processActions = {
 
 
 const progressActions = {
-
+    __providerToken: async (params) => {
+        let {tokenIsNotInDB, token} = params;
+        if(tokenIsNotInDB){
+            (new ProviderToken({token})).register();
+        }
+        return token;
+    },
     __resendEmail: async (params) => {
 
         /* attributes  */
@@ -943,6 +958,10 @@ class UserLogic extends LogicComponent {
                 case 'ResendEmail': {
                     return await library.process.__resendEmail(params); break;
                 }
+                case 'ProviderToken': {
+                    return await library.process.__providerToken(params); break;
+                }
+                
             }
         } catch (err) {
             throw err;
@@ -1013,6 +1032,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ResendEmail': {
                     return await library.progress.__resendEmail(params); break;
+                };
+                case 'ProviderToken': {
+                    return await library.progress.__providerToken(params); break;
                 };
             }
         } catch (err) {

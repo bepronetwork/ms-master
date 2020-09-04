@@ -143,6 +143,71 @@ class App extends ModelComponent {
         }
     }
 
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerAuthorization() {
+        try {
+            return await this.process('ProviderAuthorization');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerCredit() {
+        try {
+            return await this.process('ProviderCredit');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerDebit() {
+        try {
+            return await this.process('ProviderDebit');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerRollback() {
+        try {
+            return await this.process('ProviderRollback');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async providerBalance() {
+        try {
+            return await this.process('ProviderBalance');
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
    * @param {String} 
    * @return {bool || Exception}  
@@ -178,6 +243,34 @@ class App extends ModelComponent {
     async editRestrictedCountries() {
         try {
             let app = await this.process('EditRestrictedCountries');
+            // output Boolean
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+    async editApp() {
+        // output Boolean
+        try {
+            let app = await this.process('EditApp');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+    async editProvider() {
+        try {
+            let app = await this.process('EditProvider');
             // output Boolean
             return app;
         } catch (err) {
@@ -619,6 +712,22 @@ class App extends ModelComponent {
     }
 
     /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+
+
+  async editCripsrIntegration() {
+    // Output Boolean
+    try {
+        let app = await this.process('EditCripsrIntegration');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
+    /**
     * @param {String} 
     * @return {bool || Exception}  
     */
@@ -695,16 +804,16 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-   async editSubSections() {
-       //output = boolean
-    try {
-        let app = await this.process('EditSubSections');
-        return app;
-        // return MapperEditSubSectionsSingleton.output('EditSubSections', app);
-    } catch (err) {
-        throw err;
+    async editSubSections() {
+        //output = boolean
+        try {
+            let app = await this.process('EditSubSections');
+            return app;
+            // return MapperEditSubSectionsSingleton.output('EditSubSections', app);
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     /**
     * @param {String} 

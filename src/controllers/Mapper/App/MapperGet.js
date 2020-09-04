@@ -1,4 +1,5 @@
 import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
+import { Security } from "../../Security";
 
 let self;
 
@@ -19,6 +20,17 @@ let outputs = {
             "storeAddOn": object.storeAddOn,
             "virtual": object.virtual,
             "licenseID": object.licenseID,
+            "casino_providers": object.casino_providers ? object.casino_providers.map(casino_provider => {
+                return ({
+                    "_id": casino_provider._id,
+                    "activated": casino_provider.activated,
+                    "name": casino_provider.name,
+                    "logo": casino_provider.logo,
+                    "api_url": casino_provider.api_url,
+                    "partner_id": casino_provider.partner_id,
+                    "providerEco": casino_provider.providerEco,
+                })
+            }) : object.casino_providers,
             "games": object.games ? object.games.map(game => {
                 return ({
                     "_id": game._id,
@@ -67,7 +79,7 @@ let outputs = {
                     "virtual": currency.virtual
                 })
             }) : object.currencies,
-            "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
+            "external_users": object.external_users ? object.external_users.length : 0,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
@@ -209,6 +221,14 @@ let outputs = {
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
+                },
+                "cripsr": !object.integrations.cripsr ? {} : {
+                    "_id": object.integrations.cripsr._id,
+                    "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
+                    "link": object.integrations.cripsr.link,
+                    "isActive": object.integrations.cripsr.isActive,
+                    "name": object.integrations.cripsr.name,
+                    "metaName": object.integrations.cripsr.metaName,
                 },
                 "mailSender": !object.integrations.mailSender ? {} : {
                     "_id": object.integrations.mailSender._id,

@@ -89,6 +89,12 @@ ErrorHandler.prototype.KEYS =  {
     'PAYMENT_FORWARDING_TRANSACTION'        : "072"
 };
 
+ErrorHandler.prototype.KEYS_PROVIDER =  {
+    '10' : {code:10, message: "Hash does not match"},
+    '14' : {code:14, message: "Non-valid token"},
+    '11' : {code:11, message: "Player not found"},
+}
+
 /***************************
  *
  *
@@ -110,6 +116,15 @@ ErrorHandler.prototype.getError = function(code){
         key     : this.getKey(code),
         code    : parseInt(code),
         message : this.getMessage(code)
+    }
+}
+
+ErrorHandler.prototype.getErrorProvider = function(code){
+    console.log("code", code);
+    return {
+        key     : parseInt(code),
+        code    : parseInt(code),
+        message : ErrorHandler.prototype.KEYS_PROVIDER[code].message
     }
 }
 

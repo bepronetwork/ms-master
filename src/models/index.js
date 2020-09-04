@@ -44,8 +44,13 @@ import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
 import PointSystem from "./pointSystem";
 import TopTab from "./topTab";
+import Provider from "./provider";
+import ProviderToken from "./providerToken";
+import Cripsr from "./cripsr";
 
 export {
+    Cripsr,
+    Provider,
     TopTab,
     DepositBonus,
     PopularNumberLogic,
@@ -92,4 +97,5 @@ export {
     LoadingGif,
     Background,
     PointSystem,
+    ProviderToken,
 }

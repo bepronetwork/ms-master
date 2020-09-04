@@ -1,3 +1,4 @@
+import { Security } from "../../Security"
 
 const app_object = (object) => {
     return {
@@ -104,7 +105,7 @@ const app_object = (object) => {
                     "affiliateLink": user.affiliateLink
                 })
             }) : object.app.users,
-            "external_users": object.app.external_users ? object.app.external_users.map(external_user_id => external_user_id) : object.app.external_users,
+            "external_users": object.app.external_users ? object.app.external_users.length : 0,
             "wallet": object.app.wallet ? object.app.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
@@ -258,6 +259,14 @@ const app_object = (object) => {
                     "privateKey": object.app.integrations.chat.privateKey,
                     "publicKey": object.app.integrations.chat.publicKey,
                     "token": object.app.integrations.chat.token
+                },
+                "cripsr": !object.app.integrations.cripsr ? {} : {
+                    "_id": object.app.integrations.cripsr._id,
+                    "key": !object.app.integrations.cripsr.key ? object.app.integrations.cripsr.key : Security.prototype.decryptData(object.app.integrations.cripsr.key),
+                    "isActive": object.app.integrations.cripsr.isActive,
+                    "link": object.app.integrations.cripsr.link,
+                    "name": object.app.integrations.cripsr.name,
+                    "metaName": object.app.integrations.cripsr.metaName,
                 },
                 "mailSender": !object.app.integrations.mailSender ? {} : {
                     "_id": object.app.integrations.mailSender._id,

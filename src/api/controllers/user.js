@@ -211,6 +211,19 @@ async function getBets(req, res) {
     }
 }
 
+async function providerToken(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let user = new User(params);
+        let data = await user.providerToken();
+        MiddlewareSingleton.log({ type: "user", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "user", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
 async function getDepositAddress(req, res) {
     try {
         let params = req.body;
@@ -337,5 +350,6 @@ export {
     confirmEmail,
     resendEmail,
     userGetBets,
-    getPotJackpot
+    getPotJackpot,
+    providerToken
 }

@@ -38,8 +38,13 @@ import { DepositBonusSchema } from "./addOn/depositBonus";
 import { PointSystemSchema } from "./addOn/pointSystem";
 import { TopTabSchema } from "./customization/topTab";
 import { SubSectionsSchema } from './customization/subSections';
+import { ProviderSchema } from './provider';
+import { ProviderTokenSchema } from './providerToken';
+import { CripsrSchema } from './integrations/cripsr';
+
 
 export {
+    CripsrSchema,
     TopTabSchema,
     DepositBonusSchema,
     TxFeeSchema,
@@ -80,4 +85,6 @@ export {
     BackgroundSchema,
     PointSystemSchema,
     SubSectionsSchema,
+    ProviderSchema,
+    ProviderTokenSchema,
 }

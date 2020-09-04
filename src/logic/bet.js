@@ -56,12 +56,23 @@ const betResolvingActions = {
                     hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
                     outcome = CryptographySingleton.hexToInt(hmca_hash);
                     let outcomeResultSpaceIndividual = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
-                    console.log("outcomeResultSpaceIndividual", outcomeResultSpaceIndividual);
                     let exists = outcomeResultSpace.find( o => outcomeResultSpaceIndividual.index == o.index)
                     if(!exists){
                         /* Make sure they dont have the same result space */
                         outcomeResultSpace.push(outcomeResultSpaceIndividual);
                     }
+                }
+                break;
+            };
+            case 'slots_simple' : {
+                outcomeResultSpace = [];
+                /* 5 Outcome Result Spaces */
+                while(outcomeResultSpace.length < 5){
+                    serverSeed = CryptographySingleton.generateSeed();
+                    hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
+                    outcome = CryptographySingleton.hexToInt(hmca_hash);
+                    let outcomeResultSpaceIndividual = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
+                    outcomeResultSpace.push(outcomeResultSpaceIndividual);
                 }
                 break;
             };
@@ -295,7 +306,8 @@ const progressActions = {
     __auto : async (params) => {
 
         const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
-        if(points>0){
+        console.log("params", params.totalBetAmount, points);
+        if(points > 0){
             await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
         }
         /* Save all ResultSpaces */

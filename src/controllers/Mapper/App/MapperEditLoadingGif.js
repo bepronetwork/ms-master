@@ -13,9 +13,7 @@ let self;
 let outputs = {
     editLoadingGif: (object) => {
         return {
-            "loadingGif": object.loadingGif,
-            ...app_object(object),
-            "admin": object.admin,
+            "loadingGif": object.loadingGif
         }
     },
 }
