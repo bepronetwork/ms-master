@@ -62,6 +62,8 @@ let outputs = {
                     "wallets": game.wallets ? game.wallets.map(wallet => {
                         return ({
                             "_id": wallet._id,
+                            "wallet": wallet.wallet._id,
+                            "currency": wallet.wallet.currency,
                             "tableLimit": wallet.tableLimit,
                         })
                     }) : game.wallets,
