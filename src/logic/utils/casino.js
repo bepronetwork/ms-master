@@ -548,7 +548,6 @@ class CasinoLogic{
                     break;
                 };
                 case 'slots_simple' : {
-                    console.log("1");
                     if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')};
                     let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
