@@ -42,9 +42,6 @@ import { ProviderSchema } from './provider';
 import { ProviderTokenSchema } from './providerToken';
 import { CripsrSchema } from './integrations/cripsr';
 
-import { GameStatsSchema } from './redis/gameStats';
-import { UserStatsSchema } from './redis/userStats';
-
 
 export {
     CripsrSchema,
@@ -90,6 +87,4 @@ export {
     SubSectionsSchema,
     ProviderSchema,
     ProviderTokenSchema,
-    GameStatsSchema,
-    UserStatsSchema,
 }
