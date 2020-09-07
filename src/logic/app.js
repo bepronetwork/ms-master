@@ -301,7 +301,8 @@ const processActions = {
                 dates : fromPeriodicityToDates({periodicity : params.periodicity}),
                 currency : params.currency
                 // Add more here if needed
-            }
+            },
+            period: params.periodicity
         }
 
        return normalized;
@@ -1046,7 +1047,7 @@ const progressActions = {
     },
 	__summary : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts);
+        let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts, params.period);
         return res;
     },
     __appGetUsersBets : async (params) => {
