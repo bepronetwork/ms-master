@@ -276,7 +276,6 @@ class CasinoLogic{
                     var n = resultSpace.length; /* Number of total icons -  resultSpace.length ex : 13 icons*/
                     var x = userResultSpace.length; /* Icons Picked */
                     var y = [];
-                    console.log("1", outcomeResultSpace)
                     /* Verify if all the numbers have the same value for each box */ 
                     let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
@@ -289,10 +288,8 @@ class CasinoLogic{
 
                     /* Check for all the outcomes if any matches */
                     outcomeResultSpace.map( o => {  
-                        console.log("o", o)
                         /* Check if the value is equal to choosen */
                         let index = y.findIndex( p => p.key == o.key);
-                        console.log("index", index, y, o)
                         if(index < 0){
                             o.times = 1;
                             y.push(o);
@@ -301,8 +298,6 @@ class CasinoLogic{
                             y[index].times = y[index].times + 1;
                         }
                     })  
-
-                    console.log("4", totalBetAmount, y)
 
                     if(y <= 0){
                         /* is Lost */
@@ -313,7 +308,6 @@ class CasinoLogic{
                         isWon = true;
                         let winBalance = y.reduce( (acc, item) => {
                             let odd = parseFloat(resultSpace[item.index].multiplier);
-                            console.log("5", resultSpace[item.index], acc)
                             let _winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd, 1);
                             return acc+_winBalance;
                         }, 0);
@@ -322,7 +316,6 @@ class CasinoLogic{
                         let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
                         winAmount = parseFloat(winBalance - houseEdgeBalance);
                     }
-                    console.log("6", winAmount)
 
                     break;
                 };
