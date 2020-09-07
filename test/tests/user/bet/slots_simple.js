@@ -107,7 +107,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
                 {place: 12, value: betAmount/13}
             ]
         };
-        console.log("a", postData.result[0].value);
+        
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount) );
         res = await placeBet(postData, user.bearerToken, {id : user.id});
 
