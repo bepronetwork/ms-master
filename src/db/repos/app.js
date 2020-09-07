@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { AppSchema } from '../schemas';
+import { AppSchema, UserStatsSchema, GameStatsSchema } from '../schemas';
 import { 
     pipeline_revenue_stats, 
     pipeline_user_stats, 
@@ -623,8 +623,7 @@ class AppRepository extends MongoComponent{
      * @param {Mongoose Id} _id 
      */
 
-    async getSummaryStats(type, _id, { dates, currency }){ 
-
+    async getSummaryStats(type, _id, { dates, currency }, period="weekly"){
         let pipeline;
 
         /**
@@ -632,8 +631,27 @@ class AppRepository extends MongoComponent{
          * @output Pipeline
          */
         switch (type){
-            case 'users' : pipeline = pipeline_user_stats; break;
-            case 'games' : pipeline = pipeline_game_stats; break;
+            case 'users' : {
+                return new Promise( (resolve, reject) => {
+                    UserStatsSchema.prototype.model.findOne({app: _id, currency, period})
+                    .exec( (err, item) => {
+                        if(err) { reject(err)}
+                        resolve({item: !item ? [] : item.userStats, type});
+                    });
+                });
+                break;
+            };
+            case 'games' : {
+                return new Promise( (resolve, reject) => {
+                    GameStatsSchema.prototype.model.findOne({app: _id, currency, period})
+                    .exec( (err, item) => {
+                        if(err) { reject(err)}
+                        console.log(item);
+                        resolve({item, type});
+                    });
+                });
+                break
+            };
             case 'revenue' : pipeline = pipeline_revenue_stats; break;
             case 'bets' : pipeline = pipeline_bet_stats; break;
             case 'wallet' : pipeline = pipeline_app_wallet; break;

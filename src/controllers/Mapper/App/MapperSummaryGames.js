@@ -12,25 +12,23 @@ let self;
 
 let outputs = {
     summaryGames: (object) => {
-        return object.item.map(object => {
-            return ({
-                "date": !object.date ? {} : {
-                    "month": object.date.month,
-                    "year": object.date.year,
-                },
-                "games": !object.games ? [] : object.games.map(game => {
-                    return({
-                        "_id": game._id,
-                        "name": game.name,
-                        "edge": game.edge,
-                        "betsAmount": game.betsAmount,
-                        "betAmount": game.betAmount,
-                        "profit": game.profit,
-                        "fees": game.fees
-                    })
-                }),
-            })
-        })
+        return ([{
+            "date": !object.item.month ? {} : {
+                "month": object.item.month,
+                "year": object.item.year,
+            },
+            "games": !object.item.gameStats ? [] : object.item.gameStats.map(game => {
+                return({
+                    "_id": game._id,
+                    "name": game.name,
+                    "edge": game.edge,
+                    "betsAmount": game.betsAmount,
+                    "betAmount": game.betAmount,
+                    "profit": game.profit,
+                    "fees": game.fees
+                })
+            }),
+        }])
     }
 }
 
