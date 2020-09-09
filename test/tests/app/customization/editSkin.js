@@ -11,7 +11,6 @@ context('Edit Theme', async () => {
         app = global.test.app;
         admin = global.test.admin;
         app = await AppRepository.prototype.findAppById(app.id, 'simple')
-        console.log("APP:: ",app)
     });
 
     it('should be able to edit app Skin', mochaAsync(async () => {
