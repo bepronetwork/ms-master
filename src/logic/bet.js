@@ -333,7 +333,9 @@ const progressActions = {
             ...params,
             betAmount : params.totalBetAmount
         });
+        PerformanceBet.end({id : 'bet.register'});
 
+        PerformanceBet.start({id : 'isWon.virtual'});
         // Logic for when the APP is not virtual
         if(isWon && !virtual){
             if(amountBonus>0){
@@ -351,6 +353,7 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (params.totalBetAmount >= playBalance ? playBalance : app_delta));
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, ( params.totalBetAmount >= playBalance ? -playBalance : -params.totalBetAmount));
         }
+        PerformanceBet.end({id : 'isWon.virtual'});
 
         // Logic for when the APP is virtual
         if(virtual) {
@@ -363,6 +366,7 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
             PerformanceBet.end({id : 'wallet2'});
         }
+        PerformanceBet.start({id : 'increment'});
 
         // if the increment of the bonus bet is greater than the minimum for the bonus to be unlocked, and the bonus is greater than then: Then the bonus owner is sent to playbalance.
         if( incrementBetAmountForBonus >= minBetAmountForBonusUnlocked && amountBonus > 0 && !virtual) {
@@ -371,6 +375,7 @@ const progressActions = {
             await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked));
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, (user_delta+amountBonus));
         }
+        PerformanceBet.end({id : 'increment'});
 
         /* Update Balance of Affiliates */
         if(isUserAffiliated && amountBonus <= 0){
@@ -384,7 +389,6 @@ const progressActions = {
 		UsersRepository.prototype.addBet(params.user, bet); // Async because not needed to be synced - no security issue
 		/* Add Bet to Event Profile */
         GamesRepository.prototype.addBet(params.game, bet); // Async because not needed to be synced - no security issue
-        PerformanceBet.end({id : 'bet.register'});
 
         let res = {
             bet,
