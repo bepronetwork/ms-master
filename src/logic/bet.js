@@ -313,9 +313,7 @@ const progressActions = {
 
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
-        let dependentObjects = Object.keys(result).map( async key =>
-            await (new BetResultSpace(result[key])).register()
-        );
+        let dependentObjects = Object.keys(result).map( async key =>(new BetResultSpace(result[key])).register());
         
         let betResultSpacesIds = await Promise.all(dependentObjects);
         PerformanceBet.end({id : 'BetResultSpace.register'});
