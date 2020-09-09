@@ -51,8 +51,10 @@ import TopTabLogic from "./topTab";
 import ProviderLogic from "./provider";
 import ProviderTokenLogic from "./providerToken";
 import CripsrLogic from "./cripsr";
+import SkinLogic from "./skin";
 
 export {
+    SkinLogic,
     CripsrLogic,
     ProviderLogic,
     TopTabLogic,

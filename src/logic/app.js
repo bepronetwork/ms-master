@@ -36,6 +36,7 @@ import {
     SubSectionsRepository,
     ProviderRepository,
     CripsrRepository,
+    SkinRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -837,6 +838,16 @@ const processActions = {
             app
         };
     },
+    __editSkin : async (params) => {
+        let { app, skinParams } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        if((skinParams.skin_type.toLowerCase() != "default") && (skinParams.skin_type.toLowerCase() != "digital")){ throwError('WRONG_SKIN') }
+        return {
+            ...params,
+            app
+        };
+    },
     __editTopBar : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1535,6 +1546,15 @@ const progressActions = {
 
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
+    __editSkin  : async (params) => {
+        let { app, skinParams } = params;
+        await SkinRepository.prototype.findByIdAndUpdate({_id: skinParams._id, skin_type: skinParams.skin_type.toLowerCase()});
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return true;
+    },
     __editTopBar  : async (params) => {
         let { app, backgroundColor, textColor, text, isActive, isTransparent } = params;
         const { topBar } = app.customization;
@@ -1954,6 +1974,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTheme' : {
                     return await library.process.__editTheme(params); break;
                 };
+                case 'EditSkin' : {
+                    return await library.process.__editSkin(params); break;
+                };
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
@@ -2159,6 +2182,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTheme' : {
                     return await library.progress.__editTheme(params); break;
+                };
+                case 'EditSkin' : {
+                    return await library.progress.__editSkin(params); break;
                 };
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;

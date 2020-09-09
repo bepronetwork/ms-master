@@ -290,5 +290,9 @@
     "072" : {
         "key" : "PAYMENT_FORWARDING_TRANSACTION",
         "message"   : "Payment Forwarding Done"
+    },
+    "073" : {
+        "key" : "WRONG_SKIN",
+        "message"   : "Skin not available, choose default or digital"
     }
 }

@@ -756,6 +756,21 @@ class App extends ModelComponent {
         }
     }
 
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editSkin() {
+        //Boolean Output
+        try {
+            let app = await this.process('EditSkin');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
      * @param {String} 
      * @return {bool || Exception}  
