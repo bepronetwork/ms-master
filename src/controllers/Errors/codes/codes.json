@@ -57,7 +57,7 @@
     },
     "014" : {
         "key"      : "WITHDRAW_MODE_IN_API",
-        "message"   : "Withdraw/Bet Mode is already in"
+        "message"   : "The system is already processing your action"
     },
     "015" : {
         "key"      : "WITHDRAW_MODE_IN_SMART_CONTRACT",
