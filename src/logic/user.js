@@ -4,15 +4,12 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 
 import {
-    Token, ProviderToken
-} from '../../src/models';
-
-import {
     UsersRepository,
     AppRepository,
     WalletsRepository,
     DepositRepository,
     AffiliateLinkRepository,
+    Token, ProviderToken,
     AffiliateRepository,
     SecurityRepository,
     TokenRepository,
