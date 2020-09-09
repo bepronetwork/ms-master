@@ -305,18 +305,20 @@ const progressActions = {
     __auto : async (params) => {
 
         const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
-        console.log("params", params.totalBetAmount, points);
+        PerformanceBet.start({id : 'UsersRepository.insertPoints'});
         if(points > 0){
             await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
         }
+        PerformanceBet.end({id : 'UsersRepository.insertPoints'});
+
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
         let dependentObjects = Object.keys(result).map( async key =>
             await (new BetResultSpace(result[key])).register()
         );
-        PerformanceBet.end({id : 'BetResultSpace.register'});
-
+        
         let betResultSpacesIds = await Promise.all(dependentObjects);
+        PerformanceBet.end({id : 'BetResultSpace.register'});
         // Generate new Params Setup
 
         params = {
@@ -382,6 +384,7 @@ const progressActions = {
 		UsersRepository.prototype.addBet(params.user, bet); // Async because not needed to be synced - no security issue
 		/* Add Bet to Event Profile */
         GamesRepository.prototype.addBet(params.game, bet); // Async because not needed to be synced - no security issue
+        PerformanceBet.end({id : 'bet.register'});
 
         let res = {
             bet,
