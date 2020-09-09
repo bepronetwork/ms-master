@@ -1,40 +1,89 @@
 import mongoose from 'mongoose';
-import { pipeline_match_by_currency, pipeline_by_timestamp } from '../filters';
+import { pipeline_bets_by_date, pipeline_bets_by_currency } from '../filters';
 
 
 const pipeline_revenue_stats = (_id, { dates, currency }) =>
   [
+    //Stage 0
     {
       '$match': {
-        'app': mongoose.Types.ObjectId(_id)
+        "_id": mongoose.Types.ObjectId(_id)
+      }
+    }, {
+      '$lookup': {
+        'from': 'games',
+        'localField': 'games',
+        'foreignField': '_id',
+        'as': 'games'
+      }
+    }, {
+      '$project': {
+        'games.bets': true,
+        'games.edge': true,
+        '_id': false
+      }
+    }, {
+      '$unwind': {
+        'path': '$games'
+      }
+    }, {
+      '$project': {
+        'bets': '$games.bets',
+        'edge': '$games.edge'
+      }
+    }, {
+      '$unwind': {
+        'path': '$bets'
+      }
+    }, {
+      '$lookup': {
+        'from': 'bets',
+        'localField': 'bets',
+        'foreignField': '_id',
+        'as': 'bet'
       }
     },
-    ...pipeline_match_by_currency({ currency }),
-    ...pipeline_by_timestamp({ from_date: dates.from, to_date: dates.to }),
     {
+      '$project': {
+        'bet': {
+          '$arrayElemAt': [
+            '$bet', 0
+          ]
+        },
+        'fee': {
+          '$arrayElemAt': [
+            '$bet.fee', 0
+          ]
+        }
+      }
+    },
+    ...pipeline_bets_by_currency({ currency })
+    ,
+    ...pipeline_bets_by_date({ from_date: dates.from, to_date: dates.to })
+    , {
       '$group': {
         '_id': {
           'hour': {
-            '$hour': '$timestamp'
+            '$hour': '$bet.timestamp'
           },
           'day': {
-            '$dayOfYear': '$timestamp'
+            '$dayOfYear': '$bet.timestamp'
           },
           'year': {
-            '$year': '$timestamp'
+            '$year': '$bet.timestamp'
           }
         },
         'lossAmount': {
-          '$sum': '$winAmount'
+          '$sum': '$bet.winAmount'
         },
         'revenueAmount': {
-          '$sum': '$betAmount'
+          '$sum': '$bet.betAmount'
         },
         'betsAmount': {
           '$sum': 1
         },
         'fees': {
-          '$sum': '$fee'
+          '$sum': '$bet.fee'
         }
       }
     }, {
