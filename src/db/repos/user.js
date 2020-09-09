@@ -9,7 +9,7 @@ import {
     pipeline_my_bets,
     pipeline_user_specific_stats
 } from './pipelines/user';
-import { populate_user, populate_user_simple, populate_user_wallet, populate_users } from './populates';
+import { populate_user, populate_user_simple, populate_user_wallet, populate_users, populate_user_to_bet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
@@ -69,6 +69,22 @@ class UsersRepository extends MongoComponent{
                 .populate(populate_type)
                 .exec( (err, user) => {
                     if(err) { resolve(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async findUserByIdToBet(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findById(_id, {bets:0,deposits:0,withdraws:0, hash_password:0})
+                .populate(populate_user_to_bet)
+                .lean()
+                .exec( (err, user) => {
+                    if(err) { reject(null)}
                     resolve(user);
                 });
             });

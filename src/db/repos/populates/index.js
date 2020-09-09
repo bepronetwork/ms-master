@@ -6,6 +6,7 @@ import populate_app_affiliates from './app/populate_app_affiliates';
 import populate_affiliateLink from './affiliateLink/populate_affiliateLink';
 import populate_jackpot from './populate_jackpot';
 import populate_app_simple from './app/populate_app_simple';
+import populate_app_to_bet from './app/populate_app_to_bet';
 import populate_app_wallet from './app/populate_app_wallet';
 import populate_user_simple from './user/populate_user_simple';
 import populate_app_address from './app/populate_app_address';
@@ -14,6 +15,7 @@ import populate_app_auth from './app/populate_app_auth';
 import populate_app_game from './app/populate_app_game';
 import populate_users from './populate_users';
 import populate_footer from "./customization/footer";
+import populate_user_to_bet from './user/populate_user_to_bet';
 
 export {
     populate_footer,
@@ -31,5 +33,7 @@ export {
     populate_jackpot,
     populate_app_auth,
     populate_app_game,
-    populate_users
+    populate_users,
+    populate_user_to_bet,
+    populate_app_to_bet,
 }

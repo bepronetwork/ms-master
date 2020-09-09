@@ -128,7 +128,6 @@ const betResolvingActions = {
  * @memberof logic
  * @param {function} params - Function Params
  **/
-
   
 const processActions = {
     __auto : async (params) => {
@@ -138,10 +137,10 @@ const processActions = {
             let game = await GamesRepository.prototype.findGameById(params.game);
             PerformanceBet.end({id : 'findGameById'});
             PerformanceBet.start({id : 'findUserById'});
-            let user = await UsersRepository.prototype.findUserById(params.user, "simple");
+            let user = await UsersRepository.prototype.findUserByIdToBet(params.user);
             PerformanceBet.end({id : 'findUserById'});
             PerformanceBet.start({id : 'findAppById'});
-            let app = await AppRepository.prototype.findAppById(params.app, "wallet");
+            let app = await AppRepository.prototype.findAppByIdToBet(params.app);
             PerformanceBet.end({id : 'findAppById'});
 
             if(game){var maxBetValue = game.maxBet; }
