@@ -16,7 +16,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game } from './populates';
+import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -376,6 +376,43 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
+
+    findAppByIdToBet(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    games:0,
+                    listAdmins:0,
+                    services:0,
+                    currencies:0,
+                    users:0,
+                    external_users:0,
+                    deposits:0,
+                    withdraws:0,
+                    countriesAvailable:0,
+                    licensesId:0,
+                    bearerToken:0,
+                    whitelistedAddresses:0,
+                    restrictedCountries:0,
+                    providers:0,
+                    casino_providers:0,
+                    typography:0,
+                    integrations:0,
+                    customization:0,
+                    metadataJSON:0,
+                })
+                .populate(populate_app_to_bet)
+                .lean()
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
     findAppByIdWithJackpotPopulated(_id){
         try{
             return new Promise( (resolve, reject) => {
