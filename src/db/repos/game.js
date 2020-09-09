@@ -33,7 +33,7 @@ class GamesRepository extends MongoComponent{
     
     findGameById(_id){ 
         return new Promise( (resolve, reject) => {
-            GamesRepository.prototype.schema.model.findById(_id)
+            GamesRepository.prototype.schema.model.findById(_id, {bets: 0})
             .populate(foreignKeys)
             .lean()
             .exec( (err, Game) => {

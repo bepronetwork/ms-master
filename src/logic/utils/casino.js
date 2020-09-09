@@ -271,14 +271,11 @@ class CasinoLogic{
                     const SLOTS_RESULT_SPACE = 5; /* Amount of results needed */
                     const USER_RESULT_SPACE = 13; /* User Results */
 
-                    console.log("2", userResultSpace.length, outcomeResultSpace.length);
                     if(userResultSpace.length != USER_RESULT_SPACE){ throw throwError('BAD_BET')}
                     if(outcomeResultSpace.length != SLOTS_RESULT_SPACE){throwError('BAD_BET')} /* Result Space has to be 10 diff values */
                     var n = resultSpace.length; /* Number of total icons -  resultSpace.length ex : 13 icons*/
                     var x = userResultSpace.length; /* Icons Picked */
                     var y = [];
-                    console.log("3");
-
                     /* Verify if all the numbers have the same value for each box */ 
                     let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {
@@ -286,24 +283,21 @@ class CasinoLogic{
                         if(item.value <= 0){ throw throwError('BAD_BET')} /* Neg or 0 */
                         if(item.value != medianValue){throwError('BAD_BET')} /* All values should be the same */
                         medianValue = item.value;
-
-                        /* Check for all the outcomes if any matches */
-                        outcomeResultSpace.map( o => {  
-                            if(item.place == o.index){
-                                /* Check if the value is equal to choosen */
-                                let index = y.findIndex( p => p.key == item.key);
-                                if(index < 0){
-                                    item.times = 1;
-                                    y.push(item);
-                                }else{
-                                    /* Already there */
-                                    y[index].times = y[index].times + 1;
-                                }
-                             
-                            }
-                        })  
                         return acc+item.value;
                     }, 0));
+
+                    /* Check for all the outcomes if any matches */
+                    outcomeResultSpace.map( o => {  
+                        /* Check if the value is equal to choosen */
+                        let index = y.findIndex( p => p.key == o.key);
+                        if(index < 0){
+                            o.times = 1;
+                            y.push(o);
+                        }else{
+                            /* Already there */
+                            y[index].times = y[index].times + 1;
+                        }
+                    })  
 
                     if(y <= 0){
                         /* is Lost */
@@ -313,14 +307,16 @@ class CasinoLogic{
                         /* is Won */
                         isWon = true;
                         let winBalance = y.reduce( (acc, item) => {
-                            let odd = parseFloat(resultSpace[item.place].multiplier);
-                            let _winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd, item.times);
+                            let odd = parseFloat(resultSpace[item.index].multiplier);
+                            let _winBalance = MathSingleton.multiplyAbsolutes(totalBetAmount, odd, 0.3);
                             return acc+_winBalance;
                         }, 0);
+
 
                         let houseEdgeBalance = this.getRealOdd(totalBetAmount, houseEdge);
                         winAmount = parseFloat(winBalance - houseEdgeBalance);
                     }
+
                     break;
                 };
                 
@@ -548,7 +544,6 @@ class CasinoLogic{
                     break;
                 };
                 case 'slots_simple' : {
-                    console.log("1");
                     if(userResultSpace.length != resultSpace.length){ throw throwError('BAD_BET')};
                     let medianValue = userResultSpace[0].value;   
                     totalBetAmount = parseFloat(userResultSpace.reduce( (acc, item) => {

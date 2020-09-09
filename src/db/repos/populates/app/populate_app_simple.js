@@ -53,6 +53,11 @@ let populate_app_simple = [
                 path : 'resultSpace',
                 model : 'ResultSpace',
                 select : { '__v': 0}
+            },
+            {
+                path : 'wallets.wallet',
+                model : 'Wallet',
+                select : { '__v': 0}
             }
         ]
     },
