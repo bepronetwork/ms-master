@@ -10,7 +10,7 @@ context('Edit Theme', async () => {
     before(async () => {
         app = global.test.app;
         admin = global.test.admin;
-        app = AppRepository.prototype.findAppById(app.id, 'simple')
+        app = await AppRepository.prototype.findAppById(app.id, 'simple')
         console.log("APP:: ",app)
     });
 
