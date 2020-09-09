@@ -1,33 +1,75 @@
 import mongoose from 'mongoose';
-import { pipeline_match_by_currency, pipeline_by_timestamp } from '../filters';
+import { pipeline_bets_by_date, pipeline_bets_by_currency } from '../filters';
 
 
 const pipeline_bet_stats = (_id, { dates, currency }) =>
   [
+    //Stage 0
     {
       '$match': {
-        'app': mongoose.Types.ObjectId(_id)
+        "_id": mongoose.Types.ObjectId(_id)
       }
     },
-    ...pipeline_match_by_currency({ currency }),
-    ...pipeline_by_timestamp({ from_date: dates.from, to_date: dates.to }),
     {
+      '$lookup': {
+        'from': 'games',
+        'localField': 'games',
+        'foreignField': '_id',
+        'as': 'games'
+      }
+    }, {
+      '$project': {
+        'games.bets': true,
+        '_id': false
+      }
+    }, {
+      '$unwind': {
+        'path': '$games'
+      }
+    }, {
+      '$project': {
+        'bets': '$games.bets'
+      }
+    }, {
+      '$unwind': {
+        'path': '$bets'
+      }
+    }, {
+      '$lookup': {
+        'from': 'bets',
+        'localField': 'bets',
+        'foreignField': '_id',
+        'as': 'bet'
+      }
+    }, {
+      '$project': {
+        'bet': {
+          '$arrayElemAt': [
+            '$bet', 0
+          ]
+        }
+      }
+    },
+    ...pipeline_bets_by_currency({ currency })
+    ,
+    ...pipeline_bets_by_date({ from_date: dates.from, to_date: dates.to })
+    , {
       '$group': {
         '_id': {
           'week': {
-            '$week': '$timestamp'
+            '$week': '$bet.timestamp'
           },
           'year': {
-            '$year': '$timestamp'
+            '$year': '$bet.timestamp'
           }
         },
         'averageBet': {
-          '$avg': '$betAmount'
+          '$avg': '$bet.betAmount'
         },
         'averageBetReturn': {
           '$avg': {
             '$subtract': [
-              '$betAmount', '$winAmount'
+              '$bet.betAmount', '$bet.winAmount'
             ]
           }
         },
@@ -36,7 +78,7 @@ const pipeline_bet_stats = (_id, { dates, currency }) =>
             '$cond': {
               'if': {
                 '$eq': [
-                  '$isWon', true
+                  '$bet.isWon', true
                 ]
               },
               'then': 1,

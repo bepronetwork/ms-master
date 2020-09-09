@@ -1,51 +1,93 @@
 import mongoose from 'mongoose';
-import { pipeline_match_by_currency, pipeline_by_timestamp } from '../filters';
+import { pipeline_bets_by_date, pipeline_bets_by_currency } from '../filters';
 
 
 const pipeline_game_stats = (_id, { dates, currency }) =>
     [
+        //Stage 0
         {
             '$match': {
-                'app': mongoose.Types.ObjectId(_id)
+                "_id": mongoose.Types.ObjectId(_id)
             }
         },
-        ...pipeline_match_by_currency({ currency }),
-        ...pipeline_by_timestamp({ from_date: dates.from, to_date: dates.to }),
         {
             '$lookup': {
                 'from': 'games',
-                'localField': 'game',
+                'localField': 'games',
                 'foreignField': '_id',
-                'as': 'game'
+                'as': 'games'
+            }
+        }, {
+            '$project': {
+                'games.bets': true,
+                'games.name': true,
+                'games.edge': true,
+                'games.description': true,
+                'games._id': true
             }
         }, {
             '$unwind': {
-                'path': '$game'
+                'path': '$games'
             }
         }, {
+            '$project': {
+                'bets': '$games.bets',
+                'name': '$games.name',
+                'edge': '$games.edge',
+                'game_id': '$games._id'
+            }
+        }, {
+            '$unwind': {
+                'path': '$bets',
+                'preserveNullAndEmptyArrays': true
+            }
+        }, {
+            '$lookup': {
+                'from': 'bets',
+                'localField': 'bets',
+                'foreignField': '_id',
+                'as': 'bet'
+            }
+        }, {
+            '$project': {
+                'bet': {
+                    '$arrayElemAt': [
+                        '$bet', 0
+                    ]
+                },
+                'game': {
+                    'name': '$name',
+                    'edge': '$edge',
+                    '_id': '$game_id'
+                }
+            }
+        },
+        ...pipeline_bets_by_currency({ currency }),
+        ...pipeline_bets_by_date({ from_date: dates.from, to_date: dates.to })
+        , {
             '$group': {
                 '_id': {
                     '_id': '$game._id',
                     'month': {
-                        '$month': '$timestamp'
+                        '$month': '$bet.timestamp'
                     },
                     'year': {
-                        '$year': '$timestamp'
+                        '$year': '$bet.timestamp'
                     },
-                    'game': '$game',
+                    'game': '$bet.game',
                     'name': '$game.name'
                 },
                 'betAmount': {
-                    '$sum': '$betAmount'
+                    '$sum': '$bet.betAmount'
                 },
                 'betsAmount': {
                     '$sum': 1
                 },
                 'paidAmount': {
-                    '$sum': '$winAmount'
+                    '$sum': '$bet.winAmount'
                 },
                 'fees': {
-                    '$sum': '$fee'
+                    '$sum': '$bet.fee'
                 },
                 'edge': {
                     '$first': '$game.edge'
