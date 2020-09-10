@@ -678,7 +678,8 @@ class AppRepository extends MongoComponent{
      * @param {Mongoose Id} _id 
      */
 
-    async getSummaryStats(type, _id, { dates, currency }, period="weekly"){
+    async getSummaryStats(type, _id, { dates, currency }){ 
+
         let pipeline;
 
         /**
@@ -686,52 +687,22 @@ class AppRepository extends MongoComponent{
          * @output Pipeline
          */
         switch (type){
-            case 'users' : {
-                return new Promise( (resolve, reject) => {
-                    UserStatsSchema.prototype.model.findOne({app: _id, currency, period})
-                    .exec( (err, item) => {
-                        if(err) { reject(err)}
-                        resolve({item: !item ? [] : item.userStats, type});
-                    });
-                });
-                break;
-            };
-            case 'games' : {
-                return new Promise( (resolve, reject) => {
-                    GameStatsSchema.prototype.model.findOne({app: _id, currency, period})
-                    .exec( (err, item) => {
-                        if(err) { reject(err)}
-                        console.log(item);
-                        resolve({item, type});
-                    });
-                });
-                break
-            };
+            case 'users' : pipeline = pipeline_user_stats; break;
+            case 'games' : pipeline = pipeline_game_stats; break;
             case 'revenue' : pipeline = pipeline_revenue_stats; break;
             case 'bets' : pipeline = pipeline_bet_stats; break;
             case 'wallet' : pipeline = pipeline_app_wallet; break;
             default : throw new Error(` Type : ${type} is not accepted as a Summary Type API Call`);
         }
 
-        if(type == 'wallet'){
-            return new Promise( (resolve, reject) => {
-                AppRepository.prototype.schema.model
-                .aggregate(pipeline(_id, { dates, currency }))
-                .exec( (err, item) => {
-                    if(err) { reject(err)}
-                    resolve({item, type});
-                    });
-                }); 
-        } else { 
-            return new Promise( (resolve, reject) => {
-            BetRepository.prototype.schema.model
+        return new Promise( (resolve, reject) => {
+            AppRepository.prototype.schema.model
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve({item, type});
-                });
-            }); 
-        }
+            });
+        });
     }
 
     async getAll(){
