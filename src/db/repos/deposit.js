@@ -49,7 +49,9 @@ class DepositRepository extends MongoComponent{
                 DepositRepository.prototype.schema.model
                 .aggregate(pipeline)
                 .exec( (err, deposits) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        deposits=[]
+                        reject(err)}
                     resolve(deposits);
                 });
             });
