@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { AppSchema, UserStatsSchema, GameStatsSchema } from '../schemas';
+import { AppSchema } from '../schemas';
 import { 
     pipeline_revenue_stats, 
     pipeline_user_stats, 
