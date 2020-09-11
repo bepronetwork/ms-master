@@ -778,6 +778,20 @@ async function editTheme(req, res) {
     }
 }
 
+async function editSkin(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editSkin();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editTopBar(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
@@ -1035,6 +1049,7 @@ async function generateAddresses(req, res) {
 
 
 export {
+    editSkin,
     editCripsrIntegration,
     editApp,
     editProvider,

@@ -41,6 +41,11 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'skin',
+        model : 'Skin',
+        select : { '__v': 0},
+    },
+    {
         path : 'colors',
         model : 'Color',
         select : { '__v': 0},

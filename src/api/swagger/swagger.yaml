@@ -1120,6 +1120,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/skin : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit App Skin Customization
+      operationId: editSkin
+      description: Edit App Skin Customization
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationSkin'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/topBar : 
     x-swagger-router-controller: app
     post:
@@ -4004,6 +4034,31 @@ definitions:
         type : string
         format: name
         example: "dark"
+  AppCustomizationSkin : 
+    type: object
+    required:
+      - app
+      - skinParams
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      skinParams:
+        type: object
+        properties:
+          _id :
+            type : string
+            example: "wertwetwert213cwert"
+            description: |
+              Skin Id
+          skin_type :
+            type : string
+            example: "DEFAULT or DIGITAL"
+            description: |
+              Skin Type (DEFAULT or DIGITAL)
   AppCustomizationTopBar : 
     type: object
     required:

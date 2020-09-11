@@ -442,6 +442,24 @@ class AppRepository extends MongoComponent{
         }
     }
 
+    findAppByIdHostingId(_id){ 
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    _id : 1,
+                    hosting_id : 1,
+                })
+                .lean()
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
     removeTypography(_id){ 
         try{
             return new Promise( (resolve, reject) => {

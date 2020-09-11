@@ -3,6 +3,7 @@ import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
 import { TopBar, Banners, SubSections, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab } from '.';
 import { colors } from '../mocks';
+import Skin from './skin';
 
 class Customization extends ModelComponent {
 
@@ -25,6 +26,7 @@ class Customization extends ModelComponent {
                     new Footer(params),
                     new TopIcon(params),
                     new LoadingGif(params),
+                    new Skin(params),
                     new Background(params),
                     new TopTab({
                         ids: [

@@ -47,8 +47,10 @@ import TopTab from "./topTab";
 import Provider from "./provider";
 import ProviderToken from "./providerToken";
 import Cripsr from "./cripsr";
+import Skin from "./skin";
 
 export {
+    Skin,
     Cripsr,
     Provider,
     TopTab,
