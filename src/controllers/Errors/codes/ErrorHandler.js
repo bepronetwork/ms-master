@@ -86,7 +86,8 @@ ErrorHandler.prototype.KEYS =  {
     'ADD_ON_POINT_SYSTEM_NOT_EXISTS'        : "069",
     'UNCONFIRMED_EMAIL'                     : "070",
     'WALLET_WAIT'                           : "071",
-    'PAYMENT_FORWARDING_TRANSACTION'        : "072"
+    'PAYMENT_FORWARDING_TRANSACTION'        : "072",
+    'WRONG_SKIN'                            : "073"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {
