@@ -84,7 +84,7 @@ let __private = {};
 const processActions = {
     __providerAuthorization : async (params) => {
         try {
-            let user     = await UsersRepository.prototype.findUserById(params.player_id);
+            let user     = await UsersRepository.prototype.findUserByExternalId(params.player_id);
             if(!user){
                 throwErrorProvider("11");
             }
@@ -92,7 +92,6 @@ const processActions = {
             let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             let app      = await AppRepository.prototype.findAppById(user.app_id._id);
             let provider = await ProviderRepository.prototype.findByApp({app: app._id});
-            console.log("provider::  ",provider);
             provider     = provider[0];
             let apiKey = await Security.prototype.decryptData(provider.api_key);
             if(md5("Authorization/"+ params.player_id + params.game_id + params.token + apiKey) != params.hash){
@@ -101,10 +100,11 @@ const processActions = {
             return {
                 code      : 0,
                 message   : "Success",
-                player_id : params.player_id,
+                player_id : parseInt(params.player_id),
                 nick      : user.username,
                 balance   : wallet.playBalance,
-                currency  : (new String(ticker).toUpperCase())
+                currency  : (new String(ticker).toUpperCase()),
+                external_session: 1
             };
         } catch(err) {
             console.log("6 ",err);
@@ -123,7 +123,7 @@ const processActions = {
         } = params;
 
         let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
-        let user      = await UsersRepository.prototype.findUserById(player_id);
+        let user      = await UsersRepository.prototype.findUserByExternalId(player_id);
         if(!user){
             throwErrorProvider("11");
         }
@@ -155,7 +155,7 @@ const processActions = {
         } = params;
 
         let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
-        let user      = await UsersRepository.prototype.findUserById(player_id);
+        let user      = await UsersRepository.prototype.findUserByExternalId(player_id);
         if(!user){
             throwErrorProvider("11");
         }
@@ -177,7 +177,7 @@ const processActions = {
     },
     __providerBalance : async (params) => {
         var {token, player_id, hash} = params;
-        let user = await UsersRepository.prototype.findUserById(player_id);
+        let user = await UsersRepository.prototype.findUserByExternalId(player_id);
         if(!user){
             throwErrorProvider("11");
         }
@@ -987,15 +987,8 @@ const progressActions = {
     },
     __providerCredit : async (params) => {
         let {
-            token,
-            player_id,
-            round_id,
-            game_id,
-            transaction_id,
             amount,
-            hash,
-            wallet,
-            dataToken
+            wallet
         } = params;
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, -amount);
 

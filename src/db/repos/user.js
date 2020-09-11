@@ -77,6 +77,28 @@ class UsersRepository extends MongoComponent{
         }
     }
 
+
+    async findUserByExternalId(external_id, populate_type=populate_user){
+        switch(populate_type){
+            case 'simple' : { populate_type=populate_user_simple; break; }
+            case 'wallet' : { populate_type=populate_user_wallet; break; }
+        }
+
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findOne({external_id})
+                .populate(populate_type)
+                .lean()
+                .exec( (err, user) => {
+                    if(err) { reject(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
     async findUserByIdToBet(_id){
         try{
             return new Promise( (resolve, reject) => {
@@ -373,21 +395,21 @@ class UsersRepository extends MongoComponent{
         
     }
 
-    async findUserByExternalId(external_id){
-        try{
-            return new Promise( (resolve, reject) => {
-                UsersRepository.prototype.schema.model.find({external_id : external_id})
-                .populate(foreignKeys)
-                .lean()
-                .exec( (err, user) => {
-                    if(err) { reject(err)}
-                    resolve(user);
-                });
-            });
-        }catch(err){
-            throw (err)
-        }
-    }
+    // async findUserByExternalId(external_id){
+    //     try{
+    //         return new Promise( (resolve, reject) => {
+    //             UsersRepository.prototype.schema.model.find({external_id : external_id})
+    //             .populate(foreignKeys)
+    //             .lean()
+    //             .exec( (err, user) => {
+    //                 if(err) { reject(err)}
+    //                 resolve(user);
+    //             });
+    //         });
+    //     }catch(err){
+    //         throw (err)
+    //     }
+    // }
 
     async findUserByAddress({address, app}){
         try{

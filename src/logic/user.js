@@ -9,13 +9,12 @@ import {
     WalletsRepository,
     DepositRepository,
     AffiliateLinkRepository,
-    Token, ProviderToken,
     AffiliateRepository,
     SecurityRepository,
     TokenRepository,
     ProviderTokenRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, ProviderToken, Token } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
