@@ -624,6 +624,16 @@ class ErrorManager {
         }
     }
 
+    skin = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     background = function (object, type){
         try{
             switch(type){

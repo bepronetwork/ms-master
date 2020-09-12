@@ -347,7 +347,7 @@ const processActions = {
         var erc20 = false;
         if(user_wallet.currency.erc20){
             // Is ERC20 Token simulate use of eth wallet
-            user_wallet = user.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toLowerCase());
+            user_wallet = user.wallet.find(w => w.currency.erc20 == true);
             app_wallet  = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toString());
             erc20 = true
         }

@@ -79,6 +79,8 @@ export const CRYPTO_API = process.env.CRYPTO_API;
 
 export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
+export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
