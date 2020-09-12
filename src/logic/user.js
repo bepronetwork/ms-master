@@ -698,25 +698,48 @@ const progressActions = {
                         break;
                     };
                     case 'eth': {
-                        crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
-                        /* Record webhooks */
-                        await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
-                            address     : crypto_address.payload.address,
-                            app_id      : user._id,
-                            currency_id : user_wallet.currency._id,
-                            isApp       : false
-                        });
-                        /* Record Payment Forwarding webhooks */
-                        let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
-                            from: crypto_address.payload.address, 
-                            to: app_wallet.bank_address_not_webhook, 
-                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
-                            wallet: crypto_address.payload.address, 
-                            privateKey: crypto_address.payload.privateKey,
-                            confirmations: 3
-                        }); 
-                        if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
-                        break;
+                        if(erc20) {
+                            crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                            /* Record webhooks */
+                            await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
+                                address     : crypto_address.payload.address,
+                                app_id      : user._id,
+                                currency_id : user_wallet.currency._id,
+                                isApp       : false
+                            });
+                            /* Record Payment Forwarding webhooks */
+                            let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwardingToken({
+                                from: crypto_address.payload.address, 
+                                to: app_wallet.bank_address_not_webhook, 
+                                callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
+                                wallet: crypto_address.payload.address, 
+                                privateKey: crypto_address.payload.privateKey,
+                                confirmations: 3,
+                                token: user_wallet.currency.address
+                            });
+                            if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                            break;
+                        }else{
+                            crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                            /* Record webhooks */
+                            await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
+                                address     : crypto_address.payload.address,
+                                app_id      : user._id,
+                                currency_id : user_wallet.currency._id,
+                                isApp       : false
+                            });
+                            /* Record Payment Forwarding webhooks */
+                            let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
+                                from: crypto_address.payload.address, 
+                                to: app_wallet.bank_address_not_webhook, 
+                                callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
+                                wallet: crypto_address.payload.address, 
+                                privateKey: crypto_address.payload.privateKey,
+                                confirmations: 3
+                            });
+                            if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                            break;
+                        }
                     };
                 }
 
