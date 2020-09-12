@@ -88,6 +88,12 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getSkinEcosystem(params) {
+        return request(global.server)
+        .post('/api/app/skinEcosystem/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editSkin(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/customization/skin')

@@ -1548,7 +1548,7 @@ const progressActions = {
     },
     __editSkin  : async (params) => {
         let { app, skinParams } = params;
-        await SkinRepository.prototype.findByIdAndUpdate({_id: skinParams._id, skin_type: skinParams.skin_type.toLowerCase()});
+        await SkinRepository.prototype.findByIdAndUpdate({_id: skinParams._id, skin_type: skinParams.skin_type.toLowerCase(), name: skinParams.name});
         
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})

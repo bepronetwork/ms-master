@@ -2110,6 +2110,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/skinEcosystem/get:
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Get Skin
+      operationId: getSkinEcosystem
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/provider/create:
     x-swagger-router-controller: app
     post:
@@ -4059,6 +4079,11 @@ definitions:
             example: "DEFAULT or DIGITAL"
             description: |
               Skin Type (DEFAULT or DIGITAL)
+          name :
+            type : string
+            example: "DEFAULT or DIGITAL"
+            description: |
+              Skin Name (DEFAULT or DIGITAL)
   AppCustomizationTopBar : 
     type: object
     required:

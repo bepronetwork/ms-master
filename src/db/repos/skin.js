@@ -39,12 +39,13 @@ class SkinRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate({_id, skin_type}){
+    findByIdAndUpdate({_id, skin_type, name}){
         return new Promise( (resolve,reject) => {
             SkinRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
                     "skin_type" : skin_type,
+                    "name" : name,
                 } },
                 { 'new': true })
                 .lean()

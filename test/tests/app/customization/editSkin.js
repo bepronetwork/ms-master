@@ -18,7 +18,8 @@ context('Edit Theme', async () => {
         const postData = {
             skinParams: {
                 _id: app.customization.skin._id,
-                skin_type: "digital"
+                skin_type: "digital",
+                name: "Digital"
                 },
             app: app._id
         };
