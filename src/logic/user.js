@@ -718,6 +718,7 @@ const progressActions = {
                                 token: user_wallet.currency.address
                             });
                             if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                            console.log("no 1");
                             break;
                         }else{
                             crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
@@ -738,6 +739,7 @@ const progressActions = {
                                 confirmations: 3
                             });
                             if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                            console.log("no 2");
                             break;
                         }
                     };
