@@ -25,7 +25,7 @@ module.exports = {
     let index = -1;
     while (true) {
       index++;
-      let games = await db.collection('games').find({name: "Diamonds"}).toArray();
+      let games = await db.collection('games').find({metaName: "diamonds_simple"}).toArray();
       if (games.length === 0) {
         console.log("ADD_DIAMONDS_TO_ECOSYSTEM");
         var resultSpace = [
