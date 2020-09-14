@@ -3,6 +3,7 @@ import { ErrorManager } from '../controllers/Errors';
 import { BlockchainsRepository, AuthorizedsRepository, CurrencyRepository, CasinoProviderEcoRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
+import SkinEcoRepository from '../db/repos/ecosystem/skin';
 let error = new ErrorManager();
 
 
@@ -30,6 +31,11 @@ const processActions = {
 		// Get Games
 		let providers = await CasinoProviderEcoRepository.prototype.getAll();
 		return providers;
+	},
+	__getSkinEcosystem: async () => {
+		// Get Games
+		let skins = await SkinEcoRepository.prototype.getAll();
+		return skins;
 	},
     __getEcosystemData : async () => {
 
@@ -68,6 +74,9 @@ const processActions = {
   
 const progressActions = {
 	__getProviderEcosystem: async (params) => {
+		return params;
+	},
+	__getSkinEcosystem: async (params) => {
 		return params;
 	},
 	__getEcosystemData : async (params) => {
@@ -134,6 +143,9 @@ class EcosystemLogic extends LogicComponent{
 				case 'GetProviderEcosystem' : {
 					return await library.process.__getProviderEcosystem(params); break;
 				};
+				case 'GetSkinEcosystem' : {
+					return await library.process.__getSkinEcosystem(params); break;
+				};
 			}
 		}catch(error){
 			throw error;
@@ -167,6 +179,9 @@ class EcosystemLogic extends LogicComponent{
 				};
 				case 'GetProviderEcosystem' : {
 					return await library.progress.__getProviderEcosystem(params); break;
+				};
+				case 'GetSkinEcosystem' : {
+					return await library.progress.__getSkinEcosystem(params); break;
 				};
 			}
 		}catch(error){

@@ -6,7 +6,8 @@ class SkinSchema{};
 SkinSchema.prototype.name = 'Skin';
 
 SkinSchema.prototype.schema =  {
-    skin_type : { type : String, required : true, default : 'default' }
+    skin_type : { type : String, required : true, default : 'default' },
+    name      : { type : String, default : 'Default' }
 }
 
 
