@@ -39,10 +39,12 @@ module.exports = {
         } else {
           for (let walletObject of userObject.wallet) {
             let wallet = await db.collection('wallets').findOne({ _id: walletObject })
-            await db.collection('wallets').updateOne(
-              { _id: wallet._id },
-              { $set: { depositAddresses: [] } }
-            );
+            if(wallet._id != null){
+              await db.collection('wallets').updateOne(
+                { _id: wallet._id },
+                { $set: { depositAddresses: [] } }
+              );
+            }
           }
         }
       }
