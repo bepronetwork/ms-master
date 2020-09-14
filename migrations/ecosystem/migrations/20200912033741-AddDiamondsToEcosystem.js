@@ -80,12 +80,11 @@ module.exports = {
         await db.collection('games').insertOne({
           "name": "Diamonds",
           "metaName": "diamonds_simple",
-          "description": "Diamonds with 6 Icons",
+          "description": "Diamonds with 7 Places",
           "image_url": "https://storage.googleapis.com/betprotocol-game-images/001-plinko_variation_1.png",
           "isValid": true,
-          "rules": "1 - To win, get the best gem combination. \\n2 - Best possible combination is 5 of a kind. \\n3 - Rankings follow that of traditional poker.",
+          "rules": "1 - Don´t rob the Diamonds, you can see you there",
           "resultSpace": listResultSpace,
-          "background_url": null,
           "__v": 0
         });
         break;

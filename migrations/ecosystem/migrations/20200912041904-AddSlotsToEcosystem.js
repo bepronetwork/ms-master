@@ -92,19 +92,19 @@ module.exports = {
           {
             "formType": "10",
             "probability": 0.0006,
-            "multiplier": 80,
+            "multiplier": 60,
             "__v": 0
           },
           {
             "formType": "11",
             "probability": 0.0004,
-            "multiplier": 200,
+            "multiplier": 100,
             "__v": 0
           },
           {
             "formType": "12",
             "probability": 0.0002,
-            "multiplier": 600,
+            "multiplier": 200,
             "__v": 0
           }
         ];
@@ -119,9 +119,8 @@ module.exports = {
           "description": "Slots with 13 Icons",
           "image_url": "https://storage.googleapis.com/betprotocol-game-images/001-plinko_variation_1.png",
           "isValid": true,
-          "rules": "new",
+          "rules": "1 - 13 Icons are possible to be drawn \n 2 - Everytime the same Icon is drawn your odd is multiplied by 2",
           "resultSpace": listResultSpace,
-          "background_url": null,
           "__v": 0
         });
         break;
