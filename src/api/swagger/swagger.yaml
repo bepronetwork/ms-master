@@ -1240,6 +1240,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/icons : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Icon Information
+      operationId: editIcons
+      description: Change Icons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationIcons'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/subSections : 
     x-swagger-router-controller: app
     post:
@@ -3923,6 +3953,29 @@ definitions:
       fullWidth:
         type : boolean
         example: true
+  AppCustomizationIcons :
+    type: object
+    required:
+      - app
+      - icons
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      icons:
+        type : array
+        items :
+          type: object
+          properties:
+            position :
+              type: number
+            link :
+              type: string
+            name :
+              type: string
   AppCustomizationSubSections :
     type: object
     required:
