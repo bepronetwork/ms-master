@@ -53,8 +53,10 @@ import ProviderRepository from "./provider";
 import ProviderTokenRepository from "./providerToken";
 import CripsrRepository from "./cripsr";
 import SkinRepository from "./skin"
+import IconsRepository from "./icon";
 
 export {
+    IconsRepository,
     SkinRepository,
     CripsrRepository,
     ProviderRepository,
