@@ -90,7 +90,7 @@ module.exports = {
     },
     async getSkinEcosystem(params) {
         return request(global.server)
-        .post('/api/app/skinEcosystem/get')
+        .get('/api/app/skinEcosystem/get')
         .send(params)
         .then(res => detectServerError(res))
     },
