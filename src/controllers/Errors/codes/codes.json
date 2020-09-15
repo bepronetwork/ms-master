@@ -294,5 +294,9 @@
     "073" : {
         "key" : "WRONG_SKIN",
         "message"   : "Skin not available, choose default or digital"
+    },
+    "074" : {
+        "key" : "ICONS_LIMIT_EXCEEDED",
+        "message"   : "Icons limit exceeded"
     }
 }

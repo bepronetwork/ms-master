@@ -52,8 +52,10 @@ import ProviderLogic from "./provider";
 import ProviderTokenLogic from "./providerToken";
 import CripsrLogic from "./cripsr";
 import SkinLogic from "./skin";
+import IconsLogic from "./icon";
 
 export {
+    IconsLogic,
     SkinLogic,
     CripsrLogic,
     ProviderLogic,

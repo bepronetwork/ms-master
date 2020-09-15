@@ -38,12 +38,14 @@ module.exports = {
           continue;
         } else {
           for (let walletObject of userObject.wallet) {
-            let wallet = await db.collection('wallets').findOne({ _id: walletObject })
-            if(wallet._id != null){
-              await db.collection('wallets').updateOne(
-                { _id: wallet._id },
-                { $set: { depositAddresses: [] } }
-              );
+            if (walletObject != (null || undefined)) {
+              let wallet = await db.collection('wallets').findOne({ _id: walletObject })
+              if (wallet._id != (null || undefined)) {
+                await db.collection('wallets').updateOne(
+                  { _id: wallet._id },
+                  { $set: { depositAddresses: [] } }
+                );
+              }
             }
           }
         }

@@ -4,7 +4,7 @@ import { editSkin } from '../../../methods';
 import { AppRepository } from '../../../../src/db/repos';
 const expect = chai.expect;
 
-context('Edit Theme', async () => {
+context('Edit Skin', async () => {
     var app, admin;
 
     before(async () => {

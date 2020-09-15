@@ -604,6 +604,16 @@ class ErrorManager {
         }
     }
 
+    icon = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     subSection = function (object, type){
         try{
             switch(type){
