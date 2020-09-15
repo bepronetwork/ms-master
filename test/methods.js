@@ -80,6 +80,22 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editKycNeeded(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/user/kyc_needed/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editKycIntegration(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/integrations/kyc/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editCripsrIntegration(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/integrations/cripsr/edit')
@@ -90,7 +106,7 @@ module.exports = {
     },
     async getSkinEcosystem(params) {
         return request(global.server)
-        .post('/api/app/skinEcosystem/get')
+        .get('/api/app/skinEcosystem/get')
         .send(params)
         .then(res => detectServerError(res))
     },

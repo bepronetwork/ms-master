@@ -15,7 +15,7 @@ context('Ecosystem Skin', async () => {
     });
 
     it('should Get Skin Ecosystem', mochaAsync(async () => {
-        let res = await getSkinEcosystem({});
+        let res = await getSkinEcosystem();
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));

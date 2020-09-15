@@ -269,6 +269,15 @@ const app_object = (object) => {
                     "name": object.app.integrations.cripsr.name,
                     "metaName": object.app.integrations.cripsr.metaName,
                 },
+                "kyc": !object.app.integrations.kyc ? {} : {
+                    "_id": object.app.integrations.kyc._id,
+                    "clientId": !object.app.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.app.integrations.kyc.clientId),
+                    "clientId": !object.app.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.app.integrations.kyc.flowId),
+                    "link": object.app.integrations.kyc.link,
+                    "isActive": object.app.integrations.kyc.isActive,
+                    "name": object.app.integrations.kyc.name,
+                    "metaName": object.app.integrations.kyc.metaName,
+                },
                 "mailSender": !object.app.integrations.mailSender ? {} : {
                     "_id": object.app.integrations.mailSender._id,
                     "apiKey": object.app.integrations.mailSender.apiKey,

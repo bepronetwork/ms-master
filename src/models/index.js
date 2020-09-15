@@ -48,6 +48,7 @@ import Provider from "./provider";
 import ProviderToken from "./providerToken";
 import Cripsr from "./cripsr";
 import Skin from "./skin";
+import Kyc from "./kyc";
 
 export {
     Skin,
@@ -100,4 +101,5 @@ export {
     Background,
     PointSystem,
     ProviderToken,
+    Kyc,
 }

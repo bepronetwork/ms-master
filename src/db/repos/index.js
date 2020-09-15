@@ -52,7 +52,8 @@ import SubSectionsRepository from "./subSections";
 import ProviderRepository from "./provider";
 import ProviderTokenRepository from "./providerToken";
 import CripsrRepository from "./cripsr";
-import SkinRepository from "./skin"
+import SkinRepository from "./skin";
+import KycRepository from "./kyc";
 
 export {
     SkinRepository,
@@ -113,4 +114,5 @@ export {
     SubSectionsRepository,
     ProviderTokenRepository,
     CasinoProviderEcoRepository,
+    KycRepository,
 }

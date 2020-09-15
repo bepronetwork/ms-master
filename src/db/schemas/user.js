@@ -30,12 +30,14 @@ UserSchema.prototype.schema = {
     security            : { type: mongoose.Schema.Types.ObjectId, ref: 'Security', required : true},
     email_confirmed     : { type : Boolean, default : false, required : true },
     points              : { type: Number, required : true, default: 0 },
+    kyc_needed          : { type : Boolean, default : false },
+    kyc_status          : { type : String, default : "no kyc" },
 }
 
 
 // db o only allows once per type
 UserSchema.prototype.model = db.model(UserSchema.prototype.name, new db.Schema(UserSchema.prototype.schema));
-    
+
 export {
     UserSchema
 }

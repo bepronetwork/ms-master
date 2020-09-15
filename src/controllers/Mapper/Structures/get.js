@@ -181,6 +181,15 @@ const get_object = (object) => {
                 "name": object.integrations.cripsr.name,
                 "metaName": object.integrations.cripsr.metaName,
             },
+            "kyc": !object.integrations.kyc ? {} : {
+                "_id": object.integrations.kyc._id,
+                "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                "clientId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
+                "link": object.integrations.kyc.link,
+                "isActive": object.integrations.kyc.isActive,
+                "name": object.integrations.kyc.name,
+                "metaName": object.integrations.kyc.metaName,
+            },
             "mailSender": !object.integrations.mailSender ? {} : {
                 "_id": object.integrations.mailSender._id,
                 "apiKey": object.integrations.mailSender.apiKey,

@@ -42,7 +42,7 @@ import { ProviderSchema } from './provider';
 import { ProviderTokenSchema } from './providerToken';
 import { CripsrSchema } from './integrations/cripsr';
 import { SkinSchema } from "./customization/skin";
-
+import { KycSchema } from "./integrations/kyc";
 
 export {
     SkinSchema,
@@ -89,4 +89,5 @@ export {
     SubSectionsSchema,
     ProviderSchema,
     ProviderTokenSchema,
+    KycSchema,
 }

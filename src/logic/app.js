@@ -37,11 +37,13 @@ import {
     ProviderRepository,
     CripsrRepository,
     SkinRepository,
+    KycRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
+import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
@@ -815,6 +817,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editKycIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
     __editCripsrIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -977,6 +985,15 @@ const processActions = {
             availableDepositAddresses,
             app
         };
+    },
+    __kycWebhook: async (params) => {
+        if(!verifyKYC(params.metadata)) {
+            return false;
+        }
+        const user_id = params.metadata.id;
+        const user = await UsersRepository.prototype.findUserById(user_id);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        return params;
     }
 }
 
@@ -1497,6 +1514,21 @@ const progressActions = {
         }
         return params;
     },
+    __editKycIntegration : async (params) => {
+        let { flowId, clientId, isActive, app, kyc_id } = params;
+        let hashedFlowId    = Security.prototype.encryptData(flowId);
+        let hashedClientId  = Security.prototype.encryptData(clientId);
+
+        await KycRepository.prototype.findByIdAndUpdate(kyc_id, {
+            flowId   : hashedFlowId,
+            clientId : hashedClientId,
+            isActive : isActive
+        });
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id});
+
+        return true;
+    },
     __editCripsrIntegration : async (params) => {
         let { key, cripsr_id, isActive, app } = params;
         let hashedKey = await Security.prototype.encryptData(key)
@@ -1835,6 +1867,15 @@ const progressActions = {
                 console.log("b")
             }
         }
+    },
+    __kycWebhook: async (params) => {
+        if(!params) {return false;}
+        const user_id = params.metadata.id;
+        if(params.identityStatus=="verified") {
+            UsersRepository.prototype.editKycNeeded(user_id, false);
+        }
+        UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
+        return true;
     }
 }
 
@@ -1955,6 +1996,9 @@ class AppLogic extends LogicComponent{
                 case 'EditCripsrIntegration' : {
                     return await library.process.__editCripsrIntegration(params); break;
                 };
+                case 'EditKycIntegration' : {
+                    return await library.process.__editKycIntegration(params); break;
+                };
                 case 'EditMailSenderIntegration' : {
                     return await library.process.__editMailSenderIntegration(params); break;
                 };
@@ -2069,7 +2113,9 @@ class AppLogic extends LogicComponent{
                 case 'ProviderBalance' : {
                     return await library.process.__providerBalance(params); break;
                 };
-
+                case 'KycWebhook' : {
+                    return await library.process.__kycWebhook(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -2172,6 +2218,10 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditCripsrIntegration' : {
                     return await library.progress.__editCripsrIntegration(params); break;
+                };
+
+                case 'EditKycIntegration' : {
+                    return await library.progress.__editKycIntegration(params); break;
                 };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;
@@ -2277,6 +2327,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'ProviderBalance' : {
                     return await library.progress.__providerBalance(params); break;
+                };
+                case 'KycWebhook' : {
+                    return await library.progress.__kycWebhook(params); break;
                 };
 			}
 		}catch(error){
