@@ -848,6 +848,21 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
+   async editIcons() {
+    //Output Boolean
+    try {
+        let app = await this.process('EditIcons');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
     async editSubSections() {
         //output = boolean
         try {

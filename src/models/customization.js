@@ -1,7 +1,7 @@
 import { CustomizationLogic } from '../logic';
 import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
-import { TopBar, Banners, SubSections, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab } from '.';
+import { TopBar, Banners, SubSections, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab, Icons } from '.';
 import { colors } from '../mocks';
 import Skin from './skin';
 
@@ -39,6 +39,15 @@ class Customization extends ModelComponent {
                                 name: "Esports",
                                 icon: "https://i.ibb.co/F6RLGVz/Esports.png",
                                 link_url: "/esports"
+                            }
+                        ]
+                    }),
+                    new Icons({
+                        ids: [
+                            {
+                                position: "0",
+                                link: "0.png",
+                                name: "test"
                             }
                         ]
                     }),

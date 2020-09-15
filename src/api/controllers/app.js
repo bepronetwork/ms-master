@@ -862,6 +862,20 @@ async function editBanners(req, res) {
     }
 }
 
+async function editIcons(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editIcons();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editLogo(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
@@ -1088,6 +1102,7 @@ async function generateAddresses(req, res) {
 
 
 export {
+    editIcons,
     editSkin,
     editCripsrIntegration,
     editApp,

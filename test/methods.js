@@ -118,6 +118,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editIcons(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/icons')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editProvider(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/provider/edit')

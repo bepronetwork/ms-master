@@ -37,7 +37,8 @@ import {
     ProviderRepository,
     CripsrRepository,
     SkinRepository,
-    KycRepository
+    KycRepository,
+    IconsRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -873,6 +874,16 @@ const processActions = {
             app
         };
     },
+    __editIcons : async (params) => {
+        let { app, icons } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        if(icons.length > 50){throwError('ICONS_LIMIT_EXCEEDED')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editBanners : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1625,6 +1636,30 @@ const progressActions = {
 
         return true;
     },
+    __editIcons  : async (params) => {
+        let { app, icons, icon_id } = params;
+        let icon = await Promise.all(icons.map( async icon => {
+            if(icon.link.includes("https")){
+                /* If it is a link already */
+                return icon;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    link     : await GoogleStorageSingleton.uploadFileWithName({bucketName : 'betprotocol-icons', file : icon.link, fileName: `${icon.position}-${app._id}`}),
+                    name     : icon.name,
+                    position : icon.position
+                };
+            }
+        }))
+        await IconsRepository.prototype.findByIdAndUpdate({
+            _id: icon_id,
+            icon
+        });
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return true;
+    },
     __editBanners : async (params) => {
         let { app, autoDisplay, banners, fullWidth } = params;
         let ids = await Promise.all(banners.map( async b => {
@@ -2026,6 +2061,9 @@ class AppLogic extends LogicComponent{
                 case 'EditTopTab' : {
                     return await library.process.__editTopTab(params); break;
                 };
+                case 'EditIcons' : {
+                    return await library.process.__editIcons(params); break;
+                };
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
                 };
@@ -2240,6 +2278,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditTopTab' : {
                     return await library.progress.__editTopTab(params); break;
+                };
+                case 'EditIcons' : {
+                    return await library.progress.__editIcons(params); break;
                 };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;
