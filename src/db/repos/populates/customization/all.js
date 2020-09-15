@@ -16,6 +16,11 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'icons',
+        model : 'Icons',
+        select : { '__v': 0},
+    },
+    {
         path : 'logo',
         model : 'Logo',
         select : { '__v': 0},

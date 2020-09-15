@@ -3958,6 +3958,7 @@ definitions:
     required:
       - app
       - icons
+      - icon_id
     properties:
       app:
         type : string
@@ -3965,6 +3966,12 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      icon_id:
+        type : string
+        format: name
+        example: "nwovn1232wqc12"
+        description: |
+          Icon Customization id
       icons:
         type : array
         items :
