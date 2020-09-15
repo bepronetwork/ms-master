@@ -1613,7 +1613,7 @@ const progressActions = {
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return {
-                    link     : await GoogleStorageSingleton.uploadFile({bucketName : `icons/icons-${app._id}`, file : icon.link}),
+                    link     : await GoogleStorageSingleton.uploadFileWithName({bucketName : 'betprotocol-icons', file : icon.link, fileName: `${icon.position}-${app._id}`}),
                     name     : icon.name,
                     position : icon.position
                 };
@@ -1621,7 +1621,7 @@ const progressActions = {
         }))
         await IconsRepository.prototype.findByIdAndUpdate({
             _id: icon_id,
-            newStructure: icon
+            icon
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})

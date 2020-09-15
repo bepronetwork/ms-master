@@ -39,12 +39,12 @@ class IconsRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate(_id, newStructure){
+    findByIdAndUpdate({_id, icon}){
         return new Promise( (resolve,reject) => {
             IconsRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "ids"          : newStructure.ids
+                    "ids" : icon
                 } },
                 { 'new': true })
                 .lean()
