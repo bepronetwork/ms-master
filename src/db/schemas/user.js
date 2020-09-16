@@ -15,7 +15,7 @@ UserSchema.prototype.schema = {
     email               : { type: String, required : true},
     hash_password       : { type: String},
     external_user       : { type: Boolean, required : true},
-    external_id         : { type: String},
+    external_id         : { type: Number},
     bearerToken         : { type: String },
     app_id              : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true},
     bets                : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bet'}],
