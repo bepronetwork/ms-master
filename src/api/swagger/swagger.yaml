@@ -1120,6 +1120,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/skin : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit App Skin Customization
+      operationId: editSkin
+      description: Edit App Skin Customization
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationSkin'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/topBar : 
     x-swagger-router-controller: app
     post:
@@ -1199,6 +1229,36 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/AppCustomizationBanners'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/customization/icons : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Icon Information
+      operationId: editIcons
+      description: Change Icons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationIcons'
       responses:
         "200":
           description: Success
@@ -1669,7 +1729,100 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
+
+  /user/kyc_needed/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Kyc Integration
+      operationId: editKycNeeded
+      description: Change Kyc Integration Info
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppEditKycNeededRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/integrations/kyc/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Kyc Integration
+      operationId: editKycIntegration
+      description: Change Kyc Integration Info
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppKycEditIntegrationRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/kyc_webhook:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Kyc Webhook
+      operationId: kycWebhook
+      description: Change Kyc Integration Info
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppKycWebhookRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/integrations/mailSender/edit:
     x-swagger-router-controller: app
     post:
@@ -2067,6 +2220,26 @@ paths:
       - ecosystem
       summary: Register User Data
       operationId: getProviderEcosystem
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/skinEcosystem/get:
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Get Skin
+      operationId: getSkinEcosystem
       produces:
         - application/json
       responses:
@@ -3873,6 +4046,36 @@ definitions:
       fullWidth:
         type : boolean
         example: true
+  AppCustomizationIcons :
+    type: object
+    required:
+      - app
+      - icons
+      - icon_id
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      icon_id:
+        type : string
+        format: name
+        example: "nwovn1232wqc12"
+        description: |
+          Icon Customization id
+      icons:
+        type : array
+        items :
+          type: object
+          properties:
+            position :
+              type: number
+            link :
+              type: string
+            name :
+              type: string
   AppCustomizationSubSections :
     type: object
     required:
@@ -4004,6 +4207,36 @@ definitions:
         type : string
         format: name
         example: "dark"
+  AppCustomizationSkin : 
+    type: object
+    required:
+      - app
+      - skinParams
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      skinParams:
+        type: object
+        properties:
+          _id :
+            type : string
+            example: "wertwetwert213cwert"
+            description: |
+              Skin Id
+          skin_type :
+            type : string
+            example: "DEFAULT or DIGITAL"
+            description: |
+              Skin Type (DEFAULT or DIGITAL)
+          name :
+            type : string
+            example: "DEFAULT or DIGITAL"
+            description: |
+              Skin Name (DEFAULT or DIGITAL)
   AppCustomizationTopBar : 
     type: object
     required:
@@ -4164,9 +4397,72 @@ definitions:
         type : string
         format: name
         example: "3456g334"
-      isActive : 
+      isActive :
         type : boolean
         example: true
+  AppEditKycNeededRequest :
+    type: object
+    required:
+      - admin
+      - user
+      - kyc_needed
+    properties:
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          admin id
+      user:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          User id
+      kyc_needed:
+        type : boolean
+        example: true
+  AppKycEditIntegrationRequest :
+    type: object
+    required:
+      - kyc_id
+      - admin
+      - app
+      - clientId
+      - flowId
+      - isActive
+    properties:
+      kyc_id:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          kyc id
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          admin id
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      clientId:
+        type : string
+        format: name
+        example: "gw293847ncv2"
+      flowId:
+        type : string
+        format: name
+        example: "3456g334"
+      isActive :
+        type : boolean
+        example: true
+  AppKycWebhookRequest:
+    type: object
   AppCripsrEditIntegration : 
     type: object
     required:

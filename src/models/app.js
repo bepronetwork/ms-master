@@ -99,6 +99,21 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+    async kycWebhook() {
+        // output Boolean
+        try {
+            let res = await this.process('KycWebhook');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
     async modifyBalance() {
@@ -716,16 +731,30 @@ class App extends ModelComponent {
    * @return {bool || Exception}  
    */
 
-
-  async editCripsrIntegration() {
+  async editKycIntegration() {
     // Output Boolean
     try {
-        let app = await this.process('EditCripsrIntegration');
+        let app = await this.process('EditKycIntegration');
         return app;
     } catch (err) {
         throw err;
     }
 }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+
+    async editCripsrIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditCripsrIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
 
     /**
     * @param {String} 
@@ -751,6 +780,21 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditTheme');
             return MapperEditThemeSingleton.output('EditTheme', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+     /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editSkin() {
+        //Boolean Output
+        try {
+            let app = await this.process('EditSkin');
+            return app;
         } catch (err) {
             throw err;
         }
@@ -798,6 +842,21 @@ class App extends ModelComponent {
             throw err;
         }
     }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async editIcons() {
+    //Output Boolean
+    try {
+        let app = await this.process('EditIcons');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
 
     /**
     * @param {String} 

@@ -80,9 +80,47 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editKycNeeded(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/user/kyc_needed/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editKycIntegration(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/integrations/kyc/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editCripsrIntegration(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/integrations/cripsr/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async getSkinEcosystem(params) {
+        return request(global.server)
+        .get('/api/app/skinEcosystem/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editSkin(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/skin')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editIcons(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/icons')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

@@ -41,12 +41,13 @@ import { SubSectionsSchema } from './customization/subSections';
 import { ProviderSchema } from './provider';
 import { ProviderTokenSchema } from './providerToken';
 import { CripsrSchema } from './integrations/cripsr';
-
-import { GameStatsSchema } from './redis/gameStats';
-import { UserStatsSchema } from './redis/userStats';
-
+import { SkinSchema } from "./customization/skin";
+import { KycSchema } from "./integrations/kyc";
+import { IconsSchema } from "./customization/icon";
 
 export {
+    IconsSchema,
+    SkinSchema,
     CripsrSchema,
     TopTabSchema,
     DepositBonusSchema,
@@ -90,6 +91,5 @@ export {
     SubSectionsSchema,
     ProviderSchema,
     ProviderTokenSchema,
-    GameStatsSchema,
-    UserStatsSchema,
+    KycSchema,
 }

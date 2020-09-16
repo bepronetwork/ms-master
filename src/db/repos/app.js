@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { AppSchema, UserStatsSchema, GameStatsSchema } from '../schemas';
+import { AppSchema } from '../schemas';
 import { 
     pipeline_revenue_stats, 
     pipeline_user_stats, 
@@ -228,7 +228,10 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_last_bets(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)
+                    }
                     resolve(data.slice(0, size));
                 });
             });
@@ -243,7 +246,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_popular_numbers(id))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)}
                     resolve(data.slice(0, size));
                 });
             });
@@ -299,7 +304,9 @@ class AppRepository extends MongoComponent{
                         ...game,
                         ...currency
                     }).countDocuments().exec();
-                    if(err){reject(err)}
+                    if(err){
+                        item=[]
+                        reject(err)}
                     resolve({list: item, totalCount });
                 })
             });
@@ -314,7 +321,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_biggest_bet_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)}
                     resolve(data.slice(0, size));
                 });
             });
@@ -329,7 +338,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_biggest_user_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data = []
+                        reject(err)}
                     resolve(data.slice(0, size));
                 });
             });
@@ -431,6 +442,24 @@ class AppRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
+                .lean()
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    findAppByIdHostingId(_id){ 
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    _id : 1,
+                    hosting_id : 1,
+                })
                 .lean()
                 .exec( (err, App) => {
                     if(err) { reject(err)}
@@ -602,7 +631,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_get_by_external_id(app_id, user_external_id))
                 .exec( (err, user) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        user=[]
+                        reject(err)}
                     let ret;
                     if(user.length == 0){ ret = null; }else{
                         ret = user[0].user;
@@ -649,7 +680,9 @@ class AppRepository extends MongoComponent{
             AppRepository.prototype.schema.model
             .aggregate(pipeline_one_game_stats(_id, { currency, game }))
             .exec( (err, item) => {
-                if(err) { reject(err)}
+                if(err) { 
+                    item=[]
+                    reject(err)}
                 resolve(item[0]==null ? null : item[0].game);
             });
         });
@@ -660,7 +693,8 @@ class AppRepository extends MongoComponent{
      * @param {Mongoose Id} _id 
      */
 
-    async getSummaryStats(type, _id, { dates, currency }, period="weekly"){
+    async getSummaryStats(type, _id, { dates, currency }){ 
+
         let pipeline;
 
         /**
@@ -668,52 +702,24 @@ class AppRepository extends MongoComponent{
          * @output Pipeline
          */
         switch (type){
-            case 'users' : {
-                return new Promise( (resolve, reject) => {
-                    UserStatsSchema.prototype.model.findOne({app: _id, currency, period})
-                    .exec( (err, item) => {
-                        if(err) { reject(err)}
-                        resolve({item: !item ? [] : item.userStats, type});
-                    });
-                });
-                break;
-            };
-            case 'games' : {
-                return new Promise( (resolve, reject) => {
-                    GameStatsSchema.prototype.model.findOne({app: _id, currency, period})
-                    .exec( (err, item) => {
-                        if(err) { reject(err)}
-                        console.log(item);
-                        resolve({item, type});
-                    });
-                });
-                break
-            };
+            case 'users' : pipeline = pipeline_user_stats; break;
+            case 'games' : pipeline = pipeline_game_stats; break;
             case 'revenue' : pipeline = pipeline_revenue_stats; break;
             case 'bets' : pipeline = pipeline_bet_stats; break;
             case 'wallet' : pipeline = pipeline_app_wallet; break;
             default : throw new Error(` Type : ${type} is not accepted as a Summary Type API Call`);
         }
 
-        if(type == 'wallet'){
-            return new Promise( (resolve, reject) => {
-                AppRepository.prototype.schema.model
-                .aggregate(pipeline(_id, { dates, currency }))
-                .exec( (err, item) => {
-                    if(err) { reject(err)}
-                    resolve({item, type});
-                    });
-                }); 
-        } else { 
-            return new Promise( (resolve, reject) => {
-            BetRepository.prototype.schema.model
+        return new Promise( (resolve, reject) => {
+            AppRepository.prototype.schema.model
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
-                if(err) { reject(err)}
+                if(err) { 
+                    item=[]
+                    reject(err)}
                 resolve({item, type});
-                });
-            }); 
-        }
+            });
+        });
     }
 
     async getAll(){

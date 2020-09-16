@@ -51,7 +51,9 @@ class WithdrawRepository extends MongoComponent{
                 WithdrawRepository.prototype.schema.model
                 .aggregate(pipeline)
                 .exec( (err, Withdraws) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        Withdraws=[]
+                        reject(err)}
                     resolve(Withdraws);
                 });
             });

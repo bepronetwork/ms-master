@@ -57,7 +57,7 @@
     },
     "014" : {
         "key"      : "WITHDRAW_MODE_IN_API",
-        "message"   : "Withdraw/Bet Mode is already in"
+        "message"   : "The system is already processing your action"
     },
     "015" : {
         "key"      : "WITHDRAW_MODE_IN_SMART_CONTRACT",
@@ -290,5 +290,13 @@
     "072" : {
         "key" : "PAYMENT_FORWARDING_TRANSACTION",
         "message"   : "Payment Forwarding Done"
+    },
+    "073" : {
+        "key" : "WRONG_SKIN",
+        "message"   : "Skin not available, choose default or digital"
+    },
+    "074" : {
+        "key" : "ICONS_LIMIT_EXCEEDED",
+        "message"   : "Icons limit exceeded"
     }
 }

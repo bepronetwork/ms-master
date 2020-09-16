@@ -541,6 +541,16 @@ class ErrorManager {
         }
     }
 
+    kyc = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     topTab = function (object, type){
         try{
             switch(type){
@@ -604,6 +614,16 @@ class ErrorManager {
         }
     }
 
+    icon = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     subSection = function (object, type){
         try{
             switch(type){
@@ -615,6 +635,16 @@ class ErrorManager {
     }
 
     logo = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    skin = function (object, type){
         try{
             switch(type){
                

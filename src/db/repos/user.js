@@ -121,7 +121,10 @@ class UsersRepository extends MongoComponent{
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_user_specific_stats(user, currency))
                 .exec( (err, user) => {
-                    if(err) { resolve(null)}
+                    if(err) { 
+                        user = []
+                        reject(err)
+                    }
                     resolve(user);
                 });
             });
@@ -154,7 +157,10 @@ class UsersRepository extends MongoComponent{
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_my_bets(_id,{ dates, currency, game, offset, size  }))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)
+                    }
                     resolve(data.slice(0, size));
                 });
             });
@@ -232,6 +238,32 @@ class UsersRepository extends MongoComponent{
                 if(err) {reject(err)}
                 resolve(user);
             });
+        });
+    }
+
+    editKycNeeded(_id, kyc_needed){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: { kyc_needed } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    editKycStatus(_id, kyc_status){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: { kyc_status } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
         });
     }
 
@@ -345,10 +377,13 @@ class UsersRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model
             .aggregate(usersFromAppFiltered({size, offset, app, user, username, email}))
-            .exec( (err, docs) => {
-                if(err){reject(err)}
-                resolve(docs);
-            })
+            .exec( (err, data) => {
+                if(err) { 
+                    data=[]
+                    reject(err)
+                }
+                resolve(data.slice(0, size));
+            });
         })
     }
 
@@ -382,7 +417,10 @@ class UsersRepository extends MongoComponent{
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_all_users_balance(app))
                 .exec( (err, item) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        item=[]
+                        reject(err)
+                    }
                     var res;
                     if(!item || !item[0]){ res = { balance : 0} }
                     else{res = item[0]}
@@ -452,7 +490,10 @@ class UsersRepository extends MongoComponent{
             UsersRepository.prototype.schema.model
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
-                if(err) { reject(err)}
+                if(err) { 
+                    item=[]
+                    reject(err)
+                }
                 resolve(item);
             });
         });

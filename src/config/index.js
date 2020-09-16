@@ -17,6 +17,8 @@ export const LIMIT =  process.env.LIMIT || 1;
 
 export const RATE =  process.env.RATE || 100;
 
+export const MERCHANT_SECRET_KYC = process.env.MERCHANT_SECRET_KYC;
+
 export const DB_PASSWORD =  process.env.DB_PASSWORD;
 
 export const ETH_TEST_NET = process.env.ETH_NET; 
@@ -78,6 +80,8 @@ export const USER_KEY = process.env.USER_KEY;
 export const CRYPTO_API = process.env.CRYPTO_API;
 
 export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
+
+export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
 
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;

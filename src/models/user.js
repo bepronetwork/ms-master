@@ -53,6 +53,14 @@ class User extends ModelComponent {
         }
     }
 
+    async editKycNeeded() {
+        try {
+            return await this.process('EditKycNeeded');
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async login() {
         try {
             let res = await this.process('Login');

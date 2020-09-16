@@ -36,11 +36,15 @@ import {
     SubSectionsRepository,
     ProviderRepository,
     CripsrRepository,
+    SkinRepository,
+    KycRepository,
+    IconsRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
+import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
@@ -318,8 +322,7 @@ const processActions = {
                 dates : fromPeriodicityToDates({periodicity : params.periodicity}),
                 currency : params.currency
                 // Add more here if needed
-            },
-            period: params.periodicity
+            }
         }
 
        return normalized;
@@ -832,6 +835,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editKycIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
     __editCripsrIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -854,6 +863,16 @@ const processActions = {
             app
         };
     },
+    __editSkin : async (params) => {
+        let { app, skinParams } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        if((skinParams.skin_type.toLowerCase() != "default") && (skinParams.skin_type.toLowerCase() != "digital")){ throwError('WRONG_SKIN') }
+        return {
+            ...params,
+            app
+        };
+    },
     __editTopBar : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -867,6 +886,16 @@ const processActions = {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editIcons : async (params) => {
+        let { app, icons } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        if(icons.length > 50){throwError('ICONS_LIMIT_EXCEEDED')};
         return {
             ...params,
             app
@@ -984,6 +1013,15 @@ const processActions = {
             availableDepositAddresses,
             app
         };
+    },
+    __kycWebhook: async (params) => {
+        if(!verifyKYC(params.metadata)) {
+            return false;
+        }
+        const user_id = params.metadata.id;
+        const user = await UsersRepository.prototype.findUserById(user_id);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        return params;
     }
 }
 
@@ -1065,7 +1103,7 @@ const progressActions = {
     },
 	__summary : async (params) => {
         // Get Specific App Data
-        let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts, params.period);
+        let res = await AppRepository.prototype.getSummaryStats(params.type, params.app, params.opts);
         return res;
     },
     __appGetUsersBets : async (params) => {
@@ -1505,6 +1543,21 @@ const progressActions = {
         }
         return params;
     },
+    __editKycIntegration : async (params) => {
+        let { flowId, clientId, isActive, app, kyc_id } = params;
+        let hashedFlowId    = Security.prototype.encryptData(flowId);
+        let hashedClientId  = Security.prototype.encryptData(clientId);
+
+        await KycRepository.prototype.findByIdAndUpdate(kyc_id, {
+            flowId   : hashedFlowId,
+            clientId : hashedClientId,
+            isActive : isActive
+        });
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id});
+
+        return true;
+    },
     __editCripsrIntegration : async (params) => {
         let { key, cripsr_id, isActive, app } = params;
         let hashedKey = await Security.prototype.encryptData(key)
@@ -1553,6 +1606,15 @@ const progressActions = {
 
         return {app: app._id, customization: app.customization._id, theme: themeResult.theme};
     },
+    __editSkin  : async (params) => {
+        let { app, skinParams } = params;
+        await SkinRepository.prototype.findByIdAndUpdate({_id: skinParams._id, skin_type: skinParams.skin_type.toLowerCase(), name: skinParams.name});
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return true;
+    },
     __editTopBar  : async (params) => {
         let { app, backgroundColor, textColor, text, isActive, isTransparent } = params;
         const { topBar } = app.customization;
@@ -1586,6 +1648,30 @@ const progressActions = {
             _id: app.customization.topTab._id,
             newStructure: topTab,
             isTransparent
+        });
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return true;
+    },
+    __editIcons  : async (params) => {
+        let { app, icons, icon_id } = params;
+        let icon = await Promise.all(icons.map( async icon => {
+            if(icon.link.includes("https")){
+                /* If it is a link already */
+                return icon;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    link     : await GoogleStorageSingleton.uploadFileWithName({bucketName : 'betprotocol-icons', file : icon.link, fileName: `${icon.position}-${app._id}`}),
+                    name     : icon.name,
+                    position : icon.position
+                };
+            }
+        }))
+        await IconsRepository.prototype.findByIdAndUpdate({
+            _id: icon_id,
+            icon
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -1834,6 +1920,15 @@ const progressActions = {
                 console.log("b")
             }
         }
+    },
+    __kycWebhook: async (params) => {
+        if(!params) {return false;}
+        const user_id = params.metadata.id;
+        if(params.identityStatus=="verified") {
+            UsersRepository.prototype.editKycNeeded(user_id, false);
+        }
+        UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
+        return true;
     }
 }
 
@@ -1954,6 +2049,9 @@ class AppLogic extends LogicComponent{
                 case 'EditCripsrIntegration' : {
                     return await library.process.__editCripsrIntegration(params); break;
                 };
+                case 'EditKycIntegration' : {
+                    return await library.process.__editKycIntegration(params); break;
+                };
                 case 'EditMailSenderIntegration' : {
                     return await library.process.__editMailSenderIntegration(params); break;
                 };
@@ -1972,11 +2070,17 @@ class AppLogic extends LogicComponent{
                 case 'EditTheme' : {
                     return await library.process.__editTheme(params); break;
                 };
+                case 'EditSkin' : {
+                    return await library.process.__editSkin(params); break;
+                };
                 case 'EditTopBar' : {
                     return await library.process.__editTopBar(params); break;
                 };
                 case 'EditTopTab' : {
                     return await library.process.__editTopTab(params); break;
+                };
+                case 'EditIcons' : {
+                    return await library.process.__editIcons(params); break;
                 };
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
@@ -2065,7 +2169,9 @@ class AppLogic extends LogicComponent{
                 case 'ProviderBalance' : {
                     return await library.process.__providerBalance(params); break;
                 };
-
+                case 'KycWebhook' : {
+                    return await library.process.__kycWebhook(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -2169,6 +2275,10 @@ class AppLogic extends LogicComponent{
                 case 'EditCripsrIntegration' : {
                     return await library.progress.__editCripsrIntegration(params); break;
                 };
+
+                case 'EditKycIntegration' : {
+                    return await library.progress.__editKycIntegration(params); break;
+                };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;
                 };
@@ -2178,11 +2288,17 @@ class AppLogic extends LogicComponent{
                 case 'EditTheme' : {
                     return await library.progress.__editTheme(params); break;
                 };
+                case 'EditSkin' : {
+                    return await library.progress.__editSkin(params); break;
+                };
                 case 'EditTopBar' : {
                     return await library.progress.__editTopBar(params); break;
                 };
                 case 'EditTopTab' : {
                     return await library.progress.__editTopTab(params); break;
+                };
+                case 'EditIcons' : {
+                    return await library.progress.__editIcons(params); break;
                 };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;
@@ -2270,6 +2386,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'ProviderBalance' : {
                     return await library.progress.__providerBalance(params); break;
+                };
+                case 'KycWebhook' : {
+                    return await library.progress.__kycWebhook(params); break;
                 };
 			}
 		}catch(error){

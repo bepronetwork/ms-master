@@ -28,6 +28,8 @@ let outputs = {
                     })
                 }) : object.withdraws,
                 ...wallet_object(object),
+                "kyc_needed":object.kyc_needed,
+                "kyc_status":object.kyc_status,
                 "isWithdrawing": object.isWithdrawing,
                 "email_confirmed": object.email_confirmed,
                 "username": object.username,

@@ -14,7 +14,7 @@ import {
     TokenRepository,
     ProviderTokenRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address, ProviderToken, Token } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
@@ -53,6 +53,7 @@ let __private = {};
 
 
 const processActions = {
+
 
     __providerToken: async (params) => {
         let token    = MiddlewareSingleton.generateTokenByJson(params);
@@ -346,7 +347,7 @@ const processActions = {
         var erc20 = false;
         if(user_wallet.currency.erc20){
             // Is ERC20 Token simulate use of eth wallet
-            user_wallet = user.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toLowerCase());
+            user_wallet = user.wallet.find(w => w.currency.erc20 == true);
             app_wallet  = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toString());
             erc20 = true
         }
@@ -498,6 +499,15 @@ const processActions = {
             ...statsObject
         }
         return normalized;
+    },
+    __editKycNeeded: async (params) => {
+        const user = await UsersRepository.prototype.findUserById(params.user);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        const app = await AppRepository.prototype.findAppById(user.app_id, "simple");
+        if (!app) { throwError("APP_NOT_EXISTENT");}
+        let admin = app.listAdmins.find(_id => _id == params.admin);
+        if(admin==null || admin==undefined) { throwError('USER_NOT_EXISTENT')}
+        return params;
     }
 }
 
@@ -697,25 +707,50 @@ const progressActions = {
                         break;
                     };
                     case 'eth': {
-                        crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
-                        /* Record webhooks */
-                        await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
-                            address     : crypto_address.payload.address,
-                            app_id      : user._id,
-                            currency_id : user_wallet.currency._id,
-                            isApp       : false
-                        });
-                        /* Record Payment Forwarding webhooks */
-                        let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
-                            from: crypto_address.payload.address, 
-                            to: app_wallet.bank_address_not_webhook, 
-                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
-                            wallet: crypto_address.payload.address, 
-                            privateKey: crypto_address.payload.privateKey,
-                            confirmations: 3
-                        }); 
-                        if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
-                        break;
+                        if(erc20) {
+                            crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                            /* Record webhooks */
+                            await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
+                                address     : crypto_address.payload.address,
+                                app_id      : user._id,
+                                currency_id : user_wallet.currency._id,
+                                isApp       : false
+                            });
+                            /* Record Payment Forwarding webhooks */
+                            let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwardingToken({
+                                from: crypto_address.payload.address, 
+                                to: app_wallet.bank_address_not_webhook, 
+                                callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
+                                wallet: crypto_address.payload.address, 
+                                privateKey: crypto_address.payload.privateKey,
+                                confirmations: 3,
+                                token: user_wallet.currency.address
+                            });
+                            if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                            console.log("no 1");
+                            break;
+                        }else{
+                            crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                            /* Record webhooks */
+                            await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
+                                address     : crypto_address.payload.address,
+                                app_id      : user._id,
+                                currency_id : user_wallet.currency._id,
+                                isApp       : false
+                            });
+                            /* Record Payment Forwarding webhooks */
+                            let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
+                                from: crypto_address.payload.address, 
+                                to: app_wallet.bank_address_not_webhook, 
+                                callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
+                                wallet: crypto_address.payload.address, 
+                                privateKey: crypto_address.payload.privateKey,
+                                confirmations: 3
+                            });
+                            if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                            console.log("no 2");
+                            break;
+                        }
                     };
                 }
 
@@ -858,6 +893,10 @@ const progressActions = {
     },
     __getInfo: async (params) => {
         return params;
+    },
+    __editKycNeeded: async (params) => {
+        await UsersRepository.prototype.editKycNeeded(params.user, params.kyc_needed);
+        return true;
     }
 }
 
@@ -957,7 +996,9 @@ class UserLogic extends LogicComponent {
                 case 'ProviderToken': {
                     return await library.process.__providerToken(params); break;
                 }
-                
+                case 'EditKycNeeded': {
+                    return await library.process.__editKycNeeded(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -1031,6 +1072,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ProviderToken': {
                     return await library.progress.__providerToken(params); break;
+                };
+                case 'EditKycNeeded': {
+                    return await library.progress.__editKycNeeded(params); break;
                 };
             }
         } catch (err) {

@@ -51,8 +51,13 @@ import TopTabLogic from "./topTab";
 import ProviderLogic from "./provider";
 import ProviderTokenLogic from "./providerToken";
 import CripsrLogic from "./cripsr";
+import SkinLogic from "./skin";
+import KycLogic from "./kyc";
+import IconsLogic from "./icon";
 
 export {
+    IconsLogic,
+    SkinLogic,
     CripsrLogic,
     ProviderLogic,
     TopTabLogic,
@@ -106,5 +111,6 @@ export {
     BackgroundLogic,
     PointSystemLogic,
     ProviderTokenLogic,
+    KycLogic
 }
 
