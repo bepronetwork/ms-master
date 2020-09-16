@@ -56,7 +56,7 @@ const processActions = {
 
 
     __providerToken: async (params) => {
-        let token    = MiddlewareSingleton.generateTokenByJson(params);
+        let token    = MiddlewareSingleton.generateTokenByJson({user:params.user, ticker:params.ticker});
         let resToken = await ProviderTokenRepository.prototype.findByToken(token);
         return {
             tokenIsNotInDB: !resToken,
