@@ -99,6 +99,21 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+    async kycWebhook() {
+        // output Boolean
+        try {
+            let res = await this.process('KycWebhook');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
     async modifyBalance() {
@@ -695,21 +710,21 @@ class App extends ModelComponent {
         }
     }
 
-     /**
-   * @param {String} 
-   * @return {bool || Exception}  
-   */
+    /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
 
 
-  async editMoonPayIntegration() {
-    // Output Boolean
-    try {
-        let app = await this.process('EditMoonPayIntegration');
-        return app;
-    } catch (err) {
-        throw err;
+    async editMoonPayIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditMoonPayIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     /**
    * @param {String} 
@@ -732,6 +747,31 @@ class App extends ModelComponent {
    * @return {bool || Exception}  
    */
 
+
+    async editCripsrIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditCripsrIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+    
+    async editKycIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditKycIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
 
     async editCripsrIntegration() {
         // Output Boolean

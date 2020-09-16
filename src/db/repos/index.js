@@ -52,7 +52,8 @@ import SubSectionsRepository from "./subSections";
 import ProviderRepository from "./provider";
 import ProviderTokenRepository from "./providerToken";
 import CripsrRepository from "./cripsr";
-import SkinRepository from "./skin"
+import SkinRepository from "./skin";
+import KycRepository from "./kyc";
 import IconsRepository from "./icon";
 import MoonPayRepository from "./moonpay";
 
@@ -117,4 +118,5 @@ export {
     SubSectionsRepository,
     ProviderTokenRepository,
     CasinoProviderEcoRepository,
+    KycRepository,
 }

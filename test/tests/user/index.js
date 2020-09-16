@@ -3,6 +3,7 @@ context('User', async () => {
     require('./addOn')
     require('./resetPassword');
     require('./confirmEmail');
+    require('./kyc')
     require('./get')
     require('./pushNotifications');
     require('./ping');

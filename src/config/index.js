@@ -17,6 +17,8 @@ export const LIMIT =  process.env.LIMIT || 1;
 
 export const RATE =  process.env.RATE || 100;
 
+export const MERCHANT_SECRET_KYC = process.env.MERCHANT_SECRET_KYC;
+
 export const DB_PASSWORD =  process.env.DB_PASSWORD;
 
 export const ETH_TEST_NET = process.env.ETH_NET; 

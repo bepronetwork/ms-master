@@ -4,7 +4,8 @@ import ModelComponent from './modelComponent';
 import { Chat } from '.';
 import { MailSender} from '.';
 import { Cripsr } from '.';
-import MoonPay from './moonpay';
+import { MoonPay } from '.';
+import { Kyc } from '.';
 
 class Integrations extends ModelComponent{
 
@@ -23,7 +24,8 @@ class Integrations extends ModelComponent{
                     new Chat,
                     new MailSender,
                     new Cripsr,
-                    new MoonPay
+                    new MoonPay,
+                    new Kyc
                 ]
             }
             );

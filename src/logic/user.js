@@ -9,13 +9,12 @@ import {
     WalletsRepository,
     DepositRepository,
     AffiliateLinkRepository,
-    Token, ProviderToken,
     AffiliateRepository,
     SecurityRepository,
     TokenRepository,
     ProviderTokenRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
@@ -54,6 +53,7 @@ let __private = {};
 
 
 const processActions = {
+
 
     __providerToken: async (params) => {
         let token    = MiddlewareSingleton.generateTokenByJson(params);
@@ -499,6 +499,15 @@ const processActions = {
             ...statsObject
         }
         return normalized;
+    },
+    __editKycNeeded: async (params) => {
+        const user = await UsersRepository.prototype.findUserById(params.user);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        const app = await AppRepository.prototype.findAppById(user.app_id, "simple");
+        if (!app) { throwError("APP_NOT_EXISTENT");}
+        let admin = app.listAdmins.find(_id => _id == params.admin);
+        if(admin==null || admin==undefined) { throwError('USER_NOT_EXISTENT')}
+        return params;
     }
 }
 
@@ -884,6 +893,10 @@ const progressActions = {
     },
     __getInfo: async (params) => {
         return params;
+    },
+    __editKycNeeded: async (params) => {
+        await UsersRepository.prototype.editKycNeeded(params.user, params.kyc_needed);
+        return true;
     }
 }
 
@@ -983,7 +996,9 @@ class UserLogic extends LogicComponent {
                 case 'ProviderToken': {
                     return await library.process.__providerToken(params); break;
                 }
-                
+                case 'EditKycNeeded': {
+                    return await library.process.__editKycNeeded(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -1057,6 +1072,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ProviderToken': {
                     return await library.progress.__providerToken(params); break;
+                };
+                case 'EditKycNeeded': {
+                    return await library.progress.__editKycNeeded(params); break;
                 };
             }
         } catch (err) {

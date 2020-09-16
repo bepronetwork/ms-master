@@ -19,6 +19,11 @@ let populate_integrations_all = [
         path : 'cripsr',
         model : 'Cripsr',
         select : { '__v': 0},
+    },
+    {
+        path : 'kyc',
+        model : 'Kyc',
+        select : { '__v': 0},
     }
 ] 
 

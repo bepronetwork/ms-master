@@ -219,6 +219,32 @@ class UsersRepository extends MongoComponent{
         });
     }
 
+    editKycNeeded(_id, kyc_needed){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: { kyc_needed } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    editKycStatus(_id, kyc_status){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: { kyc_status } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     addDeposit(user_id, deposit){
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model.findOneAndUpdate(

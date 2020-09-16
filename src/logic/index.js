@@ -52,6 +52,7 @@ import ProviderLogic from "./provider";
 import ProviderTokenLogic from "./providerToken";
 import CripsrLogic from "./cripsr";
 import SkinLogic from "./skin";
+import KycLogic from "./kyc";
 import IconsLogic from "./icon";
 import MoonPayLogic from "./moonpay";
 
@@ -112,5 +113,6 @@ export {
     BackgroundLogic,
     PointSystemLogic,
     ProviderTokenLogic,
+    KycLogic
 }
 

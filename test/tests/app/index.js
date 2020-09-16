@@ -11,5 +11,5 @@ context('App', async () => {
     require('./deposit');
     require('./get');
     require('../admin/resetPassword/resetAdminPassword')
-    require('./provider');
+    // require('./provider');
 });

@@ -73,6 +73,15 @@ let outputs = {
                     "name": object.integrations.cripsr.name,
                     "metaName": object.integrations.cripsr.metaName,
                 },
+                "kyc": !object.integrations.kyc ? {} : {
+                    "_id": object.integrations.kyc._id,
+                    "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                    "clientId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
+                    "link": object.integrations.kyc.link,
+                    "isActive": object.integrations.kyc.isActive,
+                    "name": object.integrations.kyc.name,
+                    "metaName": object.integrations.kyc.metaName,
+                },
             },
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {
