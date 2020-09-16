@@ -39,6 +39,7 @@ import {
     SkinRepository,
     KycRepository,
     IconsRepository,
+    MoonPayRepository,
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -829,6 +830,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editMoonPayIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
     __editIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1527,6 +1534,20 @@ const progressActions = {
 
         return true;
     },
+    __editMoonPayIntegration : async (params) => {
+        let { key, moonpay_id, isActive, app } = params;
+        let hashedKey = Security.prototype.encryptData(key)
+        await MoonPayRepository.prototype.findByIdAndUpdate({
+            moonpay_id: moonpay_id,
+            key: hashedKey,
+            isActive: isActive
+        });
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id});
+
+        return true;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         /* Update Integrations Id Type */
@@ -2043,6 +2064,9 @@ class AppLogic extends LogicComponent{
                 case 'EditAffiliateStructure' : {
                     return await library.process.__editAffiliateStructure(params); break;
                 };
+                case 'EditMoonPayIntegration' : {
+                    return await library.process.__editMoonPayIntegration(params); break;
+                };
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
@@ -2265,7 +2289,10 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameBackgroundImage': {
 					return await library.progress.__editGameBackgroundImage(params); break;
-				};
+                };
+                case 'EditMoonPayIntegration' : {
+                    return await library.progress.__editMoonPayIntegration(params); break;
+                };
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;
                 };

@@ -47,6 +47,14 @@ let outputs = {
             ...bets_object(object),
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
+                "moonpay": !object.integrations.moonpay ? {} : {
+                    "_id": object.integrations.moonpay._id,
+                    "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
+                    "link": object.integrations.moonpay.link,
+                    "isActive": object.integrations.moonpay.isActive,
+                    "name": object.integrations.moonpay.name,
+                    "metaName": object.integrations.moonpay.metaName,
+                },
                 "chat": {
                     "_id": object.integrations.chat._id,
                     "isActive": object.integrations.chat.isActive,

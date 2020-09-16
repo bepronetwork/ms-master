@@ -711,6 +711,22 @@ class App extends ModelComponent {
     }
 
     /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+
+
+    async editMoonPayIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditMoonPayIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
    * @param {String} 
    * @return {bool || Exception}  
    */
@@ -731,15 +747,26 @@ class App extends ModelComponent {
    * @return {bool || Exception}  
    */
 
-  async editKycIntegration() {
-    // Output Boolean
-    try {
-        let app = await this.process('EditKycIntegration');
-        return app;
-    } catch (err) {
-        throw err;
+
+    async editCripsrIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditCripsrIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
+    
+    async editKycIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditKycIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
 
     /**
    * @param {String} 
@@ -785,10 +812,10 @@ class App extends ModelComponent {
         }
     }
 
-     /**
-     * @param {String} 
-     * @return {bool || Exception}  
-     */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
     async editSkin() {
         //Boolean Output
@@ -848,15 +875,15 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-   async editIcons() {
-    //Output Boolean
-    try {
-        let app = await this.process('EditIcons');
-        return app;
-    } catch (err) {
-        throw err;
+    async editIcons() {
+        //Output Boolean
+        try {
+            let app = await this.process('EditIcons');
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     /**
     * @param {String} 

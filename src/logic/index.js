@@ -54,8 +54,10 @@ import CripsrLogic from "./cripsr";
 import SkinLogic from "./skin";
 import KycLogic from "./kyc";
 import IconsLogic from "./icon";
+import MoonPayLogic from "./moonpay";
 
 export {
+    MoonPayLogic,
     IconsLogic,
     SkinLogic,
     CripsrLogic,

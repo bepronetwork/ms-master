@@ -55,8 +55,10 @@ import CripsrRepository from "./cripsr";
 import SkinRepository from "./skin";
 import KycRepository from "./kyc";
 import IconsRepository from "./icon";
+import MoonPayRepository from "./moonpay";
 
 export {
+    MoonPayRepository,
     IconsRepository,
     SkinRepository,
     CripsrRepository,

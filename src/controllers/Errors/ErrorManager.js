@@ -520,6 +520,16 @@ class ErrorManager {
         }
     }
 
+    moonpay = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
 
     chat = function (object, type){
         try{
