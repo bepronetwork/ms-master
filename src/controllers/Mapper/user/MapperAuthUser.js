@@ -18,6 +18,7 @@ let outputs = {
             "points": !object.points ? 0 : object.points,
             "email": object.email,
             "bearerToken": object.security.bearerToken,
+            "external_id": object.external_id,
             "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
