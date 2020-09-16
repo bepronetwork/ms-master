@@ -273,7 +273,7 @@ const app_object = (object) => {
                 "kyc": !object.app.integrations.kyc ? {} : {
                     "_id": object.app.integrations.kyc._id,
                     "clientId": !object.app.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.app.integrations.kyc.clientId),
-                    "clientId": !object.app.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.app.integrations.kyc.flowId),
+                    "flowId": !object.app.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.app.integrations.kyc.flowId),
                     "link": object.app.integrations.kyc.link,
                     "isActive": object.app.integrations.kyc.isActive,
                     "name": object.app.integrations.kyc.name,
