@@ -88,15 +88,20 @@ const processActions = {
             if(!user){
                 throwErrorProvider("11");
             }
-            let ticker    = (MiddlewareSingleton.decodeTokenToJson(params.token)).ticker;
+            let payload = (MiddlewareSingleton.decodeTokenToJson(params.token));
+            if(user._id!=payload.user){
+                throwErrorProvider("11");
+            }
+            let ticker    = payload.ticker;
             let wallet   = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
             let app      = await AppRepository.prototype.findAppById(user.app_id._id);
             let provider = await ProviderRepository.prototype.findByApp({app: app._id});
             provider     = provider[0];
-            let apiKey = await Security.prototype.decryptData(provider.api_key);
+            let apiKey = Security.prototype.decryptData(provider.api_key);
             if(md5("Authorization/"+ params.player_id + params.game_id + params.token + apiKey) != params.hash){
                 throwErrorProvider("10");
             }
+            console.log("Login succes");
             return {
                 code      : 0,
                 message   : "Success",
@@ -127,12 +132,16 @@ const processActions = {
         if(!user){
             throwErrorProvider("11");
         }
+        let payload = (MiddlewareSingleton.decodeTokenToJson(params.token));
+        if(user._id!=payload.user){
+            throwErrorProvider("11");
+        }
 
         let app      = await AppRepository.prototype.findAppById(user.app_id._id);
-        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        let provider = await ProviderRepository.prototype.findByApp({app: app._id});
         provider     = provider[0];
-
-        if(md5("Credit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+        let apiKey = Security.prototype.decryptData(provider.api_key);
+        if(md5("Credit/"+ player_id + round_id + game_id + transaction_id + token + apiKey) != hash){
             throwErrorProvider("10");
         }
 
@@ -159,12 +168,16 @@ const processActions = {
         if(!user){
             throwErrorProvider("11");
         }
+        let payload = (MiddlewareSingleton.decodeTokenToJson(params.token));
+        if(user._id!=payload.user){
+            throwErrorProvider("11");
+        }
 
         let app      = await AppRepository.prototype.findAppById(user.app_id._id);
-        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        let provider = await ProviderRepository.prototype.findByApp({app:app._id});
         provider     = provider[0];
-
-        if(md5("Debit/"+ player_id + round_id + game_id + transaction_id + token + provider.api_key) != hash){
+        let apiKey = Security.prototype.decryptData(provider.api_key);
+        if(md5("Debit/"+ player_id + round_id + game_id + transaction_id + token + apiKey) != hash){
             throwErrorProvider("10");
         }
 
@@ -181,12 +194,16 @@ const processActions = {
         if(!user){
             throwErrorProvider("11");
         }
+        let payload = (MiddlewareSingleton.decodeTokenToJson(params.token));
+        if(user._id!=payload.user){
+            throwErrorProvider("11");
+        }
         let dataToken = MiddlewareSingleton.decodeTokenToJson(token);
         let app      = await AppRepository.prototype.findAppById(user.app_id._id);
-        let provider = await ProviderRepository.prototype.findByApp(app._id);
+        let provider = await ProviderRepository.prototype.findByApp({app:app._id});
         provider     = provider[0];
-
-        if(md5("Balance/"+ player_id + token + provider.api_key) != hash){
+        let apiKey = Security.prototype.decryptData(provider.api_key);
+        if(md5("Balance/"+ player_id + token + apiKey) != hash){
             throwErrorProvider("10");
         }
 
@@ -991,7 +1008,10 @@ const progressActions = {
             wallet
         } = params;
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, -amount);
-
+        console.log("__providerCredit ", wallet.playBalance);
+        console.log("__providerCredit ", -amount);
+        console.log("__providerCredit ", wallet.playBalance - amount);
+        console.log("-------------------------");
         return {
             code: 0,
             message: "success",
@@ -1007,6 +1027,10 @@ const progressActions = {
         if(is_close) {
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
         }
+        console.log("__providerDebit ", wallet.playBalance);
+        console.log("__providerDebit ", amount);
+        console.log("__providerDebit ", wallet.playBalance + amount);
+        console.log("-------------------------");
         return {
             code: 0,
             message: "success",
@@ -1017,6 +1041,7 @@ const progressActions = {
         return params;
     },
     __providerBalance : async (params) => {
+        console.log("__providerBalance ", params.wallet.playBalance);
         return {
             code: 0,
             message: "success",
