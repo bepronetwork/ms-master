@@ -182,14 +182,6 @@ const get_object = (object) => {
                 "name": object.integrations.cripsr.name,
                 "metaName": object.integrations.cripsr.metaName,
             },
-            "moonpay": !object.integrations.moonpay ? {} : {
-                "_id": object.integrations.moonpay._id,
-                "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
-                "link": object.integrations.moonpay.link,
-                "isActive": object.integrations.moonpay.isActive,
-                "name": object.integrations.moonpay.name,
-                "metaName": object.integrations.moonpay.metaName,
-            },
             "mailSender": !object.integrations.mailSender ? {} : {
                 "_id": object.integrations.mailSender._id,
                 "apiKey": object.integrations.mailSender.apiKey,
@@ -200,6 +192,14 @@ const get_object = (object) => {
                         "contactlist_Id": template.contactlist_Id
                     })
                 }),
+            },
+            "moonpay": !object.integrations.moonpay ? {} : {
+                "_id": object.integrations.moonpay._id,
+                "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
+                "link": object.integrations.moonpay.link,
+                "isActive": object.integrations.moonpay.isActive,
+                "name": object.integrations.moonpay.name,
+                "metaName": object.integrations.moonpay.metaName,
             },
             "pusher": !object.integrations.pusher ? {} : {
                 "key": object.integrations.pusher.key

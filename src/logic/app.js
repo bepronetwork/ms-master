@@ -811,6 +811,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __editMoonPayIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
     __editIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -820,12 +826,6 @@ const processActions = {
     __editCripsrIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
-        if(!app){throwError('APP_NOT_EXISTENT')};
-        return {...params, app};
-    },
-    __editMoonPayIntegration : async (params) => {
-        let { app } = params;
-        app = await AppRepository.prototype.findAppByIdHostingId(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {...params, app};
     },
@@ -1499,6 +1499,20 @@ const progressActions = {
 
         return true;
     },
+    __editMoonPayIntegration : async (params) => {
+        let { key, moonpay_id, isActive, app } = params;
+        let hashedKey = Security.prototype.encryptData(key)
+        await MoonPayRepository.prototype.findByIdAndUpdate({
+            moonpay_id: moonpay_id,
+            key: hashedKey,
+            isActive: isActive
+        });
+        
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id});
+
+        return true;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         /* Update Integrations Id Type */
@@ -1520,20 +1534,6 @@ const progressActions = {
         let hashedKey = await Security.prototype.encryptData(key)
         await CripsrRepository.prototype.findByIdAndUpdate({
             cripsr_id: cripsr_id,
-            key: hashedKey,
-            isActive: isActive
-        });
-        
-        /* Rebuild the App */
-        await HerokuClientSingleton.deployApp({app : app.hosting_id});
-
-        return true;
-    },
-    __editMoonPayIntegration : async (params) => {
-        let { key, moonpay_id, isActive, app } = params;
-        let hashedKey = Security.prototype.encryptData(key)
-        await MoonPayRepository.prototype.findByIdAndUpdate({
-            moonpay_id: moonpay_id,
             key: hashedKey,
             isActive: isActive
         });
@@ -2005,14 +2005,14 @@ class AppLogic extends LogicComponent{
                 case 'EditAffiliateStructure' : {
                     return await library.process.__editAffiliateStructure(params); break;
                 };
+                case 'EditMoonPayIntegration' : {
+                    return await library.process.__editMoonPayIntegration(params); break;
+                };
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
                 case 'EditCripsrIntegration' : {
                     return await library.process.__editCripsrIntegration(params); break;
-                };
-                case 'EditMoonPayIntegration' : {
-                    return await library.process.__editMoonPayIntegration(params); break;
                 };
                 case 'EditMailSenderIntegration' : {
                     return await library.process.__editMailSenderIntegration(params); break;
@@ -2225,7 +2225,10 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameBackgroundImage': {
 					return await library.progress.__editGameBackgroundImage(params); break;
-				};
+                };
+                case 'EditMoonPayIntegration' : {
+                    return await library.progress.__editMoonPayIntegration(params); break;
+                };
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;
                 };
@@ -2234,9 +2237,6 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditCripsrIntegration' : {
                     return await library.progress.__editCripsrIntegration(params); break;
-                };
-                case 'EditMoonPayIntegration' : {
-                    return await library.progress.__editMoonPayIntegration(params); break;
                 };
                 case 'EditMailSenderIntegration' : {
                     return await library.progress.__editMailSenderIntegration(params); break;

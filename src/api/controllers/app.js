@@ -708,6 +708,20 @@ async function getPopularNumbers(req, res) {
     }
 }
 
+async function editMoonPayIntegration(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editMoonPayIntegration();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editAffiliateStructure(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -742,20 +756,6 @@ async function editCripsrIntegration(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editCripsrIntegration();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
-        MiddlewareSingleton.respond(res, req, data);
-    } catch (err) {
-        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err, req);
-    }
-}
-
-async function editMoonPayIntegration(req, res) {
-    try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        let params = req.body;
-        let app = new App(params);
-        let data = await app.editMoonPayIntegration();
         MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {

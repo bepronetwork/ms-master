@@ -9,8 +9,8 @@ IntegrationsSchema.prototype.name = 'Integrations';
 IntegrationsSchema.prototype.schema =  {
     chat        : { type : mongoose.Schema.Types.ObjectId, ref: 'Chat', required : true },
     mailSender  : { type : mongoose.Schema.Types.ObjectId, ref: 'MailSender', required : true },
-    cripsr      : { type : mongoose.Schema.Types.ObjectId, ref: 'Cripsr', required : true },
     moonpay     : { type : mongoose.Schema.Types.ObjectId, ref: 'MoonPay', required : true },
+    cripsr      : { type : mongoose.Schema.Types.ObjectId, ref: 'Cripsr', required : true },
 }
 
 

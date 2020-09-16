@@ -695,6 +695,22 @@ class App extends ModelComponent {
         }
     }
 
+     /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+
+
+  async editMoonPayIntegration() {
+    // Output Boolean
+    try {
+        let app = await this.process('EditMoonPayIntegration');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
     /**
    * @param {String} 
    * @return {bool || Exception}  
@@ -721,22 +737,6 @@ class App extends ModelComponent {
         // Output Boolean
         try {
             let app = await this.process('EditCripsrIntegration');
-            return app;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-   * @param {String} 
-   * @return {bool || Exception}  
-   */
-
-
-    async editMoonPayIntegration() {
-        // Output Boolean
-        try {
-            let app = await this.process('EditMoonPayIntegration');
             return app;
         } catch (err) {
             throw err;

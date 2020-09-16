@@ -520,6 +520,16 @@ class ErrorManager {
         }
     }
 
+    moonpay = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
 
     chat = function (object, type){
         try{
@@ -532,16 +542,6 @@ class ErrorManager {
     }
 
     cripsr = function (object, type){
-        try{
-            switch(type){
-              
-            }
-        }catch(err){
-            throw err
-        }
-    }
-
-    moonpay = function (object, type){
         try{
             switch(type){
               
