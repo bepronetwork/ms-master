@@ -1729,6 +1729,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/integrations/moonpay/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit MoonPay Integration
+      operationId: editMoonPayIntegration
+      description: Change MoonPay Integration Info
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppMoonPayEditIntegration'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   
   /app/integrations/mailSender/edit:
     x-swagger-router-controller: app
@@ -4326,6 +4356,31 @@ definitions:
         format: name
         example: "gw293847ncv2"
       cripsr_id:
+        type : string
+        format: name
+        example: "3456g334"
+      isActive : 
+        type : boolean
+        example: true
+  AppMoonPayEditIntegration : 
+    type: object
+    required:
+      - app
+      - key
+      - moonpay_id
+      - isActive
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      key:
+        type : string
+        format: name
+        example: "gw293847ncv2"
+      moonpay_id:
         type : string
         format: name
         example: "3456g334"

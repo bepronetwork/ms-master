@@ -88,6 +88,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editMoonPayIntegration(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/integrations/moonpay/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getSkinEcosystem(params) {
         return request(global.server)
         .get('/api/app/skinEcosystem/get')

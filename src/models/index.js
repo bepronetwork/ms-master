@@ -49,8 +49,10 @@ import ProviderToken from "./providerToken";
 import Cripsr from "./cripsr";
 import Skin from "./skin";
 import Icons from "./icon";
+import MoonPay from "./moonpay";
 
 export {
+    MoonPay,
     Icons,
     Skin,
     Cripsr,

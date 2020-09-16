@@ -41,11 +41,13 @@ import { SubSectionsSchema } from './customization/subSections';
 import { ProviderSchema } from './provider';
 import { ProviderTokenSchema } from './providerToken';
 import { CripsrSchema } from './integrations/cripsr';
+import { MoonPaySchema } from './integrations/moonpay';
 import { SkinSchema } from "./customization/skin";
 import { IconsSchema } from "./customization/icon";
 
 
 export {
+    MoonPaySchema,
     IconsSchema,
     SkinSchema,
     CripsrSchema,

@@ -53,8 +53,10 @@ import ProviderTokenLogic from "./providerToken";
 import CripsrLogic from "./cripsr";
 import SkinLogic from "./skin";
 import IconsLogic from "./icon";
+import MoonPayLogic from "./moonpay";
 
 export {
+    MoonPayLogic,
     IconsLogic,
     SkinLogic,
     CripsrLogic,
