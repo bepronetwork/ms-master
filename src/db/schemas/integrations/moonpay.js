@@ -6,7 +6,7 @@ class MoonPaySchema{};
 MoonPaySchema.prototype.name = 'MoonPay';
 
 MoonPaySchema.prototype.schema =  {
-    key                   : { type : String},
+    key                   : { type : String, default : ''},
     isActive              : { type : Boolean, default : false},
     name                  : { type : String, default : 'MoonPay'},
     metaName              : { type : String, default : 'moonpay'},

@@ -20,7 +20,7 @@ context('MoonPay', async () =>  {
         let postData = {
             app: app.id,
             admin: admin.id,
-            moonpay_id: integrations.cripsr,
+            moonpay_id: integrations.moonpay,
             key: "test",
             isActive: true
         }

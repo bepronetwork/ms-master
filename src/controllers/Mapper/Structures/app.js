@@ -270,6 +270,14 @@ const app_object = (object) => {
                     "name": object.app.integrations.cripsr.name,
                     "metaName": object.app.integrations.cripsr.metaName,
                 },
+                "moonpay": !object.app.integrations.moonpay ? {} : {
+                    "_id": object.app.integrations.moonpay._id,
+                    "key": !object.app.integrations.moonpay.key ? object.app.integrations.moonpay.key : Security.prototype.decryptData(object.app.integrations.moonpay.key),
+                    "link": object.app.integrations.moonpay.link,
+                    "isActive": object.app.integrations.moonpay.isActive,
+                    "name": object.app.integrations.moonpay.name,
+                    "metaName": object.app.integrations.moonpay.metaName,
+                },
                 "mailSender": !object.app.integrations.mailSender ? {} : {
                     "_id": object.app.integrations.mailSender._id,
                     "apiKey": object.app.integrations.mailSender.apiKey,

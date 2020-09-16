@@ -14,6 +14,11 @@ let populate_integrations_all = [
         path : 'cripsr',
         model : 'Cripsr',
         select : { '__v': 0},
+    },
+    {
+        path : 'moonpay',
+        model : 'MoonPay',
+        select : { '__v': 0},
     }
 ] 
 
