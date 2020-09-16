@@ -541,6 +541,16 @@ class ErrorManager {
         }
     }
 
+    kyc = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     topTab = function (object, type){
         try{
             switch(type){

@@ -29,6 +29,8 @@ let outputs = {
             ...wallet_object(object),
             "isWithdrawing": object.isWithdrawing,
             "email_confirmed": object.email_confirmed,
+            "kyc_needed":object.kyc_needed,
+            "kyc_status":object.kyc_status,
             "points": !object.points ? 0 : object.points,
             "username": object.username,
             "full_name": object.full_name,
