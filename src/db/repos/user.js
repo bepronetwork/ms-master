@@ -77,6 +77,78 @@ class UsersRepository extends MongoComponent{
         }
     }
 
+    async findUserByIdAppId({app}){
+        console.log("app::", app)
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.find(
+                    {
+                        app_id: app,
+                        points: { $gt: 0 }
+                    },
+                    {
+                       _id: 1,
+                       username: 1,
+                       app_id: 1,
+                       wallet: 1,
+                       points: 1
+                    }
+                )
+                .populate([
+                    'wallet'
+                ])
+                .exec( (err, user) => {
+                    console.log("userHHAAA::", user)
+                    if(err) { reject(err)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async findUserByIdWithPoints(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findById(
+                    _id,
+                    {
+                       _id: 1,
+                       username: 1,
+                       app_id: 1,
+                       wallet: 1,
+                       points: 1
+                    }
+                )
+                .populate([
+                    'wallet'
+                ])
+                .exec( (err, user) => {
+                    if(err) { resolve(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    updateUserPoints({_id, value}){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: {
+                    points : value 
+                    } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 
     async findUserByExternalId(external_id, populate_type=populate_user){
         switch(populate_type){

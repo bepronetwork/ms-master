@@ -830,6 +830,24 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return params;
     },
+    __convertPoints : async (params) => {
+        let { app, currency, user } = params;
+        app = await AppRepository.prototype.findAppByIdConvertPoints(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        let ratio = app.addOn.pointSystem.ratio.find( ratio => new String(ratio.currency).toLowerCase() == new String(currency).toLowerCase()).value;
+        if(user.toLowerCase() == 'all'){
+            user = await UsersRepository.prototype.findUserByIdAppId({app: app._id});
+        } else {
+            user = await UsersRepository.prototype.findUserByIdWithPoints(user);
+        }
+        console.log("user::", user)
+        return {
+            ...params, 
+            app,
+            user, 
+            ratio
+        };
+    },
     __editMoonPayIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppByIdHostingId(app);
@@ -1534,6 +1552,51 @@ const progressActions = {
 
         return true;
     },
+    __convertPoints : async (params) => {
+        let { currency, user, isAbsolut, ratio } = params;
+        var { userWallet, amountConversion} = '';
+        if(Array.isArray(user)){
+            for(let userObject of user) {
+                console.log("userObject:: ", userObject)
+                userWallet = userObject.wallet.find( w => new String(w.currency).toLowerCase() == new String(currency).toLowerCase());
+                console.log("userWallet::", userWallet)
+                if(!isAbsolut){
+                    amountConversion = userObject.points/ratio
+                    await WalletsRepository.prototype.updatePlayBalance(userWallet._id, amountConversion);
+                    await UsersRepository.prototype.updateUserPoints({
+                        _id: userObject._id,
+                        value: 0
+                    })
+                } else {
+                    amountConversion = userObject.points
+                    await WalletsRepository.prototype.updatePlayBalance(userWallet._id, amountConversion);
+                    await UsersRepository.prototype.updateUserPoints({
+                        _id: userObject._id,
+                        value: 0
+                    })
+                }
+            }
+        } else {
+            userWallet = user.wallet.find( w => new String(w.currency).toLowerCase() == new String(currency).toLowerCase());
+            if(!isAbsolut){
+                amountConversion = user.points/ratio
+                await WalletsRepository.prototype.updatePlayBalance(userWallet._id, amountConversion);
+                await UsersRepository.prototype.updateUserPoints({
+                    _id: user._id,
+                    value: 0
+                })
+
+            } else {
+                amountConversion = user.points
+                await WalletsRepository.prototype.updatePlayBalance(userWallet._id, amountConversion);
+                await UsersRepository.prototype.updateUserPoints({
+                    _id: user._id,
+                    value: 0
+                })
+            }
+        }
+        return true;
+    },
     __editMoonPayIntegration : async (params) => {
         let { key, moonpay_id, isActive, app } = params;
         let hashedKey = Security.prototype.encryptData(key)
@@ -2091,6 +2154,9 @@ class AppLogic extends LogicComponent{
                 case 'EditApp' : {
                     return await library.process.__editApp(params); break;
                 };
+                case 'ConvertPoints' : {
+                    return await library.process.__convertPoints(params); break;
+                };
                 case 'EditTheme' : {
                     return await library.process.__editTheme(params); break;
                 };
@@ -2311,6 +2377,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditApp' : {
                     return await library.progress.__editApp(params); break;
+                };
+                case 'ConvertPoints' : {
+                    return await library.progress.__convertPoints(params); break;
                 };
                 case 'EditTheme' : {
                     return await library.progress.__editTheme(params); break;

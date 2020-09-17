@@ -16,7 +16,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game } from './populates';
+import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game, populate_app_convert_points } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -429,6 +429,23 @@ class AppRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
                 .populate(populate_jackpot)
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+    findAppByIdConvertPoints(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    _id: 1,
+                    addOn: 1
+                })
+                .populate(populate_app_convert_points)
                 .exec( (err, App) => {
                     if(err) { reject(err)}
                     resolve(App);
