@@ -1,6 +1,8 @@
 import {globals} from "../../Globals";
 import mongoose from 'mongoose';
 let db = globals.main_db;
+let autoIncrement = require('mongoose-auto-increment');
+autoIncrement.initialize(db);
 
 class UserSchema{};
 
@@ -15,7 +17,6 @@ UserSchema.prototype.schema = {
     email               : { type: String, required : true},
     hash_password       : { type: String},
     external_user       : { type: Boolean, required : true},
-    external_id         : { type: Number, default: (Date.now() + Math.floor(Math.random() * 100))},
     bearerToken         : { type: String },
     app_id              : { type: mongoose.Schema.Types.ObjectId, ref: 'App', required : true},
     bets                : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bet'}],
@@ -34,10 +35,10 @@ UserSchema.prototype.schema = {
     kyc_status          : { type : String, default : "no kyc" },
 }
 
-
+let userInstance = new db.Schema(UserSchema.prototype.schema);
+userInstance.plugin(autoIncrement.plugin, { model: 'User', field: 'external_id' });
 // db o only allows once per type
-UserSchema.prototype.model = db.model(UserSchema.prototype.name, new db.Schema(UserSchema.prototype.schema));
-
+UserSchema.prototype.model = db.model(UserSchema.prototype.name, userInstance);
 export {
     UserSchema
 }
