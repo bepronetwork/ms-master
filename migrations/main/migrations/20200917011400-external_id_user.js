@@ -22,6 +22,7 @@ class Progress {
 
 module.exports = {
   async up(db, client) {
+    let countIndex = 0;
     let index = -1;
     while (true) {
       index++;
@@ -34,9 +35,10 @@ module.exports = {
       for (let user of users) {
         processObj.setProcess(processIndex);
         processIndex--;
+        countIndex++;
         await db.collection('users').updateOne(
           { _id: user._id },
-          { $set: { "external_id": (Date.now() + Math.floor(Math.random() * 10000000)) } }
+          { $set: { "external_id": countIndex } }
         );
       }
       processObj.destroyProgress();

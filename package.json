@@ -111,6 +111,7 @@
         "moment": "^2.21.0",
         "mongo-express": "^0.53.0",
         "mongoose": "^5.10.4",
+        "mongoose-auto-increment": "^5.0.1",
         "mongoose-gen": "^2.1.1",
         "morgan": "^1.9.1",
         "msgpack-lite": "^0.1.26",
