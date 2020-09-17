@@ -88,7 +88,8 @@ ErrorHandler.prototype.KEYS =  {
     'WALLET_WAIT'                           : "071",
     'PAYMENT_FORWARDING_TRANSACTION'        : "072",
     'WRONG_SKIN'                            : "073",
-    'ICONS_LIMIT_EXCEEDED'                  : "074"
+    'ICONS_LIMIT_EXCEEDED'                  : "074",
+    'LOGIN_NOT_CURRENCY_ADDED'              : "075"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {

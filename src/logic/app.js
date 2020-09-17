@@ -64,9 +64,11 @@ import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
 import MiddlewareSingleton from '../api/helpers/middleware';
+import ConverterSingleton from './utils/converter';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 var md5 = require('md5');
+import PusherSingleton from './third-parties/pusher';
 
 
 // Private fields
@@ -112,8 +114,8 @@ const processActions = {
                 message   : "Success",
                 player_id : parseInt(params.player_id),
                 nick      : user.username,
-                balance   : wallet.playBalance,
-                currency  : (new String(ticker).toUpperCase()),
+                balance   : ConverterSingleton.convertAmountProviderBigger(new String(ticker).toUpperCase(), wallet.playBalance),
+                currency  : ConverterSingleton.convertTickerProvider(new String(ticker).toUpperCase()),
                 external_session: 1
             };
         } catch(err) {
@@ -151,10 +153,7 @@ const processActions = {
         }
 
         let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
-        if(wallet.playBalance < amount) {
-            throwErrorProvider("2");
-        }
-        return {...params, wallet, dataToken};
+        return {...params, wallet, dataToken, user};
     },
     __providerDebit : async (params) => {
         let {
@@ -188,7 +187,7 @@ const processActions = {
 
         let wallet = user.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(dataToken.ticker).toLowerCase());
 
-        return {...params, wallet, dataToken};
+        return {...params, wallet, dataToken, user};
     },
     __providerRollback : async (params) => {
         return params;
@@ -1050,25 +1049,42 @@ const progressActions = {
     __providerCredit : async (params) => {
         let {
             amount,
-            wallet
+            wallet,
+            dataToken,
+            user
         } = params;
+        amount = ConverterSingleton.convertAmountProviderSmaller(new String(dataToken.ticker).toUpperCase(), amount);
+        console.log(amount);
+        if(wallet.playBalance < amount) {
+            throwErrorProvider("2");
+        }
         await WalletsRepository.prototype.updatePlayBalance(wallet._id, -amount);
         console.log("__providerCredit ", wallet.playBalance);
         console.log("__providerCredit ", -amount);
-        console.log("__providerCredit ", wallet.playBalance - amount);
+        console.log("__providerCredit ", wallet.playBalance - amount );
         console.log("-------------------------");
+        /* Send Notification */
+        PusherSingleton.trigger({
+            channel_name: user._id,
+            isPrivate: true,
+            message: `${-amount}=${new String(dataToken.ticker).toUpperCase()}`,
+            eventType: 'UPDATE_BALANCE'
+        })
         return {
             code: 0,
             message: "success",
-            balance: wallet.playBalance - amount
+            balance: ConverterSingleton.convertAmountProviderBigger(new String(dataToken.ticker).toUpperCase(), wallet.playBalance - amount)
         };
     },
     __providerDebit : async (params) => {
         let {
             amount,
             wallet,
-            is_close
+            is_close,
+            dataToken,
+            user
         } = params;
+        amount = ConverterSingleton.convertAmountProviderSmaller(new String(dataToken.ticker).toUpperCase(), amount);
         if(is_close) {
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
         }
@@ -1076,10 +1092,19 @@ const progressActions = {
         console.log("__providerDebit ", amount);
         console.log("__providerDebit ", wallet.playBalance + amount);
         console.log("-------------------------");
+
+        /* Send Notification */
+        PusherSingleton.trigger({
+            channel_name: user._id,
+            isPrivate: true,
+            message: `${amount}=${new String(dataToken.ticker).toUpperCase()}`,
+            eventType: 'UPDATE_BALANCE'
+        })
+
         return {
             code: 0,
             message: "success",
-            balance: wallet.playBalance + amount
+            balance: ConverterSingleton.convertAmountProviderBigger(new String(dataToken.ticker).toUpperCase(),wallet.playBalance + amount)
         };
     },
     __providerRollback : async (params) => {
@@ -1090,7 +1115,7 @@ const progressActions = {
         return {
             code: 0,
             message: "success",
-            balance: params.wallet.playBalance
+            balance: ConverterSingleton.convertAmountProviderBigger(new String(params.wallet.currency.ticker).toUpperCase(), params.wallet.playBalance)
         };
     },
 	__register : async (params) => {

@@ -113,6 +113,7 @@ const processActions = {
 
         app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
+        if(app.wallet.length<=0) {throwError("LOGIN_NOT_CURRENCY_ADDED");}
 
         var user_in_app = (app._id == params.app);
         const { integrations } = app;

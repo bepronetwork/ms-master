@@ -298,5 +298,9 @@
     "074" : {
         "key" : "ICONS_LIMIT_EXCEEDED",
         "message"   : "Icons limit exceeded"
+    },
+    "075" : {
+        "key" : "LOGIN_NOT_CURRENCY_ADDED",
+        "message"   : "This app does not yet contain currencies"
     }
 }
