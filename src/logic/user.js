@@ -271,18 +271,13 @@ const processActions = {
         if(app.addOn != null) {
             balanceInitial = app.addOn.balance;
         }
-        console.log(1)
-        console.log("params.user_external_id:: ",params.user_external_id)
         if (params.user_external_id) {
-            console.log(2)
             // User is Extern (Only Widget Clients)
             user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
         } else {
-            console.log(3)
             // User is Intern 
             user = await UsersRepository.prototype.findUser(username);
         }
-        console.log(4)
         let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if (params.password)
