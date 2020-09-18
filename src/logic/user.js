@@ -271,13 +271,9 @@ const processActions = {
         if(app.addOn != null) {
             balanceInitial = app.addOn.balance;
         }
-        if (params.user_external_id) {
-            // User is Extern (Only Widget Clients)
-            user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
-        } else {
-            // User is Intern 
-            user = await UsersRepository.prototype.findUser(username);
-        }
+        // User is Intern 
+        user = await UsersRepository.prototype.findUser(username);
+        
         let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if (params.password)
@@ -302,8 +298,7 @@ const processActions = {
             affiliateLink,
             app: app,
             app_id: app.id,
-            external_user: params.user_external_id ? true : false,
-            external_id: params.user_external_id,
+            external_user: false,
             balanceInitial,
             url
         }
