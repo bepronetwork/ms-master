@@ -1067,7 +1067,7 @@ const progressActions = {
         PusherSingleton.trigger({
             channel_name: user._id,
             isPrivate: true,
-            message: `${-amount}=${new String(dataToken.ticker).toUpperCase()}`,
+            message: JSON.stringify({value: -amount, ticker: String(dataToken.ticker).toUpperCase()}),
             eventType: 'UPDATE_BALANCE'
         })
         return {
@@ -1097,7 +1097,7 @@ const progressActions = {
         PusherSingleton.trigger({
             channel_name: user._id,
             isPrivate: true,
-            message: `${amount}=${new String(dataToken.ticker).toUpperCase()}`,
+            message: JSON.stringify({value: amount, ticker: String(dataToken.ticker).toUpperCase()}),
             eventType: 'UPDATE_BALANCE'
         })
 
