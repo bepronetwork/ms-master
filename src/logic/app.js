@@ -1557,9 +1557,7 @@ const progressActions = {
         var { userWallet, amountConversion} = '';
         if(Array.isArray(user)){
             for(let userObject of user) {
-                console.log("userObject:: ", userObject)
                 userWallet = userObject.wallet.find( w => new String(w.currency).toLowerCase() == new String(currency).toLowerCase());
-                console.log("userWallet::", userWallet)
                 if(!isAbsolut){
                     amountConversion = userObject.points/ratio
                     await WalletsRepository.prototype.updatePlayBalance(userWallet._id, amountConversion);
