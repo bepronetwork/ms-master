@@ -13,9 +13,7 @@ context('Points', async () => {
     before( async () =>  {
         admin = global.test.admin;
         app = global.test.app;
-        console.log("app", app)
-        console.log("currency", currency)
-        currency = app.currencies[0]
+        currency = app.currencies[0]._id
     });
 
     it('should Convert Points To Currency', mochaAsync(async () => {
