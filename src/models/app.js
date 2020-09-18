@@ -543,6 +543,19 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+    async convertPoints() {
+        try {
+            let app = await this.process('ConvertPoints');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
     async generateAddresses() {
 
         const { app } = this.self.params;
@@ -757,7 +770,7 @@ class App extends ModelComponent {
             throw err;
         }
     }
-    
+
     async editKycIntegration() {
         // Output Boolean
         try {

@@ -1605,6 +1605,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/convert/points:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Convert User Points To Currency
+      operationId: convertPoints
+      description: Convert User Points To Currency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppConvertPoints'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
             
   /app/games/editImage:
     x-swagger-router-controller: game
@@ -3918,6 +3949,42 @@ definitions:
         description: |
           Price of virtual currency
 
+  AppConvertPoints :
+    type: object
+    required:
+      - app
+      - currency
+      - admin
+      - user
+      - isAbsolut
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin id
+      currency:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Currency id
+      user:
+        type : string
+        format: name
+        example: "u12gibdi17d or all"
+        description: |
+          Can you pass User Id or flag all
+      isAbsolut:
+        type : boolean
+        example: true
   AppGameEditEdge :
     type: object
     required:

@@ -8,6 +8,7 @@ context('User', async () => {
     require('./pushNotifications');
     require('./ping');
     require('./deposit');
+    require('./points');
     require('./affiliates');
     //require('../app/misc/addCurrencyWithUsersRegistered');
     require('./bet');

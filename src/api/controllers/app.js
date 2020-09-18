@@ -722,6 +722,20 @@ async function editMoonPayIntegration(req, res) {
     }
 }
 
+async function convertPoints(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.convertPoints();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editAffiliateStructure(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -1116,6 +1130,7 @@ async function generateAddresses(req, res) {
 
 
 export {
+    convertPoints,
     editMoonPayIntegration,
     editIcons,
     editSkin,
