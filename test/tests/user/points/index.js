@@ -36,6 +36,7 @@ context('Points', async () => {
         userWalletAfter = userAfter.wallet.find( w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
         expect(userWalletAfter.playBalance).to.equal(userWalletBefore.playBalance + points);
         expect(userAfter.points).to.equal(0);
+        userWalletBefore = userWalletAfter
     }));
 
     it('should Convert Points To Currency - Ratio', mochaAsync(async () => {
