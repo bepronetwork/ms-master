@@ -14,24 +14,32 @@ context('Points', async () => {
     before( async () =>  {
         admin = global.test.admin;
         user = global.test.user;
-        console.log("user:: ", user)
         app = global.test.app;
         currency = app.currencies[0]._id,
-        userWalletBefore = user.wallet.find( w => new String(w.currency).toLowerCase() == new String(currency).toLowerCase());
         await UsersRepository.prototype.updateUserPoints({ _id: user.id, value: 1})
         user = await UsersRepository.prototype.findUserById(user.id);
-        console.log("user2::", user)
+        console.log("user:: ", user)
+        userWalletBefore = user.wallet.find( w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
+        console.log("userWalletBefore:: ", userWalletBefore)
+        points = user.points
+        console.log("points:: ", points)
     });
 
     it('should Convert Points To Currency', mochaAsync(async () => {
         const postData = {
             app: app.id,
             currency,
-            user: "all",
+            user: user._id,
             isAbsolut: true
         };
         let res = await convertPoints({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
         expect(res.data.status).to.equal(200);
+        userAfter = await UsersRepository.prototype.findUserById(user._id);
+        console.log("userAfter:: ", userAfter)
+        userWalletAfter = userAfter.wallet.find( w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
+        console.log("userWalletAfter:: ", userWalletAfter)
+        expect(userWalletAfter.playBalance).to.equal(userWalletBefore.playBalance + points);
+        expect(userAfter.points).to.equal(0);
     }));
 });
 

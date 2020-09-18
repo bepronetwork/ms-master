@@ -78,7 +78,6 @@ class UsersRepository extends MongoComponent{
     }
 
     async findUserByIdAppId({app}){
-        console.log("app::", app)
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.find(
@@ -98,7 +97,6 @@ class UsersRepository extends MongoComponent{
                     'wallet'
                 ])
                 .exec( (err, user) => {
-                    console.log("userHHAAA::", user)
                     if(err) { reject(err)}
                     resolve(user);
                 });

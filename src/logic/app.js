@@ -840,7 +840,6 @@ const processActions = {
         } else {
             user = await UsersRepository.prototype.findUserByIdWithPoints(user);
         }
-        console.log("user::", user)
         return {
             ...params, 
             app,
