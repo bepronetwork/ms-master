@@ -724,7 +724,7 @@ async function editMoonPayIntegration(req, res) {
 
 async function convertPoints(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
         let params = req.body;
         let app = new App(params);
         let data = await app.convertPoints();

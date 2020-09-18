@@ -23,9 +23,7 @@ context('Points', async () => {
             user: "all",
             isAbsolut: true
         };
-        console.log("postData", postData)
         let res = await convertPoints({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
-        console.log("res:: ",res.data)
         expect(res.data.status).to.equal(200);
     }));
 });
