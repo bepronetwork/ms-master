@@ -47,7 +47,9 @@ context('Balance', async () => {
             username: '678im67im' + Random(10000, 23409234235463456)
         }));
         var res = await registerUser(userPostData);
+        console.log("res.data", res.data)
         user = res.data.message;
+        console.log("user", user)
         let balance = user.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == 'eth');
         expect(balance.playBalance).to.be.equal(valueBalance);
         expect(res.data.status).to.equal(200);
