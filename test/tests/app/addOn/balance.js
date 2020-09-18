@@ -42,16 +42,14 @@ context('Balance', async () => {
         expect(status).to.be.equal(200);
     }));
 
-    it(`should register the User and checks if the balance initial has changed to ${valueBalance} eth`, mochaAsync(async () => {
-        let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
-            username: '678im67im' + Random(10000, 23409234235463456)
-        }));
-        var res = await registerUser(userPostData);
-        console.log("res.data", res.data)
-        user = res.data.message;
-        console.log("user", user)
-        let balance = user.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == 'eth');
-        expect(balance.playBalance).to.be.equal(valueBalance);
-        expect(res.data.status).to.equal(200);
-    }));
+    // it(`should register the User and checks if the balance initial has changed to ${valueBalance} eth`, mochaAsync(async () => {
+    //     let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
+    //         username: '678im67im' + Random(10000, 23409234235463456)
+    //     }));
+    //     var res = await registerUser(userPostData);
+    //     user = res.data.message;
+    //     let balance = user.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == 'eth');
+    //     expect(balance.playBalance).to.be.equal(valueBalance);
+    //     expect(res.data.status).to.equal(200);
+    // }));
 });
