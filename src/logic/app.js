@@ -1061,7 +1061,6 @@ const processActions = {
   
 const progressActions = {
     __providerAuthorization : async (params) => {
-        console.log("Auth ", params);
         return params;
     },
     __providerCredit : async (params) => {
