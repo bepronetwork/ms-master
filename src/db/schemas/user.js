@@ -36,7 +36,7 @@ UserSchema.prototype.schema = {
 }
 
 let userInstance = new db.Schema(UserSchema.prototype.schema);
-userInstance.plugin(autoIncrement.plugin, { model: 'User', field: 'external_id', 'startAt': 200000 });
+userInstance.plugin(autoIncrement.plugin, { model: 'User', field: 'external_id', 'startAt': 20000 });
 // db o only allows once per type
 UserSchema.prototype.model = db.model(UserSchema.prototype.name, userInstance);
 export {
