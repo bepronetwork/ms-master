@@ -1,6 +1,6 @@
 import { AppLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import { AppRepository, UsersRepository } from '../db/repos';
+import { AppRepository } from '../db/repos';
 import Wallet from './wallet';
 import { AffiliateSetup, Integrations, Customization, Typography, AddOn } from '.';
 import {
@@ -180,22 +180,9 @@ class App extends ModelComponent {
 
 
     async providerCredit() {
-
-
-        const userData = await UsersRepository.prototype.findUserByExternalId(this.self.params.player_id);
-        const user = userData._id;
-
-        try{
-            await UsersRepository.prototype.changeWithdrawPosition(user, true);
-            let res = await this.process('ProviderCredit');
-            UsersRepository.prototype.changeWithdrawPosition(user, false);
-            return res;
-        }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not betting/withdrawing atm */
-                /* Open Mutex */
-                UsersRepository.prototype.changeWithdrawPosition(user, false);
-            }
+        try {
+            return await this.process('ProviderCredit');
+        } catch (err) {
             throw err;
         }
     }
