@@ -31,7 +31,7 @@ module.exports = {
         await db.collection('casinoproviders').insertOne({
           api_key: "",
           name: 'Webslots',
-          logo: 'https://images.zenhubusercontent.com/5ded93b598047a56e64a162c/275fe0dd-786f-478c-99db-256ac4b79e66',
+          logo: 'https://storage.googleapis.com/betprotocol-apps/m8wnaye5t.jpg',
           api_url: "https://webslot.co",
           partner_id: "",
           __v: 0
@@ -47,7 +47,7 @@ module.exports = {
             { _id: casinoProvider._id },
             { $set: {
               name: 'Webslots',
-              logo: 'https://images.zenhubusercontent.com/5ded93b598047a56e64a162c/275fe0dd-786f-478c-99db-256ac4b79e66'
+              logo: 'https://storage.googleapis.com/betprotocol-apps/m8wnaye5t.jpg'
             } }
           )
         }
