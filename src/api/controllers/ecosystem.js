@@ -38,6 +38,18 @@ async function getProviderEcosystem(req, res) {
         MiddlewareSingleton.respondError(res, err, req);
 	}
 }
+
+async function getSkinEcosystem(req, res) {
+        try{
+            let ecosystem = new Ecosystem();
+            let data = await ecosystem.getSkinEcosystem();
+            await MiddlewareSingleton.log({type: "global", req, code: 200});
+            MiddlewareSingleton.respond(res, req, data);
+            }catch(err){
+            await MiddlewareSingleton.log({type: "global", req, code: err.code});
+            MiddlewareSingleton.respondError(res, err, req);
+            }
+    }
 async function getCasinoGames(req, res) {
     try{
         let ecosystem = new Ecosystem();
@@ -53,5 +65,6 @@ async function getCasinoGames(req, res) {
 export {
     getEcosystemData,    
     getCasinoGames,
-    getProviderEcosystem
+    getProviderEcosystem,
+    getSkinEcosystem
 }

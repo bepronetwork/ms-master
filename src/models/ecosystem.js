@@ -59,6 +59,14 @@ class Ecosystem extends ModelComponent{
         }
     }
 
+    async getSkinEcosystem(){
+        try{
+            return await this.process('GetSkinEcosystem');
+        }catch(err){
+            throw err;
+        }
+    }
+
     
 }
 

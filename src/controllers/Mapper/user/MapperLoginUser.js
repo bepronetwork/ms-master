@@ -47,6 +47,14 @@ let outputs = {
             ...bets_object(object),
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
+                "moonpay": !object.integrations.moonpay ? {} : {
+                    "_id": object.integrations.moonpay._id,
+                    "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
+                    "link": object.integrations.moonpay.link,
+                    "isActive": object.integrations.moonpay.isActive,
+                    "name": object.integrations.moonpay.name,
+                    "metaName": object.integrations.moonpay.metaName,
+                },
                 "chat": {
                     "_id": object.integrations.chat._id,
                     "isActive": object.integrations.chat.isActive,
@@ -64,6 +72,15 @@ let outputs = {
                     "link": object.integrations.cripsr.link,
                     "name": object.integrations.cripsr.name,
                     "metaName": object.integrations.cripsr.metaName,
+                },
+                "kyc": !object.integrations.kyc ? {} : {
+                    "_id": object.integrations.kyc._id,
+                    "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                    "flowId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
+                    "link": object.integrations.kyc.link,
+                    "isActive": object.integrations.kyc.isActive,
+                    "name": object.integrations.kyc.name,
+                    "metaName": object.integrations.kyc.metaName,
                 },
             },
             "affiliateId": object.affiliateLink._id,

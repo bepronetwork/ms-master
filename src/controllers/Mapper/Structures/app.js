@@ -166,6 +166,8 @@ const app_object = (object) => {
             "customization": !object.app.customization ? {} : object.app.customization.colors == undefined ? object.app.customization._id : {
                 "_id": object.app.customization._id,
                 "theme": object.app.customization.theme,
+                "skin": object.app.customization.skin,
+                "icons": object.app.customization.icons,
                 "colors": object.app.customization.colors ? object.app.customization.colors.map(color => {
                     return ({
                         "_id": color._id,
@@ -268,6 +270,15 @@ const app_object = (object) => {
                     "name": object.app.integrations.cripsr.name,
                     "metaName": object.app.integrations.cripsr.metaName,
                 },
+                "kyc": !object.app.integrations.kyc ? {} : {
+                    "_id": object.app.integrations.kyc._id,
+                    "clientId": !object.app.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.app.integrations.kyc.clientId),
+                    "flowId": !object.app.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.app.integrations.kyc.flowId),
+                    "link": object.app.integrations.kyc.link,
+                    "isActive": object.app.integrations.kyc.isActive,
+                    "name": object.app.integrations.kyc.name,
+                    "metaName": object.app.integrations.kyc.metaName,
+                },
                 "mailSender": !object.app.integrations.mailSender ? {} : {
                     "_id": object.app.integrations.mailSender._id,
                     "apiKey": object.app.integrations.mailSender.apiKey,
@@ -278,6 +289,14 @@ const app_object = (object) => {
                             "contactlist_Id": template.contactlist_Id
                         })
                     }),
+                },
+                "moonpay": !object.app.integrations.moonpay ? {} : {
+                    "_id": object.app.integrations.moonpay._id,
+                    "key": !object.app.integrations.moonpay.key ? object.app.integrations.moonpay.key : Security.prototype.decryptData(object.app.integrations.moonpay.key),
+                    "link": object.app.integrations.moonpay.link,
+                    "isActive": object.app.integrations.moonpay.isActive,
+                    "name": object.app.integrations.moonpay.name,
+                    "metaName": object.app.integrations.moonpay.metaName,
                 },
                 "pusher": !object.app.integrations.pusher ? {} : {
                     "key": object.app.integrations.pusher.key

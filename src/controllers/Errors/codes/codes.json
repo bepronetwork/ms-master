@@ -290,5 +290,17 @@
     "072" : {
         "key" : "PAYMENT_FORWARDING_TRANSACTION",
         "message"   : "Payment Forwarding Done"
+    },
+    "073" : {
+        "key" : "WRONG_SKIN",
+        "message"   : "Skin not available, choose default or digital"
+    },
+    "074" : {
+        "key" : "ICONS_LIMIT_EXCEEDED",
+        "message"   : "Icons limit exceeded"
+    },
+    "075" : {
+        "key" : "LOGIN_NOT_CURRENCY_ADDED",
+        "message"   : "This app does not yet contain currencies"
     }
 }

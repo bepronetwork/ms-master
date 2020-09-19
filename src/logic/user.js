@@ -9,13 +9,12 @@ import {
     WalletsRepository,
     DepositRepository,
     AffiliateLinkRepository,
-    Token, ProviderToken,
     AffiliateRepository,
     SecurityRepository,
     TokenRepository,
     ProviderTokenRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
@@ -55,8 +54,9 @@ let __private = {};
 
 const processActions = {
 
+
     __providerToken: async (params) => {
-        let token    = MiddlewareSingleton.generateTokenByJson(params);
+        let token    = MiddlewareSingleton.generateTokenByJson({user:params.user, ticker:params.ticker});
         let resToken = await ProviderTokenRepository.prototype.findByToken(token);
         return {
             tokenIsNotInDB: !resToken,
@@ -113,6 +113,7 @@ const processActions = {
 
         app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
+        if(app.wallet.length<=0) {throwError("LOGIN_NOT_CURRENCY_ADDED");}
 
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
@@ -271,15 +272,9 @@ const processActions = {
         if(app.addOn != null) {
             balanceInitial = app.addOn.balance;
         }
-
-        if (params.user_external_id) {
-            // User is Extern (Only Widget Clients)
-            user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
-        } else {
-            // User is Intern 
-            user = await UsersRepository.prototype.findUser(username);
-        }
-
+        // User is Intern 
+        user = await UsersRepository.prototype.findUser(username);
+        
         let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if (params.password)
@@ -304,8 +299,7 @@ const processActions = {
             affiliateLink,
             app: app,
             app_id: app.id,
-            external_user: params.user_external_id ? true : false,
-            external_id: params.user_external_id,
+            external_user: false,
             balanceInitial,
             url
         }
@@ -499,6 +493,15 @@ const processActions = {
             ...statsObject
         }
         return normalized;
+    },
+    __editKycNeeded: async (params) => {
+        const user = await UsersRepository.prototype.findUserById(params.user);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        const app = await AppRepository.prototype.findAppById(user.app_id, "simple");
+        if (!app) { throwError("APP_NOT_EXISTENT");}
+        let admin = app.listAdmins.find(_id => _id == params.admin);
+        if(admin==null || admin==undefined) { throwError('USER_NOT_EXISTENT')}
+        return params;
     }
 }
 
@@ -708,13 +711,13 @@ const progressActions = {
                         });
                         /* Record Payment Forwarding webhooks */
                         let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
-                            from: crypto_address.payload.address, 
-                            to: app_wallet.bank_address_not_webhook, 
-                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`, 
-                            wallet: crypto_address.payload.address, 
+                            from: crypto_address.payload.address,
+                            to: app_wallet.bank_address_not_webhook,
+                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                            wallet: crypto_address.payload.address,
                             privateKey: crypto_address.payload.privateKey,
                             confirmations: 3
-                        }); 
+                        });
                         if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
                         break;
                     };
@@ -859,6 +862,10 @@ const progressActions = {
     },
     __getInfo: async (params) => {
         return params;
+    },
+    __editKycNeeded: async (params) => {
+        await UsersRepository.prototype.editKycNeeded(params.user, params.kyc_needed);
+        return true;
     }
 }
 
@@ -958,7 +965,9 @@ class UserLogic extends LogicComponent {
                 case 'ProviderToken': {
                     return await library.process.__providerToken(params); break;
                 }
-                
+                case 'EditKycNeeded': {
+                    return await library.process.__editKycNeeded(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -1032,6 +1041,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ProviderToken': {
                     return await library.progress.__providerToken(params); break;
+                };
+                case 'EditKycNeeded': {
+                    return await library.progress.__editKycNeeded(params); break;
                 };
             }
         } catch (err) {

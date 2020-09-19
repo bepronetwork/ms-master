@@ -22,29 +22,24 @@ class Progress {
 
 module.exports = {
   async up(db, client) {
+    let countIndex = 0;
     let index = -1;
     while (true) {
       index++;
-      let users = await db.collection('users').find().skip(1000 * index).limit(1000).sort({ register_timestamp: -1 }).toArray();
+      let users = await db.collection('users').find().skip(1000 * index).limit(1000).toArray();
       if (users.length === 0) {
         break;
       }
       let processIndex = users.length;
-      let processObj = new Progress(processIndex, "REMOVE_USER_ADDRESS");
-      for (let userObject of users) {
+      let processObj = new Progress(processIndex, "EXTERNAL_ID_USER");
+      for (let user of users) {
         processObj.setProcess(processIndex);
         processIndex--;
-        if (!(Array.isArray(userObject.wallet))) {
-          continue;
-        } else {
-          for (let walletObject of userObject.wallet) {
-            let wallet = await db.collection('wallets').findOne({ _id: walletObject })
-            await db.collection('wallets').updateOne(
-              { _id: wallet._id },
-              { $set: { depositAddresses: [] } }
-            );
-          }
-        }
+        countIndex++;
+        await db.collection('users').updateOne(
+          { _id: user._id },
+          { $set: { "external_id": countIndex } }
+        );
       }
       processObj.destroyProgress();
     }

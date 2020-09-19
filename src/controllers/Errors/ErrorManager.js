@@ -520,6 +520,16 @@ class ErrorManager {
         }
     }
 
+    moonpay = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
 
     chat = function (object, type){
         try{
@@ -532,6 +542,16 @@ class ErrorManager {
     }
 
     cripsr = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    kyc = function (object, type){
         try{
             switch(type){
               
@@ -604,6 +624,16 @@ class ErrorManager {
         }
     }
 
+    icon = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     subSection = function (object, type){
         try{
             switch(type){
@@ -615,6 +645,16 @@ class ErrorManager {
     }
 
     logo = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    skin = function (object, type){
         try{
             switch(type){
                

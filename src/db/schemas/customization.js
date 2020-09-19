@@ -18,6 +18,8 @@ CustomizationSchema.prototype.schema =  {
     loadingGif     : { type : mongoose.Schema.Types.ObjectId, ref: 'LoadingGif', required : true },
     theme          : { type : String, default : "dark" },
     topTab         : { type : mongoose.Schema.Types.ObjectId, ref: 'TopTab', required : true },
+    skin           : { type : mongoose.Schema.Types.ObjectId, ref: 'Skin', required : true },
+    icons          : { type : mongoose.Schema.Types.ObjectId, ref: 'Icons', required : true },
 }
 
 
