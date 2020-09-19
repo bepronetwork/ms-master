@@ -606,9 +606,9 @@ const processActions = {
             if(params.pointSystemParams.logo.includes("https")){
                 /* If it is a link already */
                 imageLogo = params.pointSystemParams.logo;
-            }else if(params.pointSystemParams.logo!=""){
+            }else {
                 /* Does not have a Link and is a blob encoded64 */
-                imageLogo = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : params.pointSystemParams.logo});
+                imageLogo = !params.pointSystemParams.logo ? params.pointSystemParams.logo : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : params.pointSystemParams.logo});
                 params.pointSystemParams.logo = imageLogo
             }
 
@@ -1520,9 +1520,9 @@ const progressActions = {
         if(image_url.includes("https")){
             /* If it is a link already */
             gameImageURL = image_url;
-        }else if(image_url!=""){
+        }else {
             /* Does not have a Link and is a blob encoded64 */
-            gameImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
+            gameImageURL = !image_url ? image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : image_url});
             image_url = gameImageURL
         }
         
@@ -1540,9 +1540,9 @@ const progressActions = {
         if(background_url.includes("https")){
             /* If it is a link already */
             gameBackgroundImageURL = background_url;
-        }else if(background_url!=""){
+        }else {
             /* Does not have a Link and is a blob encoded64 */
-            gameBackgroundImageURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : background_url});
+            gameBackgroundImageURL = !background_url ? background_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-game-images', file : background_url});
             background_url = gameBackgroundImageURL
         }
         
@@ -1745,7 +1745,7 @@ const progressActions = {
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return {
-                    icon   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topTab.icon}),
+                    icon   : !topTab.icon ? topTab.icon : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topTab.icon}),
                     name    : topTab.name,
                     link_url : topTab.link_url
                 };
@@ -1770,7 +1770,7 @@ const progressActions = {
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return {
-                    link     : await GoogleStorageSingleton.uploadFileWithName({bucketName : 'betprotocol-icons', file : icon.link, fileName: `${icon.position}-${app._id}`}),
+                    link     : !icon.link ? icon.link : await GoogleStorageSingleton.uploadFileWithName({bucketName : 'betprotocol-icons', file : icon.link, fileName: `${icon.position}-${app._id}`}),
                     name     : icon.name,
                     position : icon.position
                 };
@@ -1794,7 +1794,7 @@ const progressActions = {
             }else{
                 /* Does not have a Link and is a blob encoded64 */
                 return {
-                    image_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
+                    image_url   : !b.image_url ? b.image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : b.image_url}),
                     link_url    : b.link_url,
                     button_text : b.button_text,
                     title       : b.title,
@@ -1816,9 +1816,9 @@ const progressActions = {
         if(background.includes("https")){
             /* If it is a link already */
             backgroundURL = background;
-        }else if(background!=""){
+        }else {
             /* Does not have a Link and is a blob encoded64 */
-            backgroundURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : background});
+            backgroundURL = !background ? background : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : background});
         }
 
         await BackgroundRepository.prototype.findByIdAndUpdate(app.customization.background._id, {
@@ -1835,7 +1835,7 @@ const progressActions = {
             logoURL = logo;
         }else{
             /* Does not have a Link and is a blob encoded64 */
-            logoURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : logo});
+            logoURL = !logo ? logo : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : logo});
         }
 
         await LogoRepository.prototype.findByIdAndUpdate(app.customization.logo._id, {
@@ -1869,7 +1869,7 @@ const progressActions = {
                 /* If it is a link already */
                 imageCommunity = c.image_url;
             } else {
-                imageCommunity = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
+                imageCommunity = !c.image_url ? c.image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
             }
             return (await new Link({
                 href: c.href,
@@ -1884,7 +1884,7 @@ const progressActions = {
                 /* If it is a link already */
                 imageSupport = c.image_url;
             } else {
-                imageSupport = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
+                imageSupport = !c.image_url ? c.image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : c.image_url})
             }
             return (await new Link({
                 href: c.href,
@@ -1910,7 +1910,7 @@ const progressActions = {
             topIconURL = topIcon;
         }else{
             /* Does not have a Link and is a blob encoded64 */
-            topIconURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topIcon});
+            topIconURL = !topIcon ? topIcon : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : topIcon});
         }
 
         await TopIconRepository.prototype.findByIdAndUpdate(app.customization.topIcon._id, {
@@ -1944,7 +1944,7 @@ const progressActions = {
             loadingGifURL = loadingGif;
         }else{
             /* Does not have a Link and is a blob encoded64 */
-            loadingGifURL = await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : loadingGif});
+            loadingGifURL = !loadingGif ? loadingGif : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : loadingGif});
         }
 
         await LoadingGifRepository.prototype.findByIdAndUpdate(app.customization.loadingGif._id, {
@@ -1974,8 +1974,8 @@ const progressActions = {
                 return {
                     title            : s.title,
                     text             : s.text,
-                    image_url        : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : s.image_url}),
-                    background_url   : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : s.background_url}),
+                    image_url        : !s.image_url      ? s.image_url      : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : s.image_url}),
+                    background_url   : !s.background_url ? s.background_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : s.background_url}),
                     background_color : s.background_color,
                     position         : s.position,
                     location         : s.location
