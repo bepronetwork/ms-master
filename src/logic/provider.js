@@ -39,7 +39,7 @@ const processActions = {
         });
         console.log("listProviders:: ", listProviders)
         let res = listProviders.map(async (provider) => {
-            if(!provider.api_key || !provider.partner_id){
+            if(provider.api_key && provider.partner_id){
                 let providerKey = Security.prototype.decryptData(provider.api_key);
                 let listGames = await axios.get(`${provider.api_url}/GetListGames?partner_id=${provider.partner_id}&type=web_slot&hash=${md5("GetListGames/" + provider.partner_id + "web_slot" + providerKey)}`);
                 return { name: provider.name, api_url: provider.api_url, partner_id: provider.partner_id , list: listGames.data };
