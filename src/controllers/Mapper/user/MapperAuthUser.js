@@ -16,6 +16,8 @@ let outputs = {
         return {
             "username": object.username,
             "points": !object.points ? 0 : object.points,
+            "kyc_needed":object.kyc_needed,
+            "kyc_status":object.kyc_status,
             "email": object.email,
             "bearerToken": object.security.bearerToken,
             "external_id": object.external_id,
