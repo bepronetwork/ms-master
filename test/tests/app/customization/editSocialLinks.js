@@ -17,8 +17,7 @@ context('Edit Social Media Links', async () => {
 
     it('should be able to edit app Social Media Links', mochaAsync(async () => {
         console.log("app:: ", app)
-        let customizations = await CustomizationRepository.prototype.findById(app.customizations._id)
-        console.log("app:: ", app)
+        let customizations = await CustomizationRepository.prototype.findById(app.customization._id)
         console.log("customizations:: ", customizations)
         console.log("App Id: ",app.id)
         const postData = {
