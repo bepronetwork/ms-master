@@ -51,8 +51,10 @@ import Skin from "./skin";
 import Kyc from "./kyc";
 import Icons from "./icon";
 import MoonPay from "./moonpay";
+import SocialLink from "./socialLink";
 
 export {
+    SocialLink,
     MoonPay,
     Icons,
     Skin,

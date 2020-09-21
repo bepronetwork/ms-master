@@ -45,8 +45,10 @@ import { MoonPaySchema } from './integrations/moonpay';
 import { SkinSchema } from "./customization/skin";
 import { KycSchema } from "./integrations/kyc";
 import { IconsSchema } from "./customization/icon";
+import { SocialLinkSchema } from "./customization/socialLink";
 
 export {
+    SocialLinkSchema,
     MoonPaySchema,
     IconsSchema,
     SkinSchema,
