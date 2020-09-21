@@ -1762,7 +1762,7 @@ const progressActions = {
         return true;
     },
     __editIcons  : async (params) => {
-        let { app, icons, icon_id } = params;
+        let { app, icons, icon_id, useDefaultIcons } = params;
         let icon = await Promise.all(icons.map( async icon => {
             if(icon.link.includes("https")){
                 /* If it is a link already */
@@ -1778,7 +1778,8 @@ const progressActions = {
         }))
         await IconsRepository.prototype.findByIdAndUpdate({
             _id: icon_id,
-            icon
+            icon,
+            useDefaultIcons
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})

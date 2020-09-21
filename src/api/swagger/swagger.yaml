@@ -4150,6 +4150,7 @@ definitions:
       - app
       - icons
       - icon_id
+      - useDefaultIcons
     properties:
       app:
         type : string
@@ -4174,6 +4175,9 @@ definitions:
               type: string
             name :
               type: string
+      useDefaultIcons : 
+        type : boolean
+        example: true
   AppCustomizationSubSections :
     type: object
     required:

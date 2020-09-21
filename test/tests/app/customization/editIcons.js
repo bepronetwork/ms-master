@@ -23,6 +23,7 @@ context('Edit Icons', async () => {
                 link: image_data,
                 name: "New Icon"
                 }],
+            useDefaultIcons: false,
             icon_id: app.customization.icons._id,
             app: app._id
         };
