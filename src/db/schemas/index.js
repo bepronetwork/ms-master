@@ -40,11 +40,27 @@ import { MatchSchema } from "./match";
 import { BetResultSchema } from "./betResult";
 import { VideogameSchema } from "./videogame";
 import { EsportsScrennerSchema } from "./customization/esports_screnner";
+import { PointSystemSchema } from "./addOn/pointSystem";
+import { TopTabSchema } from "./customization/topTab";
+import { SubSectionsSchema } from './customization/subSections';
+import { ProviderSchema } from './provider';
+import { ProviderTokenSchema } from './providerToken';
+import { CripsrSchema } from './integrations/cripsr';
+import { MoonPaySchema } from './integrations/moonpay';
+import { SkinSchema } from "./customization/skin";
+import { KycSchema } from "./integrations/kyc";
+import { IconsSchema } from "./customization/icon";
+
 
 export {
     EsportsScrennerSchema,
     VideogameSchema,
     BetResultSchema,
+    MoonPaySchema,
+    IconsSchema,
+    SkinSchema,
+    CripsrSchema,
+    TopTabSchema,
     DepositBonusSchema,
     TxFeeSchema,
     BalanceSchema,
@@ -83,5 +99,10 @@ export {
     AutoWithdrawSchema,
     BackgroundSchema,
     BetEsportsSchema,
-    MatchSchema
+    MatchSchema,
+    PointSystemSchema,
+    SubSectionsSchema,
+    ProviderSchema,
+    ProviderTokenSchema,
+    KycSchema,
 }

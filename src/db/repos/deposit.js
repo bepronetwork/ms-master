@@ -49,7 +49,9 @@ class DepositRepository extends MongoComponent{
                 DepositRepository.prototype.schema.model
                 .aggregate(pipeline)
                 .exec( (err, deposits) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        deposits=[]
+                        reject(err)}
                     resolve(deposits);
                 });
             });
@@ -62,6 +64,7 @@ class DepositRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             DepositRepository.prototype.schema.model
             .findOne({ transactionHash })
+            .lean()
             .exec( (err, Deposit) => {
                 if(err) { reject(err)}
                 resolve(Deposit)            
@@ -73,6 +76,7 @@ class DepositRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             DepositRepository.prototype.schema.model
             .findOneAndDelete({ transactionHash })
+            .lean()
             .exec( (err, Deposit) => {
                 if(err) { reject(err)}
                 resolve(Deposit)            
@@ -95,6 +99,7 @@ class DepositRepository extends MongoComponent{
                         last_update_timestamp   : new_deposit_params.last_update_timestamp
                 }},{ new: true }
             )
+            .lean()
             .exec( (err, Deposit) => {
                 if(err) { reject(err)}
                 resolve(Deposit);

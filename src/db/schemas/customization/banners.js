@@ -13,7 +13,8 @@ BannersSchema.prototype.schema =  {
         title       : {type : String},
         subtitle    : {type : String}
     }],
-    autoDisplay : { type : Boolean, default : false}
+    autoDisplay : { type : Boolean, default : false},
+    fullWidth   : { type : Boolean, default : false}
 }
 
 

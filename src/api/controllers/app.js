@@ -1,6 +1,6 @@
 
 import {
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance
+    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance, Provider
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -30,7 +30,7 @@ async function createApp(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -44,7 +44,7 @@ async function getAppAuth(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -58,7 +58,7 @@ async function editRestrictedCountries(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -71,7 +71,7 @@ async function getApp(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -85,7 +85,7 @@ async function getBetInfo(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -98,7 +98,21 @@ async function getGames(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function getGameStats(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getGameStats();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -113,7 +127,7 @@ async function deployApp(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -128,7 +142,7 @@ async function createGame(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -143,7 +157,7 @@ async function addGame(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -157,7 +171,7 @@ async function editVirtualCurrency(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -171,7 +185,7 @@ async function modifyBalance(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -186,7 +200,7 @@ async function addAddonBalance(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -201,7 +215,7 @@ async function addAddonJackpot(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -215,7 +229,7 @@ async function addAddonAutoWithdraw(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -229,7 +243,7 @@ async function editAddonAutoWithdraw(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -243,7 +257,7 @@ async function addAddonTxFee(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -257,10 +271,37 @@ async function editAddonTxFee(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
+async function editProvider(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editProvider();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function addAddonPointSystem(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addAddonPointSystem();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
 async function addAddonDepositBonus(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -271,7 +312,21 @@ async function addAddonDepositBonus(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editAddonPointSystem(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editAddonPointSystem();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -285,7 +340,7 @@ async function editAddonDepositBonus(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -300,7 +355,7 @@ async function addCurrencyWallet(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -315,7 +370,7 @@ async function getGame(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -329,7 +384,21 @@ async function editAddonBalance(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editApp(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editApp();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -343,7 +412,100 @@ async function editEdgeJackpot(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function createProvider(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let provider = new Provider(params);
+        let data = await provider.register();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+
+async function getGamesProvider(req, res) {
+    try {
+        let params = req.body;
+        let provider = new Provider(params);
+        let data = await provider.getGamesProvider();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function providerAuthorization(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerAuthorization();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data, true);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req, true);
+    }
+}
+
+async function providerCredit(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerCredit();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data, true);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req, true);
+    }
+}
+
+async function providerDebit(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerDebit();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data, true);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req, true);
+    }
+}
+
+async function providerRollback(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerRollback();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data, true);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req, true);
+    }
+}
+
+async function providerBalance(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.providerBalance();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data, true);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req, true);
     }
 }
 
@@ -370,7 +532,7 @@ async function createBet(req, res) {
 
     } catch (err) {
         MiddlewareSingleton.log({ type: "user", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -383,7 +545,7 @@ async function setMaxBet(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 
 }
@@ -400,7 +562,7 @@ async function resolveBet(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -414,7 +576,7 @@ async function resolveGame (req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 */
@@ -430,7 +592,7 @@ async function summary(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -444,7 +606,7 @@ async function appGetUsersBets(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -454,11 +616,11 @@ async function editBackground(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.editBackground();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -474,7 +636,7 @@ async function getTransactions(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -490,7 +652,7 @@ async function addServices(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -503,7 +665,7 @@ async function getLastBets(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -516,7 +678,7 @@ async function getBiggestBetWinners(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -529,7 +691,7 @@ async function getBiggestUserWinners(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -542,7 +704,35 @@ async function getPopularNumbers(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editMoonPayIntegration(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editMoonPayIntegration();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function convertPoints(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.convertPoints();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -556,7 +746,7 @@ async function editAffiliateStructure(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -570,7 +760,49 @@ async function editIntegration(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editKycNeeded(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let user = new User(params);
+        let data = await user.editKycNeeded();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editKycIntegration(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editKycIntegration();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editCripsrIntegration(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editCripsrIntegration();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -584,7 +816,7 @@ async function editMailSenderIntegration(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -598,7 +830,21 @@ async function editTheme(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editSkin(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editSkin();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -612,7 +858,21 @@ async function editTopBar(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editTopTab(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editTopTab();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -626,7 +886,21 @@ async function editBanners(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editIcons(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editIcons();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -654,7 +928,7 @@ async function editLogo(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -668,7 +942,7 @@ async function editColors(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -682,7 +956,7 @@ async function editFooter(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -696,7 +970,7 @@ async function editTopIcon(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -710,7 +984,7 @@ async function editLoadingGif(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -724,7 +998,21 @@ async function editTypography(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editSubSections(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editSubSections();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -738,11 +1026,22 @@ async function getUsers(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
-
+async function kycWebhook(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.kycWebhook();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
 
 /**
  *
@@ -764,15 +1063,8 @@ async function webhookBitgoDeposit(req, res) {
                 // Verify if it is App or User Deposit /Since the App deposit is to the main MultiSign no label is given to specific address, normally label = ${user_od}
                 var isApp = !wBT.label;
                 params.wBT = wBT;
-
-                if (isApp) {
-                    let app = new App(params);
-                    return await app.updateWallet();
-                } else {
-                    // is User
-                    let user = new User(params);
-                    return await user.updateWallet();
-                }
+                let app = new App(params);
+                return await app.updateWallet();
             } catch (err) {
                 console.log(err);
                 return err;
@@ -781,7 +1073,7 @@ async function webhookBitgoDeposit(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         // MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -803,7 +1095,7 @@ async function createAffiliateCustom(req, res) {
     } catch (err) {
         console.log(err)
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -825,7 +1117,7 @@ async function getLogs(req, res) {
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.log({ type: "admin", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -839,14 +1131,14 @@ async function getLogs(req, res) {
 async function generateAddresses(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
-        let body  = req.body;
+        let body = req.body;
         let app = new App(body);
         let data = await app.generateAddresses();
-        MiddlewareSingleton.log({ type: "admin", req, code: 200});
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
@@ -868,6 +1160,15 @@ async function editVideogameEdge(req, res) {
 export {
     editEsportScrenner,
     editVideogameEdge,
+    convertPoints,
+    editMoonPayIntegration,
+    editIcons,
+    editSkin,
+    editCripsrIntegration,
+    editApp,
+    editProvider,
+    addAddonPointSystem,
+    editTopTab,
     addAddonDepositBonus,
     editAddonDepositBonus,
     addAddonTxFee,
@@ -919,5 +1220,18 @@ export {
     getLogs,
     getBetInfo,
     editBackground,
-    modifyBalance
+    modifyBalance,
+    getGameStats,
+    editAddonPointSystem,
+    editSubSections,
+    createProvider,
+    getGamesProvider,
+    providerAuthorization,
+    providerCredit,
+    providerDebit,
+    providerRollback,
+    providerBalance,
+    editKycIntegration,
+    editKycNeeded,
+    kycWebhook,
 };

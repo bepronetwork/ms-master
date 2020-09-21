@@ -28,6 +28,21 @@ class BalanceRepository extends MongoComponent{
         return BalanceRepository.prototype.schema.model(Balance)
     }
 
+    pushNewCurrency(_id, currency) {
+        return new Promise( (resolve, reject) => {
+            BalanceRepository.prototype.schema.model.update(
+                {_id},
+                { $push: {
+                    "initialBalanceList" : { currency, initialBalance: 0 },
+                }} 
+                )
+            .exec( async (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     updateBalance(_id, currency, initialBalance){
         return new Promise( (resolve,reject) => {
             BalanceRepository.prototype.schema.model.updateOne(

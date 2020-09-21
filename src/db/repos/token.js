@@ -31,6 +31,7 @@ class TokenRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             TokenRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -41,6 +42,7 @@ class TokenRepository extends MongoComponent{
     findByToken(token){ 
         return new Promise( (resolve, reject) => {
             TokenRepository.prototype.schema.model.findOne({token})
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

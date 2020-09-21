@@ -83,7 +83,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             currency : currency._id,
             nonce: getRandom(123,2384723),
             result: [
-                { place: 0, value: betAmount/3},
+                { place: 1, value: betAmount/3},
                 {place: 4, value: betAmount/2}
             ]
         };
@@ -106,7 +106,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             app: app.id,
             nonce: getRandom(123,2384723),
             result: [{
-                place: 0, value: betAmount/2
+                place: 1, value: betAmount/2
             }]
         };
         global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * (betAmount/2));
@@ -136,7 +136,7 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             currency : currency._id,
             nonce: getRandom(123,2384723),
             result: [{
-                place: 0, value: betAmount
+                place: 1, value: betAmount
             }]
         };
         res = await placeBet(postData, user.bearerToken, {id : user.id});

@@ -57,7 +57,7 @@
     },
     "014" : {
         "key"      : "WITHDRAW_MODE_IN_API",
-        "message"   : "Withdraw/Bet Mode is already in"
+        "message"   : "The system is already processing your action"
     },
     "015" : {
         "key"      : "WITHDRAW_MODE_IN_SMART_CONTRACT",
@@ -270,5 +270,37 @@
     "067" : {
         "key" : "ADDRESS_NOT_AVAILABLE",
         "message"   : "No Deposit Address Available"
+    },
+    "068" : {
+        "key" : "NO_ETH_WALLET",
+        "message"   : "No ETH Wallet was created"
+    },
+    "069" : {
+        "key" : "ADD_ON_POINT_SYSTEM_NOT_EXISTS",
+        "message"   : "Point System AddOn not exists"
+    },
+    "070" : {
+        "key" : "UNCONFIRMED_EMAIL",
+        "message"   : "Unverified email"
+    },
+    "071" : {
+        "key" : "WALLET_WAIT",
+        "message"   : "We are updating a new currency, please wait a few minutes or try later"
+    },
+    "072" : {
+        "key" : "PAYMENT_FORWARDING_TRANSACTION",
+        "message"   : "Payment Forwarding Done"
+    },
+    "073" : {
+        "key" : "WRONG_SKIN",
+        "message"   : "Skin not available, choose default or digital"
+    },
+    "074" : {
+        "key" : "ICONS_LIMIT_EXCEEDED",
+        "message"   : "Icons limit exceeded"
+    },
+    "075" : {
+        "key" : "LOGIN_NOT_CURRENCY_ADDED",
+        "message"   : "This app does not yet contain currencies"
     }
 }

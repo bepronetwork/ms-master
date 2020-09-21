@@ -10,7 +10,8 @@ AddOnSchema.prototype.schema =  {
     autoWithdraw  : { type : mongoose.Schema.Types.ObjectId, ref: 'AutoWithdraw' },
     balance       : { type : mongoose.Schema.Types.ObjectId, ref: 'Balance' },
     txFee         : { type : mongoose.Schema.Types.ObjectId, ref: 'TxFee' },
-    depositBonus  : { type : mongoose.Schema.Types.ObjectId, ref: 'DepositBonus' }
+    depositBonus  : { type : mongoose.Schema.Types.ObjectId, ref: 'DepositBonus' },
+    pointSystem   : { type : mongoose.Schema.Types.ObjectId, ref: 'PointSystem' },
 }
 
 

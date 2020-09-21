@@ -23,7 +23,7 @@ async function setMaxDeposit(req, res) {
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
         await MiddlewareSingleton.log({type: "admin", req, code: err.code});
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
 	}
 }
 

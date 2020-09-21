@@ -21,6 +21,7 @@ import ChatLogic from './chat';
 import CustomizationLogic from './customization';
 import TopBarLogic from './topBar';
 import BannersLogic from './banners';
+import SubSectionsLogic from './subSections';
 import LogoLogic from './logo';
 import LogLogic from './log';
 import ColorLogic from './color';
@@ -45,10 +46,26 @@ import TxFeeLogic from "./txFee";
 import BackgroundLogic from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonusLogic from "./depositBonus";
-import EsportsScrennerLogic from "./esports_screnner"
+import EsportsScrennerLogic from "./esports_screnner";
+import PointSystemLogic from "./pointSystem";
+import TopTabLogic from "./topTab";
+import ProviderLogic from "./provider";
+import ProviderTokenLogic from "./providerToken";
+import CripsrLogic from "./cripsr";
+import SkinLogic from "./skin";
+import KycLogic from "./kyc";
+import IconsLogic from "./icon";
+import MoonPayLogic from "./moonpay";
+
 
 export {
     EsportsScrennerLogic,
+    MoonPayLogic,
+    IconsLogic,
+    SkinLogic,
+    CripsrLogic,
+    ProviderLogic,
+    TopTabLogic,
     DepositBonusLogic,
     PopularNumberLogic,
     TxFeeLogic,
@@ -70,6 +87,7 @@ export {
     LogLogic,
     EventsLogic,
     BannersLogic,
+    SubSectionsLogic,
     AppLogic,
     IntegrationsLogic,
     CustomizationLogic,
@@ -95,6 +113,9 @@ export {
     LoadingGifLogic,
     PermissionLogic,
     AutoWithdrawLogic,
-    BackgroundLogic
+    BackgroundLogic,
+    PointSystemLogic,
+    ProviderTokenLogic,
+    KycLogic
 }
 

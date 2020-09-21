@@ -18,7 +18,6 @@ let outputs = {
             "name": object.name,
             ...security_object(object),
             "email": object.email,
-            ...app_object(object),
             "registered": object.registered,
             ...permission_object(object),
             "__v": object.__v

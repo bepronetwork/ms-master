@@ -28,6 +28,26 @@ class JackpotRepository extends MongoComponent{
         return JackpotRepository.prototype.schema.model(Jackpot)
     }
 
+    pushNewCurrency(_id, currency) {
+        return new Promise( (resolve, reject) => {
+            JackpotRepository.prototype.schema.model.update(
+                {_id},
+                { $push: {
+                    limits              : {
+                        currency            : currency,
+                        tableLimit          : 0,
+                        maxBet              : 0,
+                        pot                 : 0
+                    }
+                }} 
+            )
+            .exec( async (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     updatePot(_id, currency, pot){
         return new Promise( (resolve,reject) => {
             JackpotRepository.prototype.schema.model.updateOne(
@@ -52,7 +72,9 @@ class JackpotRepository extends MongoComponent{
                 {
                     $set: { edge }
                 }
-            ).exec( (err, item) => {
+            )
+            .lean()
+            .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
             });
@@ -71,6 +93,7 @@ class JackpotRepository extends MongoComponent{
                     }
                 ]
             )
+            .lean()
             .exec( (err, jackpot) => {
                 if(err) { reject(err) }
                 resolve(jackpot);

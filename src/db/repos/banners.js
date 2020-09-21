@@ -31,6 +31,7 @@ class BannersRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             BannersRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -44,9 +45,11 @@ class BannersRepository extends MongoComponent{
                 _id, 
                 { $set: { 
                     "ids"          : newStructure.ids,
-                    "autoDisplay"   : newStructure.autoDisplay
+                    "autoDisplay"  : newStructure.autoDisplay,
+                    "fullWidth"    : newStructure.fullWidth
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

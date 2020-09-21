@@ -33,6 +33,7 @@ class FooterRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             FooterRepository.prototype.schema.model.findById(_id)
             .populate(populate_footer)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -50,6 +51,7 @@ class FooterRepository extends MongoComponent{
                     "supportLinks"             : newStructure.supportLinks
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

@@ -5,6 +5,7 @@ import {
     pipeline_user_stats, 
     pipeline_bet_stats, 
     pipeline_game_stats, 
+    pipeline_one_game_stats,
     pipeline_app_wallet,
     pipeline_get_by_external_id,
     pipeline_last_bets,
@@ -15,7 +16,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game } from './populates';
+import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game, populate_app_convert_points } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -55,6 +56,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, games : {$nin : [game._id] } },
                 { $push: { "games" : game } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -73,6 +75,7 @@ class AppRepository extends MongoComponent{
                     }
                 }
             )
+            .lean()
             .exec( (err, item) => {
                 console.log(err);
                 if(err){reject(err)}
@@ -101,6 +104,7 @@ class AppRepository extends MongoComponent{
     async addTypography(_id, typography){
         return new Promise( async (resolve,reject) => {
             await AppRepository.prototype.schema.model.updateOne({_id}, { typography })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -115,6 +119,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, users : {$nin : [user._id] } }, 
                 { $push: { "users" : user, "external_users" : user.external_id} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -129,6 +134,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, listAdmins : {$nin : [admin._id] } }, 
                 { $push: { "listAdmins" : admin} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -143,6 +149,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, wallet : {$nin : [wallet._id] } }, 
                 { $push: { "wallet" : wallet._id} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -157,6 +164,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, currencies : {$nin : [currency._id] } }, 
                 { $push: { "currencies" : currency} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -172,6 +180,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, deposits : {$nin : [deposit._id] } }, 
                 { $push: { "deposits" : deposit } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -188,6 +197,7 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model.findByIdAndUpdate(
                     { _id: _id}, 
                     { $set:  {  isWithdrawing : state} } )
+                    .lean()
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{
@@ -211,6 +221,7 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model.findByIdAndUpdate(
                     { _id: _id}, 
                     { $set:  {  "isUsersAllLocked" : state} } )
+                    .lean()
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{
@@ -234,7 +245,10 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_last_bets(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)
+                    }
                     resolve(data.slice(0, size));
                 });
             });
@@ -249,7 +263,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_popular_numbers(id))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)}
                     resolve(data.slice(0, size));
                 });
             });
@@ -343,7 +359,9 @@ class AppRepository extends MongoComponent{
                         ...game,
                         ...currency
                     }).countDocuments().exec();
-                    if(err){reject(err)}
+                    if(err){
+                        item=[]
+                        reject(err)}
                     resolve({list: item, totalCount });
                 })
             });
@@ -358,7 +376,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_biggest_bet_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)}
                     resolve(data.slice(0, size));
                 });
             });
@@ -373,13 +393,28 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_biggest_user_winners(_id, {currency, game, offset, size}))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data = []
+                        reject(err)}
                     resolve(data.slice(0, size));
                 });
             });
         }catch(err){
             throw err;
         }
+    }
+
+    pushProvider(_id, provider) {
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.findOneAndUpdate(
+                { _id },
+                { $push: { "casino_providers" : provider } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(true);
+                }
+            )
+        });
     }
 
     findAppById(_id, populate_type=populate_app_all){
@@ -407,6 +442,43 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
+
+    findAppByIdToBet(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    games:0,
+                    listAdmins:0,
+                    services:0,
+                    currencies:0,
+                    users:0,
+                    external_users:0,
+                    deposits:0,
+                    withdraws:0,
+                    countriesAvailable:0,
+                    licensesId:0,
+                    bearerToken:0,
+                    whitelistedAddresses:0,
+                    restrictedCountries:0,
+                    providers:0,
+                    casino_providers:0,
+                    typography:0,
+                    integrations:0,
+                    customization:0,
+                    metadataJSON:0,
+                })
+                .populate(populate_app_to_bet)
+                .lean()
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
     findAppByIdWithJackpotPopulated(_id){
         try{
             return new Promise( (resolve, reject) => {
@@ -421,10 +493,46 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
+    findAppByIdConvertPoints(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    _id: 1,
+                    addOn: 1
+                })
+                .populate(populate_app_convert_points)
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
     findAppByIdNotPopulated(_id){ 
         try{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
+                .lean()
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    findAppByIdHostingId(_id){ 
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    _id : 1,
+                    hosting_id : 1,
+                })
+                .lean()
                 .exec( (err, App) => {
                     if(err) { reject(err)}
                     resolve(App);
@@ -441,7 +549,8 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model.findByIdAndUpdate(
                     _id, 
                     { $set: { "typography" : [] }})
-                .exec( (err, item) => {
+                    .lean()
+                    .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
                 });
@@ -457,6 +566,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id, services : {$nin : services } }, 
                 { $set : { "services" : services } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (true);
@@ -473,6 +583,27 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "affiliateSetup" : affiliate_id } },
                 { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){throw(err)}
+                    return (item);
+                }
+            )
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async editAppNameDescription({app_id, name, description}){
+        try{
+            await AppRepository.prototype.schema.model.findOneAndUpdate(
+                {_id: app_id}, 
+                { $set : { 
+                    "name" : name,
+                    "description" : description
+                } },
+                { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -489,6 +620,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "integrations" : integrations_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -505,6 +637,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "customization" : customization_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -521,6 +654,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : { "typography" : typography_id } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -537,6 +671,7 @@ class AppRepository extends MongoComponent{
                 { _id: app_id }, 
                 { $set : {  "hosting_id" : hosting_id, "web_url" :  web_url} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);
@@ -553,6 +688,7 @@ class AppRepository extends MongoComponent{
                 app_id, 
                 { $set: { "wallet" : [] } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -567,7 +703,9 @@ class AppRepository extends MongoComponent{
                 AppRepository.prototype.schema.model
                 .aggregate(pipeline_get_by_external_id(app_id, user_external_id))
                 .exec( (err, user) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        user=[]
+                        reject(err)}
                     let ret;
                     if(user.length == 0){ ret = null; }else{
                         ret = user[0].user;
@@ -596,9 +734,28 @@ class AppRepository extends MongoComponent{
     findApp = (App_name) => {
         return new Promise( (resolve, reject) => {
             AppRepository.prototype.schema.model.findOne({'name' : App_name})
+            .lean()
             .exec( (err, App) => {
                 if(err) {reject(err)}
                 resolve(App);
+            });
+        });
+    }
+
+    /**
+     * 
+     * @param {Mongoose Id} _id 
+     */
+
+    async getSummaryOneStats(_id, { currency, game }) {
+        return new Promise( (resolve, reject) => {
+            AppRepository.prototype.schema.model
+            .aggregate(pipeline_one_game_stats(_id, { currency, game }))
+            .exec( (err, item) => {
+                if(err) { 
+                    item=[]
+                    reject(err)}
+                resolve(item[0]==null ? null : item[0].game);
             });
         });
     }
@@ -629,7 +786,9 @@ class AppRepository extends MongoComponent{
             AppRepository.prototype.schema.model
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
-                if(err) { reject(err)}
+                if(err) { 
+                    item=[]
+                    reject(err)}
                 resolve({item, type});
             });
         });

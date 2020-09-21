@@ -28,9 +28,40 @@ class DepositBonusRepository extends MongoComponent{
         return DepositBonusRepository.prototype.schema.model(DepositBonus)
     }
 
+    pushNewCurrency(_id, currency) {
+        return new Promise( (resolve, reject) => {
+            DepositBonusRepository.prototype.schema.model.update(
+                {_id},
+                { $push: {
+                    min_deposit : {
+                        currency             : currency,
+                        amount               : 0,
+                    },
+                    percentage  : {
+                        currency             : currency,
+                        amount               : 0,
+                    },
+                    max_deposit : {
+                        currency             : currency,
+                        amount               : 0,
+                    },
+                    multiplier  : {
+                        currency             : currency,
+                        multiple             : 0,
+                    }
+                }} 
+                )
+            .exec( async (err, item) => {
+                if(err) { reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             DepositBonusRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);

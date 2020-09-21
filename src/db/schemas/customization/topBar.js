@@ -6,7 +6,7 @@ class TopBarSchema{};
 TopBarSchema.prototype.name = 'TopBar';
 
 TopBarSchema.prototype.schema =  {
-    text                 : { type : String},
+    text                  : { type : String},
     backgroundColor       : { type : String},
     textColor             : { type : String},
     isActive              : { type : Boolean, default : false},

@@ -1,10 +1,10 @@
 // In this file you can configure migrate-mongo
-require('dotenv').config();
+var connection = require("../../mongo-connection-migrate");
 
 const config = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-shard-00-00-${process.env.MONGO_ID}.mongodb.net:27017,cluster0-shard-00-01-${process.env.MONGO_ID}.mongodb.net:27017,cluster0-shard-00-02-${process.env.MONGO_ID}.mongodb.net:27017/admin?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=true`,
+    url: `${connection.MONGO_CONNECTION_STRING}/admin?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=true`,
 
     // TODO Change this to your database name:
     databaseName: "main",

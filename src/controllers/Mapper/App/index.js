@@ -41,6 +41,9 @@ import { MapperEditAddonDepositBonusSingleton } from "./MapperEditDepositBonus";
 import { MapperEditBackgroundSingleton } from "./MapperEditBackground";
 import { MapperAppGetBetsEsportsSingleton } from "./MapperAppGetUsersBetsEsports";
 import { MapperAppGetBetInfoEsportsSingleton } from "./MapperGetBetInfoEsports";
+import { MapperSummaryOneGamesSingleton } from "./MapperGetGameStats";
+import { MapperGetUserInfoSingleton } from "./MapperGetUserInfo";
+import { MapperEditSubSectionsSingleton } from "./MapperEditSubSections";
 
 export {
     MapperAppGetBetInfoEsportsSingleton,
@@ -85,5 +88,8 @@ export {
     MapperGetPopularNumbersSingleton,
     MapperGetLogsSingleton,
     MapperEditThemeSingleton,
-    MapperEditBackgroundSingleton
+    MapperEditBackgroundSingleton,
+    MapperSummaryOneGamesSingleton,
+    MapperGetUserInfoSingleton,
+    MapperEditSubSectionsSingleton
 }

@@ -123,4 +123,3 @@ const pipeline_user_stats = (_id, { dates, currency }) =>
 
 
 export default pipeline_user_stats;
-

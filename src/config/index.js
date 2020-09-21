@@ -11,9 +11,13 @@ export const CLOUDAMQP_URL =  process.env.CLOUDAMQP_URL || "amqp://localhost:567
 
 export const DB_USER =  process.env.DB_USER;
 
+export const ETH_FEE_VARIABLE =  process.env.ETH_FEE_VARIABLE;
+
 export const LIMIT =  process.env.LIMIT || 1;
 
 export const RATE =  process.env.RATE || 100;
+
+export const MERCHANT_SECRET_KYC = process.env.MERCHANT_SECRET_KYC;
 
 export const DB_PASSWORD =  process.env.DB_PASSWORD;
 
@@ -73,6 +77,16 @@ export const IS_LOCAL_DEV = process.env.IS_LOCAL_DEV;
 
 export const PANDA_SCORE_TOKEN = process.env.PANDA_SCORE_TOKEN;
 
+export const LOGOWL_TICKET = process.env.LOGOWL_TICKET;
+
+export const USER_KEY = process.env.USER_KEY;
+
+export const CRYPTO_API = process.env.CRYPTO_API;
+
+export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
+
+export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
@@ -80,18 +94,11 @@ export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
 var ETH_NETWORK = config.eth;
 
-var DB_MONGO = config.mongo;
 
 /**
  * @function SET_ENV
  */
 
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_USER', DB_USER);
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_PASSWORD', DB_PASSWORD);
-        
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'MONGO_ID', MONGO_ID);
 
 if(ETH_RPC_URL){
     ETH_NETWORK = ETH_RPC_URL
@@ -101,6 +108,5 @@ if(ETH_RPC_URL){
 }
 
 export {
-    ETH_NETWORK,
-    DB_MONGO
+    ETH_NETWORK
 }

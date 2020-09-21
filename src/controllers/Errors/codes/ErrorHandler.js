@@ -81,8 +81,22 @@ ErrorHandler.prototype.KEYS =  {
     'INVALID_DEPOSIT_BONUS_PERCENTAGE'      : "064",
     'INVALID_DEPOSIT_BONUS_MAX_DEPOSIT'     : "065",
     'INVALID_DEPOSIT_BONUS_MIN_DEPOSIT'     : "066",
-    'ADDRESS_NOT_AVAILABLE'                 : "067"
+    'ADDRESS_NOT_AVAILABLE'                 : "067",
+    'NO_ETH_WALLET'                         : "068",
+    'ADD_ON_POINT_SYSTEM_NOT_EXISTS'        : "069",
+    'UNCONFIRMED_EMAIL'                     : "070",
+    'WALLET_WAIT'                           : "071",
+    'PAYMENT_FORWARDING_TRANSACTION'        : "072",
+    'WRONG_SKIN'                            : "073",
+    'ICONS_LIMIT_EXCEEDED'                  : "074",
+    'LOGIN_NOT_CURRENCY_ADDED'              : "075"
 };
+
+ErrorHandler.prototype.KEYS_PROVIDER =  {
+    '10' : {code:10, message: "Hash does not match"},
+    '14' : {code:14, message: "Non-valid token"},
+    '11' : {code:11, message: "Player not found"},
+}
 
 /***************************
  *
@@ -105,6 +119,15 @@ ErrorHandler.prototype.getError = function(code){
         key     : this.getKey(code),
         code    : parseInt(code),
         message : this.getMessage(code)
+    }
+}
+
+ErrorHandler.prototype.getErrorProvider = function(code){
+    console.log("code", code);
+    return {
+        key     : parseInt(code),
+        code    : parseInt(code),
+        message : ErrorHandler.prototype.KEYS_PROVIDER[code].message
     }
 }
 

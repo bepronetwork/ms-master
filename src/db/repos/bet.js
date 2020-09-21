@@ -43,6 +43,7 @@ class BetsRepository extends MongoComponent{
                         blockhash           : params.blockHash,
                         isResolved          : true
                 }},{ new: true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

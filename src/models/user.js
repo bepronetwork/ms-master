@@ -10,7 +10,8 @@ import {
     MapperGetDepositAddressUserSingleton,
     MapperGetBetsSingleton,
     MapperUserGetBetsSingleton,
-    MapperGetBetsEsportsSingleton
+    MapperGetBetsEsportsSingleton,
+    MapperGetUserInfoSingleton
 } from "../controllers/Mapper";
 import { Affiliate, Wallet, AffiliateLink } from '.';
 import Security from './security';
@@ -36,10 +37,26 @@ class User extends ModelComponent {
         );
     }
 
+
+    async providerToken() {
+        try {
+            return await this.process('ProviderToken');
+        } catch (err) {
+            throw err;
+        }
+    }
     async auth() {
         try {
             let res = await this.process('Auth');
             return MapperAuthUserSingleton.output('AuthUser', res);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async editKycNeeded() {
+        try {
+            return await this.process('EditKycNeeded');
         } catch (err) {
             throw err;
         }
@@ -131,10 +148,9 @@ class User extends ModelComponent {
     }
 
     async getInfo() {
-        // No Output
         try {
             let res = await this.process('GetInfo');
-            return res;
+            return MapperGetUserInfoSingleton.output('GetUserInfo', res);
         } catch (err) {
             throw err;
         }

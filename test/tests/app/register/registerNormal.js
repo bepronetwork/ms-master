@@ -8,7 +8,8 @@ import {
     registerAdmin,
     getAdminByApp,
     editAdminType,
-    editVideogameEdge
+    editVideogameEdge,
+    editApp
 } from '../../../methods';
 
 import faker from 'faker';
@@ -43,6 +44,7 @@ context('Normal', async () =>  {
         detectValidationErrors(res);
         shouldCreateTheApp(res.data, expect);
         expect(res.data.message.virtual).to.equal(false);
+        console.log(res.data.message)
     }));
 
     it('Should update a contact', mochaAsync(async () => {
@@ -197,6 +199,19 @@ context('Normal', async () =>  {
         let res = await editVideogameEdge({...postData}, admin.security.bearerToken, { id: admin.id });
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
+    }));
+
+    it('should Edit App Name And Description', mochaAsync(async () => {
+        let res = await editApp({
+            app: app.id, 
+            admin: admin.id, 
+            editParams: {
+                name: "test",
+                app_description: "It's a test"
+            }
+        }, admin.security.bearerToken, { id: admin.id });
+        detectValidationErrors(res);
+        shouldIntegrateServicesIntoApp(res.data, expect);
     }));
 
 });

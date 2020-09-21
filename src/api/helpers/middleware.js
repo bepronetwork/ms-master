@@ -3,6 +3,7 @@ import Log from '../../models/log';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { writeFile } from './file';
 import {Security as SecurityCrypt} from "../../controllers/Security";
+import { LogOwlSingleton } from "../../logic/third-parties";
 
 const geoip = require("geoip-lite");
 const jwt   = require('jsonwebtoken');
@@ -30,6 +31,25 @@ class Middleware{
             if('Auth/' + payload.id != response.id || payload.id != id){ return false; };
             return true;
         }catch (err){
+            throw err;
+        }
+    };
+
+    generateTokenByJson(json){
+        try{
+            //expires in 30 days
+            let token = jwt.sign(json, privateKEY, { algorithm: 'RS256' });
+            return token;
+        }catch(err){
+            throw err;
+        }
+    };
+
+    decodeTokenToJson(token){
+        try{
+            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+            return response;
+        }catch (err) {
             throw err;
         }
     };
@@ -73,32 +93,47 @@ class Middleware{
         return jwt.decode(token, {complete: true});
         //returns null if token is invalid
     }
-    respond(res, req, data){        
+    respond(res, req, data, provider=null){        
         try{
             var process = req.swagger.operation.definition.operationId;
-            writeFile({functionName : process, content : data});
-            res.json({
-                data : {
-                    status : 200,
-                    message : data
-                }
-            });
+            if(provider){
+                writeFile({functionName : process, content : data});
+                res.json(data);
+            }else{
+                writeFile({functionName : process, content : data});
+                res.json({
+                    data : {
+                        status : 200,
+                        message : data
+                    }
+                });
+            }
         }catch(err){
             this.respondError(res, err)
         }
     }
 
-    respondError(res, err){
+    respondError(res, err, req, provider=null){
         try{
             // Unknown Error
             if(!err.code){throw err}
-            res.json({
-                data : {
-                    status : err.code,
-                    message : err.message
-                }
-            });
+            if(provider) {
+                res.json(err.message);
+            }else{
+                res.json({
+                    data : {
+                        status : err.code,
+                        message : err.message
+                    }
+                });
+            }
         }catch(err){
+            LogOwlSingleton.pushError(err, {
+                admin: !req.body ? '' : req.body.admin,
+                user: !req.body.user ? '' : req.body.user,
+                app: !req.body.app ? '' : req.body.app,
+                route: req.originalUrl 
+            })
             console.log(err)
             res.json({
                 data : {

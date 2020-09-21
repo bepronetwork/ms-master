@@ -31,6 +31,7 @@ class AffiliateRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             AffiliateRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -58,6 +59,7 @@ class AffiliateRepository extends MongoComponent{
                 affiliate_id, 
                 { $set: { "wallet" : [] } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -72,6 +74,7 @@ class AffiliateRepository extends MongoComponent{
                 { _id: _id, wallet : {$nin : [wallet._id] } }, 
                 { $push: { "wallet" : wallet} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
