@@ -80,9 +80,9 @@ context('Bet Errors Exploit - Prevention', async () => {
         }
     });
 
-    /* wheel_simple */
-
-  /*  it(`should add all games (if not there already)`, mochaAsync(async () => {
+    /* Add Games if not already up */
+    /*
+    it(`should add all games (if not there already)`, mochaAsync(async () => {
         global.test.ECOSYSTEM_GAMES.map( async g => {
             let get_app_model = {
                 game : g._id,
@@ -93,7 +93,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             console.log(g.metaName, res.data.status);
             detectValidationErrors(res);
         })
-    })); */
+    }));*/
 
 
     /* keno_simple */
@@ -173,7 +173,84 @@ context('Bet Errors Exploit - Prevention', async () => {
 
         expect(res.data.status).to.equal(13);
     }));
-  
+
+    /* slots_simple */
+
+    it(`it shound´t be able to bet different amounts on slots_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'slots_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value : i/10000
+            }})
+        };
+
+        let { res } =await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+
+    it(`it shound´t be able to bet the same place on slots_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'slots_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: 0, value: betAmount/(game.resultSpace.length)
+            }})
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+    
+    it(`it shound´t be able to bet negative values on slots_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'slots_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: -(betAmount/(game.resultSpace.length))
+            }})
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+    it(`it shound´t be able to bet with no diff than 13 spaces on slots_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'slots_simple'
+        })
+
+        let result = Array(12).fill(0).map( (r, i) => {return {
+            place: i, value: (betAmount/100)
+        }});
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: result
+        };
+
+        let { res } = await insideBetFunction({postData});
+
+        expect(res.data.status).to.equal(13);
+    }));
     /* wheel_simple */
 
     it(`it shound´t be able to bet different amounts on wheel_simple`, mochaAsync(async () => {
@@ -411,6 +488,126 @@ context('Bet Errors Exploit - Prevention', async () => {
         let { res } = await insideBetFunction({ postData});
         expect(res.data.status).to.equal(13);
     }));
+
+    /* diamonds_simple */
+
+    it(`it shound´t be able to bet different amounts on diamonds_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value : i/10000
+            }})
+        };
+
+        let { res } =await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+    it(`it shound´t be able to bet, not all events are present on diamonds_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: [{
+                place: 0, value : betAmount/10000,
+                place: 4, value : betAmount/10000
+            }]
+        };
+
+        let { res } = await insideBetFunction({postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+    it(`it shound´t be able to bet the same place on diamonds_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: 0, value: betAmount/(game.resultSpace.length)
+            }})
+        };
+
+        let { res } =await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+    
+    it(`it shound´t be able to bet negative values on diamonds_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: game.resultSpace.map( (r, i) => {return {
+                place: i, value: -(betAmount/(game.resultSpace.length))
+            }})
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+    it(`it shound´t be able to bet with no less than the result space length on diamonds_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let result = game.resultSpace.map( (r, i) => {return {
+            place: i, value: (betAmount/(game.resultSpace.length))
+        }});
+
+        result.pop();
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: result
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
+    it(`it shound´t be able to bet with no more than the result space length on diamonds_simple`, mochaAsync(async () => {
+
+        await beforeBetFunction({
+            metaName : 'diamonds_simple'
+        })
+
+        let result = game.resultSpace.map( (r, i) => {return {
+            place: i, value: (betAmount/(game.resultSpace.length))
+        }});
+
+        result.push( {place : game.resultSpace.length+1, value: (betAmount/(game.resultSpace.length))})
+
+        let postData = {  
+            ...postDataDefault,
+            game: game._id,
+            result: result
+        };
+
+        let { res } = await insideBetFunction({ postData});
+        expect(res.data.status).to.equal(13);
+    }));
+
 
     /* plinko_variation_1 */
 
@@ -758,9 +955,9 @@ context('Bet Errors Exploit - Prevention', async () => {
         let postData = {  
             ...postDataDefault,
             game: game._id,
-            result: game.resultSpace.map( (r, i) => {return {
-                place: i, value : betAmount/10
-            }})
+            result:  [{
+                place: 1, value : betAmount
+            }]
         };
 
         let { res } = await insideBetFunction({ postData});
@@ -777,7 +974,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: [{
-                place: 0, value : betAmount/10,
+                place: 1, value : betAmount/10,
                 place: 4, value : betAmount/10
             }]
         };
@@ -796,7 +993,7 @@ context('Bet Errors Exploit - Prevention', async () => {
             ...postDataDefault,
             game: game._id,
             result: game.resultSpace.map( (r, i) => {return {
-                place: 0, value: betAmount/(game.resultSpace.length)
+                place: i, value: betAmount/(game.resultSpace.length)
             }})
         };
 
@@ -829,7 +1026,7 @@ context('Bet Errors Exploit - Prevention', async () => {
         })
 
         let result = game.resultSpace.map( (r, i) => {return {
-            place: i, value: (betAmount/(game.resultSpace.length))
+            place: i+1, value: (betAmount/(game.resultSpace.length))
         }});
 
         result.pop();

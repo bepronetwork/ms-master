@@ -31,6 +31,7 @@ class AddressRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             AddressRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -41,6 +42,7 @@ class AddressRepository extends MongoComponent{
     findByAddress(address){ 
         return new Promise( (resolve, reject) => {
             AddressRepository.prototype.schema.model.findOne({'address' : address})
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -51,6 +53,7 @@ class AddressRepository extends MongoComponent{
     findByBitgoId(bitgo_id){ 
         return new Promise( (resolve, reject) => {
             AddressRepository.prototype.schema.model.findOne({'bitgo_id' : bitgo_id})
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -67,6 +70,7 @@ class AddressRepository extends MongoComponent{
                 } },
                 {'new' : true}
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);

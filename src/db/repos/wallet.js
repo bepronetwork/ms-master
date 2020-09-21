@@ -34,6 +34,55 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { [currency] : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateAddress2(id, address) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $set: {
+                    "bank_address_not_webhook" : address
+                } },
+                { new: true }
+            )
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateIsPending(_id, isPending) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(_id,
+                { $set: {
+                    "isPending" : isPending
+                } },
+                { new: true }
+            )
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateBitgoIdNotWebhook(_id, bitgoIdNotWebhook) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(_id,
+                { $set: {
+                    "bitgo_id_not_webhook" : bitgoIdNotWebhook
+                } },
+                { new: true }
+            )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -50,6 +99,7 @@ class WalletsRepository extends MongoComponent{
                 } },
                 {'new' : true}
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -66,6 +116,7 @@ class WalletsRepository extends MongoComponent{
                 } },
                 {'new' : true}
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -78,6 +129,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
                 max_deposit: amount
             })
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -95,6 +147,7 @@ class WalletsRepository extends MongoComponent{
                 } } },
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -113,6 +166,7 @@ class WalletsRepository extends MongoComponent{
                 } },
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -132,6 +186,7 @@ class WalletsRepository extends MongoComponent{
                 }},
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -146,6 +201,7 @@ class WalletsRepository extends MongoComponent{
                 { $set: {playBalance : newBalance}},
                 { 'new': true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -158,6 +214,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { playBalance : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -170,6 +227,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { bonusAmount : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -182,6 +240,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { incrementBetAmountForBonus : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -194,6 +253,7 @@ class WalletsRepository extends MongoComponent{
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { minBetAmountForBonusUnlocked : parseFloat(amount) } } ,{ new: true }
             )
+            .lean()
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -217,6 +277,7 @@ class WalletsRepository extends MongoComponent{
                 { _id: wallet_id, "depositAddresses" : {$nin : [address] } }, 
                 { $push: { "depositAddresses" : address } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);
@@ -233,6 +294,7 @@ class WalletsRepository extends MongoComponent{
                     "playBalance" : playBalance,
                     "bonusAmount" : bonusAmount
                 } })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(true);

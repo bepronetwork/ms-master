@@ -7,9 +7,10 @@ import {
     pipeline_user_wallet,
     pipeline_all_users_balance,
     pipeline_my_bets,
-    pipeline_bets_esports
+    pipeline_bets_esports,
+    pipeline_user_specific_stats
 } from './pipelines/user';
-import { populate_user, populate_user_simple, populate_user_wallet, populate_users } from './populates';
+import { populate_user, populate_user_simple, populate_user_wallet, populate_users, populate_user_to_bet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
@@ -49,6 +50,7 @@ class UsersRepository extends MongoComponent{
                 id,
                 { $set : param },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -77,13 +79,160 @@ class UsersRepository extends MongoComponent{
         }
     }
 
+    async findUserByIdAppId({app}){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.find(
+                    {
+                        app_id: app,
+                        points: { $gt: 0 }
+                    },
+                    {
+                       _id: 1,
+                       username: 1,
+                       app_id: 1,
+                       wallet: 1,
+                       points: 1
+                    }
+                )
+                .populate([
+                    'wallet'
+                ])
+                .exec( (err, user) => {
+                    if(err) { reject(err)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async findUserByIdWithPoints(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findById(
+                    _id,
+                    {
+                       _id: 1,
+                       username: 1,
+                       app_id: 1,
+                       wallet: 1,
+                       points: 1
+                    }
+                )
+                .populate([
+                    'wallet'
+                ])
+                .exec( (err, user) => {
+                    if(err) { resolve(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    updateUserPoints({_id, value}){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: {
+                    points : value 
+                    } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+
+    async findUserByExternalId(external_id, populate_type=populate_user){
+        switch(populate_type){
+            case 'simple' : { populate_type=populate_user_simple; break; }
+            case 'wallet' : { populate_type=populate_user_wallet; break; }
+        }
+
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findOne({external_id})
+                .populate(populate_type)
+                .lean()
+                .exec( (err, user) => {
+                    if(err) { reject(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async findUserByIdToBet(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findById(_id, {bets:0,deposits:0,withdraws:0, hash_password:0})
+                .populate(populate_user_to_bet)
+                .lean()
+                .exec( (err, user) => {
+                    if(err) { reject(null)}
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async findUserStatsById(user, currency){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model
+                .aggregate(pipeline_user_specific_stats(user, currency))
+                .exec( (err, user) => {
+                    if(err) { 
+                        user = []
+                        reject(err)
+                    }
+                    resolve(user);
+                });
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async insertPoints(user, point){
+        try{
+            return new Promise( (resolve,reject) => {
+                UsersRepository.prototype.schema.model.findByIdAndUpdate(
+                    user,
+                    { $inc : { points : parseFloat(point) } } ,{ new: true }
+                )
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                })
+            });
+        }catch(err){
+            throw (err)
+        }
+    }
+
     getBets({_id, size, dates, currency, game, offset}){
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_my_bets(_id,{ dates, currency, game, offset, size  }))
                 .exec( (err, data) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        data=[]
+                        reject(err)
+                    }
                     resolve(data.slice(0, size));
                 });
             });
@@ -143,6 +292,7 @@ class UsersRepository extends MongoComponent{
                 user_id, 
                 { $set: { "wallet" : [] } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -175,6 +325,32 @@ class UsersRepository extends MongoComponent{
                 if(err) {reject(err)}
                 resolve(user);
             });
+        });
+    }
+
+    editKycNeeded(_id, kyc_needed){
+        return new Promise( (resolve,reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: { kyc_needed } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    editKycStatus(_id, kyc_status){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.findOneAndUpdate(
+                {_id},
+                { $set: { kyc_status } },
+                (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
         });
     }
 
@@ -223,6 +399,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id },
                 { $set: { "affiliateLink" : affiliateLinkId} },
                 { 'new': true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -236,6 +413,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id },
                 { $set: { "affiliate" : affiliateId} },
                 { 'new': true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -249,6 +427,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id, wallet : {$nin : [wallet._id] } }, 
                 { $push: { "wallet" : wallet} },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -263,6 +442,7 @@ class UsersRepository extends MongoComponent{
                 { _id: user_id },
                 { $set: { "security": securityId } },
                 { 'new' : true })
+                .lean()
             .exec( (err, item) => {
                 if(err){reject(err)}
                 resolve(item);
@@ -284,10 +464,13 @@ class UsersRepository extends MongoComponent{
         return new Promise( (resolve,reject) => {
             UsersRepository.prototype.schema.model
             .aggregate(usersFromAppFiltered({size, offset, app, user, username, email}))
-            .exec( (err, docs) => {
-                if(err){reject(err)}
-                resolve(docs);
-            })
+            .exec( (err, data) => {
+                if(err) { 
+                    data=[]
+                    reject(err)
+                }
+                resolve(data.slice(0, size));
+            });
         })
     }
 
@@ -296,7 +479,8 @@ class UsersRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findByIdAndUpdate(
                     { _id: _id },
-                    { $set: { "isWithdrawing" : state} }) 
+                    { $set: { "isWithdrawing" : state} })
+                    .lean() 
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{
@@ -320,7 +504,10 @@ class UsersRepository extends MongoComponent{
                 UsersRepository.prototype.schema.model
                 .aggregate(pipeline_all_users_balance(app))
                 .exec( (err, item) => {
-                    if(err) { reject(err)}
+                    if(err) { 
+                        item=[]
+                        reject(err)
+                    }
                     var res;
                     if(!item || !item[0]){ res = { balance : 0} }
                     else{res = item[0]}
@@ -333,20 +520,21 @@ class UsersRepository extends MongoComponent{
         
     }
 
-    async findUserByExternalId(external_id){
-        try{
-            return new Promise( (resolve, reject) => {
-                UsersRepository.prototype.schema.model.find({external_id : external_id})
-                .populate(foreignKeys)
-                .exec( (err, user) => {
-                    if(err) { reject(err)}
-                    resolve(user);
-                });
-            });
-        }catch(err){
-            throw (err)
-        }
-    }
+    // async findUserByExternalId(external_id){
+    //     try{
+    //         return new Promise( (resolve, reject) => {
+    //             UsersRepository.prototype.schema.model.find({external_id : external_id})
+    //             .populate(foreignKeys)
+    //             .lean()
+    //             .exec( (err, user) => {
+    //                 if(err) { reject(err)}
+    //                 resolve(user);
+    //             });
+    //         });
+    //     }catch(err){
+    //         throw (err)
+    //     }
+    // }
 
     async findUserByAddress({address, app}){
         try{
@@ -354,6 +542,7 @@ class UsersRepository extends MongoComponent{
                 UsersRepository.prototype.schema.model.find(
                     { $and: [ { address: address}, { app_id: app} ] })
                 .populate(foreignKeys)
+                .lean()
                 .exec( (err, users) => {
                     if(err) { reject(err)}
                     var res;
@@ -388,7 +577,10 @@ class UsersRepository extends MongoComponent{
             UsersRepository.prototype.schema.model
             .aggregate(pipeline(_id, { dates, currency }))
             .exec( (err, item) => {
-                if(err) { reject(err)}
+                if(err) { 
+                    item=[]
+                    reject(err)
+                }
                 resolve(item);
             });
         });

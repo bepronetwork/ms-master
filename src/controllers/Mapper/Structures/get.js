@@ -1,11 +1,24 @@
 import { games_object } from "./games"
 import { currencies_object } from "./currencies"
 import { wallet_object } from "./wallet"
+import { Security } from "../../Security"
 
 const get_object = (object) => {
     return {
         "id": object._id,
         "isValid": object.isValid,
+        "casino_providers": object.casino_providers ? object.casino_providers.map(casino_provider => {
+            return ({
+                "_id": casino_provider._id,
+                "activated": casino_provider.activated,
+                "api_key": !casino_provider.api_key ? casino_provider.api_key : Security.prototype.decryptData(casino_provider.api_key),
+                "name": casino_provider.name,
+                "logo": casino_provider.logo,
+                "api_url": casino_provider.api_url,
+                "partner_id": casino_provider.partner_id,
+                "providerEco": casino_provider.providerEco,
+            })
+        }) : object.casino_providers,
         "storeAddOn": object.storeAddOn,
         "virtual": object.virtual,
         "licenseID": object.licenseID,
@@ -17,7 +30,7 @@ const get_object = (object) => {
         }) : object.listAdmins,
         "services": object.services ? object.services.map(service => service) : object.services,
         ...currencies_object(object),
-        "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
+        "external_users": object.external_users ? object.external_users.length : 0,
         ...wallet_object(object),
         "deposits": object.deposits ? object.deposits.map(deposit => {
             return ({
@@ -45,7 +58,7 @@ const get_object = (object) => {
             "url": object.typography.url
         } : object.typography,
         "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
-        "restrictedCountries":object.restrictedCountries ? object.restrictedCountries : [],
+        "restrictedCountries": object.restrictedCountries ? object.restrictedCountries : [],
         "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
         "isWithdrawing": object.isWithdrawing,
         "name": object.name,
@@ -65,6 +78,8 @@ const get_object = (object) => {
         "customization": !object.customization ? {} : {
             "_id": object.customization._id,
             "theme": object.customization.theme,
+            "skin": object.customization.skin,
+            "icons": object.customization.icons,
             "colors": object.customization.colors ? object.customization.colors.map(color => {
                 return ({
                     "_id": color._id,
@@ -78,10 +93,12 @@ const get_object = (object) => {
                 "backgroundColor": object.customization.topBar.backgroundColor,
                 "text": object.customization.topBar.text,
                 "textColor": object.customization.topBar.textColor,
+                "isTransparent": object.customization.topBar.isTransparent,
             },
             "banners": !object.customization.banners ? {} : {
                 "_id": object.customization.banners._id,
                 "autoDisplay": object.customization.banners.autoDisplay,
+                "fullWidth": object.customization.banners.fullWidth,
                 "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
                     return ({
                         "_id": id._id,
@@ -90,6 +107,21 @@ const get_object = (object) => {
                         "button_text": id.button_text,
                         "title": id.title,
                         "subtitle": id.subtitle,
+                    })
+                })
+            },
+            "subSections": !object.customization.subSections ? {} : {
+                "_id": object.customization.subSections._id,
+                "ids": !object.customization.subSections.ids ? [] : object.customization.subSections.ids.map(id => {
+                    return ({
+                        "_id": id._id,
+                        "title": id.title,
+                        "text": id.text,
+                        "image_url": id.image_url,
+                        "background_url": id.background_url,
+                        "background_color": id.background_color,
+                        "position": id.position,
+                        "location": id.location
                     })
                 })
             },
@@ -129,6 +161,7 @@ const get_object = (object) => {
                 "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
             },
             "esportsScrenner": object.customization.esportsScrenner,
+            "topTab": object.customization.topTab
         },
         "integrations": !object.integrations ? {} : {
             "_id": object.integrations._id,
@@ -142,6 +175,23 @@ const get_object = (object) => {
                 "publicKey": object.integrations.chat.publicKey,
                 "token": object.integrations.chat.token
             },
+            "cripsr": !object.integrations.cripsr ? {} : {
+                "_id": object.integrations.cripsr._id,
+                "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
+                "isActive": object.integrations.cripsr.isActive,
+                "link": object.integrations.cripsr.link,
+                "name": object.integrations.cripsr.name,
+                "metaName": object.integrations.cripsr.metaName,
+            },
+            "kyc": !object.integrations.kyc ? {} : {
+                "_id": object.integrations.kyc._id,
+                "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                "flowId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
+                "link": object.integrations.kyc.link,
+                "isActive": object.integrations.kyc.isActive,
+                "name": object.integrations.kyc.name,
+                "metaName": object.integrations.kyc.metaName,
+            },
             "mailSender": !object.integrations.mailSender ? {} : {
                 "_id": object.integrations.mailSender._id,
                 "apiKey": object.integrations.mailSender.apiKey,
@@ -153,6 +203,14 @@ const get_object = (object) => {
                     })
                 }),
             },
+            "moonpay": !object.integrations.moonpay ? {} : {
+                "_id": object.integrations.moonpay._id,
+                "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
+                "link": object.integrations.moonpay.link,
+                "isActive": object.integrations.moonpay.isActive,
+                "name": object.integrations.moonpay.name,
+                "metaName": object.integrations.moonpay.metaName,
+            },
             "pusher": !object.integrations.pusher ? {} : {
                 "key": object.integrations.pusher.key
             },
@@ -161,7 +219,8 @@ const get_object = (object) => {
         "hosting_id": object.hosting_id,
         "web_url": object.web_url,
         "esports_edge": object.esports_edge,
-        "addOn": object.addOn ? {...object.addOn._doc,
+        "addOn": object.addOn ? {
+            ...object.addOn._doc,
             jackpot: object.addOn.jackpot ?  {
                 ...object.addOn.jackpot._doc,
                 bets: [],

@@ -1,4 +1,5 @@
 import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
+import { Security } from "../../Security";
 
 let self;
 
@@ -19,6 +20,17 @@ let outputs = {
             "storeAddOn": object.storeAddOn,
             "virtual": object.virtual,
             "licenseID": object.licenseID,
+            "casino_providers": object.casino_providers ? object.casino_providers.map(casino_provider => {
+                return ({
+                    "_id": casino_provider._id,
+                    "activated": casino_provider.activated,
+                    "name": casino_provider.name,
+                    "logo": casino_provider.logo,
+                    "api_url": casino_provider.api_url,
+                    "partner_id": casino_provider.partner_id,
+                    "providerEco": casino_provider.providerEco,
+                })
+            }) : object.casino_providers,
             "games": object.games ? object.games.map(game => {
                 return ({
                     "_id": game._id,
@@ -50,6 +62,8 @@ let outputs = {
                     "wallets": game.wallets ? game.wallets.map(wallet => {
                         return ({
                             "_id": wallet._id,
+                            "wallet": wallet.wallet._id,
+                            "currency": wallet.wallet.currency,
                             "tableLimit": wallet.tableLimit,
                         })
                     }) : game.wallets,
@@ -67,7 +81,7 @@ let outputs = {
                     "virtual": currency.virtual
                 })
             }) : object.currencies,
-            "external_users": object.external_users ? object.external_users.map(external_user_id => external_user_id) : object.external_users,
+            "external_users": object.external_users ? object.external_users.length : 0,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
@@ -116,6 +130,8 @@ let outputs = {
             "customization": !object.customization ? {} : {
                 "_id": object.customization._id,
                 "theme": object.customization.theme,
+                "skin": object.customization.skin,
+                "icons": object.customization.icons,
                 "colors": object.customization.colors ? object.customization.colors.map(color => {
                     return ({
                         "_id": color._id,
@@ -129,10 +145,12 @@ let outputs = {
                     "backgroundColor": object.customization.topBar.backgroundColor,
                     "text": object.customization.topBar.text,
                     "textColor": object.customization.topBar.textColor,
+                    "isTransparent": object.customization.topBar.isTransparent,
                 },
                 "banners": !object.customization.banners ? {} : {
                     "_id": object.customization.banners._id,
                     "autoDisplay": object.customization.banners.autoDisplay,
+                    "fullWidth": object.customization.banners.fullWidth,
                     "ids": !object.customization.banners.ids ? [] : object.customization.banners.ids.map(id => {
                         return ({
                             "_id": id._id,
@@ -141,6 +159,21 @@ let outputs = {
                             "button_text": id.button_text,
                             "title": id.title,
                             "subtitle": id.subtitle,
+                        })
+                    })
+                },
+                "subSections": !object.customization.subSections ? {} : {
+                    "_id": object.customization.subSections._id,
+                    "ids": !object.customization.subSections.ids ? [] : object.customization.subSections.ids.map(id => {
+                        return ({
+                            "_id": id._id,
+                            "title": id.title,
+                            "text": id.text,
+                            "image_url": id.image_url,
+                            "background_url": id.background_url,
+                            "background_color": id.background_color,
+                            "position": id.position,
+                            "location": id.location
                         })
                     })
                 },
@@ -180,6 +213,7 @@ let outputs = {
                     "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
                 "esportsScrenner": object.customization.esportsScrenner,
+                "topTab": object.customization.topTab
             },
             "integrations": !object.integrations ? {} : {
                 "_id": object.integrations._id,
@@ -193,6 +227,23 @@ let outputs = {
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
                 },
+                "cripsr": !object.integrations.cripsr ? {} : {
+                    "_id": object.integrations.cripsr._id,
+                    "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
+                    "link": object.integrations.cripsr.link,
+                    "isActive": object.integrations.cripsr.isActive,
+                    "name": object.integrations.cripsr.name,
+                    "metaName": object.integrations.cripsr.metaName,
+                },
+                "kyc": !object.integrations.kyc ? {} : {
+                    "_id": object.integrations.kyc._id,
+                    "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                    "flowId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
+                    "link": object.integrations.kyc.link,
+                    "isActive": object.integrations.kyc.isActive,
+                    "name": object.integrations.kyc.name,
+                    "metaName": object.integrations.kyc.metaName,
+                },
                 "mailSender": !object.integrations.mailSender ? {} : {
                     "_id": object.integrations.mailSender._id,
                     "apiKey": object.integrations.mailSender.apiKey,
@@ -203,6 +254,14 @@ let outputs = {
                             "contactlist_Id": template.contactlist_Id
                         })
                     }),
+                },
+                "moonpay": !object.integrations.moonpay ? {} : {
+                    "_id": object.integrations.moonpay._id,
+                    "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
+                    "link": object.integrations.moonpay.link,
+                    "isActive": object.integrations.moonpay.isActive,
+                    "name": object.integrations.moonpay.name,
+                    "metaName": object.integrations.moonpay.metaName,
                 },
                 "pusher": !object.integrations.pusher ? {} : {
                     "key": object.integrations.pusher.key
@@ -216,7 +275,8 @@ let outputs = {
                 autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
                 balance       : !object.addOn.balance       ? null : object.addOn.balance,
                 txFee         : !object.addOn.txFee       ? null : object.addOn.txFee,
-                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus
+                depositBonus  : !object.addOn.depositBonus       ? null : object.addOn.depositBonus,
+                pointSystem  : !object.addOn.pointSystem       ? null : object.addOn.pointSystem
             },
             "__v": object.__v,
         }

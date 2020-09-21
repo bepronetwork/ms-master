@@ -3,7 +3,10 @@ context('Customization', async () => {
     require('./addTopBarInformation');
     require('./addBackground');
     require('./addBanner');
+    require('./addSubSection');
     require('./addLogo');
+    require('./editSkin');
+    require('./editIcons');
     require('./editColors');
     require('./editFooter');
     require('./addTopIcon');
@@ -11,4 +14,5 @@ context('Customization', async () => {
     require('./addLoadingGif');
     require('./editTheme');
     require('./editEsportsScrenner')
+    require('./editTopTab');
 });

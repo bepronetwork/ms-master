@@ -40,6 +40,7 @@ import JackpotRepository from "./jackpot";
 import PermissionRepository from "./permission";
 import AutoWithdrawRepository from "./autoWithdraw";
 import AddOnsEcoRepository from "./ecosystem/addon";
+import CasinoProviderEcoRepository from "./ecosystem/casinoProvider";
 import BalanceRepository from "./balance";
 import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsRepository,  PopularNumberRepository} from "./redis";
 import TxFeeRepository from "./txFee";
@@ -49,10 +50,26 @@ import BetEsportsRepository from "./betEsports";
 import MatchRepository from "./match";
 import VideogameRepository from "./videogame";
 import EsportsScrennerRepository from "./esports_screnner";
+import PointSystemRepository from "./pointSystem";
+import TopTabRepository from "./topTab";
+import SubSectionsRepository from "./subSections";
+import ProviderRepository from "./provider";
+import ProviderTokenRepository from "./providerToken";
+import CripsrRepository from "./cripsr";
+import SkinRepository from "./skin";
+import KycRepository from "./kyc";
+import IconsRepository from "./icon";
+import MoonPayRepository from "./moonpay";
 
 export {
     EsportsScrennerRepository,
     BetEsportsRepository,
+    MoonPayRepository,
+    IconsRepository,
+    SkinRepository,
+    CripsrRepository,
+    ProviderRepository,
+    TopTabRepository,
     DepositBonusRepository,
     PopularNumberRepository,
     TxFeeRepository,
@@ -104,5 +121,10 @@ export {
     AutoWithdrawRepository,
     BackgroundRepository,
     MatchRepository,
-    VideogameRepository
+    VideogameRepository,
+    PointSystemRepository,
+    SubSectionsRepository,
+    ProviderTokenRepository,
+    CasinoProviderEcoRepository,
+    KycRepository,
 }

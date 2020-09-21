@@ -1,5 +1,6 @@
 import CoinmarketcapSingleton from "../coinmarketcap/coinmarketcap";
-
+const JSON_CONVERT_TICKER=require("./converter/convertTicker.json");
+const JSON_CONVERT_VALUE=require("./converter/convertValue.json");
 const __rates = {
     // Each BPRO Costs x in Currency
     eth : 0.00002,
@@ -15,6 +16,18 @@ class Converter{
 
     toUSD = async (currency, amount) => {
         return await CoinmarketcapSingleton.getCurrencyPrice(currency, amount)
+    }
+    convertTickerProvider = (ticker) => {
+        let tickers = JSON_CONVERT_TICKER;
+        return tickers[ticker];
+    }
+    convertAmountProviderBigger = (ticker, value) => {
+        let tickers = JSON_CONVERT_VALUE;
+        return (value * tickers[ticker]);
+    }
+    convertAmountProviderSmaller = (ticker, value) => {
+        let tickers = JSON_CONVERT_VALUE;
+        return (value/tickers[ticker]);
     }
 }
 

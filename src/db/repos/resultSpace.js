@@ -32,6 +32,7 @@ class ResultSpacesRepository extends MongoComponent{
     findResultSpaceById(_id){ 
         return new Promise( (resolve, reject) => {
             ResultSpacesRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, ResultSpace) => {
                 if(err) { reject(err)}
                 resolve(ResultSpace);

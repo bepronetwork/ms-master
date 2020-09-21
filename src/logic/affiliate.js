@@ -27,7 +27,7 @@ const processActions = {
 	__register : async (params) => {
         var { app } = params;
 
-        app = await AppRepository.prototype.findAppById(params.app);
+        app = await AppRepository.prototype.findAppById(params.app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')}
         /* Register of Available Wallets on App */
         const wallet = await Promise.all(app.wallet.map( async w => {

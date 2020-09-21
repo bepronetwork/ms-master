@@ -3,7 +3,7 @@ jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
     working_directory: ~/mern-starter # directory where steps will run
     docker: # run the steps with Docker
-      - image: circleci/node:8.12.0 # ...with this image as the primary container; this is where all `steps` will run
+      - image: circleci/node:8.13.0 # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout # special step to check out source code to working directory
       - run:
@@ -18,6 +18,8 @@ jobs: # a collection of steps
       - run:
           name: Define Environment Variable at Runtime
           command: |
+          
+            echo 'export MONGO_CONNECTION_STRING=mongodb+srv://BetProtocolAdmin:wNmm4OmASXEp8UXi@cluster0.2gxjd.mongodb.net' >> $BASH_ENV
             echo 'export CLOUDAMQP_URL=amqp://tseaeunl:jIMDudJ9mke8KtK6wveKrAmKZlIcnZUE@squid.rmq.cloudamqp.com/tseaeunl' >> $BASH_ENV
             echo 'export ETH_NET_NAME=rinkeby' >> $BASH_ENV
             echo 'export DB_USER=BetProtocolAdmin' >> $BASH_ENV

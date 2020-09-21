@@ -30,6 +30,11 @@ let populate_app_simple = [
                 path : 'depositBonus',
                 model : 'DepositBonus',
                 select : { '__v': 0}
+            },
+            {
+                path : 'pointSystem',
+                model : 'PointSystem',
+                select : { '__v': 0}
             }
         ]
     },
@@ -47,6 +52,11 @@ let populate_app_simple = [
             {
                 path : 'resultSpace',
                 model : 'ResultSpace',
+                select : { '__v': 0}
+            },
+            {
+                path : 'wallets.wallet',
+                model : 'Wallet',
                 select : { '__v': 0}
             }
         ]
@@ -85,6 +95,11 @@ let populate_app_simple = [
         model : 'Typography',
         select : { '__v': 0 },
         populate : populate_typography
+    },
+    {
+        path : 'casino_providers',
+        model : 'Provider',
+        select : { '__v': 0}
     }
 ] 
 

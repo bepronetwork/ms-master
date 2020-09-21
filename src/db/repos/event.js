@@ -38,6 +38,7 @@ class EventsRepository extends MongoComponent{
                         result              : params.result,
                         isResolved          : true
                 }},{ new: true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);
@@ -63,6 +64,7 @@ class EventsRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             EventsRepository.prototype.schema.model.findById(_id)
             .populate(foreignKeys)
+            .lean()
             .exec( (err, Event) => {
                 if(err) { reject(err)}
                 resolve(Event);

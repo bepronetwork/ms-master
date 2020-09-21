@@ -1,4 +1,5 @@
 import { wallet_object, security_object, bets_object } from "../Structures";
+import { Security } from "../../Security";
 
 let self;
 
@@ -18,6 +19,9 @@ let outputs = {
             "email": object.email,
             "id": object._id,
             "name": object.name,
+            "points": !object.points ? 0 : object.points,
+            "kyc_needed":object.kyc_needed,
+            "kyc_status":object.kyc_status,
             "bearerToken": object.bearerToken,
             "email_confirmed": object.email_confirmed,
             ...wallet_object(object),
@@ -46,6 +50,14 @@ let outputs = {
             ...bets_object(object),
             "verifiedAccounts": object.verifiedAccounts,
             "integrations": {
+                "moonpay": !object.integrations.moonpay ? {} : {
+                    "_id": object.integrations.moonpay._id,
+                    "key": !object.integrations.moonpay.key ? object.integrations.moonpay.key : Security.prototype.decryptData(object.integrations.moonpay.key),
+                    "link": object.integrations.moonpay.link,
+                    "isActive": object.integrations.moonpay.isActive,
+                    "name": object.integrations.moonpay.name,
+                    "metaName": object.integrations.moonpay.metaName,
+                },
                 "chat": {
                     "_id": object.integrations.chat._id,
                     "isActive": object.integrations.chat.isActive,
@@ -55,7 +67,24 @@ let outputs = {
                     "privateKey": object.integrations.chat.privateKey,
                     "publicKey": object.integrations.chat.publicKey,
                     "token": object.integrations.chat.token
-                }
+                },
+                "cripsr": !object.integrations.cripsr ? {} : {
+                    "_id": object.integrations.cripsr._id,
+                    "key": !object.integrations.cripsr.key ? object.integrations.cripsr.key : Security.prototype.decryptData(object.integrations.cripsr.key),
+                    "isActive": object.integrations.cripsr.isActive,
+                    "link": object.integrations.cripsr.link,
+                    "name": object.integrations.cripsr.name,
+                    "metaName": object.integrations.cripsr.metaName,
+                },
+                "kyc": !object.integrations.kyc ? {} : {
+                    "_id": object.integrations.kyc._id,
+                    "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                    "flowId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
+                    "link": object.integrations.kyc.link,
+                    "isActive": object.integrations.kyc.isActive,
+                    "name": object.integrations.kyc.name,
+                    "metaName": object.integrations.kyc.metaName,
+                },
             },
             "affiliateId": object.affiliateLink._id,
             "affilateLinkInfo": object.affiliateLink ? {

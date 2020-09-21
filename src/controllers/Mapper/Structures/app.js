@@ -1,3 +1,4 @@
+import { Security } from "../../Security"
 
 const app_object = (object) => {
     return {
@@ -104,7 +105,7 @@ const app_object = (object) => {
                     "affiliateLink": user.affiliateLink
                 })
             }) : object.app.users,
-            "external_users": object.app.external_users ? object.app.external_users.map(external_user_id => external_user_id) : object.app.external_users,
+            "external_users": object.app.external_users ? object.app.external_users.length : 0,
             "wallet": object.app.wallet ? object.app.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,
@@ -165,6 +166,8 @@ const app_object = (object) => {
             "customization": !object.app.customization ? {} : object.app.customization.colors == undefined ? object.app.customization._id : {
                 "_id": object.app.customization._id,
                 "theme": object.app.customization.theme,
+                "skin": object.app.customization.skin,
+                "icons": object.app.customization.icons,
                 "colors": object.app.customization.colors ? object.app.customization.colors.map(color => {
                     return ({
                         "_id": color._id,
@@ -178,10 +181,12 @@ const app_object = (object) => {
                     "backgroundColor": object.app.customization.topBar.backgroundColor,
                     "text": object.app.customization.topBar.text,
                     "textColor": object.app.customization.topBar.textColor,
+                    "isTransparent": object.app.customization.topBar.isTransparent,
                 },
                 "banners": !object.app.customization.banners ? {} : {
                     "_id": object.app.customization.banners._id,
                     "autoDisplay": object.app.customization.banners.autoDisplay,
+                    "fullWidth": object.app.customization.banners.fullWidth,
                     "ids": !object.app.customization.banners.ids ? [] : object.app.customization.banners.ids.map(id => {
                         return ({
                             "_id": id._id,
@@ -190,6 +195,21 @@ const app_object = (object) => {
                             "button_text": id.button_text,
                             "title": id.title,
                             "subtitle": id.subtitle,
+                        })
+                    })
+                },
+                "subSections": !object.app.customization.subSections ? {} : {
+                    "_id": object.app.customization.subSections._id,
+                    "ids": !object.app.customization.subSections.ids ? [] : object.app.customization.subSections.ids.map(id => {
+                        return ({
+                            "_id": id._id,
+                            "title": id.title,
+                            "text": id.text,
+                            "image_url": id.image_url,
+                            "background_url": id.background_url,
+                            "background_color": id.background_color,
+                            "position": id.position,
+                            "location": id.location
                         })
                     })
                 },
@@ -229,6 +249,7 @@ const app_object = (object) => {
                     "id": !object.app.customization.loadingGif.id ? '' : object.app.customization.loadingGif.id
                 },
                 "esportsScrenner": object.app.customization.esportsScrenner,
+                "topTab": object.app.customization.topTab
             },
             "integrations": !object.app.integrations ? {} : (!object.app.integrations.chat && !object.app.integrations.mailSender && !object.app.integrations.pusher) ? object.app.customization._id : {
                 "_id": object.app.integrations._id,
@@ -242,6 +263,23 @@ const app_object = (object) => {
                     "publicKey": object.app.integrations.chat.publicKey,
                     "token": object.app.integrations.chat.token
                 },
+                "cripsr": !object.app.integrations.cripsr ? {} : {
+                    "_id": object.app.integrations.cripsr._id,
+                    "key": !object.app.integrations.cripsr.key ? object.app.integrations.cripsr.key : Security.prototype.decryptData(object.app.integrations.cripsr.key),
+                    "isActive": object.app.integrations.cripsr.isActive,
+                    "link": object.app.integrations.cripsr.link,
+                    "name": object.app.integrations.cripsr.name,
+                    "metaName": object.app.integrations.cripsr.metaName,
+                },
+                "kyc": !object.app.integrations.kyc ? {} : {
+                    "_id": object.app.integrations.kyc._id,
+                    "clientId": !object.app.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.app.integrations.kyc.clientId),
+                    "flowId": !object.app.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.app.integrations.kyc.flowId),
+                    "link": object.app.integrations.kyc.link,
+                    "isActive": object.app.integrations.kyc.isActive,
+                    "name": object.app.integrations.kyc.name,
+                    "metaName": object.app.integrations.kyc.metaName,
+                },
                 "mailSender": !object.app.integrations.mailSender ? {} : {
                     "_id": object.app.integrations.mailSender._id,
                     "apiKey": object.app.integrations.mailSender.apiKey,
@@ -252,6 +290,14 @@ const app_object = (object) => {
                             "contactlist_Id": template.contactlist_Id
                         })
                     }),
+                },
+                "moonpay": !object.app.integrations.moonpay ? {} : {
+                    "_id": object.app.integrations.moonpay._id,
+                    "key": !object.app.integrations.moonpay.key ? object.app.integrations.moonpay.key : Security.prototype.decryptData(object.app.integrations.moonpay.key),
+                    "link": object.app.integrations.moonpay.link,
+                    "isActive": object.app.integrations.moonpay.isActive,
+                    "name": object.app.integrations.moonpay.name,
+                    "metaName": object.app.integrations.moonpay.metaName,
                 },
                 "pusher": !object.app.integrations.pusher ? {} : {
                     "key": object.app.integrations.pusher.key

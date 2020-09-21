@@ -20,6 +20,7 @@ import Chat from './chat';
 import Customization from './customization';
 import TopBar from './topBar';
 import Banners from './banners';
+import SubSections from './subSections';
 import Color from './color';
 import Logo from './logo';
 import Footer from './footer';
@@ -42,9 +43,25 @@ import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
 import EsportsScrenner from "./esports_screnner";
+import PointSystem from "./pointSystem";
+import TopTab from "./topTab";
+import Provider from "./provider";
+import ProviderToken from "./providerToken";
+import Cripsr from "./cripsr";
+import Skin from "./skin";
+import Kyc from "./kyc";
+import Icons from "./icon";
+import MoonPay from "./moonpay";
+
 
 export {
     EsportsScrenner,
+    MoonPay,
+    Icons,
+    Skin,
+    Cripsr,
+    Provider,
+    TopTab,
     DepositBonus,
     PopularNumberLogic,
     LastBets,
@@ -65,6 +82,7 @@ export {
     TopBar,
     Wallet,
     Banners,
+    SubSections,
     Deposit,
     Customization,
     Integrations,
@@ -87,5 +105,8 @@ export {
     Token,
     MailSender,
     LoadingGif,
-    Background
+    Background,
+    PointSystem,
+    ProviderToken,
+    Kyc,
 }

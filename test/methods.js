@@ -72,6 +72,92 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editApp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editKycNeeded(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/user/kyc_needed/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editKycIntegration(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/integrations/kyc/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editCripsrIntegration(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/integrations/cripsr/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editMoonPayIntegration(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/integrations/moonpay/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async getSkinEcosystem(params) {
+        return request(global.server)
+        .get('/api/app/skinEcosystem/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editSkin(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/skin')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async convertPoints(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/convert/points')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editIcons(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/icons')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editProvider(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/provider/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async createProvider(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/provider/create')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getBetInfo(params) {
         return request(global.server)
         .post('/api/app/bet/get')
@@ -110,9 +196,33 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addAddonPointSystem(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/pointSystem/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editAddonPointSystem(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/pointSystem/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editAddonTxFee(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/txFee/editTxFee')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async getGameStats(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/game/stats')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)
@@ -569,9 +679,25 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editSubSectionsCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/subSections')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editBackgroundCustomizationApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/customization/background')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editTopTabCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/topTab')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

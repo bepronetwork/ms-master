@@ -34,6 +34,7 @@ class SecurityRepository extends MongoComponent{
                 { _id: _id }, 
                 { $set : { "2fa_secret" : secret, "2fa_set" : true } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){throw(err)}
                     return (item);

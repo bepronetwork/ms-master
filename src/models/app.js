@@ -1,12 +1,13 @@
 import { AppLogic } from '../logic';
 import ModelComponent from './modelComponent';
-import { AppRepository } from '../db/repos';
+import { AppRepository, UsersRepository } from '../db/repos';
 import Wallet from './wallet';
 import { AffiliateSetup, Integrations, Customization, Typography, AddOn } from '.';
 import {
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
     MapperEditBannersSingleton,
+    MapperEditSubSectionsSingleton,
     MapperEditColorsSingleton,
     MapperEditFooterSingleton,
     MapperEditGameBackgroundImageSingleton,
@@ -40,7 +41,8 @@ import {
     MapperGetLogsSingleton,
     MapperGetBetSingleton,
     MapperEditThemeSingleton,
-    MapperEditBackgroundSingleton
+    MapperEditBackgroundSingleton,
+    MapperSummaryOneGamesSingleton
 } from '../controllers/Mapper';
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
@@ -93,17 +95,48 @@ class App extends ModelComponent {
         }
     }
 
-     /**
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+    async kycWebhook() {
+        // output Boolean
+        try {
+            let res = await this.process('KycWebhook');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+
+    async modifyBalance() {
+        // output Boolean
+        try {
+            let res = await this.process('ModifyBalance');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
      * @param {String} 
      * @return {bool || Exception}  
      */
 
 
-    async modifyBalance() {
-         // output Boolean
+    async getGameStats() {
         try {
-            let res = await this.process('ModifyBalance');
-            return res;
+            let app = await this.process('GetGameStats');
+            return MapperSummaryOneGamesSingleton.output('SummaryOneGames', app);
         } catch (err) {
             throw err;
         }
@@ -120,6 +153,84 @@ class App extends ModelComponent {
         try {
             let app = await this.process('GetLogs');
             return MapperGetLogsSingleton.output('GetLogs', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerAuthorization() {
+        try {
+            return await this.process('ProviderAuthorization');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerCredit() {
+
+
+        const userData = await UsersRepository.prototype.findUserByExternalId(this.self.params.player_id);
+        const user = userData._id;
+
+        try{
+            await UsersRepository.prototype.changeWithdrawPosition(user, true);
+            let res = await this.process('ProviderCredit');
+            UsersRepository.prototype.changeWithdrawPosition(user, false);
+            return res;
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not betting/withdrawing atm */
+                /* Open Mutex */
+                UsersRepository.prototype.changeWithdrawPosition(user, false);
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerDebit() {
+        try {
+            return await this.process('ProviderDebit');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+
+    async providerRollback() {
+        try {
+            return await this.process('ProviderRollback');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async providerBalance() {
+        try {
+            return await this.process('ProviderBalance');
         } catch (err) {
             throw err;
         }
@@ -149,10 +260,10 @@ class App extends ModelComponent {
         }
     }
 
-   /**
-   * @param {String} 
-   * @return {bool || Exception}  
-   */
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
     async get() {
         try {
@@ -177,6 +288,34 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+    async editApp() {
+        // output Boolean
+        try {
+            let app = await this.process('EditApp');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+    async editProvider() {
+        try {
+            let app = await this.process('EditProvider');
+            // output Boolean
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
 
     /**
    * @param {String} 
@@ -187,7 +326,7 @@ class App extends ModelComponent {
     async getAuth() {
         try {
             let app = await this.process('GetAuth');
-            return MapperGetAuthSingleton.output('GetAuth', {...app._doc, storeAddOn : app.storeAddOn});
+            return MapperGetAuthSingleton.output('GetAuth', { ...app._doc, storeAddOn: app.storeAddOn });
         } catch (err) {
             throw err;
         }
@@ -201,13 +340,13 @@ class App extends ModelComponent {
     async summary() {
         try {
             let app = await this.process('Summary');
-            switch (app.type){
-                case 'users' : return MapperSummaryUsersSingleton.output('SummaryUsers', app);
-                case 'games' : return MapperSummaryGamesSingleton.output('SummaryGames', app);
-                case 'revenue' : return MapperSummaryRevenueSingleton.output('SummaryRevenue', app);
-                case 'bets' : return MapperSummaryBetsSingleton.output('SummaryBets', app);
-                case 'wallet' : return MapperSummaryWalletSingleton.output('SummaryWallet', app);
-                default : return app;    
+            switch (app.type) {
+                case 'users': return MapperSummaryUsersSingleton.output('SummaryUsers', app);
+                case 'games': return MapperSummaryGamesSingleton.output('SummaryGames', app);
+                case 'revenue': return MapperSummaryRevenueSingleton.output('SummaryRevenue', app);
+                case 'bets': return MapperSummaryBetsSingleton.output('SummaryBets', app);
+                case 'wallet': return MapperSummaryWalletSingleton.output('SummaryWallet', app);
+                default: return app;
             }
         } catch (err) {
             throw err;
@@ -386,11 +525,35 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+    async addAddonPointSystem() {
+        try {
+            return await this.process('AddAddonPointSystem');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
     async editAddonDepositBonus() {
         try {
             let app = await this.process('EditAddonDepositBonus');
             return MapperEditAddonDepositBonusSingleton.output('EditAddonDepositBonus', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+    async editAddonPointSystem() {
+        try {
+            return await this.process('EditAddonPointSystem');
         } catch (err) {
             throw err;
         }
@@ -413,16 +576,29 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+    async convertPoints() {
+        try {
+            let app = await this.process('ConvertPoints');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
     async generateAddresses() {
-        
+
         const { app } = this.self.params;
-        try{
+        try {
             await AppRepository.prototype.changeWithdrawPosition(app, true);
             let res = await this.process('GenerateAddresses');
             AppRepository.prototype.changeWithdrawPosition(app, false);
             return MapperGenerateAddressSingleton.output('GenerateAddresses', res);
-        }catch(err){
-            if(parseInt(err.code) != 14){
+        } catch (err) {
+            if (parseInt(err.code) != 14) {
                 /* If not betting/withdrawing atm */
                 /* Open Mutex */
                 AppRepository.prototype.changeWithdrawPosition(app, false);
@@ -630,6 +806,22 @@ class App extends ModelComponent {
     }
 
     /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+
+
+    async editMoonPayIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditMoonPayIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
    * @param {String} 
    * @return {bool || Exception}  
    */
@@ -639,6 +831,47 @@ class App extends ModelComponent {
         // No Output
         try {
             let app = await this.process('EditIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+
+
+    async editCripsrIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditCripsrIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async editKycIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditKycIntegration');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+
+    async editCripsrIntegration() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditCripsrIntegration');
             return app;
         } catch (err) {
             throw err;
@@ -675,6 +908,21 @@ class App extends ModelComponent {
     }
 
     /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editSkin() {
+        //Boolean Output
+        try {
+            let app = await this.process('EditSkin');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
      * @param {String} 
      * @return {bool || Exception}  
      */
@@ -683,6 +931,21 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditTopBar');
             return MapperEditTopBarSingleton.output('EditTopBar', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+
+    async editTopTab() {
+        //output = boolean
+        try {
+            let app = await this.process('EditTopTab');
+            return app
         } catch (err) {
             throw err;
         }
@@ -716,6 +979,31 @@ class App extends ModelComponent {
     }
 }
 
+    async editIcons() {
+        //Output Boolean
+        try {
+            let app = await this.process('EditIcons');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async editSubSections() {
+        //output = boolean
+        try {
+            let app = await this.process('EditSubSections');
+            return app;
+            // return MapperEditSubSectionsSingleton.output('EditSubSections', app);
+        } catch (err) {
+            throw err;
+        }
+    }
 
     /**
     * @param {String} 
@@ -737,7 +1025,7 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-   async editBackground() {
+    async editBackground() {
         try {
             let app = await this.process('EditBackground');
             return MapperEditBackgroundSingleton.output('EditBackground', app);

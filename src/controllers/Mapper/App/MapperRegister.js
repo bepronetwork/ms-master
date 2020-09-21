@@ -22,7 +22,7 @@ let outputs = {
             "virtual":  object.virtual,
             ...currencies_object(object),
             "users": !object.users ? [] : object.users.map(user_id => user_id),
-            "external_users": !object.external_users ? [] : object.external_users.map(external_user_id => external_user_id),
+            "external_users": !object.external_users ? 0 : object.external_users.length,
             "wallet": !object.wallet ? [] : object.wallet.map(wallet_id => wallet_id),
             "deposits": !object.deposits ? [] : object.deposits.map(deposit_id => deposit_id),
             "withdraws": !object.withdraws ? [] : object.withdraws.map(withdraw_id => withdraw_id),

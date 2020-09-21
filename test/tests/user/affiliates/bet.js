@@ -49,11 +49,11 @@ context('Bet', async () => {
         user_4 = global.test.user_4;
         user_5 = global.test.user_5;
         /* Get Info for User 1 before Bet */
-        var user_1_before_info = await getUserInfo({user : user_1, app});
+        var user_1_before_info = await getUserInfo({user : user_1, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 2 before Bet */
-        var user_2_before_info = await getUserInfo({user : user_2, app});
+        var user_2_before_info = await getUserInfo({user : user_2, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 2 before Bet */
-        var user_3_before_info = await getUserInfo({user : user_3, app});
+        var user_3_before_info = await getUserInfo({user : user_3, app, currency:"5e108498049eba079930ae1c"});
         
         /* Get Info for User3 before Bet */
         user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
@@ -68,12 +68,12 @@ context('Bet', async () => {
         await provideFunds({wallet : user_3_currrencyWallet._id, amount : ethDepositAmount});
 
         /* Get Info for User 2 before Bet */
-        user_3_before_info = await getUserInfo({user : user_3 , app});
+        user_3_before_info = await getUserInfo({user : user_3 , app, currency:"5e108498049eba079930ae1c"});
         var wasWon = true;
         /* Creater User Bet */
         while(wasWon){
             var BET_RESULT = [{
-                place: 0, value: betAmount
+                place: 1, value: betAmount
             }];
             global.test.pot = ((!global.test.pot) ? 0 : global.test.pot) + (global.test.jackpotEdge * betAmount);
             /* Verify that was Lost */
@@ -91,11 +91,11 @@ context('Bet', async () => {
         /* Confirm Bet was valid */
         expect(status).to.equal(200);
         /* Get Info for User 1 After Bet */
-        const user_1_after_info = await getUserInfo({user : user_1, app});
+        const user_1_after_info = await getUserInfo({user : user_1, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 2 After Bet */
-        const user_2_after_info = await getUserInfo({user : user_2, app});
+        const user_2_after_info = await getUserInfo({user : user_2, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User3 After Bet */
-        const user_3_after_info = await getUserInfo({user : user_3, app});
+        const user_3_after_info = await getUserInfo({user : user_3, app, currency:"5e108498049eba079930ae1c"});
 
         /* Check that Affiliate With Structure x got his amount */
         var { percentageOnLoss : user_1_percentageOnLoss } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_1_after_info.affiliateInfo._id).affiliateStructure;
@@ -130,9 +130,9 @@ context('Bet', async () => {
         user_5 = global.test.user_5;
 
         /* Get Info for User 4 before Bet */
-        var user_4_before_info = await getUserInfo({user : user_4, app});
+        var user_4_before_info = await getUserInfo({user : user_4, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 5 before Bet */
-        var user_5_before_info = await getUserInfo({user : user_5, app});
+        var user_5_before_info = await getUserInfo({user : user_5, app, currency:"5e108498049eba079930ae1c"});
         
         /* Get Info for User3 before Bet */
         user_4 = {...user_4_before_info, eth_account : user_4.eth_account};
@@ -143,7 +143,7 @@ context('Bet', async () => {
 
         /* Const */
         const BET_RESULT = [{
-            place: 0, value: betAmount
+            place: 1, value: betAmount
         }];
 
 
@@ -152,7 +152,7 @@ context('Bet', async () => {
         await provideFunds({wallet : user_5_currrencyWallet._id, amount : ethDepositAmount});
 
         /* Get Info for User 4 before Bet */
-        user_5_before_info = await getUserInfo({user : user_5, app});
+        user_5_before_info = await getUserInfo({user : user_5, app, currency:"5e108498049eba079930ae1c"});
         
         var wasWon = true;
         /* Creater User Bet */
@@ -173,9 +173,9 @@ context('Bet', async () => {
         expect(status).to.equal(200);
 
         /* Get Info for User 4 After Bet */
-        const user_4_after_info = await getUserInfo({user : user_4, app});
+        const user_4_after_info = await getUserInfo({user : user_4, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 5 After Bet */
-        const user_5_after_info = await getUserInfo({user : user_5, app});
+        const user_5_after_info = await getUserInfo({user : user_5, app, currency:"5e108498049eba079930ae1c"});
 
         /* Check that Affiliate With Structure x got his amount */
         var { percentageOnLoss : user_4_percentageOnLoss } = user_5.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_4_after_info.affiliateInfo._id).affiliateStructure;
@@ -208,11 +208,11 @@ context('Bet', async () => {
         expect(res_editAppStructure.data.status).to.equal(200);
 
         /* Get Info for User 1 before Bet */
-        var user_1_before_info = await getUserInfo({user : user_1, app});
+        var user_1_before_info = await getUserInfo({user : user_1, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 2 before Bet */
-        var user_2_before_info = await getUserInfo({user : user_2, app});
+        var user_2_before_info = await getUserInfo({user : user_2, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 2 before Bet */
-        var user_3_before_info = await getUserInfo({user : user_3, app});
+        var user_3_before_info = await getUserInfo({user : user_3, app, currency:"5e108498049eba079930ae1c"});
 
         /* Get Info for User3 before Bet */
         user_1 = {...user_1_before_info, eth_account : user_1.eth_account};
@@ -225,11 +225,11 @@ context('Bet', async () => {
         /* Const */
 
         const BET_RESULT = [{
-            place: 0, value: betAmount
+            place: 1, value: betAmount
         }];
 
         /* Get Info for User 2 before Bet */
-        user_3_before_info = await getUserInfo({user : user_3, app});
+        user_3_before_info = await getUserInfo({user : user_3, app, currency:"5e108498049eba079930ae1c"});
         var wasWon = true;
 
         /* Creater User Bet */
@@ -250,11 +250,11 @@ context('Bet', async () => {
         /* Confirm Bet was valid */
         expect(status).to.equal(200);
         /* Get Info for User 1 After Bet */
-        const user_1_after_info = await getUserInfo({user : user_1, app});
+        const user_1_after_info = await getUserInfo({user : user_1, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User 2 After Bet */
-        const user_2_after_info = await getUserInfo({user : user_2, app});
+        const user_2_after_info = await getUserInfo({user : user_2, app, currency:"5e108498049eba079930ae1c"});
         /* Get Info for User3 After Bet */
-        const user_3_after_info = await getUserInfo({user : user_3, app});
+        const user_3_after_info = await getUserInfo({user : user_3, app, currency:"5e108498049eba079930ae1c"});
 
         /* Check that Affiliate With Structure x got his amount */
         var { percentageOnLoss : user_2_percentageOnLoss } = user_3.affilateLinkInfo.parentAffiliatedLinks.find( paf => paf.affiliate._id == user_2_after_info.affiliateInfo._id).affiliateStructure;

@@ -10,6 +10,11 @@ let populate_app_game = [
                 select : { '__v': 0}
             }
         ]
+    },
+    {
+        path : 'casino_providers',
+        model : 'Provider',
+        select : { '__v': 0}
     }
 ]
 

@@ -33,6 +33,7 @@ class MailSenderRepository extends MongoComponent{
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             MailSenderRepository.prototype.schema.model.findById(_id)
+            .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
                 resolve(item);
@@ -42,7 +43,7 @@ class MailSenderRepository extends MongoComponent{
 
     findApiKeyByAppId(app_id){ 
         return new Promise( async (resolve, reject) => {
-            let app = await AppRepository.prototype.findAppById(app_id);
+            let app = await AppRepository.prototype.findAppById(app_id, "simple");
             let integration = await IntegrationsRepository.prototype.findById(app.integrations);
             resolve(await MailSenderRepository.prototype.findById(integration.mailSender));
         });
@@ -57,6 +58,7 @@ class MailSenderRepository extends MongoComponent{
                     "templateIds" : newStructure.templateIds,
                 } },
                 { 'new': true })
+                .lean()
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

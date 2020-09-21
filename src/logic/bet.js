@@ -56,12 +56,23 @@ const betResolvingActions = {
                     hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
                     outcome = CryptographySingleton.hexToInt(hmca_hash);
                     let outcomeResultSpaceIndividual = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
-                    console.log("outcomeResultSpaceIndividual", outcomeResultSpaceIndividual);
                     let exists = outcomeResultSpace.find( o => outcomeResultSpaceIndividual.index == o.index)
                     if(!exists){
                         /* Make sure they dont have the same result space */
                         outcomeResultSpace.push(outcomeResultSpaceIndividual);
                     }
+                }
+                break;
+            };
+            case 'slots_simple' : {
+                outcomeResultSpace = [];
+                /* 5 Outcome Result Spaces */
+                while(outcomeResultSpace.length < 5){
+                    serverSeed = CryptographySingleton.generateSeed();
+                    hmca_hash = CryptographySingleton.generateRandomResult(serverSeed, clientSeed, params.nonce);
+                    outcome = CryptographySingleton.hexToInt(hmca_hash);
+                    let outcomeResultSpaceIndividual = CasinoLogicSingleton.fromOutcometoResultSpace(outcome, params.resultSpace);
+                    outcomeResultSpace.push(outcomeResultSpaceIndividual);
                 }
                 break;
             };
@@ -117,7 +128,6 @@ const betResolvingActions = {
  * @memberof logic
  * @param {function} params - Function Params
  **/
-
   
 const processActions = {
     __auto : async (params) => {
@@ -127,10 +137,10 @@ const processActions = {
             let game = await GamesRepository.prototype.findGameById(params.game);
             PerformanceBet.end({id : 'findGameById'});
             PerformanceBet.start({id : 'findUserById'});
-            let user = await UsersRepository.prototype.findUserById(params.user, "simple");
+            let user = await UsersRepository.prototype.findUserByIdToBet(params.user);
             PerformanceBet.end({id : 'findUserById'});
             PerformanceBet.start({id : 'findAppById'});
-            let app = await AppRepository.prototype.findAppById(params.app, "wallet");
+            let app = await AppRepository.prototype.findAppByIdToBet(params.app);
             PerformanceBet.end({id : 'findAppById'});
 
             if(game){var maxBetValue = game.maxBet; }
@@ -146,7 +156,8 @@ const processActions = {
             var user_in_app = (app._id == params.app);
 
             /* Get balance by wallet type */
-            const appWallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            const points     = (app.addOn.pointSystem!=undefined) ? app.addOn.pointSystem.ratio.find( w => new String(w.currency).toString() == new String(currency).toString()) : 0;
+            const appWallet  = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
             const userWallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
 
             let appPlayBalance                  = appWallet.playBalance;
@@ -264,7 +275,8 @@ const processActions = {
                 serverSeed          :   serverSeed,
                 amountBonus,
                 minBetAmountForBonusUnlocked,
-                incrementBetAmountForBonus
+                incrementBetAmountForBonus,
+                points: points.value
             }
             return normalized;
         }catch(err){
@@ -292,15 +304,19 @@ const processActions = {
 const progressActions = {
     __auto : async (params) => {
 
-        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual } = params;
+        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
+        PerformanceBet.start({id : 'UsersRepository.insertPoints'});
+        if(points > 0){
+            await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);
+        }
+        PerformanceBet.end({id : 'UsersRepository.insertPoints'});
+
         /* Save all ResultSpaces */
         PerformanceBet.start({id : 'BetResultSpace.register'});
-        let dependentObjects = Object.keys(result).map( async key =>
-            await (new BetResultSpace(result[key])).register()
-        );
-        PerformanceBet.end({id : 'BetResultSpace.register'});
-
+        let dependentObjects = Object.keys(result).map( async key =>(new BetResultSpace(result[key])).register());
+        
         let betResultSpacesIds = await Promise.all(dependentObjects);
+        PerformanceBet.end({id : 'BetResultSpace.register'});
         // Generate new Params Setup
 
         params = {
@@ -315,7 +331,9 @@ const progressActions = {
             ...params,
             betAmount : params.totalBetAmount
         });
+        PerformanceBet.end({id : 'bet.register'});
 
+        PerformanceBet.start({id : 'isWon.virtual'});
         // Logic for when the APP is not virtual
         if(isWon && !virtual){
             if(amountBonus>0){
@@ -333,6 +351,7 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (params.totalBetAmount >= playBalance ? playBalance : app_delta));
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, ( params.totalBetAmount >= playBalance ? -playBalance : -params.totalBetAmount));
         }
+        PerformanceBet.end({id : 'isWon.virtual'});
 
         // Logic for when the APP is virtual
         if(virtual) {
@@ -345,6 +364,7 @@ const progressActions = {
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
             PerformanceBet.end({id : 'wallet2'});
         }
+        PerformanceBet.start({id : 'increment'});
 
         // if the increment of the bonus bet is greater than the minimum for the bonus to be unlocked, and the bonus is greater than then: Then the bonus owner is sent to playbalance.
         if( incrementBetAmountForBonus >= minBetAmountForBonusUnlocked && amountBonus > 0 && !virtual) {
@@ -353,6 +373,7 @@ const progressActions = {
             await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked));
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, (user_delta+amountBonus));
         }
+        PerformanceBet.end({id : 'increment'});
 
         /* Update Balance of Affiliates */
         if(isUserAffiliated && amountBonus <= 0){

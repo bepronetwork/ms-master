@@ -24,6 +24,3 @@ const pipeline_user_wallet = (_id) =>
 ]
 
 export default pipeline_user_wallet;
-
-
-

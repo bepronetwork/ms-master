@@ -10,6 +10,11 @@ let populate_app_auth = [
         select : { '__v': 0},
     },
     {
+        path : 'casino_providers',
+        model : 'Provider',
+        select : { '__v': 0},
+    },
+    {
         path : 'addOn',
         model : 'AddOn',
         select : { '__v': 0},
@@ -34,6 +39,11 @@ let populate_app_auth = [
             },{
                 path : 'depositBonus',
                 model : 'DepositBonus',
+                select : { '__v': 0}
+            },
+            {
+                path : 'pointSystem',
+                model : 'PointSystem',
                 select : { '__v': 0}
             }
         ]
@@ -101,6 +111,11 @@ let populate_app_auth = [
         select : { '__v': 0 },
         populate : populate_typography
     },
+    {
+        path : 'casino_providers',
+        model : 'Provider',
+        select : { '__v': 0}
+    }
 ] 
 
 export default populate_app_auth;

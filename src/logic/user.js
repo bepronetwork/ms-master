@@ -4,10 +4,6 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 
 import {
-    Token
-} from '../../src/models';
-
-import {
     UsersRepository,
     AppRepository,
     WalletsRepository,
@@ -15,9 +11,10 @@ import {
     AffiliateLinkRepository,
     AffiliateRepository,
     SecurityRepository,
-    TokenRepository
+    TokenRepository,
+    ProviderTokenRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
@@ -29,6 +26,10 @@ import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
 import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
+import { resetPassword } from '../api/controllers/user';
+import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL, ETH_FEE_VARIABLE } from "../config";
+import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
+import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
 
 let error = new ErrorManager();
 
@@ -53,6 +54,15 @@ let __private = {};
 
 const processActions = {
 
+
+    __providerToken: async (params) => {
+        let token    = MiddlewareSingleton.generateTokenByJson({user:params.user, ticker:params.ticker});
+        let resToken = await ProviderTokenRepository.prototype.findByToken(token);
+        return {
+            tokenIsNotInDB: !resToken,
+            token
+        }
+    },
     __resendEmail: async (params) => {
 
         const user = await UsersRepository.prototype.findUserById(params.user);
@@ -103,6 +113,7 @@ const processActions = {
 
         app = await AppRepository.prototype.findAppById(user.app_id, "simple");
         if (!app) { throwError("APP_NOT_EXISTENT");}
+        if(app.wallet.length<=0) {throwError("LOGIN_NOT_CURRENCY_ADDED");}
 
         var user_in_app = (app._id == params.app);
         const { integrations } = app;
@@ -261,15 +272,9 @@ const processActions = {
         if(app.addOn != null) {
             balanceInitial = app.addOn.balance;
         }
-
-        if (params.user_external_id) {
-            // User is Extern (Only Widget Clients)
-            user = await AppRepository.prototype.findUserByExternalId(input_params.app, input_params.user_external_id);
-        } else {
-            // User is Intern 
-            user = await UsersRepository.prototype.findUser(username);
-        }
-
+        // User is Intern 
+        user = await UsersRepository.prototype.findUser(username);
+        
         let alreadyExists = user ? true : false;
         // TO DO : Hash Password on Client Side
         if (params.password)
@@ -294,8 +299,7 @@ const processActions = {
             affiliateLink,
             app: app,
             app_id: app.id,
-            external_user: params.user_external_id ? true : false,
-            external_id: params.user_external_id,
+            external_user: false,
             balanceInitial,
             url
         }
@@ -331,45 +335,78 @@ const processActions = {
         app = await AppRepository.prototype.findAppById(app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-        const user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
+        var app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        var erc20 = false;
+        if(user_wallet.currency.erc20){
+            // Is ERC20 Token simulate use of eth wallet
+            user_wallet = user.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toLowerCase());
+            app_wallet  = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toString());
+            erc20 = true
+        }
 
         return {
             app_wallet,
             user,
             app,
-            user_wallet
+            user_wallet,
+            erc20,
+            currency
         };
 
     },
     __updateWallet: async (params) => {
         try {
-            var { currency, id, wBT } = params;
-            var app = await AppRepository.prototype.findAppById(id, "simple");
+            var { currency, id } = params;
+
+            /* Get User Info */
+            let user = await UsersRepository.prototype.findUserById(id);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            
+            /* Get App Info */
+            var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
-            const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            let ticker = params.ticker;
+            var amount = null;
+            switch (ticker.toLowerCase()) {
+                case 'eth':
+                    if(params.token_symbol==null || params.token_symbol==undefined) {
+                        amount = getCurrencyAmountFromBitGo({
+                            amount: params.payload.value,
+                            ticker
+                        });
+                    }else{
+                        amount = parseFloat(params.payload.token_transfers[0].value)
+                    }
+                    break;
+                default:
+                    amount = params.payload.value
+                    break;
+            }
+            const app_wallet = app.wallet.find(w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
+            currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             let addOn = app.addOn;
             let fee = 0;
             if(addOn && addOn.txFee && addOn.txFee.isTxFee){
                 fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
             }
-            /* Verify if the transactionHash was created */
-            const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
+            // /* Verify if the transactionHash was created */
+            // const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
-            const from = entries[0].address;
-            const to = entries[1].address;
+            const from  = params.payload.from;
+            const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
-            const isValid = ((state == 'confirmed') && (type == 'receive'));
+            const isValid = (params.payload.status === "0x1");
 
-            /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(label);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
-            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            if(ETH_FEE_VARIABLE == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
+            if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
-            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(transactionHash);
+            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
@@ -392,7 +429,6 @@ const processActions = {
                     let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
-                    console.log(addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()))
                     let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
                     if (amount >= min_deposit && amount <= max_deposit){
                         depositBonusValue = (amount * (percentage/100));
@@ -402,7 +438,7 @@ const processActions = {
             }
 
             let res = {
-                maxDeposit: (app_wallet.max_deposit == undefined) ? 0 : app_wallet.max_deposit,
+                maxDeposit: (app_wallet.max_deposit == undefined) ? 1 : app_wallet.max_deposit,
                 app,
                 app_wallet,
                 user_in_app,
@@ -414,10 +450,10 @@ const processActions = {
                 user_id: user._id,
                 wallet: wallet,
                 creationDate: new Date(),
-                transactionHash: transactionHash,
+                transactionHash: params.txHash,
                 from: from,
                 currencyTicker: wallet.currency.ticker,
-                amount: amount,
+                amount,
                 isValid,
                 fee,
                 depositBonusValue,
@@ -454,9 +490,24 @@ const processActions = {
         return bets;
     },
     __getInfo: async (params) => {
-        const { user } = params;
+        const { user, currency } = params;
         let res = await UsersRepository.prototype.findUserById(user);
-        return res;
+        let userStats = await UsersRepository.prototype.findUserStatsById(user, currency);
+        let statsObject = !userStats[0] ? {} : userStats[0];
+        let normalized = {
+            ...res._doc,
+            ...statsObject
+        }
+        return normalized;
+    },
+    __editKycNeeded: async (params) => {
+        const user = await UsersRepository.prototype.findUserById(params.user);
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        const app = await AppRepository.prototype.findAppById(user.app_id, "simple");
+        if (!app) { throwError("APP_NOT_EXISTENT");}
+        let admin = app.listAdmins.find(_id => _id == params.admin);
+        if(admin==null || admin==undefined) { throwError('USER_NOT_EXISTENT')}
+        return params;
     }
 }
 
@@ -472,7 +523,13 @@ const processActions = {
 
 
 const progressActions = {
-
+    __providerToken: async (params) => {
+        let {tokenIsNotInDB, token} = params;
+        if(tokenIsNotInDB){
+            (new ProviderToken({token})).register();
+        }
+        return token;
+    },
     __resendEmail: async (params) => {
 
         /* attributes  */
@@ -597,40 +654,134 @@ const progressActions = {
         return params;
     },
     __getDepositAddress: async (params) => {
-        const { app_wallet, user_wallet, user } = params;
-
-        let addresses = user_wallet.depositAddresses;
-        let address = addresses.find( a => a.address);
-        if(!address){
-            var wallet = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
-            // See if address is already provided
-            let bitgo_id;
-            if(addresses.length > 0){
-                bitgo_id = addresses.find( a => a.bitgo_id).bitgo_id;
+        const { app_wallet, user_wallet, user, app, erc20, currency } = params;
+        try {
+            let walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+            let bitgo_address2;
+            if(!app_wallet.bitgo_id_not_webhook) {
+                bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}-second_wallet`});
+                await WalletsRepository.prototype.updateBitgoIdNotWebhook(app_wallet._id, bitgo_address2.id);
+                throwError('WALLET_WAIT');
             }
-            let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
-            address = bitgo_address;
-            if((!bitgo_id) || bitgo_address.address){
+            if(!app_wallet.bank_address_not_webhook) {
+                bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}-second_wallet`, id: app_wallet.bitgo_id_not_webhook});
+                if(!bitgo_address2.address) throwError('WALLET_WAIT');
+                await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address)
+                throwError('WALLET_WAIT');
+            }
+
+            let addresses = user_wallet.depositAddresses;
+            let address = addresses.find( a => a.address);
+            if(!address){
+
+
+                // let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
+                var crypto_address = null;
+                switch ((app_wallet.currency.ticker).toLowerCase()) {
+                    case 'btc': {
+                        crypto_address = await cryptoBtc.CryptoBtcSingleton.generateDepositAddress();
+                        /* Import address to HD Wallet */
+                        await cryptoBtc.CryptoBtcSingleton.importAddressAsWallet({
+                            walletName  : `${user._id}-${user_wallet.currency.ticker}`, 
+                            address     : crypto_address.payload.address,
+                            password    : Security.prototype.decryptData(app_wallet.hashed_passphrase),
+                            privateKey  : crypto_address.payload.privateKey
+                        });
+                        /* Record webhooks */
+                        await cryptoBtc.CryptoBtcSingleton.addAppDepositWebhook({
+                            address     : crypto_address.payload.address,
+                            app_id      : user._id,
+                            currency_id : user_wallet.currency._id,
+                            isApp       : false
+                        });
+                        /* Record Payment Forwarding webhooks */
+                        let resCreatePaymentForwarding = await cryptoBtc.CryptoBtcSingleton.createPaymentForwarding({
+                            from: crypto_address.payload.address,
+                            to: app_wallet.bank_address_not_webhook,
+                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                            wallet: `${user._id}-${user_wallet.currency.ticker}`,
+                            password: Security.prototype.decryptData(app_wallet.hashed_passphrase),
+                            confirmations: 3
+                        });
+                        if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                        break;
+                    };
+                    case 'eth': {
+                        crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                        /* Record webhooks */
+                        await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
+                            address     : crypto_address.payload.address,
+                            app_id      : user._id,
+                            currency_id : user_wallet.currency._id,
+                            isApp       : false
+                        });
+                        /* Record Payment Forwarding webhooks */
+                        let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
+                            from: crypto_address.payload.address,
+                            to: app_wallet.bank_address_not_webhook,
+                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                            wallet: crypto_address.payload.address,
+                            privateKey: crypto_address.payload.privateKey,
+                            confirmations: 3
+                        });
+                        if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                        break;
+                    };
+                }
+
+                address = {
+                    address: crypto_address.payload.address,
+                    hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
+                    wif: !crypto_address.payload.wif ? '' : crypto_address.payload.wif
+                };
                 // Bitgo has created the address
-                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: bitgo_address.address, bitgo_id: bitgo_address.id })).register())._doc;
+                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
                 // Add Deposit Address to User Deposit Addresses
                 await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
-            }
-        }else{
-            // System already has an address
-        }
+            }else if(erc20){
+                var walletUserErc20 = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
 
-        if (address.address) {
-            //Address Existent
-            return {
-                address: address.address,
-                currency: user_wallet.currency.ticker
+                if(!(walletUserErc20.depositAddresses.find( a => a.address))){
+
+                    let addressObject = (await (new Address({ currency: walletUserErc20.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
+
+                    /* Record ERC-20 webhooks */
+                    await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
+                        address     : address.address,
+                        app_id      : user._id,
+                        currency_id : walletUserErc20.currency._id,
+                        isApp       : false
+                    });
+                    /* Record Payment Forwarding webhooks */
+                    let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwardingToken({
+                        from: address.address,
+                        to: app_wallet.bank_address_not_webhook,
+                        callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${walletUserErc20.currency._id}&isApp=${false}`,
+                        wallet: address.address,
+                        privateKey: Security.prototype.decryptData(address.hashed_private_key),
+                        confirmations: 3,
+                        token: walletUserErc20.currency.address
+                    });
+                    if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+
+                    await WalletsRepository.prototype.addDepositAddress(walletUserErc20._id, addressObject._id);
+                }
             }
-        } else {
-            // Not existent
-            return {
-                message: 'Waiting for address initialization'
+
+            if (address.address) {
+                //Address Existent
+                return {
+                    address: address.address,
+                    currency: user_wallet.currency.ticker
+                }
+            } else {
+                // Not existent
+                return {
+                    message: 'Waiting for address initialization'
+                }
             }
+        } catch(err) {
+            throw err;
         }
 
     },
@@ -720,6 +871,10 @@ const progressActions = {
     },
     __getInfo: async (params) => {
         return params;
+    },
+    __editKycNeeded: async (params) => {
+        await UsersRepository.prototype.editKycNeeded(params.user, params.kyc_needed);
+        return true;
     }
 }
 
@@ -819,6 +974,12 @@ class UserLogic extends LogicComponent {
                 case 'ResendEmail': {
                     return await library.process.__resendEmail(params); break;
                 }
+                case 'ProviderToken': {
+                    return await library.process.__providerToken(params); break;
+                }
+                case 'EditKycNeeded': {
+                    return await library.process.__editKycNeeded(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -892,6 +1053,12 @@ class UserLogic extends LogicComponent {
                 };
                 case 'ResendEmail': {
                     return await library.progress.__resendEmail(params); break;
+                };
+                case 'ProviderToken': {
+                    return await library.progress.__providerToken(params); break;
+                };
+                case 'EditKycNeeded': {
+                    return await library.progress.__editKycNeeded(params); break;
                 };
             }
         } catch (err) {
