@@ -1636,6 +1636,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  /app/customization/socialLink:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Social Media Links
+      operationId: socialLink
+      description: Edit Social Media Links
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppSocialLink'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
             
   /app/games/editImage:
     x-swagger-router-controller: game
@@ -4144,6 +4175,36 @@ definitions:
       fullWidth:
         type : boolean
         example: true
+  AppSocialLink :
+    type: object
+    required:
+      - app
+      - links
+      - social_link_id
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      social_link_id:
+        type : string
+        format: name
+        example: "nwovn1232wqc12"
+        description: |
+          Social Link Customization id
+      links:
+        type : array
+        items :
+          type: object
+          properties:
+            href :
+              type: string
+            image_url :
+              type: string
+            name :
+              type: string
   AppCustomizationIcons :
     type: object
     required:

@@ -185,13 +185,13 @@ class App extends ModelComponent {
         const userData = await UsersRepository.prototype.findUserByExternalId(this.self.params.player_id);
         const user = userData._id;
 
-        try{
+        try {
             await UsersRepository.prototype.changeWithdrawPosition(user, true);
             let res = await this.process('ProviderCredit');
             UsersRepository.prototype.changeWithdrawPosition(user, false);
             return res;
-        }catch(err){
-            if(parseInt(err.code) != 14){
+        } catch (err) {
+            if (parseInt(err.code) != 14) {
                 /* If not betting/withdrawing atm */
                 /* Open Mutex */
                 UsersRepository.prototype.changeWithdrawPosition(user, false);
@@ -847,6 +847,21 @@ class App extends ModelComponent {
         //Boolean Output
         try {
             let app = await this.process('EditSkin');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async socialLink() {
+        //Boolean Output
+        try {
+            let app = await this.process('SocialLink');
             return app;
         } catch (err) {
             throw err;
