@@ -376,7 +376,9 @@ const processActions = {
     },
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
-
+        if(passphrase.length <10){
+            throwError("MINIMUM_PASSWORD_LENGTH");
+        }
         app = await AppRepository.prototype.findAppById(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
