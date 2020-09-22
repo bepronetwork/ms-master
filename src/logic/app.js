@@ -380,7 +380,7 @@ const processActions = {
         if(passphrase.length <10){
             throwError("MINIMUM_PASSWORD_LENGTH");
         }
-        app = await AppRepository.prototype.findAppById(app);
+        app = await AppRepository.prototype.findAppByIdAddCurrencyWallet(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
@@ -1346,12 +1346,12 @@ const progressActions = {
         }
 
         /* add currencies in addons */
-        if(app.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.jackpot._id, currency._id);
-        if(app.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.pointSystem._id, currency._id);
-        if(app.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.autoWithdraw._id, currency._id);
-        if(app.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.txFee._id, currency._id);
-        if(app.balance)         await BalanceRepository.prototype.pushNewCurrency(app.balance._id, currency._id);
-        if(app.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.depositBonus._id, currency._id);
+        if(app.addOn.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.addOn.jackpot._id, currency._id);
+        if(app.addOn.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.addOn.pointSystem._id, currency._id);
+        if(app.addOn.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.addOn.autoWithdraw._id, currency._id);
+        if(app.addOn.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.addOn.txFee._id, currency._id);
+        if(app.addOn.balance)         await BalanceRepository.prototype.pushNewCurrency(app.addOn.balance._id, currency._id);
+        if(app.addOn.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.addOn.depositBonus._id, currency._id);
 
         console.log("setting user")
 
