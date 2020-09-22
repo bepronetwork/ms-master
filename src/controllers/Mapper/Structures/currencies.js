@@ -9,7 +9,8 @@ const currencies_object = (object) => {
                 "decimals": currency.decimals,
                 "name": currency.name,
                 "address": currency.address,
-                "virtual": currency.virtual
+                "virtual": currency.virtual,
+                "erc20": !currency.erc20 ? false : currency.erc20
             })
         }) : object.currencies,
     }
