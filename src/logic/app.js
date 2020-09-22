@@ -1811,7 +1811,6 @@ const progressActions = {
                 };
             }
         }))
-        console.log("Link:: ",link)
         await SocialLinkRepository.prototype.findByIdAndUpdateSocialLink({
             _id: social_link_id,
             newStructure: link

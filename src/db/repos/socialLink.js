@@ -49,7 +49,6 @@ class SocialLinkRepository extends MongoComponent{
                 { 'new': true })
                 .lean()
                 .exec( (err, item) => {
-                    console.log("Item:: ",item)
                     if(err){reject(err)}
                     resolve(item);
                 }
