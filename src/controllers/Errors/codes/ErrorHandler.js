@@ -89,7 +89,8 @@ ErrorHandler.prototype.KEYS =  {
     'PAYMENT_FORWARDING_TRANSACTION'        : "072",
     'WRONG_SKIN'                            : "073",
     'ICONS_LIMIT_EXCEEDED'                  : "074",
-    'LOGIN_NOT_CURRENCY_ADDED'              : "075"
+    'LOGIN_NOT_CURRENCY_ADDED'              : "075",
+    'MINIMUM_PASSWORD_LENGTH'               : "076"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {
