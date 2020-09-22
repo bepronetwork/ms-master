@@ -15,7 +15,7 @@ class GoogleStorage{
 
     uploadFile = async ({bucketName, file}) => {
         let id = generateRandomID();
-        const isSVG = (Buffer.from(file, 'base64').toString('ascii')).endsWith('</svg>')
+        const isSVG = (Buffer.from(file, 'base64').toString('ascii')).trim().endsWith('</svg>')
         const fileName = isSVG ? `${id}.svg` : `${id}.jpg`;
         fs.writeFileSync(fileName, `${file}`, 'base64');
         // Uploads a local file to the bucket
@@ -45,7 +45,7 @@ class GoogleStorage{
     }
 
     uploadFileWithName = async ({bucketName, file, fileName}) => {
-        const isSVG = (Buffer.from(file, 'base64').toString('ascii')).endsWith('</svg>')
+        const isSVG = (Buffer.from(file, 'base64').toString('ascii')).trim().endsWith('</svg>')
         fileName = isSVG ? `${fileName}.svg` : `${fileName}.jpg`;
         fs.writeFileSync(fileName, `${file}`, 'base64');
         // Uploads a local file to the bucket
@@ -69,8 +69,7 @@ class GoogleStorage{
         
         // Remove File
         fs.unlinkSync(`./${fileName}`)
-        const result = isSVG ? `https://storage.googleapis.com/${bucketName}/${fileName}.svg` : `https://storage.googleapis.com/${bucketName}/${fileName}.jpg`;
-        return result;
+        return `https://storage.googleapis.com/${bucketName}/${fileName}`;
     }
 }
 
