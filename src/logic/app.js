@@ -2068,11 +2068,13 @@ const progressActions = {
     },
     __kycWebhook: async (params) => {
         if(!params) {return false;}
-        const user_id = params.metadata.id;
-        if(params.identityStatus=="verified") {
-            await UsersRepository.prototype.editKycNeeded(user_id, false);
+        if(params.identityStatus!=undefined) {
+            const user_id = params.metadata.id;
+            if(params.identityStatus=="verified") {
+                await UsersRepository.prototype.editKycNeeded(user_id, false);
+            }
+            await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
         }
-        await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
         return true;
     }
 }
