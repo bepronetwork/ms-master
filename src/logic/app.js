@@ -97,6 +97,7 @@ const processActions = {
                 throwErrorProvider("11");
             }
             let payload = (MiddlewareSingleton.decodeTokenToJson(params.token));
+            console.log(payload);
             if(user._id!=payload.user){
                 throwErrorProvider("11");
             }
