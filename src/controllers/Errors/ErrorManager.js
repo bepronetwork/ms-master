@@ -571,6 +571,16 @@ class ErrorManager {
         }
     }
 
+    socialLink = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     mailSender = function (object, type){
         try{
             switch(type){

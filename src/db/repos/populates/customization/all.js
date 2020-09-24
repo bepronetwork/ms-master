@@ -11,6 +11,11 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'socialLink',
+        model : 'SocialLink',
+        select : { '__v': 0},
+    },
+    {
         path : 'subSections',
         model : 'SubSections',
         select : { '__v': 0},

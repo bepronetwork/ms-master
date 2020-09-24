@@ -166,6 +166,7 @@ const app_object = (object) => {
             "customization": !object.app.customization ? {} : object.app.customization.colors == undefined ? object.app.customization._id : {
                 "_id": object.app.customization._id,
                 "theme": object.app.customization.theme,
+                "socialLink": object.app.customization.socialLink,
                 "skin": object.app.customization.skin,
                 "icons": object.app.customization.icons,
                 "colors": object.app.customization.colors ? object.app.customization.colors.map(color => {

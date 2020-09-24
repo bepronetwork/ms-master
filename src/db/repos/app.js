@@ -16,7 +16,7 @@ import {
 } from './pipelines/app';
 
 
-import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game, populate_app_convert_points } from './populates';
+import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game, populate_app_convert_points, populate_app_add_currency_wallet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
 
@@ -433,6 +433,28 @@ class AppRepository extends MongoComponent{
             return new Promise( (resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
                 .populate(populate_type)
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    findAppByIdAddCurrencyWallet(_id){
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id, {
+                    '_id': 1,
+                    'currencies': 1,
+                    'games': 1,
+                    'users': 1,
+                    'wallet': 1,
+                    'addOn': 1
+                })
+                .populate(populate_app_add_currency_wallet)
                 .exec( (err, App) => {
                     if(err) { reject(err)}
                     resolve(App);
