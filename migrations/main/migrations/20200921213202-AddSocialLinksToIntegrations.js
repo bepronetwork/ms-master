@@ -37,14 +37,7 @@ module.exports = {
         let socialLink = await db.collection('sociallinks').findOne({ _id: customization.socialLink });
         if (socialLink === null) {
           let newSocialLink = await db.collection('sociallinks').insertOne({
-            ids: [
-              {
-                _id: new ObjectId(),
-                href: "",
-                name: "",
-                image_url: ""
-              }
-            ],
+            ids: [],
             __v: 0
           });
           await db.collection('customizations').updateOne(
