@@ -1,7 +1,7 @@
 import { CustomizationLogic } from '../logic';
 import { CustomizationRepository } from '../db/repos';
 import ModelComponent from './modelComponent';
-import { TopBar, Banners, SubSections, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab, Icons } from '.';
+import { TopBar, Banners, SubSections, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab, Icons, SocialLink } from '.';
 import { colors } from '../mocks';
 import Skin from './skin';
 
@@ -27,6 +27,7 @@ class Customization extends ModelComponent {
                     new TopIcon(params),
                     new LoadingGif(params),
                     new Skin(params),
+                    new SocialLink(params),
                     new Background(params),
                     new TopTab({
                         ids: [

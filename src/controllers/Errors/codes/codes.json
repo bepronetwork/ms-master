@@ -302,5 +302,9 @@
     "075" : {
         "key" : "LOGIN_NOT_CURRENCY_ADDED",
         "message"   : "This app does not yet contain currencies"
+    },
+    "076" : {
+        "key" : "MINIMUM_PASSWORD_LENGTH",
+        "message"   : "The password must be at least 10 characters long"
     }
 }

@@ -10,7 +10,8 @@ IconsSchema.prototype.schema =  {
         position  : {type : Number},
         link      : {type : String},
         name      : {type : String},
-    }]
+    }],
+    useDefaultIcons : { type : Boolean, default : true}
 }
 
 

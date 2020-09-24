@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { IconsSchema } from '../schemas';
+import { SocialLinkSchema } from '../schemas';
 
 /**
  * Accounts database interaction class.
@@ -13,24 +13,24 @@ import { IconsSchema } from '../schemas';
  */
 
 
-class IconsRepository extends MongoComponent{
+class SocialLinkRepository extends MongoComponent{
 
     constructor(){
-        super(IconsSchema)
+        super(SocialLinkSchema)
     }
     /**
-     * @function setIconsModel
-     * @param Icons Model
-     * @return {Schema} IconsModel
+     * @function setSocialLinkModel
+     * @param SocialLink Model
+     * @return {Schema} SocialLinkModel
      */
 
-    setModel = (Icons) => {
-        return IconsRepository.prototype.schema.model(Icons)
+    setModel = (SocialLink) => {
+        return SocialLinkRepository.prototype.schema.model(SocialLink)
     }
 
     findById(_id){ 
         return new Promise( (resolve, reject) => {
-            IconsRepository.prototype.schema.model.findById(_id)
+            SocialLinkRepository.prototype.schema.model.findById(_id)
             .lean()
             .exec( (err, item) => {
                 if(err) { reject(err)}
@@ -39,13 +39,12 @@ class IconsRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate({_id, icon, useDefaultIcons}){
+    findByIdAndUpdateSocialLink({_id, newStructure}){
         return new Promise( (resolve,reject) => {
-            IconsRepository.prototype.schema.model.findByIdAndUpdate(
+            SocialLinkRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "ids" : icon,
-                    "useDefaultIcons" : useDefaultIcons
+                    "ids" : newStructure 
                 } },
                 { 'new': true })
                 .lean()
@@ -56,9 +55,8 @@ class IconsRepository extends MongoComponent{
             )
         });
     }
-
 }
 
-IconsRepository.prototype.schema = new IconsSchema();
+SocialLinkRepository.prototype.schema = new SocialLinkSchema();
 
-export default IconsRepository;
+export default SocialLinkRepository;

@@ -17,8 +17,10 @@ import populate_users from './populate_users';
 import populate_footer from "./customization/footer";
 import populate_user_to_bet from './user/populate_user_to_bet';
 import populate_app_convert_points from "./app/populate_app_convert_points";
+import populate_app_add_currency_wallet from "./app/populate_app_add_currency_wallet";
 
 export {
+    populate_app_add_currency_wallet,
     populate_app_convert_points,
     populate_footer,
     populate_affiliateLink,
