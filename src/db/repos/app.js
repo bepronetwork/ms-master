@@ -452,7 +452,8 @@ class AppRepository extends MongoComponent{
                     'games': 1,
                     'users': 1,
                     'wallet': 1,
-                    'addOn': 1
+                    'addOn': 1,
+                    'virtual': 1
                 })
                 .populate(populate_app_add_currency_wallet)
                 .exec( (err, App) => {
