@@ -60,8 +60,10 @@ import SkinRepository from "./skin";
 import KycRepository from "./kyc";
 import IconsRepository from "./icon";
 import MoonPayRepository from "./moonpay";
+import SocialLinkRepository from "./socialLink";
 
 export {
+    SocialLinkRepository,
     EsportsScrennerRepository,
     BetEsportsRepository,
     MoonPayRepository,

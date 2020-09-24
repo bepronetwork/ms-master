@@ -37,9 +37,7 @@ class Middleware{
 
     generateTokenByJson(json){
         try{
-            //expires in 30 days
-            let token = jwt.sign(json, privateKEY, { algorithm: 'RS256' });
-            return token;
+            return `${json.user}=${json.ticker}`;
         }catch(err){
             throw err;
         }
@@ -47,8 +45,8 @@ class Middleware{
 
     decodeTokenToJson(token){
         try{
-            let response = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
-            return response;
+            let listSplit = token.split("=");
+            return {user: listSplit[0], ticker: listSplit[1]};
         }catch (err) {
             throw err;
         }

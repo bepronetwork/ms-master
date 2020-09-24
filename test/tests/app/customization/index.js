@@ -5,6 +5,7 @@ context('Customization', async () => {
     require('./addBanner');
     require('./addSubSection');
     require('./addLogo');
+    require('./editSocialLinks');
     require('./editSkin');
     require('./editIcons');
     require('./editColors');

@@ -73,6 +73,7 @@ let perf = new PerfomanceMonitor({id : 'app'});
 const axios = require('axios');
 var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
+import SocialLinkRepository from '../db/repos/socialLink';
 
 
 // Private fields
@@ -100,6 +101,7 @@ const processActions = {
                 throwErrorProvider("11");
             }
             let payload = (MiddlewareSingleton.decodeTokenToJson(params.token));
+            console.log(payload);
             if(user._id!=payload.user){
                 throwErrorProvider("11");
             }
@@ -423,8 +425,10 @@ const processActions = {
     },
     __addCurrencyWallet : async (params) => {
         var { currency_id, app, passphrase } = params;
-
-        app = await AppRepository.prototype.findAppById(app);
+        if(passphrase.length <10){
+            throwError("MINIMUM_PASSWORD_LENGTH");
+        }
+        app = await AppRepository.prototype.findAppByIdAddCurrencyWallet(app);
         if(!app){throwError('APP_NOT_EXISTENT')}
         let currency = await CurrencyRepository.prototype.findById(currency_id);
         return  {
@@ -1001,6 +1005,15 @@ const processActions = {
             app
         };
     },
+    __socialLink : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
     __editBanners : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1430,12 +1443,12 @@ const progressActions = {
         }
 
         /* add currencies in addons */
-        if(app.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.jackpot._id, currency._id);
-        if(app.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.pointSystem._id, currency._id);
-        if(app.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.autoWithdraw._id, currency._id);
-        if(app.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.txFee._id, currency._id);
-        if(app.balance)         await BalanceRepository.prototype.pushNewCurrency(app.balance._id, currency._id);
-        if(app.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.depositBonus._id, currency._id);
+        if(app.addOn.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.addOn.jackpot._id, currency._id);
+        if(app.addOn.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.addOn.pointSystem._id, currency._id);
+        if(app.addOn.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.addOn.autoWithdraw._id, currency._id);
+        if(app.addOn.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.addOn.txFee._id, currency._id);
+        if(app.addOn.balance)         await BalanceRepository.prototype.pushNewCurrency(app.addOn.balance._id, currency._id);
+        if(app.addOn.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.addOn.depositBonus._id, currency._id);
 
         console.log("setting user")
 
@@ -1905,6 +1918,30 @@ const progressActions = {
 
         return true;
     },
+    __socialLink  : async (params) => {
+        let { app, links, social_link_id } = params;
+        let link = await Promise.all(links.map( async link => {
+            if(link.image_url.includes("https")){
+                /* If it is a link already */
+                return link;
+            }else{
+                /* Does not have a Link and is a blob encoded64 */
+                return {
+                    image_url   : !link.image_url ? link.image_url : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : link.image_url}),
+                    name        : link.name,
+                    href        : link.href
+                };
+            }
+        }))
+        await SocialLinkRepository.prototype.findByIdAndUpdateSocialLink({
+            _id: social_link_id,
+            newStructure: link
+        });
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+
+        return true;
+    },
     __editBanners : async (params) => {
         let { app, autoDisplay, banners, fullWidth } = params;
         let ids = await Promise.all(banners.map( async b => {
@@ -2164,11 +2201,13 @@ const progressActions = {
     },
     __kycWebhook: async (params) => {
         if(!params) {return false;}
-        const user_id = params.metadata.id;
-        if(params.identityStatus=="verified") {
-            UsersRepository.prototype.editKycNeeded(user_id, false);
+        if(params.identityStatus!=undefined) {
+            const user_id = params.metadata.id;
+            if(params.identityStatus=="verified") {
+                await UsersRepository.prototype.editKycNeeded(user_id, false);
+            }
+            await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
         }
-        UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
         return true;
     }
 }
@@ -2334,6 +2373,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditIcons' : {
                     return await library.process.__editIcons(params); break;
+                };
+                case 'SocialLink' : {
+                    return await library.process.__socialLink(params); break;
                 };
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
@@ -2579,6 +2621,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditIcons' : {
                     return await library.progress.__editIcons(params); break;
+                };
+                case 'SocialLink' : {
+                    return await library.progress.__socialLink(params); break;
                 };
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;

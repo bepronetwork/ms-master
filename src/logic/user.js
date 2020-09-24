@@ -874,6 +874,7 @@ const progressActions = {
     },
     __editKycNeeded: async (params) => {
         await UsersRepository.prototype.editKycNeeded(params.user, params.kyc_needed);
+        await UsersRepository.prototype.editKycStatus(params.user, "no kyc");
         return true;
     }
 }

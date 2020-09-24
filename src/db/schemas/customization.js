@@ -21,6 +21,7 @@ CustomizationSchema.prototype.schema =  {
     skin           : { type : mongoose.Schema.Types.ObjectId, ref: 'Skin', required : true },
     icons          : { type : mongoose.Schema.Types.ObjectId, ref: 'Icons', required : true },
     esportsScrenner  : { type : mongoose.Schema.Types.ObjectId, ref: 'EsportsScrenner', required : true },
+    socialLink     : { type : mongoose.Schema.Types.ObjectId, ref: 'SocialLink', required : true },
 }
 
 

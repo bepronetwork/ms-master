@@ -185,13 +185,13 @@ class App extends ModelComponent {
         const userData = await UsersRepository.prototype.findUserByExternalId(this.self.params.player_id);
         const user = userData._id;
 
-        try{
+        try {
             await UsersRepository.prototype.changeWithdrawPosition(user, true);
             let res = await this.process('ProviderCredit');
             UsersRepository.prototype.changeWithdrawPosition(user, false);
             return res;
-        }catch(err){
-            if(parseInt(err.code) != 14){
+        } catch (err) {
+            if (parseInt(err.code) != 14) {
                 /* If not betting/withdrawing atm */
                 /* Open Mutex */
                 UsersRepository.prototype.changeWithdrawPosition(user, false);
@@ -243,7 +243,7 @@ class App extends ModelComponent {
 
     async getBetInfo() {
         try {
-            var app ="";
+            var app = "";
             switch (this.self.params.tag) {
                 case "cassino":
                     app = await this.process('GetBetInfo');
@@ -253,7 +253,7 @@ class App extends ModelComponent {
                     return MapperAppGetBetInfoEsportsSingleton.output('AppGetBetInfoEsports', app);
                 default:
                     app = await this.process('GetBetInfo');
-                    return MapperGetBetSingleton.output('GetBetInfo', app);  
+                    return MapperGetBetSingleton.output('GetBetInfo', app);
             }
         } catch (err) {
             throw err;
@@ -355,7 +355,7 @@ class App extends ModelComponent {
 
     async appGetUsersBets() {
         try {
-            var app ="";
+            var app = "";
             switch (this.self.params.tag) {
                 case "cassino":
                     app = await this.process('AppGetUsersBets');
@@ -629,7 +629,7 @@ class App extends ModelComponent {
 
     async getLastBets() {
         try {
-            var app ="";
+            var app = "";
             switch (this.self.params.tag) {
                 case "cassino":
                     app = await this.process('GetLastBets');
@@ -637,7 +637,7 @@ class App extends ModelComponent {
                 case "esports":
                     app = await this.process('GetLastBetsEsports');
                     return app;
-                    // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
                 default:
                     app = await this.process('GetLastBets');
                     return MapperGetLastBetsSingleton.output('GetLastBets', app);
@@ -655,7 +655,7 @@ class App extends ModelComponent {
 
     async getBiggestBetWinners() {
         try {
-            var app ="";
+            var app = "";
             switch (this.self.params.tag) {
                 case "cassino":
                     app = await this.process('GetBiggestBetWinners');
@@ -663,7 +663,7 @@ class App extends ModelComponent {
                 case "esports":
                     app = await this.process('GetBiggestBetWinnersEsports');
                     return app;
-                    // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
                 default:
                     app = await this.process('GetBiggestBetWinners');
                     return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
@@ -680,7 +680,7 @@ class App extends ModelComponent {
 
     async getBiggestUserWinners() {
         try {
-            var app ="";
+            var app = "";
             switch (this.self.params.tag) {
                 case "cassino":
                     app = await this.process('GetBiggestUserWinners');
@@ -688,7 +688,7 @@ class App extends ModelComponent {
                 case "esports":
                     app = await this.process('GetBiggestUserWinnersEsports');
                     return app;
-                    // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
                 default:
                     app = await this.process('GetBiggestUserWinners');
                     return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
@@ -749,15 +749,15 @@ class App extends ModelComponent {
     */
 
 
-   async editVideogameEdge() {
-    try {
-        //return Boolean
-        let app = await this.process('EditVideogameEdge');
-        return app;
-    } catch (err) {
-        throw err;
+    async editVideogameEdge() {
+        try {
+            //return Boolean
+            let app = await this.process('EditVideogameEdge');
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     /**
      * @param {String} 
@@ -923,6 +923,21 @@ class App extends ModelComponent {
     }
 
     /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+    async socialLink() {
+        //Boolean Output
+        try {
+            let app = await this.process('SocialLink');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
      * @param {String} 
      * @return {bool || Exception}  
      */
@@ -970,14 +985,14 @@ class App extends ModelComponent {
     * @return {bool || Exception}  
     */
 
-   async editEsportScrenner() {
-    try {
-        let app = await this.process('EditEsportScrenner');
-        return app;
-    } catch (err) {
-        throw err;
+    async editEsportScrenner() {
+        try {
+            let app = await this.process('EditEsportScrenner');
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     async editIcons() {
         //Output Boolean
