@@ -267,6 +267,7 @@ const processActions = {
 
         let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
+        if(app.wallet.length<=0) {throwError("REGISTER_NOT_CURRENCY_ADDED");}
 
         let balanceInitial = null;
         if(app.addOn != null) {

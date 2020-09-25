@@ -306,5 +306,9 @@
     "076" : {
         "key" : "MINIMUM_PASSWORD_LENGTH",
         "message"   : "The password must be at least 10 characters long"
+    },
+    "077" : {
+        "key" : "REGISTER_NOT_CURRENCY_ADDED",
+        "message"   : "This app does not yet contain currencies"
     }
 }
