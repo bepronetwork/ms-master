@@ -21,7 +21,7 @@ context('Add Currency Wallet', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test278dbgwiu2179',
             currency_id : currency._id
         };
 
@@ -56,7 +56,7 @@ context('Add Currency Wallet', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test278dbgwiu2179',
             currency_id : currency._id
         };
 
@@ -85,7 +85,7 @@ context('Add Currency Wallet', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test278dbgwiu2179',
             currency_id : "45763"
         };
 
@@ -106,7 +106,7 @@ context('Add Currency Wallet', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test278dbgwiu2179',
             currency_id : currency._id
         };
 
