@@ -2,6 +2,7 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
 let error = new ErrorManager();
+import { Security } from "../controllers/Security";
 
 
 // Private fields
@@ -25,10 +26,11 @@ const processActions = {
 	__register : async (params) => {
         const res = {
             ...params,
-            privateKey : '2z3xcwerqpw6cc2xx9sr3abzpbptfhm9uqmb5b97yfzxbvgjnvwx374u3jntdz6e',
-            publicKey : 'bkuwr8d2t4hp',
+            privateKey : Security.prototype.encryptData('2z3xcwerqpw6cc2xx9sr3abzpbptfhm9uqmb5b97yfzxbvgjnvwx374u3jntdz6e'),
+            publicKey : Security.prototype.encryptData('bkuwr8d2t4hp'),
             isActive : true
-        }
+		}
+		console.log("RES:: ",res)
 		return res;
 	}
 }
