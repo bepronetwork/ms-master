@@ -32,6 +32,8 @@ const processActions = {
             isActive : true
 		}
 		console.log("RES:: ",res)
+		console.log("privateKey:: ",Security.prototype.decryptData(res.privateKey))
+		console.log("publicKey:: ",Security.prototype.decryptData(res.publicKey))
 		return res;
 	}
 }

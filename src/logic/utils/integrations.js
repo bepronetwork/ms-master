@@ -1,17 +1,12 @@
 const crypto = require('crypto');
 import { MERCHANT_SECRET_KYC } from '../../config';
-import { Security } from "../../controllers/Security";
 /* Stream Chat */
 import { StreamChat } from 'stream-chat';
 
 export function getIntegrationsInfo({integrations, user_id}){
     var response = {};
     const { chat } = integrations;
-    let { publicKey, privateKey } = chat;
-    publicKey = Security.prototype.decryptData(publicKey)
-    console.log("publicKey:: ", publicKey)
-    privateKey = Security.prototype.decryptData(privateKey)
-    console.log("privateKey:: ", privateKey)
+    const { publicKey, privateKey } = chat;
     /* Stream Chat */
     if(chat && chat.isActive){
         const serverSideClient = new StreamChat(publicKey, privateKey);
