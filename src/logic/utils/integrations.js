@@ -17,7 +17,7 @@ export function getIntegrationsInfo({ integrations, user_id }) {
         console.log("privateKey-getIntegrationsInfoDECRYPT:: ", privateKey)
 
     } catch (error) {
-        continue;
+        
     }
     /* Stream Chat */
     if (chat && chat.isActive) {
