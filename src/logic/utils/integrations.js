@@ -9,13 +9,8 @@ export function getIntegrationsInfo({ integrations, user_id }) {
     let { chat } = integrations;
     let { publicKey, privateKey } = chat;
     try {
-        console.log("publicKey-getIntegrationsInfo:: ", publicKey)
-        console.log("privateKey-getIntegrationsInfo:: ", privateKey)
         publicKey = Security.prototype.decryptData(publicKey)
         privateKey = Security.prototype.decryptData(privateKey)
-        console.log("publicKey-getIntegrationsInfoDECRYPT:: ", publicKey)
-        console.log("privateKey-getIntegrationsInfoDECRYPT:: ", privateKey)
-
     } catch (error) {
         
     }

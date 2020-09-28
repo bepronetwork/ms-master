@@ -31,9 +31,6 @@ const processActions = {
             publicKey : Security.prototype.encryptData(CHAT_PUBLIC_KEY),
             isActive : true
 		}
-		console.log("RES:: ",res)
-		console.log("privateKey:: ",Security.prototype.decryptData(res.privateKey))
-		console.log("publicKey:: ",Security.prototype.decryptData(res.publicKey))
 		return res;
 	}
 }
