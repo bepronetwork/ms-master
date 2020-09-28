@@ -4,22 +4,27 @@ import { MERCHANT_SECRET_KYC } from '../../config';
 import { StreamChat } from 'stream-chat';
 import { Security } from '../../controllers/Security';
 
-export function getIntegrationsInfo({integrations, user_id}){
+export function getIntegrationsInfo({ integrations, user_id }) {
     var response = {};
     let { chat } = integrations;
     let { publicKey, privateKey } = chat;
-    console.log("publicKey-getIntegrationsInfo:: ", publicKey)
-    console.log("privateKey-getIntegrationsInfo:: ", privateKey)
-    publicKey = Security.prototype.decryptData(publicKey)
-    privateKey = Security.prototype.decryptData(privateKey)
-    console.log("publicKey-getIntegrationsInfoDECRYPT:: ", publicKey)
-    console.log("privateKey-getIntegrationsInfoDECRYPT:: ", privateKey)
+    try {
+        console.log("publicKey-getIntegrationsInfo:: ", publicKey)
+        console.log("privateKey-getIntegrationsInfo:: ", privateKey)
+        publicKey = Security.prototype.decryptData(publicKey)
+        privateKey = Security.prototype.decryptData(privateKey)
+        console.log("publicKey-getIntegrationsInfoDECRYPT:: ", publicKey)
+        console.log("privateKey-getIntegrationsInfoDECRYPT:: ", privateKey)
+
+    } catch (error) {
+        continue;
+    }
     /* Stream Chat */
-    if(chat && chat.isActive){
+    if (chat && chat.isActive) {
         const serverSideClient = new StreamChat(publicKey, privateKey);
         response.chat = {
-            token : serverSideClient.createToken(user_id),
-            publicKey : publicKey
+            token: serverSideClient.createToken(user_id),
+            publicKey: publicKey
         }
     }
 
