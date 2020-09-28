@@ -64,8 +64,8 @@ let outputs = {
                     "name": object.integrations.chat.name,
                     "metaName": object.integrations.chat.metaName,
                     "link": object.integrations.chat.link,
-                    "privateKey": object.integrations.chat.privateKey,
-                    "publicKey": object.integrations.chat.publicKey,
+                    "privateKey": !object.integrations.chat.privateKey ? object.integrations.chat.privateKey : Security.prototype.decryptData(object.integrations.chat.privateKey),
+                    "publicKey": !object.integrations.chat.publicKey ? object.integrations.chat.publicKey : Security.prototype.decryptData(object.integrations.chat.publicKey),
                     "token": object.integrations.chat.token
                 },
                 "cripsr": !object.integrations.cripsr ? {} : {

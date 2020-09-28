@@ -1649,6 +1649,8 @@ const progressActions = {
     },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
+        publicKey = Security.prototype.encryptData(publicKey);
+        privateKey = Security.prototype.encryptData(privateKey);
         /* Update Integrations Id Type */
         switch(integration_type){
             case 'live_chat' : {
