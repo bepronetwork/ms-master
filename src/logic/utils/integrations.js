@@ -7,6 +7,8 @@ export function getIntegrationsInfo({integrations, user_id}){
     var response = {};
     const { chat } = integrations;
     const { publicKey, privateKey } = chat;
+    console.log("publicKey-getIntegrationsInfo:: ", publicKey)
+    console.log("privateKey-getIntegrationsInfo:: ", privateKey)
     /* Stream Chat */
     if(chat && chat.isActive){
         const serverSideClient = new StreamChat(publicKey, privateKey);
