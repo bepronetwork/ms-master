@@ -3,8 +3,9 @@ context('User', async () => {
     require('./addOn')
     require('./resetPassword');
     require('./confirmEmail');
-    require('./kyc')
-    require('./get')
+    require('./kyc');
+    require('./get');
+    require('./topUp');
     require('./pushNotifications');
     require('./ping');
     require('./deposit');
