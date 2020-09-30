@@ -259,8 +259,8 @@ const app_object = (object) => {
                     "name": object.app.integrations.chat.name,
                     "metaName": object.app.integrations.chat.metaName,
                     "link": object.app.integrations.chat.link,
-                    "privateKey": object.app.integrations.chat.privateKey,
-                    "publicKey": object.app.integrations.chat.publicKey,
+                    "privateKey": !object.app.integrations.chat.privateKey ? object.app.integrations.chat.privateKey : Security.prototype.decryptData(object.app.integrations.chat.privateKey),
+                    "publicKey": !object.app.integrations.chat.publicKey ? object.app.integrations.chat.publicKey : Security.prototype.decryptData(object.app.integrations.chat.publicKey),
                     "token": object.app.integrations.chat.token
                 },
                 "cripsr": !object.app.integrations.cripsr ? {} : {

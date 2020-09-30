@@ -38,19 +38,19 @@ context('Mail Sender', async () =>  {
         expect(res.data.status).to.equal(200);
     }));
 
-    it('shouldn´t update the Mail Sender integration info from app - Wrong API Key', mochaAsync(async () => {
-        let postData = {
-            app : app.id,
-            "apiKey" : "retertert",
-            "templateIds" : [
-                { "template_id": 1, "futionName": "USER_LOGIN", "connctionName": "USER_REGISTER", "contactlist_Id"  : 2 },
-                { "template_id": 2, "functactlist_Id"  : 2 },
-                { "template_id": 1, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
-            ]
-        }
-        let res = await editAppMailSenderIntegration({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
-        expect(res.data.status).to.equal(404);
-    }));
+    // it('shouldn´t update the Mail Sender integration info from app - Wrong API Key', mochaAsync(async () => {
+    //     let postData = {
+    //         app : app.id,
+    //         "apiKey" : "retertert",
+    //         "templateIds" : [
+    //             { "template_id": 1, "futionName": "USER_LOGIN", "connctionName": "USER_REGISTER", "contactlist_Id"  : 2 },
+    //             { "template_id": 2, "functactlist_Id"  : 2 },
+    //             { "template_id": 1, "functionName": "USER_RESET_PASSWORD", "contactlist_Id"  : 2 }
+    //         ]
+    //     }
+    //     let res = await editAppMailSenderIntegration({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
+    //     expect(res.data.status).to.equal(404);
+    // }));
 
     it('should update the Mail Sender integration info from app', mochaAsync(async () => {
         let postData = {
