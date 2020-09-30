@@ -2,6 +2,8 @@ import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
 let error = new ErrorManager();
+import { Security } from "../controllers/Security";
+import {CHAT_PRIVATE_KEY, CHAT_PUBLIC_KEY } from "../config";
 
 
 // Private fields
@@ -25,10 +27,10 @@ const processActions = {
 	__register : async (params) => {
         const res = {
             ...params,
-            privateKey : '2z3xcwerqpw6cc2xx9sr3abzpbptfhm9uqmb5b97yfzxbvgjnvwx374u3jntdz6e',
-            publicKey : 'bkuwr8d2t4hp',
+            privateKey : Security.prototype.encryptData(CHAT_PRIVATE_KEY),
+            publicKey : Security.prototype.encryptData(CHAT_PUBLIC_KEY),
             isActive : true
-        }
+		}
 		return res;
 	}
 }

@@ -83,6 +83,10 @@ export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
 export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
 
+export const CHAT_PRIVATE_KEY = process.env.CHAT_PRIVATE_KEY;
+
+export const CHAT_PUBLIC_KEY = process.env.CHAT_PUBLIC_KEY;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 

@@ -21,7 +21,7 @@ context('Add Virtual Currency', async () => {
 
         const postData = {
             app : app.id,
-            passphrase: '',
+            passphrase: 'test278dbgwiu2179',
             currency_id : currency._id
         };
 
