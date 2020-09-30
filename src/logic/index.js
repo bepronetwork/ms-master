@@ -55,9 +55,11 @@ import SkinLogic from "./skin";
 import KycLogic from "./kyc";
 import IconsLogic from "./icon";
 import MoonPayLogic from "./moonpay";
-import SocialLinkLogic from "./socialLink"
+import SocialLinkLogic from "./socialLink";
+import TopUpLogic from "./topUp";
 
 export {
+    TopUpLogic,
     SocialLinkLogic,
     MoonPayLogic,
     IconsLogic,

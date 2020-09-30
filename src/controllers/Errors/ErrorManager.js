@@ -571,6 +571,16 @@ class ErrorManager {
         }
     }
 
+    topUp = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     socialLink = function (object, type){
         try{
             switch(type){

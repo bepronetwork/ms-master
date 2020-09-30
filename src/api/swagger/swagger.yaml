@@ -90,6 +90,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/register/topUp:
+    x-swagger-router-controller: admin
+    post:
+      tags:
+      - admin
+      summary: Register Top Up Data
+      operationId: addTopUp
+      description: Register Reason of Top Up
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Register Reason of Top Up
+          required: true
+          schema:
+            $ref: '#/definitions/AddTopUpRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /admins/register:
     x-swagger-router-controller: admin
     post:
@@ -6034,6 +6064,51 @@ definitions:
         example: "we23v3934ng9341"
         description: |
           Admin Current Id
+  AddTopUpRequest:
+    type: object
+    required:
+      - reason
+      - amount
+      - currency
+      - admin
+      - user
+      - wallet
+    properties:
+      reason:
+        type: string
+        format: string
+        example: "Because is a test"
+        description: |
+          Reason of Top Up
+      amount:
+        type: number
+        example: 15
+        description: |
+          Amount of Top Up
+      currency:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Currency Id
+      admin:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Admin Id
+      user:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          User Id
+      wallet:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Wallet Id
   MaxBetRequest:
     type: object
     required:

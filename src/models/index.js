@@ -52,8 +52,10 @@ import Kyc from "./kyc";
 import Icons from "./icon";
 import MoonPay from "./moonpay";
 import SocialLink from "./socialLink";
+import TopUp from "./topUp";
 
 export {
+    TopUp,
     SocialLink,
     MoonPay,
     Icons,

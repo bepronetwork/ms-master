@@ -48,6 +48,14 @@ module.exports = {
         .set("payload", getPayloadString(payload))
         .then(res => detectServerError(res))
     },
+    async addTopUp(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/register/topUp')
+        .set("authorization", "Bearer " + bearerToken)
+        .send(params)
+        .set("payload", getPayloadString(payload))
+        .then(res => detectServerError(res))
+    },
     async getPotJackpot(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/users/jackpot/pot')

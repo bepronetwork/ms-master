@@ -1,5 +1,5 @@
 import {
-    Admin
+    Admin, TopUp
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
@@ -126,6 +126,20 @@ async function addAdmin(req, res) {
     }
 }
 
+async function addTopUp(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let topUp = new TopUp(params);
+        let data = await topUp.register();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function resetAdminPassword(req, res) {
     try {
         let params = req.body;
@@ -162,5 +176,6 @@ export {
     getAdminAll,
     editAdminType,
     resetAdminPassword,
-    setAdminPassword
+    setAdminPassword,
+    addTopUp
 }
