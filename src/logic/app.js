@@ -1264,7 +1264,7 @@ const progressActions = {
     },
     __modifyBalance : async (params) => {
         await WalletsRepository.prototype.updatePlayBalanceNotInc(params.wallet, {newBalance : params.newBalance});
-        let params = {
+        let paramsTopUp = {
             app: params.app,
             admin: params.admin,
             wallet: params.wallet,
@@ -1272,7 +1272,7 @@ const progressActions = {
             balance: params.newBalance,
             reason: params.reason
         }
-        let topUp = new TopUp(params);
+        let topUp = new TopUp(paramsTopUp);
         await topUp.register();
         return true;
     },
