@@ -15,6 +15,7 @@ context('Add Balance Manual', async () => {
         admin           = global.test.admin;
         user            = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         wallet          = user.wallet[0];
+        console.log("Wallet:: ",wallet)
         previousBalance = wallet.playBalance;
     });
 
@@ -25,7 +26,9 @@ context('Add Balance Manual', async () => {
                 app: app.id,
                 admin: admin.id,
                 wallet: wallet._id,
-                newBalance: wallet.playBalance + sumBalance
+                newBalance: wallet.playBalance + sumBalance,
+                currency: wallet.currency._id,
+                reason: "Its a necessary test"
             },
             admin.security.bearerToken,
             {

@@ -51,9 +51,11 @@ import { SkinSchema } from "./customization/skin";
 import { KycSchema } from "./integrations/kyc";
 import { IconsSchema } from "./customization/icon";
 import { SocialLinkSchema } from "./customization/socialLink";
+import { TopUpSchema } from "./topUp";
 
 
 export {
+    TopUpSchema,
     SocialLinkSchema,
     EsportsScrennerSchema,
     VideogameSchema,
