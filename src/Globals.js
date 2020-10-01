@@ -9,7 +9,6 @@ import { Logger } from "./helpers/logger";
 import bluebird from 'bluebird';
 import { BitGoSingleton } from "./logic/third-parties";
 import { TIMEOUT_MONGO_MS } from "./config";
-import Security from "./controllers/Security/Security";
 
 class Globals{
     constructor(){
@@ -17,7 +16,6 @@ class Globals{
     }
 
     async __init__(){
-        console.log((new Security().decryptData('58c18b4ee8860188c7e1ee426ff505a0e1ad4791357b796723986a9f66387912aa17c988baf9bb360d710570daeb522c62136bb34dde16bf55cf48b2af0da7746898fb7ef1a260900c69d49cd330ad7998e9c3836c476740ad18716f68f85b2eb243b5b802f3b87d684932007f1b3108759e3a36c926cc5f3082f719b767ede52b2bc09656fc6b6c03d673ed5d8d5ff193045f42f1ee13e89b9fe66b2cad99c5')));
         /* Init BitGo */
         await BitGoSingleton.__init__();
         /* Init Mongo */
