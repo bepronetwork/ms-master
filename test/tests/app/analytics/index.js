@@ -16,7 +16,7 @@ context('Edit Analytics', async () => {
     it('should be able to edit app Analytics', mochaAsync(async () => {
 
         const postData = {
-            analytics_id : app.analytics,
+            analytics_id : app.analytics._id,
             app : app.id,
             google_tracking_id: "teste123"
         };
