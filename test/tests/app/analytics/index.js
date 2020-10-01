@@ -9,13 +9,14 @@ context('Edit Analytics', async () => {
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;
+        console.log("AppHAHA:", app)
     });
 
 
     it('should be able to edit app Analytics', mochaAsync(async () => {
 
         const postData = {
-            analytics_id : app.analytics._id,
+            analytics_id : app.analytics,
             app : app.id,
             google_tracking_id: "teste123"
         };

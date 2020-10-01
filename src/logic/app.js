@@ -222,7 +222,7 @@ const processActions = {
         return wallet;
     },
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual, analytics } = params;
         
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
@@ -250,6 +250,7 @@ const processActions = {
             isVerified          : false,
             typography,
             esports_edge        : 0,
+            analytics
 		}
 		return normalized;
     },
