@@ -2,7 +2,7 @@ import { AppLogic } from '../logic';
 import ModelComponent from './modelComponent';
 import { AppRepository, UsersRepository } from '../db/repos';
 import Wallet from './wallet';
-import { AffiliateSetup, Integrations, Customization, Typography, AddOn } from '.';
+import { AffiliateSetup, Integrations, Customization, Typography, AddOn, Analytics } from '.';
 import {
     MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
@@ -73,7 +73,8 @@ class App extends ModelComponent {
                     new Integrations(params),
                     new Customization(params),
                     new Typography(params),
-                    new AddOn(params)
+                    new AddOn(params),
+                    new Analytics(params)
                 ]
             }
         );
@@ -751,6 +752,22 @@ class App extends ModelComponent {
             throw err;
         }
     }
+
+    /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+
+
+ async editAnalyticsKey() {
+    // Output Boolean
+    try {
+        let app = await this.process('EditAnalyticsKey');
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
 
     /**
    * @param {String} 

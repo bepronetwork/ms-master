@@ -52,9 +52,11 @@ import Kyc from "./kyc";
 import Icons from "./icon";
 import MoonPay from "./moonpay";
 import SocialLink from "./socialLink";
+import Analytics from "./analytics";
 
 export {
     SocialLink,
+    Analytics,
     MoonPay,
     Icons,
     Skin,

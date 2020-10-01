@@ -551,6 +551,16 @@ class ErrorManager {
         }
     }
 
+    analytics = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     kyc = function (object, type){
         try{
             switch(type){

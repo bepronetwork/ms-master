@@ -19,6 +19,10 @@ const get_object = (object) => {
                 "providerEco": casino_provider.providerEco,
             })
         }) : object.casino_providers,
+        "analytics": object.analytics ? {
+            "_id": object.analytics._id,
+            "google_tracking_id": !object.analytics.google_tracking_id ? object.analytics.google_tracking_id : Security.prototype.decryptData(object.analytics.google_tracking_id),
+        } : object.analytics,
         "storeAddOn": object.storeAddOn,
         "virtual": object.virtual,
         "licenseID": object.licenseID,

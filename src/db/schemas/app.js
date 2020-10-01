@@ -38,7 +38,8 @@ AppSchema.prototype.schema =  {
     virtual             : { type : Boolean, default : false, required : true },
     licenseID           : { type : String },
     restrictedCountries : [{ type: String}],
-    casino_providers    : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider'}]
+    casino_providers    : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider'}],
+    analytics           : { type: mongoose.Schema.Types.ObjectId, ref: 'Analytics'},
 }
 
 

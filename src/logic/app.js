@@ -39,7 +39,8 @@ import {
     SkinRepository,
     KycRepository,
     IconsRepository,
-    MoonPayRepository,
+    MoonPayRepository, 
+    AnalyticsRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -856,6 +857,12 @@ const processActions = {
         if(!app){throwError('APP_NOT_EXISTENT')};
         return {...params, app};
     },
+    __editAnalyticsKey : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
     __editIntegration : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
@@ -1647,6 +1654,19 @@ const progressActions = {
 
         return true;
     },
+    __editAnalyticsKey : async (params) => {
+        let { analytics_id, google_tracking_id, app } = params;
+        let hashedKey = Security.prototype.encryptData(google_tracking_id)
+        let test = await AnalyticsRepository.prototype.findByIdAndUpdate({
+            _id: analytics_id,
+            google_tracking_id: hashedKey
+        });
+        
+        /* Rebuild the App */
+        // await HerokuClientSingleton.deployApp({app : app.hosting_id});
+        console.log(test)
+        return test;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         publicKey = Security.prototype.encryptData(publicKey);
@@ -2195,6 +2215,9 @@ class AppLogic extends LogicComponent{
                 case 'EditMoonPayIntegration' : {
                     return await library.process.__editMoonPayIntegration(params); break;
                 };
+                case 'EditAnalyticsKey' : {
+                    return await library.process.__editAnalyticsKey(params); break;
+                };
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
@@ -2426,6 +2449,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditMoonPayIntegration' : {
                     return await library.progress.__editMoonPayIntegration(params); break;
+                };
+                case 'EditAnalyticsKey' : {
+                    return await library.progress.__editAnalyticsKey(params); break;
                 };
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;
