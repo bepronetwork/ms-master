@@ -46,6 +46,10 @@ import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsReposi
 import TxFeeRepository from "./txFee";
 import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
+import BetEsportsRepository from "./betEsports";
+import MatchRepository from "./match";
+import VideogameRepository from "./videogame";
+import EsportsScrennerRepository from "./esports_screnner";
 import PointSystemRepository from "./pointSystem";
 import TopTabRepository from "./topTab";
 import SubSectionsRepository from "./subSections";
@@ -60,6 +64,8 @@ import SocialLinkRepository from "./socialLink";
 
 export {
     SocialLinkRepository,
+    EsportsScrennerRepository,
+    BetEsportsRepository,
     MoonPayRepository,
     IconsRepository,
     SkinRepository,
@@ -116,6 +122,8 @@ export {
     PermissionRepository,
     AutoWithdrawRepository,
     BackgroundRepository,
+    MatchRepository,
+    VideogameRepository,
     PointSystemRepository,
     SubSectionsRepository,
     ProviderTokenRepository,

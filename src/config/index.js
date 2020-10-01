@@ -47,6 +47,8 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
+export const MS_ESPORTS_URL = process.env.MS_ESPORTS_URL;
+
 export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
 
 export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
@@ -72,6 +74,8 @@ export const PUSHER_APP_SECRET = process.env.PUSHER_APP_SECRET;
 export const IS_TEST = process.env.IS_TEST;
 
 export const IS_LOCAL_DEV = process.env.IS_LOCAL_DEV;
+
+export const PANDA_SCORE_TOKEN = process.env.PANDA_SCORE_TOKEN;
 
 export const LOGOWL_TICKET = process.env.LOGOWL_TICKET;
 

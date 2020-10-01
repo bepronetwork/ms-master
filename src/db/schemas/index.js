@@ -35,6 +35,11 @@ import { BalanceSchema } from "./addOn/balance";
 import { TxFeeSchema } from "./addOn/txFee";
 import { BackgroundSchema }  from './customization/background';
 import { DepositBonusSchema } from "./addOn/depositBonus";
+import { BetEsportsSchema } from "./betEsports";
+import { MatchSchema } from "./match";
+import { BetResultSchema } from "./betResult";
+import { VideogameSchema } from "./videogame";
+import { EsportsScrennerSchema } from "./customization/esports_screnner";
 import { PointSystemSchema } from "./addOn/pointSystem";
 import { TopTabSchema } from "./customization/topTab";
 import { SubSectionsSchema } from './customization/subSections';
@@ -47,8 +52,12 @@ import { KycSchema } from "./integrations/kyc";
 import { IconsSchema } from "./customization/icon";
 import { SocialLinkSchema } from "./customization/socialLink";
 
+
 export {
     SocialLinkSchema,
+    EsportsScrennerSchema,
+    VideogameSchema,
+    BetResultSchema,
     MoonPaySchema,
     IconsSchema,
     SkinSchema,
@@ -91,6 +100,8 @@ export {
     PermissionSchema,
     AutoWithdrawSchema,
     BackgroundSchema,
+    BetEsportsSchema,
+    MatchSchema,
     PointSystemSchema,
     SubSectionsSchema,
     ProviderSchema,

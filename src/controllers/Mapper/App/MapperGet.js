@@ -213,6 +213,7 @@ let outputs = {
                     "_id": object.customization.loadingGif._id,
                     "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
+                "esportsScrenner": object.customization.esportsScrenner,
                 "topTab": object.customization.topTab
             },
             "integrations": !object.integrations ? {} : {
@@ -270,6 +271,7 @@ let outputs = {
             "description": object.description,
             "hosting_id": object.hosting_id,
             "web_url": object.web_url,
+            "esports_edge": object.esports_edge,
             "addOn": !object.addOn ? {} : {
                 autoWithdraw  : !object.addOn.autoWithdraw  ? null : object.addOn.autoWithdraw,
                 balance       : !object.addOn.balance       ? null : object.addOn.balance,

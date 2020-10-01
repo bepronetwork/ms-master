@@ -8,6 +8,7 @@ import {
     registerAdmin,
     getAdminByApp,
     editAdminType,
+    editVideogameEdge,
     editApp
 } from '../../../methods';
 
@@ -187,6 +188,17 @@ context('Normal', async () =>  {
         let res = await addAppServices({...service_call_add_model, admin: admin.id}, admin.security.bearerToken, { id: admin.id });
         detectValidationErrors(res);
         shouldIntegrateServicesIntoApp(res.data, expect);
+    }));
+
+    it('should Edit E-Sports Edge', mochaAsync(async () => {
+        let postData = {
+            app: app.id,
+            admin: admin.id,
+            esports_edge: 10
+        }
+        let res = await editVideogameEdge({...postData}, admin.security.bearerToken, { id: admin.id });
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
     }));
 
     it('should Edit App Name And Description', mochaAsync(async () => {
