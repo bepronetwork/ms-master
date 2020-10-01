@@ -40,6 +40,7 @@ AppSchema.prototype.schema =  {
     restrictedCountries : [{ type: String}],
     casino_providers    : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider'}],
     analytics           : { type: mongoose.Schema.Types.ObjectId, ref: 'Analytics'},
+    esports_edge        : { type: Number, required : true, default : 0 }
 }
 
 

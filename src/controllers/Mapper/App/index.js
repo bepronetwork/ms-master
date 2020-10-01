@@ -39,11 +39,15 @@ import { MapperEditAddonTxFeeSingleton } from "./MapperEditTxFee";
 import { MapperAddAddonDepositBonusSingleton } from "./MapperAddDepositBonus";
 import { MapperEditAddonDepositBonusSingleton } from "./MapperEditDepositBonus";
 import { MapperEditBackgroundSingleton } from "./MapperEditBackground";
+import { MapperAppGetBetsEsportsSingleton } from "./MapperAppGetUsersBetsEsports";
+import { MapperAppGetBetInfoEsportsSingleton } from "./MapperGetBetInfoEsports";
 import { MapperSummaryOneGamesSingleton } from "./MapperGetGameStats";
 import { MapperGetUserInfoSingleton } from "./MapperGetUserInfo";
 import { MapperEditSubSectionsSingleton } from "./MapperEditSubSections";
 
 export {
+    MapperAppGetBetInfoEsportsSingleton,
+    MapperAppGetBetsEsportsSingleton,
     MapperAddAddonDepositBonusSingleton,
     MapperEditAddonDepositBonusSingleton,
     MapperEditAddonTxFeeSingleton,

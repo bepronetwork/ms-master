@@ -46,6 +46,7 @@ import TxFeeLogic from "./txFee";
 import BackgroundLogic from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonusLogic from "./depositBonus";
+import EsportsScrennerLogic from "./esports_screnner";
 import PointSystemLogic from "./pointSystem";
 import TopTabLogic from "./topTab";
 import ProviderLogic from "./provider";
@@ -58,9 +59,11 @@ import MoonPayLogic from "./moonpay";
 import SocialLinkLogic from "./socialLink"
 import AnalyticsLogic from "./analytics";
 
+
 export {
     SocialLinkLogic,
     AnalyticsLogic,
+    EsportsScrennerLogic,
     MoonPayLogic,
     IconsLogic,
     SkinLogic,

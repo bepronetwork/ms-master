@@ -84,6 +84,23 @@ class AppRepository extends MongoComponent{
         });
     }
 
+    findByIdAndUpdateVideogameEdge({_id, esports_edge}){
+        return new Promise( (resolve,reject) => {
+            AppRepository.prototype.schema.model.updateOne(
+                {_id},
+                {
+                    $set: {
+                        "esports_edge" : parseFloat(esports_edge)
+                    }
+                }
+            )
+            .exec( async (err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            })
+        });
+    }
+
     async addTypography(_id, typography){
         return new Promise( async (resolve,reject) => {
             await AppRepository.prototype.schema.model.updateOne({_id}, { typography })
@@ -257,8 +274,25 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}}){
+    getAppBets({_id, offset, size, user = {}, bet = {}, currency = {}, game = {}, isJackpot = {}, begin_at, end_at}){
         try{
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model.find({
                     app : _id,
@@ -266,7 +300,11 @@ class AppRepository extends MongoComponent{
                     ...bet,
                     ...game,
                     ...currency,
-                    ...isJackpot
+                    ...isJackpot,
+                    timestamp: { 
+                        $gte: new Date( begin_at ), 
+                        $lte: new Date ( end_at )
+                    },
                 })
                 .sort({timestamp: -1})
                 .populate([
@@ -291,11 +329,28 @@ class AppRepository extends MongoComponent{
         }
     }
 
-    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username }){
+    getAppBetsPipeline({app, offset, size, user, _id, currency, game, isJackpot, username, begin_at, end_at }){
         try{
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
             return new Promise( (resolve, reject) => {
                 BetRepository.prototype.schema.model
-                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username}))
+                .aggregate(pipeline_get_users_bets({app, offset, size, user, _id, currency, game, isJackpot, username, begin_at, end_at}))
                 .exec( async (err, item) => {
                     const totalCount = await BetRepository.prototype.schema.model.find({
                         app,

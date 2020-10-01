@@ -20,6 +20,7 @@ let outputs = {
                 "winAmount": object.winAmount,
                 "currency": object.currency,
                 "game": object.game,
+                "tag": "cassino"
             })
         })
     }

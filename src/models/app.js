@@ -44,7 +44,7 @@ import {
     MapperEditBackgroundSingleton,
     MapperSummaryOneGamesSingleton
 } from '../controllers/Mapper';
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton } from '../controllers/Mapper/App';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
 
 class App extends ModelComponent {
@@ -244,8 +244,18 @@ class App extends ModelComponent {
 
     async getBetInfo() {
         try {
-            let app = await this.process('GetBetInfo');
-            return MapperGetBetSingleton.output('GetBetInfo', app);
+            var app = "";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetBetInfo');
+                    return MapperGetBetSingleton.output('GetBetInfo', app);
+                case "esports":
+                    app = await this.process('GetBetInfoEsports');
+                    return MapperAppGetBetInfoEsportsSingleton.output('AppGetBetInfoEsports', app);
+                default:
+                    app = await this.process('GetBetInfo');
+                    return MapperGetBetSingleton.output('GetBetInfo', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -346,8 +356,18 @@ class App extends ModelComponent {
 
     async appGetUsersBets() {
         try {
-            let app = await this.process('AppGetUsersBets');
-            return MapperAppGetBetsSingleton.output('AppGetBets', app);
+            var app = "";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('AppGetUsersBets');
+                    return MapperAppGetBetsSingleton.output('AppGetBets', app);
+                case "esports":
+                    app = await this.process('AppGetUsersBetsEsports');
+                    return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('AppGetUsersBets');
+                    return MapperAppGetBetsSingleton.output('AppGetBets', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -610,8 +630,19 @@ class App extends ModelComponent {
 
     async getLastBets() {
         try {
-            let app = await this.process('GetLastBets');
-            return MapperGetLastBetsSingleton.output('GetLastBets', app);
+            var app = "";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetLastBets');
+                    return MapperGetLastBetsSingleton.output('GetLastBets', app);
+                case "esports":
+                    app = await this.process('GetLastBetsEsports');
+                    return app;
+                // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('GetLastBets');
+                    return MapperGetLastBetsSingleton.output('GetLastBets', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -625,8 +656,19 @@ class App extends ModelComponent {
 
     async getBiggestBetWinners() {
         try {
-            let app = await this.process('GetBiggestBetWinners');
-            return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+            var app = "";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetBiggestBetWinners');
+                    return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+                case "esports":
+                    app = await this.process('GetBiggestBetWinnersEsports');
+                    return app;
+                // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('GetBiggestBetWinners');
+                    return MapperGetBiggetsBetWinnersSingleton.output('GetBiggetsBetWinners', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -639,8 +681,19 @@ class App extends ModelComponent {
 
     async getBiggestUserWinners() {
         try {
-            let app = await this.process('GetBiggestUserWinners');
-            return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+            var app = "";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    app = await this.process('GetBiggestUserWinners');
+                    return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+                case "esports":
+                    app = await this.process('GetBiggestUserWinnersEsports');
+                    return app;
+                // return MapperAppGetBetsEsportsSingleton.output('AppGetBetsEsports', app);
+                default:
+                    app = await this.process('GetBiggestUserWinners');
+                    return MapperGetBiggetsUserWinnersSingleton.output('GetBiggetsUserWinners', app);
+            }
         } catch (err) {
             throw err;
         }
@@ -686,6 +739,22 @@ class App extends ModelComponent {
         try {
             let app = await this.process('EditGameEdge');
             return MapperEditGameEdgeSingleton.output('EditGameEdge', app);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+
+    async editVideogameEdge() {
+        try {
+            //return Boolean
+            let app = await this.process('EditVideogameEdge');
+            return app;
         } catch (err) {
             throw err;
         }
@@ -932,6 +1001,15 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+
+    async editEsportScrenner() {
+        try {
+            let app = await this.process('EditEsportScrenner');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
 
     async editIcons() {
         //Output Boolean
