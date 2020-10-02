@@ -47,13 +47,13 @@ const processActions = {
             if(!app){throwError('APP_NOT_EXISTENT')}
             let user = await UsersRepository.prototype.findUserById(params.user, "wallet")
             if(!user){throwError('USER_NOT_EXISTENT')}
-            let userWallet  = user.wallet.find((w)=>w.currency==params.currency);
-            let appWallet   = app.wallet.find((w)=>w.currency==params.currency);
+            let userWallet  = user.wallet.find((w)=>String(w.currency._id).toString()==String(params.currency).toString());
+            let appWallet   = app.wallet.find((w)=>String(w.currency._id).toString()==String(params.currency).toString());
             const currency = await CurrencyRepository.prototype.findById(params.currency);
             if(!currency){
                 throwError("CURRENCY_NOT_EXISTENT");
             }
-            let freeCurrencyWallet = app.addOn.freeCurrency.wallets.find((w)=> w.currency==params.currency);
+            let freeCurrencyWallet = app.addOn.freeCurrency.wallets.find((w)=>String(w.currency).toString()==String(params.currency).toString());
             if(user.lastTimeCurrencyFree+freeCurrencyWallet.time > (new Date()).getTime()) {
                 throwError("NO_FREE_CURRENCY");
             }
