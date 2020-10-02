@@ -58,7 +58,7 @@ const processActions = {
                 throwError("NO_FREE_CURRENCY");
             }
             return {
-                freeCurrency : app.addOn.freeCurrency,
+                freeCurrency : freeCurrencyWallet,
                 userWallet,
                 user,
                 appWallet
@@ -97,7 +97,6 @@ const progressActions = {
     __getAddonFreeCurrency: async (params) => {
         try {
             let { freeCurrency, appWallet, userWallet, user } = params;
-            console.log(freeCurrency);
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -freeCurrency.value);
             await WalletsRepository.prototype.updatePlayBalance(userWallet._id, freeCurrency.value);
             await UsersRepository.prototype.updateLastTimeCurrencyFree(user._id, (new Date()).getTime());
