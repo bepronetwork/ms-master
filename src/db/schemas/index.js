@@ -51,9 +51,9 @@ import { SkinSchema } from "./customization/skin";
 import { KycSchema } from "./integrations/kyc";
 import { IconsSchema } from "./customization/icon";
 import { SocialLinkSchema } from "./customization/socialLink";
+import { FreeCurrencySchema } from "./addOn/freeCurrency";
 import { AnalyticsSchema } from "./analytics";
 import { TopUpSchema } from "./topUp";
-
 
 export {
     TopUpSchema,
@@ -111,4 +111,5 @@ export {
     ProviderSchema,
     ProviderTokenSchema,
     KycSchema,
+    FreeCurrencySchema,
 }

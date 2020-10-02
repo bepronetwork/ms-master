@@ -56,10 +56,10 @@ import SkinLogic from "./skin";
 import KycLogic from "./kyc";
 import IconsLogic from "./icon";
 import MoonPayLogic from "./moonpay";
-import SocialLinkLogic from "./socialLink"
+import SocialLinkLogic from "./socialLink";
+import FreeCurrencyLogic from "./freeCurrency";
 import AnalyticsLogic from "./analytics";
 import TopUpLogic from "./topUp";
-
 
 export {
     TopUpLogic,
@@ -122,6 +122,7 @@ export {
     BackgroundLogic,
     PointSystemLogic,
     ProviderTokenLogic,
-    KycLogic
+    KycLogic,
+    FreeCurrencyLogic,
 }
 

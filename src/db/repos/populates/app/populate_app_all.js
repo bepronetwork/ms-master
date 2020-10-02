@@ -40,6 +40,11 @@ let populate_app_all = [
                 path : 'pointSystem',
                 model : 'PointSystem',
                 select : { '__v': 0}
+            },
+            {
+                path : 'freeCurrency',
+                model : 'FreeCurrency',
+                select : { '__v': 0}
             }
         ]
     },

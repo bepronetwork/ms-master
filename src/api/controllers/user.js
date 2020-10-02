@@ -1,5 +1,5 @@
 import {
-    User, Jackpot
+    User, Jackpot, FreeCurrency
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
@@ -331,6 +331,20 @@ async function webhookDeposit(req, res) {
     }
 }
 
+async function getAddonFreeCurrency(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let body = req.body;
+        let freeCurrency = new FreeCurrency(body);
+        let data = await freeCurrency.getAddonFreeCurrency();
+        MiddlewareSingleton.log({ type: "user", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "user", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 
 export {
     webhookDeposit,
@@ -351,5 +365,6 @@ export {
     resendEmail,
     userGetBets,
     getPotJackpot,
-    providerToken
+    providerToken,
+    getAddonFreeCurrency
 }
