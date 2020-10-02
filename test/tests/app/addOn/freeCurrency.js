@@ -53,11 +53,11 @@ context('Balance', async () => {
         user = res3.data.message;
         console.log(user);
 
-        let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
+        let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user._id }, user.bearerToken, { id: user._id });
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
-        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
+        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user._id }, user.bearerToken, { id: user._id });
         const { status2 } = res2.data;
         expect(status2).to.be.equal(78);
     }));
