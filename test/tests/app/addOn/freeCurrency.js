@@ -4,9 +4,12 @@ import {
     addAddonFreeCurrency,
     editFreeCurrency,
     getFreeCurrency,
+    registerUser
 } from '../../../methods';
 import faker from 'faker';
 
+import Random from '../../../tools/Random';
+import models from '../../../models';
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
@@ -41,11 +44,17 @@ context('Balance', async () => {
     }));
 
     it('should get Fee Currency', mochaAsync(async () => {
-        let res = await getFreeCurrency({ currency: app.wallet[0].currency, app: app.id, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
+        let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
+            username: '678im67im' + Random(10000, 23409234235463456)
+        }));
+        var res3 = await registerUser(userPostData);
+        user = res3.data.message;
+
+        let res = await getFreeCurrency({ currency: app.wallet[0].currency, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
-        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency, app: app.id, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
+        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         const { status2 } = res2.data;
         expect(status2).to.be.equal(78);
     }));
