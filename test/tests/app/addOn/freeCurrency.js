@@ -4,7 +4,8 @@ import {
     addAddonFreeCurrency,
     editFreeCurrency,
     getFreeCurrency,
-    registerUser
+    registerUser,
+    loginUser
 } from '../../../methods';
 import faker from 'faker';
 
