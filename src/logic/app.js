@@ -1784,8 +1784,7 @@ const progressActions = {
         
         /* Rebuild the App */
         // await HerokuClientSingleton.deployApp({app : app.hosting_id});
-        console.log(test)
-        return test;
+        return true;
     },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;

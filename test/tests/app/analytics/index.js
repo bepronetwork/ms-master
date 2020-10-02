@@ -9,7 +9,6 @@ context('Edit Analytics', async () => {
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;
-        console.log("AppHAHA:", app)
     });
 
 
