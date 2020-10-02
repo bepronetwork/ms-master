@@ -56,13 +56,15 @@ import SkinLogic from "./skin";
 import KycLogic from "./kyc";
 import IconsLogic from "./icon";
 import MoonPayLogic from "./moonpay";
-import SocialLinkLogic from "./socialLink";
+import SocialLinkLogic from "./socialLink"
+import AnalyticsLogic from "./analytics";
 import TopUpLogic from "./topUp";
 
 
 export {
     TopUpLogic,
     SocialLinkLogic,
+    AnalyticsLogic,
     EsportsScrennerLogic,
     MoonPayLogic,
     IconsLogic,

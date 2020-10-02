@@ -100,6 +100,11 @@ let populate_app_simple = [
         path : 'casino_providers',
         model : 'Provider',
         select : { '__v': 0}
+    },
+    {
+        path : 'analytics',
+        model : 'Analytics',
+        select : { '__v': 0}
     }
 ] 
 

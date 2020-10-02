@@ -42,7 +42,8 @@ import {
     SkinRepository,
     KycRepository,
     IconsRepository,
-    MoonPayRepository,
+    MoonPayRepository, 
+    AnalyticsRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -222,7 +223,7 @@ const processActions = {
         return wallet;
     },
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual, analytics } = params;
         
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
@@ -250,6 +251,7 @@ const processActions = {
             isVerified          : false,
             typography,
             esports_edge        : 0,
+            analytics
 		}
 		return normalized;
     },
@@ -929,6 +931,12 @@ const processActions = {
         };
     },
     __editMoonPayIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
+    __editAnalyticsKey : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppByIdHostingId(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -1777,6 +1785,18 @@ const progressActions = {
 
         return true;
     },
+    __editAnalyticsKey : async (params) => {
+        let { analytics_id, google_tracking_id, app } = params;
+        let hashedKey = Security.prototype.encryptData(google_tracking_id)
+        let test = await AnalyticsRepository.prototype.findByIdAndUpdate({
+            _id: analytics_id,
+            google_tracking_id: hashedKey
+        });
+        
+        /* Rebuild the App */
+        // await HerokuClientSingleton.deployApp({app : app.hosting_id});
+        return true;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
         publicKey = Security.prototype.encryptData(publicKey);
@@ -2342,6 +2362,9 @@ class AppLogic extends LogicComponent{
                 case 'EditMoonPayIntegration' : {
                     return await library.process.__editMoonPayIntegration(params); break;
                 };
+                case 'EditAnalyticsKey' : {
+                    return await library.process.__editAnalyticsKey(params); break;
+                };
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
@@ -2597,6 +2620,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditMoonPayIntegration' : {
                     return await library.progress.__editMoonPayIntegration(params); break;
+                };
+                case 'EditAnalyticsKey' : {
+                    return await library.progress.__editAnalyticsKey(params); break;
                 };
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;

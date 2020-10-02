@@ -2709,7 +2709,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
+  /app/analytics/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Analytics Key
+      operationId: editAnalyticsKey
+      description: Edit Analytics Key
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/editAnalyticsKeyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/autoWithdraw/add:
     x-swagger-router-controller: app
     post:
@@ -6067,6 +6096,37 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           ID Currency
+  editAnalyticsKeyRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - analytics_id
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      analytics_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Analytics ID
+      google_tracking_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Google Tracking ID
 
   EditEdgeJackpotRequest : 
     type: object
