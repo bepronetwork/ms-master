@@ -1786,11 +1786,12 @@ const progressActions = {
         return true;
     },
     __editAnalyticsKey : async (params) => {
-        let { analytics_id, google_tracking_id, app } = params;
+        let { analytics_id, google_tracking_id, isActive, app } = params;
         let hashedKey = Security.prototype.encryptData(google_tracking_id)
         let test = await AnalyticsRepository.prototype.findByIdAndUpdate({
             _id: analytics_id,
-            google_tracking_id: hashedKey
+            google_tracking_id: hashedKey,
+            isActive
         });
         
         /* Rebuild the App */

@@ -8,6 +8,7 @@ AnalyticsSchema.prototype.name = 'Analytics';
 
 AnalyticsSchema.prototype.schema =  {
     google_tracking_id : { type : String },
+    isActive : { type : Boolean, default : false},
 }
 
 

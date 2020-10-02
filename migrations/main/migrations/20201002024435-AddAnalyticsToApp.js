@@ -38,6 +38,7 @@ module.exports = {
         if (analytics === null) {
           let newAnalytics = await db.collection('analytics').insertOne({
             google_tracking_id: null,
+            isActive: false,
             __v: 0
           });
           await db.collection('apps').updateOne(

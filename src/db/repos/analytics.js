@@ -39,12 +39,13 @@ class AnalyticsRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate({_id, google_tracking_id}){
+    findByIdAndUpdate({_id, google_tracking_id, isActive}){
         return new Promise( (resolve,reject) => {
             AnalyticsRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "google_tracking_id" : google_tracking_id
+                    "google_tracking_id" : google_tracking_id,
+                    "isActive": isActive
                 } },
                 { 'new': true })
                 .lean()
