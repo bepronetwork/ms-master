@@ -49,15 +49,16 @@ context('Balance', async () => {
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456)
         }));
-        var res3 = await registerUser(userPostData);
-        user = res3.data.message;
+        await registerUser(userPostData);
+        var dataUser = (await loginUser(userPostData)).data.message;
+        user = dataUser;
         console.log(user);
 
-        let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user._id }, user.bearerToken, { id: user._id });
+        let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
-        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user._id }, user.bearerToken, { id: user._id });
+        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         const { status2 } = res2.data;
         expect(status2).to.be.equal(78);
     }));
