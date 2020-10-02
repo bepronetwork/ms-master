@@ -3,7 +3,7 @@ import SibApiV3Sdk from 'sib-api-v3-sdk';
 
 class SendInBlue {
 
-    constructor({key}) {
+    constructor({ key }) {
         this.key = key;
         this.contactsAPI = new SibApiV3Sdk.ContactsApi();
         this.smtpAPI = new SibApiV3Sdk.SMTPApi();
@@ -15,7 +15,7 @@ class SendInBlue {
         this.__getInstanceWithKeysToInstanceType(this.key);
     }
 
-    __getInstanceWithKeysToInstanceType(key){
+    __getInstanceWithKeysToInstanceType(key) {
         this.contactsAPI.apiClient.authentications['partner-key'].apiKey = key;
         this.smtpAPI.apiClient.authentications['api-key'].apiKey = key;
     }
@@ -52,32 +52,47 @@ class SendInBlue {
     }
 
     async createAttribute(attributeName) {
-        this.setAPI();
-        let attributeCategory = "normal";
-        // let attributeName = "TOKEN";
-        let type = "text";
-        let createAttribute = { type };
-        const data = await this.contactsAPI.createAttribute(attributeCategory, attributeName, createAttribute);
-        return data;
+        try {
+            this.setAPI();
+            let attributeCategory = "normal";
+            // let attributeName = "TOKEN";
+            let type = "text";
+            let createAttribute = { type };
+            const data = await this.contactsAPI.createAttribute(attributeCategory, attributeName, createAttribute);
+            return data;
+        } catch (error) {
+            console.log({ status: error.status, message: error.message, origin: "SendInBlue-createAttribute" })
+        }
+
     }
 
     async createContact(email, attributes, listIds) {
-        this.setAPI();
-        // email       => string with email to create
-        // attributes  => object with the attributes what you desire to pass
-        // listIds     => array of listIds that this contact will belong
-        const createContact = { email, attributes, listIds };
-        const data = await this.contactsAPI.createContact(createContact);
-        return data;
+        try {
+            this.setAPI();
+            // email       => string with email to create
+            // attributes  => object with the attributes what you desire to pass
+            // listIds     => array of listIds that this contact will belong
+            const createContact = { email, attributes, listIds };
+            const data = await this.contactsAPI.createContact(createContact);
+            return data;
+
+        } catch (error) {
+            console.log({ status: error.status, message: error.message, origin: "SendInBlue-createContact" })
+        }
     }
 
     async updateContact(email, attributes) {
-        this.setAPI();
-        // email => email what you desire to update
-        // attributes => parameters what you desire to update
-        const updateContact = { attributes }
-        const data = await this.contactsAPI.updateContact(email, updateContact);
-        return data;
+        try {
+            this.setAPI();
+            // email => email what you desire to update
+            // attributes => parameters what you desire to update
+            const updateContact = { attributes }
+            const data = await this.contactsAPI.updateContact(email, updateContact);
+            return data;
+        } catch (error) {
+            console.log({ status: error.status, message: error.message, origin: "SendInBlue-updateContact" })
+        }
+
     }
 
     async getAtributes() {
@@ -87,9 +102,13 @@ class SendInBlue {
     }
 
     async getContacts() {
-        this.setAPI();
-        const data = await this.contactsAPI.getContacts();
-        return data;
+        try {
+            this.setAPI();
+            const data = await this.contactsAPI.getContacts();
+            return data;
+        } catch (error) {
+            console.log({ status: error.status, message: error.message, origin: "SendInBlue-getContacts" })
+        }
     }
 
     async getSmtpTemplates() {
@@ -99,14 +118,19 @@ class SendInBlue {
     }
 
     async sendTemplate(templateId, emailTo) {
-        this.setAPI();
-        const sendEmail = { emailTo };
-        const data = await this.smtpAPI.sendTemplate(templateId, sendEmail);
-        return data;
+        try {
+            this.setAPI();
+            const sendEmail = { emailTo };
+            const data = await this.smtpAPI.sendTemplate(templateId, sendEmail);
+            return data;
+        } catch (error) {
+            console.log({ status: error.status, message: error.message, origin: "SendInBlue-sendTemplate" })
+        }
+
     }
 }
 
-let SendinBlueSingleton = new SendInBlue({key : SENDINBLUE_API_KEY});
+let SendinBlueSingleton = new SendInBlue({ key: SENDINBLUE_API_KEY });
 
 export {
     SendinBlueSingleton, // Default for the APp Itself

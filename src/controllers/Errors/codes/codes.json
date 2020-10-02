@@ -308,6 +308,10 @@
         "message"   : "The password must be at least 10 characters long"
     },
     "077" : {
+        "key" : "REGISTER_NOT_CURRENCY_ADDED",
+        "message"   : "This app does not yet contain currencies"
+    },
+    "078" : {
         "key" : "NO_FREE_CURRENCY",
         "message"   : "sorry, but you still can't get free currency, if you have any problems call support"
     }

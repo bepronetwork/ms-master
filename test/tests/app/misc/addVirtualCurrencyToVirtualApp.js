@@ -22,7 +22,7 @@ context('Add Currency to Virtual App', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test278dbgwiu2179',
             currency_id : currency._id
         };
 
@@ -55,7 +55,7 @@ context('Add Currency to Virtual App', async () => {
 
         const postData = {
             app : app.id,
-            passphrase: '',
+            passphrase: 'test278dbgwiu2179',
             currency_id : currency._id
         };
 
@@ -88,7 +88,7 @@ context('Add Currency to Virtual App', async () => {
 
         const postData = {
             app : app.id,
-            passphrase : 'test',
+            passphrase : 'test278dbgwiu2179',
             currency_id : currency._id
         };
 

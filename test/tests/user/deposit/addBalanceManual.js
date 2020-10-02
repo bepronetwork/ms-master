@@ -25,7 +25,9 @@ context('Add Balance Manual', async () => {
                 app: app.id,
                 admin: admin.id,
                 wallet: wallet._id,
-                newBalance: wallet.playBalance + sumBalance
+                newBalance: wallet.playBalance + sumBalance,
+                currency: wallet.currency._id,
+                reason: "Its a necessary test"
             },
             admin.security.bearerToken,
             {

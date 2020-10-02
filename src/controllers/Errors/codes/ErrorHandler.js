@@ -91,7 +91,8 @@ ErrorHandler.prototype.KEYS =  {
     'ICONS_LIMIT_EXCEEDED'                  : "074",
     'LOGIN_NOT_CURRENCY_ADDED'              : "075",
     'MINIMUM_PASSWORD_LENGTH'               : "076",
-    'NO_FREE_CURRENCY'                      : "077",
+    'REGISTER_NOT_CURRENCY_ADDED'           : "077",
+    'NO_FREE_CURRENCY'                      : "078",
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {

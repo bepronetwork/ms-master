@@ -1240,6 +1240,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/esportsScrenner : 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit E-Sports Screnner Information
+      operationId: editEsportScrenner
+      description: Change E-Sports Screnner
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppCustomizationEsportsScrenner'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/icons : 
     x-swagger-router-controller: app
     post:
@@ -1605,7 +1635,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
+  /app/videogames/editEdge:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Table Limit Videogame
+      operationId: editVideogameEdge
+      description: Change Table Limit Videogames
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppVideogameEditEdge'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/convert/points:
     x-swagger-router-controller: app
     post:
@@ -1636,7 +1695,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
   /app/customization/socialLink:
     x-swagger-router-controller: app
     post:
@@ -2682,6 +2740,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/analytics/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Analytics Key
+      operationId: editAnalyticsKey
+      description: Edit Analytics Key
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/editAnalyticsKeyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /app/freeCurrency/get:
     x-swagger-router-controller: user
@@ -2744,7 +2832,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
+  
   /app/autoWithdraw/add:
     x-swagger-router-controller: app
     post:
@@ -3764,6 +3852,12 @@ definitions:
         example: "43256291237846817623"
         description: |
           Unique identifier of the app, ID
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
   UserInfoGetRequest :
     type: object
     required:
@@ -4133,6 +4227,30 @@ definitions:
         example: 3245
         description: |
           New Edge
+  AppVideogameEditEdge :
+    type: object
+    required:
+      - app
+      - esports_edge
+      - admin
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      esports_edge:
+        type : number
+        example: 3245
+        description: |
+          New Edge for E-Sports
+      admin:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Admin ID
   AppGameEditBackgroundImage : 
     type: object
     required:
@@ -4416,6 +4534,41 @@ definitions:
         type : string
         example: 876348bct3t2rc2t34
         description : image blob or link
+  AppCustomizationEsportsScrenner :
+    type: object
+    required:
+      - app
+    properties:
+      app:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      link_url:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      button_text:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      title:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
+      subtitle:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          App id
   AppCustomizationFooter : 
     type: object
     required:
@@ -5042,7 +5195,13 @@ definitions:
         format : name
         example : "5cuedgq7e6t334t34" 
         description: |
-          Game ID
+          Game ID (Cassino)
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
   CreateProviderRequest :
     type: object
     required:
@@ -5101,6 +5260,12 @@ definitions:
         example : "5cuedgq7e6t334t34" 
         description: |
           App ID
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
   AppUsersRequest : 
     type: object
     required:
@@ -5139,6 +5304,7 @@ definitions:
     required:
       - user
       - currency
+      - tag
     properties:
       size:
         type : number
@@ -5151,18 +5317,24 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           User ID
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag for Bets
       periodicity :
         type : string
         format: name
         example: "Weekly"
         description: |
-          Periodicity of Data
+          Periodicity of Data (Cassino And E-Sports)
       currency :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Currency ID
+          Currency ID (Cassino And E-Sports)
       offset :
         type : number
       game :
@@ -5170,7 +5342,19 @@ definitions:
         format : name
         example : "5cuedgq7e6t334t34" 
         description: |
-          Game ID
+          Game ID (Cassino)
+      type :
+        type : string
+        format : name
+        example : "simple or multiple" 
+        description: |
+          Type of Bet (E-Sports)
+      slug :
+        type : string
+        format : name
+        example : "r6-siege" 
+        description: |
+          Slug of Videogame (E-Sports)
   AppSummaryRequest:
     type: object
     required:
@@ -5227,44 +5411,73 @@ definitions:
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          User ID
+          User ID (Tag: cassino or E-Sports)
       currency :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Currency ID
+          Currency ID (Tag: cassino or E-Sports)
       bet :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Bet ID
+          Bet ID (Tag: cassino or E-Sports)
       game :
         type : string
         format: name
         example: "0xhi834ty2034thg"
         description: |
-          Game ID
+          Game ID (Tag: cassino)
       isJackpot :
         type : boolean
         format: boolean
         example: true
         description: |
-          Is Jackpot
+          Is Jackpot (Tag: cassino)
+      tag :
+        type : string
+        format: name
+        example: "cassino or esports"
+        description: |
+          Tag Type of bet
       username :
         type : string
         format: name
         example: "teste"
         description: |
-          Username of User
+          Username of User (Tag: cassino)
+      videogames :
+        type : array
+        items:
+          type : string
+          example: "xvwvj1vxhw21378"
+          description: |
+            Videogames ID (Tag: E-Sports)
       size:
         type : number
         example: 15
         description: |
-          Amount of Bets Wanted
+          Amount of Bets Wanted (Tag: cassino or E-Sports)
       offset :
         type : number
+      type :
+        type : string
+        format: name
+        example: "simple or multiple"
+        description: |
+          Type of bet (E-Sports)
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   AppAddGameRequest : 
     type: object
     required:
@@ -5310,6 +5523,8 @@ definitions:
       - user
       - wallet
       - newBalance
+      - reason
+      - currency
     properties:
       app :
         type : string
@@ -5329,6 +5544,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           user ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
       wallet :
         type : string
         format: name
@@ -5341,6 +5562,12 @@ definitions:
         example: 0.1
         description: |
           new balance
+      reason :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Reason Of Modify Balance
 
   AddAddonBalanceRequest :
     type: object
@@ -6052,6 +6279,37 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           ID Currency
+  editAnalyticsKeyRequest : 
+    type: object
+    required:
+      - app
+      - admin
+      - analytics_id
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      analytics_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Analytics ID
+      google_tracking_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Google Tracking ID
 
   EditEdgeJackpotRequest : 
     type: object

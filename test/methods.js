@@ -112,6 +112,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editAnalyticsKey(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/analytics/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getSkinEcosystem(params) {
         return request(global.server)
         .get('/api/app/skinEcosystem/get')
@@ -647,6 +655,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editVideogameEdge(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/videogames/editEdge')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editGameImage(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/games/editImage')
@@ -682,6 +698,14 @@ module.exports = {
     async editBannersCustomizationApp(params, bearerToken, payload){
         return request(global.server)
         .post('/api/app/customization/banners')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editEsportsScrennerCustomizationApp(params, bearerToken, payload){
+        return request(global.server)
+        .post('/api/app/customization/esportsScrenner')
         .set("authorization", "Bearer " + bearerToken)
         .set("payload", getPayloadString(payload))
         .send(params)

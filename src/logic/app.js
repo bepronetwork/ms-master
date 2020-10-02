@@ -28,6 +28,9 @@ import {
     TxFeeRepository,
     BackgroundRepository,
     DepositBonusRepository,
+    BetEsportsRepository,
+    VideogameRepository,
+    EsportsScrennerRepository,
     PointSystemRepository,
     TopTabRepository,
     TopTabEsportsRepository,
@@ -40,7 +43,8 @@ import {
     KycRepository,
     IconsRepository,
     MoonPayRepository,
-    FreeCurrencyRepository
+    FreeCurrencyRepository,
+    AnalyticsRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -56,10 +60,10 @@ import { SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
-import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL } from '../config';
+import { PUSHER_APP_KEY, PRICE_VIRTUAL_CURRENCY_GLOBAL, PANDA_SCORE_TOKEN } from '../config';
 import {AddOnsEcoRepository} from '../db/repos';
 import addOnRepository from '../db/repos/addOn';
-import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository } from "../db/repos/redis";
+import { LastBetsRepository, BiggestBetWinnerRepository, BiggestUserWinnerRepository, PopularNumberRepository, LastBetsEsportsRepository, BiggestBetWinnerEsportsRepository, BiggestUserWinnerEsportsRepository } from "../db/repos/redis";
 import PerfomanceMonitor from '../helpers/performance';
 import TxFee from '../models/txFee';
 import { TopTabSchema } from '../db/schemas';
@@ -68,9 +72,11 @@ import MiddlewareSingleton from '../api/helpers/middleware';
 import ConverterSingleton from './utils/converter';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
+const axios = require('axios');
 var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
+import TopUp from '../models/topUp';
 
 
 // Private fields
@@ -218,10 +224,11 @@ const processActions = {
         return wallet;
     },
 	__register : async (params) => {
-        const { affiliateSetup, integrations, customization, addOn, typography, virtual } = params;
+        const { affiliateSetup, integrations, customization, addOn, typography, virtual, analytics } = params;
         
         let admin = await AdminsRepository.prototype.findAdminById(params.admin_id);
         if(!admin){throwError('USER_NOT_EXISTENT')}
+
 
         // Get App by Appname
 		let normalized = {
@@ -243,7 +250,9 @@ const processActions = {
             countriesAvailable  : [], // TO DO
             restrictedCountries : [],
             isVerified          : false,
-            typography
+            typography,
+            esports_edge        : 0,
+            analytics
 		}
 		return normalized;
     },
@@ -341,7 +350,9 @@ const processActions = {
                 bet: params.bet == undefined ? {} : {_id : params.bet},
                 currency: params.currency == undefined ? {} : {currency : params.currency},
                 game: params.game == undefined ? {} : {game : params.game},
-                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot}
+                isJackpot: (params.isJackpot == undefined) ? {} : {isJackpot : params.isJackpot},
+                begin_at: params.begin_at,
+                end_at: params.end_at
             });
         } else {
             res = await AppRepository.prototype.getAppBetsPipeline({
@@ -353,16 +364,55 @@ const processActions = {
                 currency: params.currency,
                 game: params.game,
                 isJackpot: params.isJackpot,
-                username: params.username
+                username: params.username,
+                begin_at: params.begin_at,
+                end_at: params.end_at
             });
         }
-		return res;
+		return {...res, tag: "cassino"};
+    },
+    __appGetUsersBetsEsports : async (params) => {
+        let res = await BetEsportsRepository.prototype.getAppBetsEsports({
+            app : params.app,
+            offset: params.offset,
+            size : params.size,
+            user: params.user == undefined ? {} : { user : params.user },
+            _id: params.bet == undefined ? {} : { _id : params.bet },
+            currency: params.currency == undefined ? {} : { currency : params.currency },
+            videogames: params.videogames == undefined ? {} : { videogames : { $in: params.videogames } },
+            type: params.type == undefined ? {} : { type : params.type },
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+        let normalized = {
+            ...res, 
+            tag: "esports"
+        }
+		return normalized;
     },
     __getBetInfo : async (params) => {
         try {
             let app = await AppRepository.prototype.findAppById(params.app, "simple");
             if (!app){ throwError('APP_NOT_EXISTENT') }
             let bet = await BetRepository.prototype.findBetById(params.bet);
+            return bet;
+        } catch(err) {
+            throw err;
+        }
+    },
+
+    __getBetInfoEsports : async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppById(params.app, "simple");
+            if (!app){ throwError('APP_NOT_EXISTENT') }
+            let bet = await BetEsportsRepository.prototype.findByIdPopulated(params.bet);
+            bet.result = bet.result.map( async result => {
+                return({
+                    ...result,
+                    data_external_match : (await axios.get(`https://api.pandascore.co/betting/matches/${result.match.external_id}?token=${PANDA_SCORE_TOKEN}`)).data
+                })
+            });
+            bet.result = await Promise.all(bet.result);
             return bet;
         } catch(err) {
             throw err;
@@ -694,6 +744,12 @@ const processActions = {
         });
 		return res;
     },
+    __getLastBetsEsports : async (params) => {
+        let res = await LastBetsEsportsRepository.prototype.getLastBetsEsports({
+            _id : params.app
+        });
+		return res;
+    },
     __getBiggestBetWinners : async (params) => {
         let res = await BiggestBetWinnerRepository.prototype.getBiggetsBetWinner({
             _id : params.app,
@@ -701,8 +757,20 @@ const processActions = {
         });
 		return res;
     },
+    __getBiggestBetWinnersEsports : async (params) => {
+        let res = await BiggestBetWinnerEsportsRepository.prototype.getBiggestBetWinnerEsports({
+            _id : params.app
+        });
+		return res;
+    },
     __getBiggestUserWinners : async (params) => {
         let res = await BiggestUserWinnerRepository.prototype.getBiggetsUserWinner({
+            _id : params.app
+        });
+		return res;
+    },
+    __getBiggestUserWinnersEsports : async (params) => {
+        let res = await BiggestUserWinnerEsportsRepository.prototype.getBiggestUserWinnerEsports({
             _id : params.app
         });
 		return res;
@@ -800,6 +868,18 @@ const processActions = {
 
 		return normalized;
     },
+
+    __editVideogameEdge : async (params) => {
+        let { app, esports_edge } = params;
+        app = await AppRepository.prototype.findAppByIdNotPopulated(app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+
+		let normalized = {
+            app,
+            esports_edge
+        }
+		return normalized;
+    },
 	__editGameImage: async (params) => {
         let { game, app, image_url } = params;
         
@@ -876,6 +956,12 @@ const processActions = {
         };
     },
     __editMoonPayIntegration : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppByIdHostingId(app);
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {...params, app};
+    },
+    __editAnalyticsKey : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppByIdHostingId(app);
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -963,6 +1049,15 @@ const processActions = {
         };
     },
     __editBanners : async (params) => {
+        let { app } = params;
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if(!app){throwError('APP_NOT_EXISTENT')};
+        return {
+            ...params,
+            app
+        };
+    },
+    __editEsportScrenner : async (params) => {
         let { app } = params;
         app = await AppRepository.prototype.findAppById(app, "simple");
         if(!app){throwError('APP_NOT_EXISTENT')};
@@ -1197,8 +1292,21 @@ const progressActions = {
     __appGetUsersBets : async (params) => {
         return params;
     },
+    __appGetUsersBetsEsports : async (params) => {
+        return params;
+    },
     __modifyBalance : async (params) => {
         await WalletsRepository.prototype.updatePlayBalanceNotInc(params.wallet, {newBalance : params.newBalance});
+        let paramsTopUp = {
+            app: params.app,
+            admin: params.admin,
+            wallet: params.wallet,
+            currency: params.currency,
+            balance: params.newBalance,
+            reason: params.reason
+        }
+        let topUp = new TopUp(paramsTopUp);
+        await topUp.register();
         return true;
     },
     __getLogs : async (params) => {
@@ -1251,6 +1359,13 @@ const progressActions = {
 		return res;
     },
     __getBetInfo : async (params) => {
+        try {
+            return params;
+        } catch(err) {
+            throw err;
+        }
+    },
+    __getBetInfoEsports : async (params) => {
         try {
             return params;
         } catch(err) {
@@ -1501,11 +1616,23 @@ const progressActions = {
         let res = params;
 		return res;
     },
+    __getLastBetsEsports : async (params) => {
+        let res = params;
+		return res;
+    },
     __getBiggestBetWinners : async (params) => {
         let res = params;
 		return res;
     },
+    __getBiggestBetWinnersEsports : async (params) => {
+        let res = params;
+		return res;
+    },
     __getBiggestUserWinners : async (params) => {
+        let res = params;
+		return res;
+    },
+    __getBiggestUserWinnersEsports : async (params) => {
         let res = params;
 		return res;
     },
@@ -1558,6 +1685,17 @@ const progressActions = {
         });
 
 		return res;
+    },
+
+    __editVideogameEdge : async (params) => {
+        let { esports_edge, app} = params;
+
+        await AppRepository.prototype.findByIdAndUpdateVideogameEdge({
+            _id : app._id,
+            esports_edge
+        });
+
+		return true;
     },
 	__editGameImage : async (params) => {
         let { game, image_url } = params;
@@ -1679,8 +1817,22 @@ const progressActions = {
 
         return true;
     },
+    __editAnalyticsKey : async (params) => {
+        let { analytics_id, google_tracking_id, app } = params;
+        let hashedKey = Security.prototype.encryptData(google_tracking_id)
+        let test = await AnalyticsRepository.prototype.findByIdAndUpdate({
+            _id: analytics_id,
+            google_tracking_id: hashedKey
+        });
+        
+        /* Rebuild the App */
+        // await HerokuClientSingleton.deployApp({app : app.hosting_id});
+        return true;
+    },
     __editIntegration : async (params) => {
         let { publicKey, privateKey, integration_type, integration_id, isActive } = params;
+        publicKey = Security.prototype.encryptData(publicKey);
+        privateKey = Security.prototype.encryptData(privateKey);
         /* Update Integrations Id Type */
         switch(integration_type){
             case 'live_chat' : {
@@ -1879,6 +2031,20 @@ const progressActions = {
         })
         // Save info on Customization Part
         return params;
+    },
+    __editEsportScrenner : async (params) => {
+        let { app, link_url, button_text, title, subtitle } = params;
+        await EsportsScrennerRepository.prototype.findByIdAndUpdate({
+            _id: app.customization.esportsScrenner._id,
+            link_url,
+            button_text,
+            title,
+            subtitle
+        })
+        /* Rebuild the App */
+        await HerokuClientSingleton.deployApp({app : app.hosting_id})
+        // Save info on Customization Part
+        return true;
     },
     __editBackground: async (params) => {
         let { app, background } = params;
@@ -2168,6 +2334,9 @@ class AppLogic extends LogicComponent{
                 case 'AppGetUsersBets' : {
 					return await library.process.__appGetUsersBets(params); break;
                 };
+                case 'AppGetUsersBetsEsports' : {
+					return await library.process.__appGetUsersBetsEsports(params); break;
+                };
                 case 'DeployApp' : {
 					return await library.process.__deployApp(params); break;
                 };
@@ -2225,6 +2394,9 @@ class AppLogic extends LogicComponent{
                 case 'EditMoonPayIntegration' : {
                     return await library.process.__editMoonPayIntegration(params); break;
                 };
+                case 'EditAnalyticsKey' : {
+                    return await library.process.__editAnalyticsKey(params); break;
+                };
                 case 'EditIntegration' : {
                     return await library.process.__editIntegration(params); break;
                 };
@@ -2239,6 +2411,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditGameEdge' : {
                     return await library.process.__editGameEdge(params); break;
+                };
+                case 'EditVideogameEdge' : {
+                    return await library.process.__editVideogameEdge(params); break;
                 };
                 case 'EditGameImage': {
 					return await library.process.__editGameImage(params); break;
@@ -2273,6 +2448,9 @@ class AppLogic extends LogicComponent{
                 case 'EditBanners' : {
                     return await library.process.__editBanners(params); break;
                 };
+                case 'EditEsportScrenner' : {
+                    return await library.process.__editEsportScrenner(params); break;
+                };
                 case 'EditLogo' : {
                     return await library.process.__editLogo(params); break;
                 };
@@ -2297,11 +2475,20 @@ class AppLogic extends LogicComponent{
                 case 'GetLastBets' : {
 					return await library.process.__getLastBets(params); break;
                 };
+                case 'GetLastBetsEsports' : {
+					return await library.process.__getLastBetsEsports(params); break;
+                };
                 case 'GetBiggestBetWinners' : {
 					return await library.process.__getBiggestBetWinners(params); break;
                 };
+                case 'GetBiggestBetWinnersEsports' : {
+					return await library.process.__getBiggestBetWinnersEsports(params); break;
+                };
                 case 'GetBiggestUserWinners' : {
 					return await library.process.__getBiggestUserWinners(params); break;
+                };
+                case 'GetBiggestUserWinnersEsports' : {
+					return await library.process.__getBiggestUserWinnersEsports(params); break;
                 };
                 case 'GetPopularNumbers' : {
 					return await library.process.__getPopularNumbers(params); break;
@@ -2323,6 +2510,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetBetInfo' : {
 					return await library.process.__getBetInfo(params); break;
+                };
+                case 'GetBetInfoEsports' : {
+					return await library.process.__getBetInfoEsports(params); break;
                 };
                 case 'EditBackground' : {
 					return await library.process.__editBackground(params); break;
@@ -2430,6 +2620,9 @@ class AppLogic extends LogicComponent{
                 case 'AppGetUsersBets' : {
 					return await library.progress.__appGetUsersBets(params); break;
                 };
+                case 'AppGetUsersBetsEsports' : {
+					return await library.progress.__appGetUsersBetsEsports(params); break;
+                };
                 case 'DeployApp' : {
 					return await library.progress.__deployApp(params); break;
                 };
@@ -2451,6 +2644,9 @@ class AppLogic extends LogicComponent{
                 case 'EditGameEdge' : {
                     return await library.progress.__editGameEdge(params); break;
                 };
+                case 'EditVideogameEdge' : {
+                    return await library.progress.__editVideogameEdge(params); break;
+                };
                 case 'EditGameImage': {
 					return await library.progress.__editGameImage(params); break;
                 };
@@ -2459,6 +2655,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'EditMoonPayIntegration' : {
                     return await library.progress.__editMoonPayIntegration(params); break;
+                };
+                case 'EditAnalyticsKey' : {
+                    return await library.progress.__editAnalyticsKey(params); break;
                 };
                 case 'EditAffiliateStructure' : {
                     return await library.progress.__editAffiliateStructure(params); break;
@@ -2503,6 +2702,9 @@ class AppLogic extends LogicComponent{
                 case 'EditBanners' : {
                     return await library.progress.__editBanners(params); break;
                 };
+                case 'EditEsportScrenner' : {
+                    return await library.progress.__editEsportScrenner(params); break;
+                };
                 case 'EditLogo' : {
                     return await library.progress.__editLogo(params); break;
                 };
@@ -2527,11 +2729,20 @@ class AppLogic extends LogicComponent{
                 case 'GetLastBets' : {
 					return await library.progress.__getLastBets(params); break;
                 };
+                case 'GetLastBetsEsports' : {
+					return await library.progress.__getLastBetsEsports(params); break;
+                };
                 case 'GetBiggestBetWinners' : {
 					return await library.progress.__getBiggestBetWinners(params); break;
                 };
+                case 'GetBiggestBetWinnersEsports' : {
+					return await library.progress.__getBiggestBetWinnersEsports(params); break;
+                };
                 case 'GetBiggestUserWinners' : {
 					return await library.progress.__getBiggestUserWinners(params); break;
+                };
+                case 'GetBiggestUserWinnersEsports' : {
+					return await library.progress.__getBiggestUserWinnersEsports(params); break;
                 };
                 case 'GetPopularNumbers' : {
 					return await library.progress.__getPopularNumbers(params); break;
@@ -2554,6 +2765,9 @@ class AppLogic extends LogicComponent{
                 case 'GetBetInfo': {
                     return await library.progress.__getBetInfo(params); break;
                 }
+                case 'GetBetInfoEsports' : {
+					return await library.progress.__getBetInfoEsports(params); break;
+                };
                 case 'EditBackground': {
                     return await library.progress.__editBackground(params); break;
                 }

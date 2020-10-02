@@ -34,6 +34,7 @@ jobs: # a collection of steps
             echo 'export HEROKU_API_BEARER_TOKEN=b39c70fe-d147-468f-93ac-73f70ed7c8ee' >> $BASH_ENV
             echo 'export MS_MASTER_URL=https://sandbox-ms-master.betprotocol.com' >> $BASH_ENV
             echo 'export MS_WITHDRAW_URL=https://sandbox-ms-withdraw.betprotocol.com' >> $BASH_ENV
+            echo 'export MS_ESPORTS_URL=https://ms-esports-dev.herokuapp.com' >> $BASH_ENV
             echo 'export GITHUB_LAYOUT_REPO=layout-1' >> $BASH_ENV 
             echo 'export BITGO_ENTERPRISE_ID=5e2ee3674141b74006f37e0b0fdf6813' >> $BASH_ENV                 
             echo 'export BITGO_KEY=v2x9c8c188179741a91e4778ae69e76116a2ef3980dacb035737c0feb55b76367c1' >> $BASH_ENV                 
@@ -43,9 +44,12 @@ jobs: # a collection of steps
             echo 'export PUSHER_APP_ID=950556' >> $BASH_ENV
             echo 'export PUSHER_APP_KEY=36aa3b3b71a5005413cc' >> $BASH_ENV
             echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> $BASH_ENV
+            echo 'export CHAT_PUBLIC_KEY=bkuwr8d2t4hp' >> $BASH_ENV
+            echo 'export CHAT_PRIVATE_KEY=2z3xcwerqpw6cc2xx9sr3abzpbptfhm9uqmb5b97yfzxbvgjnvwx374u3jntdz6e' >> $BASH_ENV
             echo 'export IS_LOCAL_DEV=false' >> $BASH_ENV
             echo 'export LIMIT=1' >> $BASH_ENV
             echo 'export RATE=100' >> $BASH_ENV
+            echo 'export PANDA_SCORE_TOKEN=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0' >> $BASH_ENV
             source $BASH_ENV
       - run: # run tests
           name: test

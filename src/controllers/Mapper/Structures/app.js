@@ -249,6 +249,7 @@ const app_object = (object) => {
                     "_id": object.app.customization.loadingGif._id,
                     "id": !object.app.customization.loadingGif.id ? '' : object.app.customization.loadingGif.id
                 },
+                "esportsScrenner": object.app.customization.esportsScrenner,
                 "topTab": object.app.customization.topTab
             },
             "integrations": !object.app.integrations ? {} : (!object.app.integrations.chat && !object.app.integrations.mailSender && !object.app.integrations.pusher) ? object.app.customization._id : {
@@ -259,8 +260,8 @@ const app_object = (object) => {
                     "name": object.app.integrations.chat.name,
                     "metaName": object.app.integrations.chat.metaName,
                     "link": object.app.integrations.chat.link,
-                    "privateKey": object.app.integrations.chat.privateKey,
-                    "publicKey": object.app.integrations.chat.publicKey,
+                    "privateKey": !object.app.integrations.chat.privateKey ? object.app.integrations.chat.privateKey : Security.prototype.decryptData(object.app.integrations.chat.privateKey),
+                    "publicKey": !object.app.integrations.chat.publicKey ? object.app.integrations.chat.publicKey : Security.prototype.decryptData(object.app.integrations.chat.publicKey),
                     "token": object.app.integrations.chat.token
                 },
                 "cripsr": !object.app.integrations.cripsr ? {} : {
@@ -307,6 +308,7 @@ const app_object = (object) => {
             "hosting_id": object.app.hosting_id,
             "web_url": object.app.web_url,
             "addOn": object.app.addOn,
+            "esports_edge": object.app.esports_edge,
             "whitelistedAddresses": object.app.whitelistedAddresses,
             "__v": object.app.__v,
         }
