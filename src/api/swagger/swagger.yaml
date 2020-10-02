@@ -6127,6 +6127,9 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Google Tracking ID
+      isActive :
+        type : boolean
+        example: true
 
   EditEdgeJackpotRequest : 
     type: object
