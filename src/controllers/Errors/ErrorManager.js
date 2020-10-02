@@ -887,6 +887,14 @@ class ErrorManager {
         }
     }
 
+    freeCurrency = function (object, type){
+        try{
+            switch(type){}
+        }catch(err){
+            throw err
+        }
+    }
+
     balance = function (object, type){
         try{
             switch(type){}

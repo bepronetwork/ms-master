@@ -52,6 +52,7 @@ import Kyc from "./kyc";
 import Icons from "./icon";
 import MoonPay from "./moonpay";
 import SocialLink from "./socialLink";
+import FreeCurrency from "./freeCurrency";
 
 export {
     SocialLink,
@@ -108,4 +109,5 @@ export {
     PointSystem,
     ProviderToken,
     Kyc,
+    FreeCurrency,
 }

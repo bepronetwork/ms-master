@@ -2558,6 +2558,37 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
+  /app/freeCurrency/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add FreeCurrency
+      operationId: addAddonFreeCurrency
+      description: Add FreeCurrency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddAddonFreeCurrencyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /app/balance/modify:
     x-swagger-router-controller: app
@@ -2640,6 +2671,68 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/editAddonBalanceRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/freeCurrency/get:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Get freeCurrency
+      operationId: getAddonFreeCurrency
+      description: Get FreeCurrency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/getAddonFreeCurrencyRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/freeCurrency/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit freeCurrency initial
+      operationId: editAddonFreeCurrency
+      description: Edit FreeCurrency
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/editAddonFreeCurrencyRequest'
       responses:
         "200":
           description: Success
@@ -5267,6 +5360,25 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
+  
+  AddAddonFreeCurrencyRequest :
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
 
   AddAddonAutoWithdrawRequest : 
     type: object
@@ -5837,6 +5949,76 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
+  
+  editAddonFreeCurrencyRequest: 
+    type: object
+    required:
+      - app
+      - admin
+      - activated
+      - currency
+      - time
+      - value
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      activated :
+        type : boolean
+        example: true
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          ID Currency
+      time :
+        type : number
+        format: number
+        example: 1
+        description: |
+          time
+      value :
+        type : number
+        format: number
+        example: 1
+        description: |
+          value
+
+  getAddonFreeCurrencyRequest :
+    type: object
+    required:
+      - app
+      - user
+      - currency
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          User ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          ID Currency
 
   editAddonBalanceRequest : 
     type: object

@@ -426,6 +426,22 @@ class App extends ModelComponent {
         }
     }
 
+    
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+
+   async addAddonFreeCurrency() {
+    // Output = Boolean
+    try {
+        let balance = await this.process('AddAddonFreeCurrency');
+        return balance;
+    } catch (err) {
+        throw err;
+    }
+}
+
     /**
     * @param {String} 
     * @return {bool || Exception}  

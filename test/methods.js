@@ -164,6 +164,30 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async editFreeCurrency(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/freeCurrency/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async getFreeCurrency(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/freeCurrency/get')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async addAddonFreeCurrency(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/freeCurrency/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async addAddonBalance(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/balance/add')

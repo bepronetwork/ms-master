@@ -57,6 +57,7 @@ import KycRepository from "./kyc";
 import IconsRepository from "./icon";
 import MoonPayRepository from "./moonpay";
 import SocialLinkRepository from "./socialLink";
+import FreeCurrencyRepository from "./freeCurrency";
 
 export {
     SocialLinkRepository,
@@ -121,4 +122,5 @@ export {
     ProviderTokenRepository,
     CasinoProviderEcoRepository,
     KycRepository,
+    FreeCurrencyRepository,
 }

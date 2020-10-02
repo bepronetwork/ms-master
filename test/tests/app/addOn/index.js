@@ -1,4 +1,5 @@
 context('AddOn', async () => {
+    require('./freeCurrency');
     require('./balance');
     require('./jackpot');
     require('./autoWithdraw');

@@ -46,6 +46,7 @@ import { SkinSchema } from "./customization/skin";
 import { KycSchema } from "./integrations/kyc";
 import { IconsSchema } from "./customization/icon";
 import { SocialLinkSchema } from "./customization/socialLink";
+import { FreeCurrencySchema } from "./addOn/freeCurrency";
 
 export {
     SocialLinkSchema,
@@ -96,4 +97,5 @@ export {
     ProviderSchema,
     ProviderTokenSchema,
     KycSchema,
+    FreeCurrencySchema,
 }

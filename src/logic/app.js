@@ -40,10 +40,11 @@ import {
     KycRepository,
     IconsRepository,
     MoonPayRepository,
+    FreeCurrencyRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
@@ -468,6 +469,30 @@ const processActions = {
             app
         }
 		return res;
+    },
+    __addAddonFreeCurrency: async (params) => {
+        try {
+            let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+
+            let arrayCurrency = await CurrencyRepository.prototype.getAll();
+
+            let wallets = await Promise.all(arrayCurrency.map( async c => {
+                return {
+                    currency  : c._id,
+                    activated : false,
+                    time      : 3600000,
+                    value     : 0
+                }
+            }));
+            let res = {
+                app,
+                wallets
+            }
+            return res;
+        } catch(err) {
+            throw err;
+        }
     },
     __addAddonBalance : async (params) => {
         try {
@@ -1353,7 +1378,7 @@ const progressActions = {
         if(app.addOn.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.addOn.txFee._id, currency._id);
         if(app.addOn.balance)         await BalanceRepository.prototype.pushNewCurrency(app.addOn.balance._id, currency._id);
         if(app.addOn.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.addOn.depositBonus._id, currency._id);
-
+        if(app.addOn.freeCurrency)    await FreeCurrencyRepository.prototype.pushNewCurrency(app.addOn.freeCurrency._id, currency._id);
         console.log("setting user")
 
         /* Add Wallet to all Users */
@@ -1412,6 +1437,13 @@ const progressActions = {
         const autoWithdrawResult = await autoWithdraw.register();
         await addOnRepository.prototype.addAddonAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
 		return autoWithdrawResult;
+    },
+    __addAddonFreeCurrency: async (params) => {
+        const { app, wallets } = params;
+        let freeCurrency = new FreeCurrency({wallets});
+        const freeCurrencyResult = await freeCurrency.register();
+        await addOnRepository.prototype.addAddonBalance(app.addOn, freeCurrencyResult._doc._id);
+		return freeCurrencyResult;
     },
     __addAddonBalance : async (params) => {
         const { app, initialBalanceList } = params;
@@ -2328,6 +2360,9 @@ class AppLogic extends LogicComponent{
                 case 'KycWebhook' : {
                     return await library.process.__kycWebhook(params); break;
                 };
+                case 'AddAddonFreeCurrency' : {
+                    return await library.process.__addAddonFreeCurrency(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -2554,6 +2589,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'KycWebhook' : {
                     return await library.progress.__kycWebhook(params); break;
+                };
+                case 'AddAddonFreeCurrency' : {
+                    return await library.progress.__addAddonFreeCurrency(params); break;
                 };
 			}
 		}catch(error){

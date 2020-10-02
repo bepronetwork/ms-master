@@ -1,6 +1,6 @@
 
 import {
-    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance, Provider
+    Game, App, Bet, Event, AffiliateLink, User, Jackpot, Currency, Wallet, Balance, Provider, FreeCurrency
 } from '../../models';
 import SecuritySingleton from '../helpers/security';
 import MiddlewareSingleton from '../helpers/middleware';
@@ -181,6 +181,20 @@ async function modifyBalance(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.modifyBalance();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function addAddonFreeCurrency(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addAddonFreeCurrency();
         MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -380,6 +394,20 @@ async function editAddonBalance(req, res) {
         let params = req.body;
         let balance = new Balance(params);
         let data = await balance.editAddonBalance();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editAddonFreeCurrency(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let freeCurrency = new FreeCurrency(params);
+        let data = await freeCurrency.editAddonFreeCurrency();
         MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -1142,7 +1170,6 @@ async function generateAddresses(req, res) {
     }
 }
 
-
 export {
     socialLink,
     convertPoints,
@@ -1219,4 +1246,6 @@ export {
     editKycIntegration,
     editKycNeeded,
     kycWebhook,
+    addAddonFreeCurrency,
+    editAddonFreeCurrency
 };

@@ -37,6 +37,11 @@ let populate_app_add_currency_wallet = [
                 path : 'pointSystem',
                 model : 'PointSystem',
                 select : { '_id': 1}
+            },
+            {
+                path : 'freeCurrency',
+                model : 'FreeCurrency',
+                select : { '__v': 0}
             }
         ]
     },
