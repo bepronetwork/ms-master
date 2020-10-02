@@ -22,19 +22,19 @@ context('Balance', async () => {
         admin = global.test.admin;
     });
 
-    it('should add Fee Currency', mochaAsync(async () => {
+    it('should add Free Currency', mochaAsync(async () => {
         let res = await addAddonFreeCurrency({ app: app.id, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
     }));
 
-    it('should edit Fee Currency', mochaAsync(async () => {
+    it('should edit Free Currency', mochaAsync(async () => {
         console.log(app.wallet[0]);
         console.log(app.wallet[0].currency);
         let res = await editFreeCurrency({
             activated: true,
-            currency: app.wallet[0].currency,
+            currency: app.wallet[0].currency._id,
             time: 3600000,
             value: 1,
             app: app.id,
@@ -45,18 +45,18 @@ context('Balance', async () => {
         expect(status).to.be.equal(200);
     }));
 
-    it('should get Fee Currency', mochaAsync(async () => {
+    it('should get Free Currency', mochaAsync(async () => {
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456)
         }));
         var res3 = await registerUser(userPostData);
         user = res3.data.message;
 
-        let res = await getFreeCurrency({ currency: app.wallet[0].currency, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
+        let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
         expect(status).to.be.equal(200);
-        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
+        let res2 = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         const { status2 } = res2.data;
         expect(status2).to.be.equal(78);
     }));
