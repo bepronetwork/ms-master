@@ -75,6 +75,7 @@ const axios = require('axios');
 var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
+import TopUp from '../models/topUp';
 
 
 // Private fields
@@ -1271,6 +1272,16 @@ const progressActions = {
     },
     __modifyBalance : async (params) => {
         await WalletsRepository.prototype.updatePlayBalanceNotInc(params.wallet, {newBalance : params.newBalance});
+        let paramsTopUp = {
+            app: params.app,
+            admin: params.admin,
+            wallet: params.wallet,
+            currency: params.currency,
+            balance: params.newBalance,
+            reason: params.reason
+        }
+        let topUp = new TopUp(paramsTopUp);
+        await topUp.register();
         return true;
     },
     __getLogs : async (params) => {

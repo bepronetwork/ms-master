@@ -52,9 +52,11 @@ import { KycSchema } from "./integrations/kyc";
 import { IconsSchema } from "./customization/icon";
 import { SocialLinkSchema } from "./customization/socialLink";
 import { AnalyticsSchema } from "./analytics";
+import { TopUpSchema } from "./topUp";
 
 
 export {
+    TopUpSchema,
     SocialLinkSchema,
     AnalyticsSchema,
     EsportsScrennerSchema,

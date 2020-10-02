@@ -5429,6 +5429,8 @@ definitions:
       - user
       - wallet
       - newBalance
+      - reason
+      - currency
     properties:
       app :
         type : string
@@ -5448,6 +5450,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           user ID
+      currency :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Currency ID
       wallet :
         type : string
         format: name
@@ -5460,6 +5468,12 @@ definitions:
         example: 0.1
         description: |
           new balance
+      reason :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Reason Of Modify Balance
 
   AddAddonBalanceRequest :
     type: object

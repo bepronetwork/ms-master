@@ -62,8 +62,10 @@ import IconsRepository from "./icon";
 import MoonPayRepository from "./moonpay";
 import SocialLinkRepository from "./socialLink";
 import AnalyticsRepository from "./analytics";
+import TopUpRepository from "./topUp";
 
 export {
+    TopUpRepository,
     SocialLinkRepository,
     AnalyticsRepository,
     EsportsScrennerRepository,

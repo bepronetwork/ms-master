@@ -58,9 +58,11 @@ import IconsLogic from "./icon";
 import MoonPayLogic from "./moonpay";
 import SocialLinkLogic from "./socialLink"
 import AnalyticsLogic from "./analytics";
+import TopUpLogic from "./topUp";
 
 
 export {
+    TopUpLogic,
     SocialLinkLogic,
     AnalyticsLogic,
     EsportsScrennerLogic,
