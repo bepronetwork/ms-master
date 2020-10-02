@@ -51,6 +51,7 @@ context('Balance', async () => {
         }));
         var res3 = await registerUser(userPostData);
         user = res3.data.message;
+        console.log(user);
 
         let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
