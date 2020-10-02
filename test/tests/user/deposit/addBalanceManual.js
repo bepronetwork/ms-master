@@ -15,7 +15,6 @@ context('Add Balance Manual', async () => {
         admin           = global.test.admin;
         user            = (await getUserAuth({user : global.test.user.id, app: app.id}, global.test.user.bearerToken, {id : global.test.user.id})).data.message;
         wallet          = user.wallet[0];
-        console.log("Wallet:: ",wallet)
         previousBalance = wallet.playBalance;
     });
 
