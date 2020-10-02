@@ -1560,7 +1560,7 @@ const progressActions = {
         console.log(freeCurrencyResult);
         console.log(freeCurrencyResult._doc);
         console.log(freeCurrencyResult._doc._id);
-        await addOnRepository.prototype.addAddonBalance(app.addOn, freeCurrencyResult._doc._id);
+        await addOnRepository.prototype.addAddonFreeCurrency(app.addOn, freeCurrencyResult._doc._id);
 		return freeCurrencyResult;
     },
     __addAddonBalance : async (params) => {
