@@ -30,6 +30,8 @@ context('Balance', async () => {
     }));
 
     it('should edit Fee Currency', mochaAsync(async () => {
+        console.log(app.wallet[0]);
+        console.log(app.wallet[0].currency);
         let res = await editFreeCurrency({
             activated: true,
             currency: app.wallet[0].currency,
