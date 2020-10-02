@@ -57,7 +57,6 @@ context('Balance', async () => {
         const { status } = res.data;
         expect(status).to.be.equal(200);
         let res2 = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
-        const { status2 } = res2.data;
-        expect(status2).to.be.equal(78);
+        expect(res2.data.status).to.be.equal(78);
     }));
 });
