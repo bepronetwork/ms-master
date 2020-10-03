@@ -2771,6 +2771,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/compliance/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get compliance
+      operationId: getCompliance
+      description: Get Compliance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/getComplianceFileRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/freeCurrency/get:
     x-swagger-router-controller: user
     post:
@@ -5388,6 +5419,40 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Currency ID
+
+  getComplianceFileRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          admin ID
+      size:
+        type : number
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+
   AppGetUsersBetsRequest:
     type: object
     required:

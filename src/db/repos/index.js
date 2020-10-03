@@ -64,6 +64,7 @@ import SocialLinkRepository from "./socialLink";
 import FreeCurrencyRepository from "./freeCurrency";
 import AnalyticsRepository from "./analytics";
 import TopUpRepository from "./topUp";
+import ComplianceFileRepository from "./complianceFile";
 
 export {
     TopUpRepository,
@@ -135,4 +136,5 @@ export {
     CasinoProviderEcoRepository,
     KycRepository,
     FreeCurrencyRepository,
+    ComplianceFileRepository,
 }

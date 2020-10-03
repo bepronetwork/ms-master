@@ -764,6 +764,21 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
+   async getCompliance() {
+        try {
+            //return Boolean
+            let app = await this.process('GetCompliance');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
 
 
     async editVideogameEdge() {

@@ -44,7 +44,8 @@ import {
     IconsRepository,
     MoonPayRepository,
     FreeCurrencyRepository,
-    AnalyticsRepository
+    AnalyticsRepository,
+    ComplianceFileRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -338,6 +339,16 @@ const processActions = {
         }
 
        return normalized;
+    },
+    __getCompliance : async (params) => {
+        const res = await ComplianceFileRepository.prototype.getComplianceByApp({
+            app : params.app,
+            offset: params.offset,
+            size : params.size,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return res;
     },
     __appGetUsersBets : async (params) => {
         var res = ""
@@ -1290,6 +1301,9 @@ const progressActions = {
         return res;
     },
     __appGetUsersBets : async (params) => {
+        return params;
+    },
+    __getCompliance: async (params) => {
         return params;
     },
     __appGetUsersBetsEsports : async (params) => {
@@ -2556,6 +2570,9 @@ class AppLogic extends LogicComponent{
                 case 'AddAddonFreeCurrency' : {
                     return await library.process.__addAddonFreeCurrency(params); break;
                 };
+                case 'GetCompliance' : {
+                    return await library.process.__getCompliance(params); break;
+                };
 			}
 		}catch(error){
 			throw error
@@ -2810,6 +2827,10 @@ class AppLogic extends LogicComponent{
                 case 'AddAddonFreeCurrency' : {
                     return await library.progress.__addAddonFreeCurrency(params); break;
                 };
+                case 'GetCompliance' : {
+                    return await library.progress.__getCompliance(params); break;
+                };
+                
 			}
 		}catch(error){
 			throw error;

@@ -54,6 +54,7 @@ import { SocialLinkSchema } from "./customization/socialLink";
 import { FreeCurrencySchema } from "./addOn/freeCurrency";
 import { AnalyticsSchema } from "./analytics";
 import { TopUpSchema } from "./topUp";
+import { ComplianceFileSchema } from "./complianceFile";
 
 export {
     TopUpSchema,
@@ -112,4 +113,5 @@ export {
     ProviderTokenSchema,
     KycSchema,
     FreeCurrencySchema,
+    ComplianceFileSchema
 }
