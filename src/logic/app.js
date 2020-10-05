@@ -1314,6 +1314,7 @@ const progressActions = {
         let paramsTopUp = {
             app: params.app,
             admin: params.admin,
+            user: params.user,
             wallet: params.wallet,
             currency: params.currency,
             balance: params.newBalance,
@@ -1851,11 +1852,11 @@ const progressActions = {
         /* Update Integrations Id Type */
         switch(integration_type){
             case 'live_chat' : {
-                await ChatRepository.prototype.findByIdAndUpdate(integration_id, {
+                await ChatRepository.prototype.findByIdAndUpdateChat({
                     publicKey,
                     privateKey, 
                     integration_type,
-                    integration_id,
+                    _id: integration_id,
                     isActive
                 })
             }
