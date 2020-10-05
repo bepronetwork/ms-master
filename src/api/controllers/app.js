@@ -1211,6 +1211,21 @@ async function editVideogameEdge(req, res) {
 	}
 }
 
+async function getCompliance(req, res) {
+    try{
+        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getCompliance();
+        await MiddlewareSingleton.log({type: "admin", req, code: 200});
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+
 export {
     editAnalyticsKey,
     editEsportScrenner,
@@ -1291,5 +1306,6 @@ export {
     editKycNeeded,
     kycWebhook,
     addAddonFreeCurrency,
-    editAddonFreeCurrency
+    editAddonFreeCurrency,
+    getCompliance
 };
