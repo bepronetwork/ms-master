@@ -39,14 +39,14 @@ class ChatRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate(_id, newStructure){
+    findByIdAndUpdateChat({_id, publicKey, privateKey, isActive}){
         return new Promise( (resolve,reject) => {
             ChatRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
                 { $set: { 
-                    "publicKey" : newStructure.publicKey,
-                    "privateKey" : newStructure.privateKey,
-                    "isActive"   : newStructure.isActive
+                    "publicKey" : publicKey,
+                    "privateKey" : privateKey,
+                    "isActive": isActive
                 } },
                 { 'new': true })
                 .lean()
