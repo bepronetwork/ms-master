@@ -609,6 +609,10 @@ const progressActions = {
                 })).register())._doc._id;
             }));
 
+            params.lastTimeCurrencyFree = app.wallet.map(w => {
+                return {currency: w.currency._id, date: 0}
+            })
+
             let user = await self.save(params);
 
             /* Register of Affiliate Link */
