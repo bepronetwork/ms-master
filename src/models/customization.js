@@ -35,12 +35,7 @@ class Customization extends ModelComponent {
                             {
                                 name: "Casino",
                                 icon: "https://i.ibb.co/h96g1bx/Casino.png",
-                                link_url: "/casino"
-                            },
-                            {
-                                name: "Esports",
-                                icon: "https://i.ibb.co/F6RLGVz/Esports.png",
-                                link_url: "/esports"
+                                link_url: "/"
                             }
                         ]
                     }),
