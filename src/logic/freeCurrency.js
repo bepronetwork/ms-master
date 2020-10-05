@@ -54,14 +54,15 @@ const processActions = {
                 throwError("CURRENCY_NOT_EXISTENT");
             }
             let freeCurrencyWallet = app.addOn.freeCurrency.wallets.find((w)=>String(w.currency).toString()==String(params.currency).toString());
-            if(user.lastTimeCurrencyFree+freeCurrencyWallet.time > (new Date()).getTime()) {
+            if(user.lastTimeCurrencyFree.find((w)=>String(w.currency).toString()==String(params.currency).toString()).date+freeCurrencyWallet.time > (new Date()).getTime()) {
                 throwError("NO_FREE_CURRENCY");
             }
             return {
                 freeCurrency : freeCurrencyWallet,
                 userWallet,
                 user,
-                appWallet
+                appWallet,
+                currency: params.currency
             };
         }catch(err){
             throw err;
@@ -96,10 +97,10 @@ const progressActions = {
     },
     __getAddonFreeCurrency: async (params) => {
         try {
-            let { freeCurrency, appWallet, userWallet, user } = params;
+            let { freeCurrency, appWallet, userWallet, user, currency } = params;
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -freeCurrency.value);
             await WalletsRepository.prototype.updatePlayBalance(userWallet._id, freeCurrency.value);
-            await UsersRepository.prototype.updateLastTimeCurrencyFree(user._id, (new Date()).getTime());
+            await UsersRepository.prototype.updateLastTimeCurrencyFree(user._id, (new Date()).getTime(), currency);
 
             return {value:freeCurrency.value};
         }catch(err){

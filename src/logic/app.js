@@ -1571,9 +1571,6 @@ const progressActions = {
         const { app, wallets } = params;
         let freeCurrency = new FreeCurrency({wallets});
         const freeCurrencyResult = await freeCurrency.register();
-        console.log(freeCurrencyResult);
-        console.log(freeCurrencyResult._doc);
-        console.log(freeCurrencyResult._doc._id);
         await addOnRepository.prototype.addAddonFreeCurrency(app.addOn, freeCurrencyResult._doc._id);
 		return freeCurrencyResult;
     },

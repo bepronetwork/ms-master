@@ -79,11 +79,11 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    updateLastTimeCurrencyFree(_id, newDate){
+    updateLastTimeCurrencyFree(_id, newDate, currency){
         return new Promise( (resolve, reject) => {
-            UsersRepository.prototype.schema.model.findOneAndUpdate(
-                {_id},
-                { $set: { "lastTimeCurrencyFree" : newDate } }
+            UsersRepository.prototype.schema.model.updateOne(
+                {_id, "lastTimeCurrencyFree.currency": currency},
+                { $set: { "lastTimeCurrencyFree.$.date" : newDate } }
             )
             .exec( (err, App) => {
                 if(err) { reject(err)}
