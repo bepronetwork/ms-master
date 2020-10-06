@@ -93,6 +93,7 @@ ErrorHandler.prototype.KEYS =  {
     'MINIMUM_PASSWORD_LENGTH'               : "076",
     'REGISTER_NOT_CURRENCY_ADDED'           : "077",
     'NO_FREE_CURRENCY'                      : "078",
+    'FREE_CURRENCY_NO_ACTIVATED'            : "079",
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {

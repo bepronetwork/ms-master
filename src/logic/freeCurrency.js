@@ -54,6 +54,9 @@ const processActions = {
                 throwError("CURRENCY_NOT_EXISTENT");
             }
             let freeCurrencyWallet = app.addOn.freeCurrency.wallets.find((w)=>String(w.currency).toString()==String(params.currency).toString());
+            if(!freeCurrencyWallet.activated){
+                throwError("FREE_CURRENCY_NO_ACTIVATED");
+            }
             if(user.lastTimeCurrencyFree.find((w)=>String(w.currency).toString()==String(params.currency).toString()).date+freeCurrencyWallet.time > (new Date()).getTime()) {
                 throwError("NO_FREE_CURRENCY");
             }
