@@ -314,5 +314,9 @@
     "078" : {
         "key" : "NO_FREE_CURRENCY",
         "message"   : "sorry, but you still can't get free currency, if you have any problems call support"
+    },
+    "079" : {
+        "key" : "FREE_CURRENCY_NO_ACTIVATED",
+        "message"   : "sorry, but you still isn't activated, if you have any problems call support"
     }
 }
