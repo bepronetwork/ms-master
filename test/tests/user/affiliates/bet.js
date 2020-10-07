@@ -5,11 +5,12 @@ import { editAppStructure, getApp, getUserInfo, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
 import { digestBetResult } from '../../../utils/bet';
 const perf = require('execution-time')();
+import { WalletsRepository } from "../../../../src/db/repos";
 
 const expect = chai.expect;
 const ticker = 'ETH';
-const ethDepositAmount = 0.1;
-const betAmount = 0.01;
+const ethDepositAmount = 1;
+const betAmount = 0.000001;
 const metaName = 'european_roulette_simple';
 
 const inputs = {
@@ -27,6 +28,7 @@ context('Bet', async () => {
         game = app.games.find( game => game.metaName == metaName);
         currencyWallet = (app.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         currency = currencyWallet.currency;
+        await WalletsRepository.prototype.updatePlayBalance(currencyWallet._id, 1)
     });
 
     it('it should Set Maximum Bet - Affiliates', mochaAsync(async () => {
@@ -66,6 +68,7 @@ context('Bet', async () => {
         var user_3_currrencyWallet = (user_3.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
         await provideFunds({wallet : user_3_currrencyWallet._id, amount : ethDepositAmount});
+        await WalletsRepository.prototype.updatePlayBalance(user_3_currrencyWallet._id, 2)
 
         /* Get Info for User 2 before Bet */
         user_3_before_info = await getUserInfo({user : user_3 , app, currency:"5e108498049eba079930ae1c"});
