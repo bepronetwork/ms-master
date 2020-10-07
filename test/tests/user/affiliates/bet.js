@@ -81,6 +81,7 @@ context('Bet', async () => {
             detectValidationErrors(bet_res);
 
             const { message } = bet_res.data;
+            console.log(message);
             res = bet_res;
             wasWon = message.isWon;
             jackpotAmount = message.jackpotAmount;
