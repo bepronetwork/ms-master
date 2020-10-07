@@ -137,9 +137,21 @@ Object.keys(currenciesBetAmount).forEach( async key => {
             app: app.id,
             currency : currency._id,
             nonce: getRandom(123,2384723),
-            result: [{
-                place: 0, value: betAmount
-            }]
+            result: [
+                {place: 0, value: betAmount/13},
+                {place: 1, value: betAmount/13},
+                {place: 2, value: betAmount/13},
+                {place: 3, value: betAmount/13},
+                {place: 4, value: betAmount/13},
+                {place: 5, value: betAmount/13},
+                {place: 6, value: betAmount/13},
+                {place: 7, value: betAmount/13},
+                {place: 8, value: betAmount/13},
+                {place: 9, value: betAmount/13},
+                {place: 10, value: betAmount/13},
+                {place: 11, value: betAmount/13},
+                {place: 12, value: betAmount/13}
+            ]
         };
 
         res = await placeBet(postData, user.bearerToken, {id : user.id});
