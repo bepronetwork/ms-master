@@ -11,6 +11,7 @@ import faker from 'faker';
 
 import Random from '../../../tools/Random';
 import models from '../../../models';
+import { WalletsRepository } from '../../../../src/db/repos';
 const expect = chai.expect;
 
 const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
@@ -51,6 +52,8 @@ context('Balance', async () => {
         await registerUser(userPostData);
         var dataUser = (await loginUser(userPostData)).data.message;
         user = dataUser;
+
+        await WalletsRepository.prototype.updatePlayBalance(app.wallet[0]._id, 1);
 
         let res = await getFreeCurrency({ currency: app.wallet[0].currency._id, app: app.id, user: user.id }, user.bearerToken, { id: user.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
