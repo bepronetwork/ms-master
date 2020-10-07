@@ -47,6 +47,10 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
+export const MS_ESPORTS_URL = process.env.MS_ESPORTS_URL;
+
+export const WEBSOCKET_ESPORTS = process.env.WEBSOCKET_ESPORTS;
+
 export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
 
 export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
@@ -73,6 +77,8 @@ export const IS_TEST = process.env.IS_TEST;
 
 export const IS_LOCAL_DEV = process.env.IS_LOCAL_DEV;
 
+export const PANDA_SCORE_TOKEN = process.env.PANDA_SCORE_TOKEN;
+
 export const LOGOWL_TICKET = process.env.LOGOWL_TICKET;
 
 export const USER_KEY = process.env.USER_KEY;
@@ -82,6 +88,10 @@ export const CRYPTO_API = process.env.CRYPTO_API;
 export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
 export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
+
+export const CHAT_PRIVATE_KEY = process.env.CHAT_PRIVATE_KEY;
+
+export const CHAT_PUBLIC_KEY = process.env.CHAT_PUBLIC_KEY;
 
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;

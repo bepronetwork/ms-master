@@ -33,6 +33,10 @@ UserSchema.prototype.schema = {
     points              : { type: Number, required : true, default: 0 },
     kyc_needed          : { type : Boolean, default : false },
     kyc_status          : { type : String, default : "no kyc" },
+    lastTimeCurrencyFree: [{
+        currency  : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency'},
+        date      : { type: Number, default : 0}
+    }]
 }
 
 let userInstance = new db.Schema(UserSchema.prototype.schema);

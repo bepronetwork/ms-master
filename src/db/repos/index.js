@@ -46,6 +46,10 @@ import { BiggestBetWinnerRepository, BiggestUserWinnerRepository, LastBetsReposi
 import TxFeeRepository from "./txFee";
 import BackgroundRepository from "./background";
 import DepositBonusRepository from "./depositBonus";
+import BetEsportsRepository from "./betEsports";
+import MatchRepository from "./match";
+import VideogameRepository from "./videogame";
+import EsportsScrennerRepository from "./esports_screnner";
 import PointSystemRepository from "./pointSystem";
 import TopTabRepository from "./topTab";
 import SubSectionsRepository from "./subSections";
@@ -57,9 +61,17 @@ import KycRepository from "./kyc";
 import IconsRepository from "./icon";
 import MoonPayRepository from "./moonpay";
 import SocialLinkRepository from "./socialLink";
+import FreeCurrencyRepository from "./freeCurrency";
+import AnalyticsRepository from "./analytics";
+import TopUpRepository from "./topUp";
+import ComplianceFileRepository from "./complianceFile";
 
 export {
+    TopUpRepository,
     SocialLinkRepository,
+    AnalyticsRepository,
+    EsportsScrennerRepository,
+    BetEsportsRepository,
     MoonPayRepository,
     IconsRepository,
     SkinRepository,
@@ -116,9 +128,13 @@ export {
     PermissionRepository,
     AutoWithdrawRepository,
     BackgroundRepository,
+    MatchRepository,
+    VideogameRepository,
     PointSystemRepository,
     SubSectionsRepository,
     ProviderTokenRepository,
     CasinoProviderEcoRepository,
     KycRepository,
+    FreeCurrencyRepository,
+    ComplianceFileRepository,
 }

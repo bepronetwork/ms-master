@@ -24,6 +24,7 @@ let outputs = {
             "id": object._id,
             "name": object.name,
             "email_confirmed": object.email_confirmed,
+            "lastTimeCurrencyFree": !object.lastTimeCurrencyFree ? object.wallet.map(w => {return {currency: w.currency._id, date: 0}}) : object.lastTimeCurrencyFree,
             "wallet": object.wallet ? object.wallet.map(wallet => {
                 return ({
                     "_id": wallet._id,

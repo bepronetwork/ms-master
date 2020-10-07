@@ -19,6 +19,11 @@ const get_object = (object) => {
                 "providerEco": casino_provider.providerEco,
             })
         }) : object.casino_providers,
+        "analytics": object.analytics ? {
+            "_id": object.analytics._id,
+            "google_tracking_id": !object.analytics.google_tracking_id ? object.analytics.google_tracking_id : Security.prototype.decryptData(object.analytics.google_tracking_id),
+            "isActive": !object.analytics.isActive ? false : object.analytics.isActive
+        } : object.analytics,
         "storeAddOn": object.storeAddOn,
         "virtual": object.virtual,
         "licenseID": object.licenseID,
@@ -161,6 +166,7 @@ const get_object = (object) => {
                 "_id": object.customization.loadingGif._id,
                 "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
             },
+            "esportsScrenner": object.customization.esportsScrenner,
             "topTab": object.customization.topTab
         },
         "integrations": !object.integrations ? {} : {
@@ -171,8 +177,8 @@ const get_object = (object) => {
                 "name": object.integrations.chat.name,
                 "metaName": object.integrations.chat.metaName,
                 "link": object.integrations.chat.link,
-                "privateKey": object.integrations.chat.privateKey,
-                "publicKey": object.integrations.chat.publicKey,
+                "privateKey": !object.integrations.chat.privateKey ? object.integrations.chat.privateKey : Security.prototype.decryptData(object.integrations.chat.privateKey),
+                "publicKey": !object.integrations.chat.publicKey ? object.integrations.chat.publicKey : Security.prototype.decryptData(object.integrations.chat.publicKey),
                 "token": object.integrations.chat.token
             },
             "cripsr": !object.integrations.cripsr ? {} : {
@@ -218,9 +224,10 @@ const get_object = (object) => {
         "description": object.description,
         "hosting_id": object.hosting_id,
         "web_url": object.web_url,
+        "esports_edge": object.esports_edge,
         "addOn": object.addOn ? {
             ...object.addOn._doc,
-            jackpot: object.addOn.jackpot ? {
+            jackpot: object.addOn.jackpot ?  {
                 ...object.addOn.jackpot._doc,
                 bets: [],
                 resultSpace: []

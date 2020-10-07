@@ -35,6 +35,11 @@ let populate_app_simple = [
                 path : 'pointSystem',
                 model : 'PointSystem',
                 select : { '__v': 0}
+            },
+            {
+                path : 'freeCurrency',
+                model : 'FreeCurrency',
+                select : { '__v': 0}
             }
         ]
     },
@@ -99,6 +104,11 @@ let populate_app_simple = [
     {
         path : 'casino_providers',
         model : 'Provider',
+        select : { '__v': 0}
+    },
+    {
+        path : 'analytics',
+        model : 'Analytics',
         select : { '__v': 0}
     }
 ] 

@@ -7,12 +7,14 @@ import {
     pipeline_user_wallet,
     pipeline_all_users_balance,
     pipeline_my_bets,
+    pipeline_bets_esports,
     pipeline_user_specific_stats
 } from './pipelines/user';
 import { populate_user, populate_user_simple, populate_user_wallet, populate_users, populate_user_to_bet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { usersFromAppFiltered } from './pipelines/user/users_from_app';
 import { BetRepository } from "./";
+import BetEsportsRepository from './betEsports';
 /**
  * Accounts database interaction class.
  *
@@ -75,6 +77,19 @@ class UsersRepository extends MongoComponent{
         }catch(err){
             throw (err)
         }
+    }
+
+    updateLastTimeCurrencyFree(_id, newDate, currency){
+        return new Promise( (resolve, reject) => {
+            UsersRepository.prototype.schema.model.updateOne(
+                {_id, "lastTimeCurrencyFree.currency": currency},
+                { $set: { "lastTimeCurrencyFree.$.date" : newDate } }
+            )
+            .exec( (err, App) => {
+                if(err) { reject(err)}
+                resolve(App);
+            });
+        });
     }
 
     async findUserByIdAppId({app}){
@@ -231,6 +246,21 @@ class UsersRepository extends MongoComponent{
                         data=[]
                         reject(err)
                     }
+                    resolve(data.slice(0, size));
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    getBetsEsports({_id, size, dates, currency, type, offset, slug}){
+        try{
+            return new Promise( (resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model
+                .aggregate(pipeline_bets_esports(_id,{ size, dates, currency, type, offset, slug  }))
+                .exec( (err, data) => {
+                    if(err) { reject(err)}
                     resolve(data.slice(0, size));
                 });
             });

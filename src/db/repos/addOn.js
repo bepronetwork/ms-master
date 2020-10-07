@@ -71,6 +71,22 @@ class AddOnRepository extends MongoComponent{
         });
     }
 
+    addAddonFreeCurrency(addOn_id, freeCurrency){ 
+        return new Promise( (resolve, reject) => {
+            AddOnRepository.prototype.schema.model.findByIdAndUpdate(
+                addOn_id,
+                {
+                    $set: {freeCurrency}
+                }
+            )
+            .lean()
+            .exec((err, item) => {
+                if(err){reject(err)}
+                resolve(item);
+            });
+        });
+    }
+
     addAddonAutoWithdraw(addOn_id, autoWithdraw){
         return new Promise( (resolve, reject) => {
             AddOnRepository.prototype.schema.model.findByIdAndUpdate(

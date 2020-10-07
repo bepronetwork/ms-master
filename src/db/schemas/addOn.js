@@ -12,6 +12,7 @@ AddOnSchema.prototype.schema =  {
     txFee         : { type : mongoose.Schema.Types.ObjectId, ref: 'TxFee' },
     depositBonus  : { type : mongoose.Schema.Types.ObjectId, ref: 'DepositBonus' },
     pointSystem   : { type : mongoose.Schema.Types.ObjectId, ref: 'PointSystem' },
+    freeCurrency  : { type : mongoose.Schema.Types.ObjectId, ref: 'FreeCurrency' },
 }
 
 

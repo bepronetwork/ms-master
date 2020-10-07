@@ -551,6 +551,16 @@ class ErrorManager {
         }
     }
 
+    analytics = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     kyc = function (object, type){
         try{
             switch(type){
@@ -571,6 +581,16 @@ class ErrorManager {
         }
     }
 
+    topUp = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     socialLink = function (object, type){
         try{
             switch(type){
@@ -582,6 +602,16 @@ class ErrorManager {
     }
 
     mailSender = function (object, type){
+        try{
+            switch(type){
+              
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    esportsScrenner = function (object, type){
         try{
             switch(type){
               
@@ -882,6 +912,14 @@ class ErrorManager {
             switch(type){
                
             }
+        }catch(err){
+            throw err
+        }
+    }
+
+    freeCurrency = function (object, type){
+        try{
+            switch(type){}
         }catch(err){
             throw err
         }

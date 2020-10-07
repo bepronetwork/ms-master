@@ -1,9 +1,9 @@
-const pipeline_by_timestamp = ({ from_date, to_date }) => {
-    if ((!from_date) || (!to_date)) { return {} };
+const pipeline_bets_by_timestamp = ({ begin_at, end_at }) => {
+    if ((!begin_at) || (!end_at)) { return {} };
     return [
         {
             '$match': {
-                'timestamp': { '$gte': from_date, '$lte': to_date }
+                'timestamp': { '$gte': new Date(begin_at), '$lte': new Date(end_at) }
             }
         }
     ]
@@ -11,7 +11,7 @@ const pipeline_by_timestamp = ({ from_date, to_date }) => {
 
 
 export {
-    pipeline_by_timestamp
+    pipeline_bets_by_timestamp
 }
 
 

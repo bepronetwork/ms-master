@@ -267,6 +267,7 @@ const processActions = {
 
         let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
+        if(app.wallet.length<=0) {throwError("REGISTER_NOT_CURRENCY_ADDED");}
 
         let balanceInitial = null;
         if(app.addOn != null) {
@@ -467,18 +468,24 @@ const processActions = {
         }
     },
     __getBets: async (params) => {
-        if(!params.currency){
-            params.currency = null
-        }
-        if(!params.game){
-            params.game = null
-        }
         let bets = await UsersRepository.prototype.getBets({
             _id: params.user,
             size: params.size,
             offset: params.offset,
+            currency: !params.currency ? null : params.currency,
+            game : !params.game ? null : params.game,
+            dates: fromPeriodicityToDates({ periodicity: params.periodicity })
+        });
+        return bets;
+    },
+    __getBetsEsports: async (params) => {
+        let bets = await UsersRepository.prototype.getBetsEsports({
+            _id: params.user,
+            size: params.size,
+            offset: params.offset,
             currency: params.currency,
-            game : params.game,
+            type: params.type,
+            slug : params.slug,
             dates: fromPeriodicityToDates({ periodicity: params.periodicity })
         });
         return bets;
@@ -601,6 +608,10 @@ const progressActions = {
                     playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
                 })).register())._doc._id;
             }));
+
+            params.lastTimeCurrencyFree = app.wallet.map(w => {
+                return {currency: w.currency._id, date: 0}
+            })
 
             let user = await self.save(params);
 
@@ -860,6 +871,9 @@ const progressActions = {
     __getBets: async (params) => {
         return params;
     },
+    __getBetsEsports: async (params) => {
+        return params;
+    },
     __getInfo: async (params) => {
         return params;
     },
@@ -948,6 +962,9 @@ class UserLogic extends LogicComponent {
                 case 'GetBets': {
                     return await library.process.__getBets(params); break;
                 };
+                case 'GetBetsEsports': {
+                    return await library.process.__getBetsEsports(params); break;
+                };
                 case 'GetInfo': {
                     return await library.process.__getInfo(params); break;
                 };
@@ -1024,6 +1041,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'GetBets': {
                     return await library.progress.__getBets(params); break;
+                };
+                case 'GetBetsEsports': {
+                    return await library.progress.__getBetsEsports(params); break;
                 };
                 case 'GetInfo': {
                     return await library.progress.__getInfo(params); break;

@@ -42,6 +42,7 @@ import LastBets from "./lastBets";
 import Background from "./background";
 import PopularNumberLogic from "./popularNumber";
 import DepositBonus from "./depositBonus";
+import EsportsScrenner from "./esports_screnner";
 import PointSystem from "./pointSystem";
 import TopTab from "./topTab";
 import Provider from "./provider";
@@ -52,9 +53,13 @@ import Kyc from "./kyc";
 import Icons from "./icon";
 import MoonPay from "./moonpay";
 import SocialLink from "./socialLink";
+import FreeCurrency from "./freeCurrency";
+import Analytics from "./analytics";
 
 export {
     SocialLink,
+    Analytics,
+    EsportsScrenner,
     MoonPay,
     Icons,
     Skin,
@@ -108,4 +113,5 @@ export {
     PointSystem,
     ProviderToken,
     Kyc,
+    FreeCurrency,
 }
