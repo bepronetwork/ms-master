@@ -4,6 +4,7 @@ import chai from 'chai';
 import { editAppStructure, getApp, getUserInfo, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
 import { digestBetResult } from '../../../utils/bet';
+import { WalletsRepository } from '../../../../src/db/repos';
 const perf = require('execution-time')();
 
 const expect = chai.expect;
@@ -71,6 +72,11 @@ context('Bet', async () => {
         user_3_before_info = await getUserInfo({user : user_3 , app, currency:"5e108498049eba079930ae1c"});
         var wasWon = true;
         console.log("TESTE-HERE ", '1');
+
+
+        let walletApp = app_data_before.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        await WalletsRepository.prototype.updatePlayBalance(walletApp._id, 10);
+
         /* Creater User Bet */
         while(wasWon){
             console.log(1);
