@@ -62,7 +62,7 @@ context('Bet', async () => {
         user_3 = {...user_3_before_info, eth_account : user_3.eth_account};
 
         /* Get Info for App before Bet */
-        const app_data_before = (await getApp({app, admin})).data.message;
+        let app_data_before = (await getApp({app, admin})).data.message;
 
         var user_3_currrencyWallet = (user_3.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
@@ -76,6 +76,8 @@ context('Bet', async () => {
 
         let walletApp = app_data_before.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
         await WalletsRepository.prototype.updatePlayBalance(walletApp._id, 10);
+
+        app_data_before = (await getApp({app, admin})).data.message;
 
         /* Creater User Bet */
         while(wasWon){
