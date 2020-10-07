@@ -70,8 +70,10 @@ context('Bet', async () => {
         /* Get Info for User 2 before Bet */
         user_3_before_info = await getUserInfo({user : user_3 , app, currency:"5e108498049eba079930ae1c"});
         var wasWon = true;
+        console.log("TESTE-HERE ", '1');
         /* Creater User Bet */
         while(wasWon){
+            console.log(1);
             var BET_RESULT = [{
                 place: 1, value: betAmount
             }];
@@ -81,12 +83,13 @@ context('Bet', async () => {
             detectValidationErrors(bet_res);
 
             const { message } = bet_res.data;
-            console.log(message);
+            console.log("TESTE-HERE ", message);
             res = bet_res;
             wasWon = message.isWon;
             jackpotAmount = message.jackpotAmount;
             fee = message.fee;
             betAmountWithoutJackpotAndFee = message.betAmount;
+            console.log(2);
         }
         const { status } = bet_res.data;
         /* Confirm Bet was valid */
