@@ -318,5 +318,9 @@
     "079" : {
         "key" : "FREE_CURRENCY_NO_ACTIVATED",
         "message"   : "sorry, but you still isn't activated, if you have any problems call support"
+    },
+    "080" : {
+        "key"      : "INSUFFICIENT_FUNDS_APP",
+        "message"   : "Seems of casino don´t have enought funds to procced with this transaction."
     }
 }

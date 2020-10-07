@@ -60,6 +60,9 @@ const processActions = {
             if(user.lastTimeCurrencyFree.find((w)=>String(w.currency).toString()==String(params.currency).toString()).date+freeCurrencyWallet.time > (new Date()).getTime()) {
                 throwError("NO_FREE_CURRENCY");
             }
+            if(appWallet.playBalance < freeCurrencyWallet.value) {
+                throwError("INSUFFICIENT_FUNDS_APP");
+            }
             return {
                 freeCurrency : freeCurrencyWallet,
                 userWallet,
