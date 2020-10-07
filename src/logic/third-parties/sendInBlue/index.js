@@ -62,6 +62,9 @@ class SendInBlue {
             return data;
         } catch (error) {
             console.log({ status: error.status, message: error.message, origin: "SendInBlue-createAttribute" })
+            return {
+                error: true
+            }
         }
 
     }
@@ -78,6 +81,9 @@ class SendInBlue {
 
         } catch (error) {
             console.log({ status: error.status, message: error.message, origin: "SendInBlue-createContact" })
+            return {
+                error: true
+            }
         }
     }
 
@@ -91,6 +97,9 @@ class SendInBlue {
             return data;
         } catch (error) {
             console.log({ status: error.status, message: error.message, origin: "SendInBlue-updateContact" })
+            return {
+                error: true
+            }
         }
 
     }
@@ -108,6 +117,9 @@ class SendInBlue {
             return data;
         } catch (error) {
             console.log({ status: error.status, message: error.message, origin: "SendInBlue-getContacts" })
+            return {
+                error: true
+            }
         }
     }
 
@@ -125,6 +137,9 @@ class SendInBlue {
             return data;
         } catch (error) {
             console.log({ status: error.status, message: error.message, origin: "SendInBlue-sendTemplate" })
+            return {
+                error: true
+            }
         }
 
     }

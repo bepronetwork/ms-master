@@ -36,10 +36,12 @@ class Mailer {
                 let templateId = template.template_id;
                 let listIds = template.contactlist_Id;
 
-                try {
-                    await sendinBlueClient.createContact(user.email, attributes, [listIds]);
-                } catch (e) {
-                    await sendinBlueClient.updateContact(user.email, attributes);
+                const createContact = await sendinBlueClient.createContact(user.email, attributes, [listIds]);
+                console.log("createContact:: ", createContact)
+                if(createContact.error){
+                    console.log("Entrou no update contact")
+                    let update = await sendinBlueClient.updateContact(user.email, attributes);
+                    console.log("Update:: ", update)
                 }
                 await sendinBlueClient.sendTemplate(templateId, [user.email]);
             }
