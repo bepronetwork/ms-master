@@ -29,7 +29,7 @@ module.exports = {
         name: "Free Currency",
         description: "Free Currency",
         image_url: 'https://i.ibb.co/7J4HBKw/bonus.png',
-        price: "0",
+        price: 0,
         endpoint: "/app/freeCurrency/add",
       });
     } else {
@@ -41,7 +41,7 @@ module.exports = {
             $set: {
               description: "Free Currency",
               image_url: 'https://i.ibb.co/7J4HBKw/bonus.png',
-              price: "0",
+              price: 0,
               endpoint: "/app/freeCurrency/add"
             }
           }
