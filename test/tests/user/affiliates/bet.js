@@ -4,6 +4,7 @@ import chai from 'chai';
 import { editAppStructure, getApp, getUserInfo, bet } from '../../../services';
 import { provideFunds } from '../../../utils/env';
 import { digestBetResult } from '../../../utils/bet';
+import { WalletsRepository } from '../../../../src/db/repos';
 const perf = require('execution-time')();
 
 const expect = chai.expect;
@@ -61,7 +62,7 @@ context('Bet', async () => {
         user_3 = {...user_3_before_info, eth_account : user_3.eth_account};
 
         /* Get Info for App before Bet */
-        const app_data_before = (await getApp({app, admin})).data.message;
+        let app_data_before = (await getApp({app, admin})).data.message;
 
         var user_3_currrencyWallet = (user_3.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase()));
         /* Send Tokens to User */
@@ -70,6 +71,12 @@ context('Bet', async () => {
         /* Get Info for User 2 before Bet */
         user_3_before_info = await getUserInfo({user : user_3 , app, currency:"5e108498049eba079930ae1c"});
         var wasWon = true;
+
+        let walletApp = app_data_before.wallet.find( w => new String(w.currency.ticker).toLowerCase() == new String(ticker).toLowerCase());
+        await WalletsRepository.prototype.updatePlayBalance(walletApp._id, 10);
+
+        app_data_before = (await getApp({app, admin})).data.message;
+
         /* Creater User Bet */
         while(wasWon){
             var BET_RESULT = [{

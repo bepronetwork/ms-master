@@ -94,6 +94,7 @@ ErrorHandler.prototype.KEYS =  {
     'REGISTER_NOT_CURRENCY_ADDED'           : "077",
     'NO_FREE_CURRENCY'                      : "078",
     'FREE_CURRENCY_NO_ACTIVATED'            : "079",
+    "INSUFFICIENT_FUNDS_APP"                : "080"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {
