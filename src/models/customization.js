@@ -4,6 +4,7 @@ import ModelComponent from './modelComponent';
 import { TopBar, Banners, SubSections, Color, Logo, Footer, TopIcon, LoadingGif, Background, TopTab, Icons, EsportsScrenner, SocialLink } from '.';
 import { colors } from '../mocks';
 import Skin from './skin';
+import Language from './language';
 
 class Customization extends ModelComponent {
 
@@ -29,6 +30,7 @@ class Customization extends ModelComponent {
                     new Skin(params),
                     new Background(params),
                     new EsportsScrenner(params),
+                    new Language(params),
                     new SocialLink(params),
                     new TopTab({
                         ids: [

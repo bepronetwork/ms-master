@@ -330,6 +330,20 @@ async function addAddonDepositBonus(req, res) {
     }
 }
 
+async function addLanguage(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addLanguage();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editAddonPointSystem(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -1227,6 +1241,7 @@ async function getCompliance(req, res) {
 
 
 export {
+    addLanguage,
     editAnalyticsKey,
     editEsportScrenner,
     editVideogameEdge,

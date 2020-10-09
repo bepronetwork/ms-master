@@ -66,8 +66,10 @@ import AnalyticsRepository from "./analytics";
 import TopUpRepository from "./topUp";
 import ComplianceFileRepository from "./complianceFile";
 import LanguageEcoRepository from "./ecosystem/language";
+import LanguageRepository from "./language";
 
 export {
+    LanguageRepository,
     LanguageEcoRepository,
     TopUpRepository,
     SocialLinkRepository,

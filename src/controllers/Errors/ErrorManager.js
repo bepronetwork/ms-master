@@ -804,6 +804,16 @@ class ErrorManager {
         }
     }
 
+    language = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     color = function (object, type){
         try{
             switch(type){

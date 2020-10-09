@@ -55,8 +55,10 @@ import MoonPay from "./moonpay";
 import SocialLink from "./socialLink";
 import FreeCurrency from "./freeCurrency";
 import Analytics from "./analytics";
+import Language from "./language";
 
 export {
+    Language,
     SocialLink,
     Analytics,
     EsportsScrenner,
