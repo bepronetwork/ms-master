@@ -6,6 +6,7 @@ import SecuritySingleton from '../helpers/security';
 import PusherSingleton from '../../logic/third-parties/pusher';
 import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
 import { SearchSingleton } from '../../logic/utils/search';
+import { UsersRepository } from '../../db/repos';
 
 /**
  * Description of the function.
@@ -314,6 +315,7 @@ async function webhookDeposit(req, res) {
                         value: dataTransaction.payload.txouts[indexAddress].amount
                     }
                 }
+                console.log("dataTransaction:: ", dataTransaction)
                 break;
         
             default:
