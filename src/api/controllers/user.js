@@ -5,6 +5,7 @@ import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
 import PusherSingleton from '../../logic/third-parties/pusher';
 import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
+import { SearchSingleton } from '../../logic/utils/search';
 
 /**
  * Description of the function.
@@ -295,13 +296,22 @@ async function webhookDeposit(req, res) {
                 params.txHash = params.txid;
                 dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
                 console.log("dataTransactionBTCBeforeJson::", dataTransaction)
+                console.log("payload::", dataTransaction.payload)
+                console.log("txout::", dataTransaction.payload.txouts)
+                console.log("position0::", dataTransaction.payload.txouts[0])
+                console.log("address::", dataTransaction.payload.txouts[0].addresses)
+                console.log("addressPosition0::", dataTransaction.payload.txouts[0].addresses[0])
+                let user        = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+                let userWallet  = user.wallet.find((w) => w.currency.ticker == "btc");
+                let addressUser = userWallet.depositAddresses[0].address;
+                let indexAddress = SearchSingleton.indexOfByObjectAddress(dataTransaction.payload.txouts, addressUser);
                 dataTransaction = {
                     payload: {
                         hash: dataTransaction.payload.txid,
                         status: "0x1",
-                        to: dataTransaction.payload.txouts[0].addresses[0],
-                        from: dataTransaction.payload.txins[0].addresses[0],
-                        value: dataTransaction.payload.txouts[0].amount
+                        to: dataTransaction.payload.txouts[indexAddress].addresses[0],
+                        from: dataTransaction.payload.txins[indexAddress].addresses[0],
+                        value: dataTransaction.payload.txouts[indexAddress].amount
                     }
                 }
                 break;
