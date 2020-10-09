@@ -531,6 +531,11 @@ const processActions = {
         }
 		return res;
     },
+    __addLanguage : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+		return params;
+    },
     __addAddonFreeCurrency: async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
