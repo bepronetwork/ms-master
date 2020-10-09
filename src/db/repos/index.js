@@ -65,8 +65,10 @@ import FreeCurrencyRepository from "./freeCurrency";
 import AnalyticsRepository from "./analytics";
 import TopUpRepository from "./topUp";
 import ComplianceFileRepository from "./complianceFile";
+import LanguageEcoRepository from "./ecosystem/language";
 
 export {
+    LanguageEcoRepository,
     TopUpRepository,
     SocialLinkRepository,
     AnalyticsRepository,

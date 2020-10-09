@@ -67,6 +67,14 @@ class Ecosystem extends ModelComponent{
         }
     }
 
+    async getLanguagesEcosystem(){
+        try{
+            return await this.process('GetLanguagesEcosystem');
+        }catch(err){
+            throw err;
+        }
+    }
+
     
 }
 

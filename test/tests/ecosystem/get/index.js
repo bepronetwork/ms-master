@@ -1,5 +1,6 @@
 context('Getters', async () => {
     require('./ecosystemData');
     require('./ecosystemGames');
-    require('./ecosystemSkin')
+    require('./ecosystemSkin');
+    require('./ecosystemLanguages');
 });

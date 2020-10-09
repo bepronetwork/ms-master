@@ -126,6 +126,12 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getLanguagesEcosystem(params) {
+        return request(global.server)
+        .get('/api/app/languageEcosystem/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editSkin(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/customization/skin')

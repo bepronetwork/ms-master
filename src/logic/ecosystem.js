@@ -1,6 +1,6 @@
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
-import { BlockchainsRepository, AuthorizedsRepository, CurrencyRepository, CasinoProviderEcoRepository } from '../db/repos';
+import { BlockchainsRepository, AuthorizedsRepository, CurrencyRepository, CasinoProviderEcoRepository, LanguageEcoRepository } from '../db/repos';
 import LogicComponent from './logicComponent';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import SkinEcoRepository from '../db/repos/ecosystem/skin';
@@ -31,6 +31,11 @@ const processActions = {
 		// Get Games
 		let providers = await CasinoProviderEcoRepository.prototype.getAll();
 		return providers;
+	},
+	__getLanguagesEcosystem: async () => {
+		// Get Games
+		let languages = await LanguageEcoRepository.prototype.getAll();
+		return languages;
 	},
 	__getSkinEcosystem: async () => {
 		// Get Games
@@ -74,6 +79,9 @@ const processActions = {
   
 const progressActions = {
 	__getProviderEcosystem: async (params) => {
+		return params;
+	},
+	__getLanguagesEcosystem: async (params) => {
 		return params;
 	},
 	__getSkinEcosystem: async (params) => {
@@ -143,6 +151,9 @@ class EcosystemLogic extends LogicComponent{
 				case 'GetProviderEcosystem' : {
 					return await library.process.__getProviderEcosystem(params); break;
 				};
+				case 'GetLanguagesEcosystem' : {
+					return await library.process.__getLanguagesEcosystem(params); break;
+				};
 				case 'GetSkinEcosystem' : {
 					return await library.process.__getSkinEcosystem(params); break;
 				};
@@ -179,6 +190,9 @@ class EcosystemLogic extends LogicComponent{
 				};
 				case 'GetProviderEcosystem' : {
 					return await library.progress.__getProviderEcosystem(params); break;
+				};
+				case 'GetLanguagesEcosystem' : {
+					return await library.progress.__getLanguagesEcosystem(params); break;
 				};
 				case 'GetSkinEcosystem' : {
 					return await library.progress.__getSkinEcosystem(params); break;
