@@ -303,7 +303,7 @@ async function webhookDeposit(req, res) {
                 console.log("address::", dataTransaction.payload.txouts[0].addresses)
                 console.log("addressPosition0::", dataTransaction.payload.txouts[0].addresses[0])
                 let user        = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
-                let userWallet  = user.wallet.find((w) => w.currency.ticker == "btc");
+                let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
                 let addressUser = userWallet.depositAddresses[0].address;
                 let indexAddress = SearchSingleton.indexOfByObjectAddress(dataTransaction.payload.txouts, addressUser);
                 dataTransaction = {
