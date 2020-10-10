@@ -5,6 +5,8 @@ import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from '../helpers/security';
 import PusherSingleton from '../../logic/third-parties/pusher';
 import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
+import { SearchSingleton } from '../../logic/utils/search';
+import { UsersRepository } from '../../db/repos';
 
 /**
  * Description of the function.
@@ -279,13 +281,12 @@ async function pingPushNotifications(req, res) {
 async function webhookDeposit(req, res) {
     try {
         console.log(":::Init webhook::: ", req);
+        console.log(req.query);
         req.body.id = req.query.id;
         req.body.ticker = req.body.currency;
         req.body.currency = req.query.currency;
         req.body.isApp = req.query.isApp;
         let params = req.body;
-        console.log(1)
-        console.log("params.txHash:::", params.txHash)
         var dataTransaction = null;
         switch ((req.body.ticker).toLowerCase()) {
             case 'eth':
@@ -294,23 +295,24 @@ async function webhookDeposit(req, res) {
             case 'btc':
                 params.txHash = params.txid;
                 dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
-                console.log("dataTransactionBTCBeforeJson::", dataTransaction)
+                let user        = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+
+                let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
+                let addressUser = userWallet.depositAddresses[0].address;
+                let indexAddress = SearchSingleton.indexOfByObjectAddress(dataTransaction.payload.txouts, addressUser);
                 dataTransaction = {
                     payload: {
                         hash: dataTransaction.payload.txid,
                         status: "0x1",
-                        to: dataTransaction.payload.txouts[0].addresses[0],
+                        to: dataTransaction.payload.txouts[indexAddress].addresses[0],
                         from: dataTransaction.payload.txins[0].addresses[0],
-                        value: dataTransaction.payload.txouts[0].amount
+                        value: parseFloat(dataTransaction.payload.txouts[indexAddress].amount)
                     }
                 }
                 break;
-        
             default:
                 break;
         }
-        console.log(2)
-        console.log("::::dataTransaction::::", dataTransaction)
         if (!dataTransaction) { return null }
         params = { ...params, ...dataTransaction };
 
