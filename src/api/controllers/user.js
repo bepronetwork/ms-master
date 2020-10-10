@@ -319,7 +319,7 @@ async function webhookDeposit(req, res) {
                         hash: dataTransaction.payload.txid,
                         status: "0x1",
                         to: dataTransaction.payload.txouts[indexAddress].addresses[0],
-                        from: dataTransaction.payload.txins[indexAddress].addresses[0],
+                        from: dataTransaction.payload.txins[0].addresses[0],
                         value: dataTransaction.payload.txouts[indexAddress].amount
                     }
                 }
