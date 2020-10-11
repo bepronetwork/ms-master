@@ -38,13 +38,13 @@ class LanguageRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdate(_id, currency, newStructure){ 
+    findByIdAndUpdate({_id, logo, isActivated}){ 
         return new Promise( (resolve, reject) => {
             LanguageRepository.prototype.schema.model.findByIdAndUpdate(
                 _id,
                 { $set: {
-                    "isLanguage"  : newStructure.isLanguage,
-                    "verifiedKYC" : newStructure.verifiedKYC,
+                    "logo"  : logo,
+                    "isActivated" : isActivated,
                 }} 
                 )
             .exec( async (err, item) => {

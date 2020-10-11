@@ -479,6 +479,21 @@ class App extends ModelComponent {
     }
 
     /**
+        * @param {String} 
+        * @return {bool || Exception}  
+        */
+
+    async editLanguage() {
+        // Output = Boolean
+        try {
+            let language = await this.process('EditLanguage');
+            return language;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
     * @param {String} 
     * @return {bool || Exception}  
     */

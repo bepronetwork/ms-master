@@ -542,6 +542,11 @@ const processActions = {
             language
         };
     },
+    __editLanguage : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdPopulateCustomization(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+		return params;
+    },
     __addAddonFreeCurrency: async (params) => {
         try {
             let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
@@ -1592,6 +1597,11 @@ const progressActions = {
         await CustomizationRepository.prototype.addNewLanguage(app.customization._id, languageCustomizationResult._doc._id);
 		return true;
     },
+    __editLanguage : async (params) => {
+        const { language_id, logo, isActivated } = params;
+        await LanguageRepository.prototype.findByIdAndUpdate({_id: language_id, logo, isActivated});
+		return true;
+    },
     __addAddonFreeCurrency: async (params) => {
         const { app, wallets } = params;
         let freeCurrency = new FreeCurrency({wallets});
@@ -2410,6 +2420,9 @@ class AppLogic extends LogicComponent{
                 case 'AddLanguage' : {
                     return await library.process.__addLanguage(params); break;
                 };
+                case 'EditLanguage' : {
+                    return await library.process.__editLanguage(params); break;
+                };
                 case 'AddAddonTxFee' : {
                     return await library.process.__addAddonTxFee(params); break;
                 };
@@ -2644,6 +2657,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'AddLanguage' : {
                     return await library.progress.__addLanguage(params); break;
+                };
+                case 'EditLanguage' : {
+                    return await library.progress.__editLanguage(params); break;
                 };
                 case 'AddAddonTxFee' : {
                     return await library.progress.__addAddonTxFee(params); break;

@@ -1120,6 +1120,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/language/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Language Of Customization
+      operationId: editLanguage
+      description: Edit Language
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditLanguageRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/theme : 
     x-swagger-router-controller: app
     post:
@@ -5708,7 +5738,40 @@ definitions:
         example: "EN"
         description: |
           Prefix of Language
-
+  EditLanguageRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - language_id
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      language_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Language ID
+      logo :
+        type : string
+        format: name
+        example: "test.png"
+        description: |
+          Logo of Language
+      isActivated :
+        type : boolean
+        example: true
   AddAddonBalanceRequest :
     type: object
     required:
