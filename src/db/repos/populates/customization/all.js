@@ -66,6 +66,11 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'languages',
+        model : 'Language',
+        select : { '__v': 0},
+    },
+    {
         path : 'footer',
         model : 'Footer',
         select : { '__v': 0},

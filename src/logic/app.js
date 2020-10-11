@@ -45,11 +45,11 @@ import {
     MoonPayRepository,
     FreeCurrencyRepository,
     AnalyticsRepository,
-    ComplianceFileRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
@@ -532,9 +532,15 @@ const processActions = {
 		return res;
     },
     __addLanguage : async (params) => {
-        let app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+        let app = await AppRepository.prototype.findAppByIdPopulateCustomization(params.app);
         if(!app){throwError('APP_NOT_EXISTENT')}
-		return params;
+        const languagesAvailable = await LanguageEcoRepository.prototype.getAll();
+        const language = languagesAvailable.find(language => language.prefix.toLowerCase() == params.prefix.toLowerCase());
+        if(!language){throwError('LANGUAGE_NOT_EXISTENT')}
+		return {
+            app,
+            language
+        };
     },
     __addAddonFreeCurrency: async (params) => {
         try {
@@ -1573,6 +1579,19 @@ const progressActions = {
         await addOnRepository.prototype.addAddonAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
 		return autoWithdrawResult;
     },
+    __addLanguage : async (params) => {
+        const { app, language } = params;
+        const languageParams = {
+            isActivated: true,
+            prefix: language.prefix,
+            name: language.name,
+            logo: language.logo,
+        }
+        let languageCustomization = new Language(languageParams);
+        const languageCustomizationResult = await languageCustomization.register();
+        await CustomizationRepository.prototype.addNewLanguage(app.customization._id, languageCustomizationResult._doc._id);
+		return true;
+    },
     __addAddonFreeCurrency: async (params) => {
         const { app, wallets } = params;
         let freeCurrency = new FreeCurrency({wallets});
@@ -2388,6 +2407,9 @@ class AppLogic extends LogicComponent{
                 case 'addAddonAutoWithdraw' : {
                     return await library.process.__addAddonAutoWithdraw(params); break;
                 };
+                case 'AddLanguage' : {
+                    return await library.process.__addLanguage(params); break;
+                };
                 case 'AddAddonTxFee' : {
                     return await library.process.__addAddonTxFee(params); break;
                 };
@@ -2619,6 +2641,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'addAddonAutoWithdraw' : {
                     return await library.progress.__addAddonAutoWithdraw(params); break;
+                };
+                case 'AddLanguage' : {
+                    return await library.progress.__addLanguage(params); break;
                 };
                 case 'AddAddonTxFee' : {
                     return await library.progress.__addAddonTxFee(params); break;

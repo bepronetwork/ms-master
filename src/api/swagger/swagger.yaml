@@ -5688,6 +5688,7 @@ definitions:
     required:
       - app
       - admin
+      - prefix
     properties:
       app :
         type : string
@@ -5701,6 +5702,12 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Admin ID
+      prefix :
+        type : string
+        format: name
+        example: "EN"
+        description: |
+          Prefix of Language
 
   AddAddonBalanceRequest :
     type: object
