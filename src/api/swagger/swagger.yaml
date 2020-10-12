@@ -1090,6 +1090,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/language/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Language To Customization
+      operationId: addLanguage
+      description: Add Language
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddLanguageRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/customization/language/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Language Of Customization
+      operationId: editLanguage
+      description: Edit Language
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditLanguageRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/theme : 
     x-swagger-router-controller: app
     post:
@@ -2371,6 +2431,26 @@ paths:
       - ecosystem
       summary: Register User Data
       operationId: getProviderEcosystem
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/languageEcosystem/get:
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Get All Languages Available 
+      operationId: getLanguagesEcosystem
       produces:
         - application/json
       responses:
@@ -5688,7 +5768,65 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Reason Of Modify Balance
-
+  AddLanguageRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - prefix
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      prefix :
+        type : string
+        format: name
+        example: "EN"
+        description: |
+          Prefix of Language
+  EditLanguageRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - language_id
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      language_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Language ID
+      logo :
+        type : string
+        format: name
+        example: "test.png"
+        description: |
+          Logo of Language
+      isActivated :
+        type : boolean
+        example: true
   AddAddonBalanceRequest :
     type: object
     required:

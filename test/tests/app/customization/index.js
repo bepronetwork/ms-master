@@ -16,4 +16,5 @@ context('Customization', async () => {
     require('./editTheme');
     require('./editEsportsScrenner')
     require('./editTopTab');
+    require('./addLanguages')
 });

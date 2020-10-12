@@ -84,6 +84,7 @@ const get_object = (object) => {
             "_id": object.customization._id,
             "theme": object.customization.theme,
             "socialLink": object.customization.socialLink,
+            "languages": object.customization.languages,
             "skin": object.customization.skin,
             "icons": object.customization.icons,
             "colors": object.customization.colors ? object.customization.colors.map(color => {

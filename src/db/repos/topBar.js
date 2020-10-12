@@ -58,6 +58,23 @@ class TopBarRepository extends MongoComponent{
         });
     }
 
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
+            TopBarRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $push: { 
+                    "languages" : language
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 }
 
 TopBarRepository.prototype.schema = new TopBarSchema();

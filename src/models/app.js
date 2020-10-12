@@ -447,21 +447,51 @@ class App extends ModelComponent {
         }
     }
 
-    
+
     /**
     * @param {String} 
     * @return {bool || Exception}  
     */
 
-   async addAddonFreeCurrency() {
-    // Output = Boolean
-    try {
-        let balance = await this.process('AddAddonFreeCurrency');
-        return balance;
-    } catch (err) {
-        throw err;
+    async addAddonFreeCurrency() {
+        // Output = Boolean
+        try {
+            let balance = await this.process('AddAddonFreeCurrency');
+            return balance;
+        } catch (err) {
+            throw err;
+        }
     }
-}
+
+    /**
+        * @param {String} 
+        * @return {bool || Exception}  
+        */
+
+    async addLanguage() {
+        // Output = Boolean
+        try {
+            let language = await this.process('AddLanguage');
+            return language;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+        * @param {String} 
+        * @return {bool || Exception}  
+        */
+
+    async editLanguage() {
+        // Output = Boolean
+        try {
+            let language = await this.process('EditLanguage');
+            return language;
+        } catch (err) {
+            throw err;
+        }
+    }
 
     /**
     * @param {String} 
@@ -764,7 +794,7 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
-   async getCompliance() {
+    async getCompliance() {
         try {
             //return Boolean
             let app = await this.process('GetCompliance');
@@ -859,15 +889,15 @@ class App extends ModelComponent {
   */
 
 
- async editAnalyticsKey() {
-    // Output Boolean
-    try {
-        let app = await this.process('EditAnalyticsKey');
-        return app;
-    } catch (err) {
-        throw err;
+    async editAnalyticsKey() {
+        // Output Boolean
+        try {
+            let app = await this.process('EditAnalyticsKey');
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
     /**
    * @param {String} 
