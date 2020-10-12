@@ -1595,11 +1595,19 @@ const progressActions = {
         let languageCustomization = new Language(languageParams);
         const languageCustomizationResult = await languageCustomization.register();
         await CustomizationRepository.prototype.addNewLanguage(app.customization._id, languageCustomizationResult._doc._id);
-		return true;
+		return languageCustomizationResult._doc;
     },
     __editLanguage : async (params) => {
         const { language_id, logo, isActivated } = params;
-        await LanguageRepository.prototype.findByIdAndUpdate({_id: language_id, logo, isActivated});
+        let image_url="";
+        if(logo.includes("https")){
+            /* If it is a link already */
+            image_url = logo;
+        }else {
+            /* Does not have a Link and is a blob encoded64 */
+            image_url = !logo ? logo : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : logo});
+        }
+        await LanguageRepository.prototype.findByIdAndUpdate({_id: language_id, logo: image_url, isActivated});
 		return true;
     },
     __addAddonFreeCurrency: async (params) => {
