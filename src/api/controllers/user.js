@@ -289,10 +289,11 @@ async function webhookDeposit(req, res) {
         req.body.isApp = req.query.isApp;
         let params = req.body;
         var dataTransaction = null;
+        let user = null;
         switch ((req.body.ticker).toLowerCase()) {
             case 'eth':
                 dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
-                let user        = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+                user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
                 let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "eth");
                 let addressUser = userWallet.depositAddresses[0].address;
                 if(addressUser != dataTransaction.payload.to){
@@ -302,7 +303,7 @@ async function webhookDeposit(req, res) {
             case 'btc':
                 params.txHash = params.txid;
                 dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
-                let user        = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+                user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
 
                 let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
                 let addressUser = userWallet.depositAddresses[0].address;
