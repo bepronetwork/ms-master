@@ -42,7 +42,7 @@ module.exports = {
                 isActivated: true,
                 prefix: "EN",
                 name: "English",
-                logo: "https://img.freepik.com/vetores-gratis/ilustracao-de-bandeira-reino-unido_53876-18166.jpg?size=626&ext=jpg",
+                logo: "https://i.ibb.co/HBxGmJ2/reino-unido.png",
                 __v: 0
               });
               await db.collection('customizations').updateOne(

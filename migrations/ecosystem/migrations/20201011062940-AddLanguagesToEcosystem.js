@@ -26,27 +26,27 @@ module.exports = {
       {
         "prefix": "EN",
         "name": "English",
-        "logo": "https://img.freepik.com/vetores-gratis/ilustracao-de-bandeira-reino-unido_53876-18166.jpg?size=626&ext=jpg"
+        "logo": "https://i.ibb.co/HBxGmJ2/reino-unido.png"
       },
       {
         "prefix": "KR",
         "name": "Korean",
-        "logo": ""
+        "logo": "https://i.ibb.co/TLvFxMz/coreia-do-sul.png"
       },
       {
         "prefix": "RU",
         "name": "Russian",
-        "logo": ""
+        "logo": "https://i.ibb.co/tQ75PmB/russia.png"
       },
       {
         "prefix": "CH",
         "name": "Chinese",
-        "logo": ""
+        "logo": "https://i.ibb.co/wRsJKQd/china.png"
       },
       {
         "prefix": "JP",
         "name": "Japanese",
-        "logo": ""
+        "logo": "https://i.ibb.co/x6tLddF/japao.png"
       },
     ]
     for(let languagesAvailable of languagesToEcosystem){
