@@ -59,6 +59,23 @@ class FooterRepository extends MongoComponent{
             )
         });
     }
+
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
+            FooterRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $push: { 
+                    "languages" : language
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
 }
 
 FooterRepository.prototype.schema = new FooterSchema();

@@ -56,6 +56,23 @@ class SubSectionsRepository extends MongoComponent{
         });
     }
 
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
+            SubSectionsRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $push: { 
+                    "languages" : language
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 }
 
 SubSectionsRepository.prototype.schema = new SubSectionsSchema();

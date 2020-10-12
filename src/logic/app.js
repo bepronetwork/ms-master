@@ -537,9 +537,64 @@ const processActions = {
         const languagesAvailable = await LanguageEcoRepository.prototype.getAll();
         const language = languagesAvailable.find(language => language.prefix.toLowerCase() == params.prefix.toLowerCase());
         if(!language){throwError('LANGUAGE_NOT_EXISTENT')}
+        const banner = {
+            language : "", 
+            useStandardLanguage : true,
+            ids                     : [{
+                image_url   : "",
+                link_url    : "",
+                button_text : "",
+                title       : "",
+                subtitle    : ""
+            }],
+            autoDisplay : false,
+            fullWidth   : false
+        };
+        const subSections = {
+            language : "",
+            useStandardLanguage : true,
+            ids : [{
+                title            : "",
+                text             : "",
+                image_url        : "",
+                background_url   : "",
+                background_color : "",
+                position         : "",
+                location         : ""
+            }]
+        }
+        const topBar = {
+            language : "",
+            useStandardLanguage : true,
+            text                  : "",
+            backgroundColor       : "",
+            textColor             : "",
+            isActive              : false,
+        }
+        const topTab = {
+            language : "",
+            useStandardLanguage : true,
+            ids : [{
+                name      : "",
+                icon      : "",
+                link_url  : ""
+            }],
+            isTransparent : false,
+        }
+        const footer = {
+            language : "",
+            useStandardLanguage : true,
+            supportLinks    : [],
+            communityLinks  : []
+        }
 		return {
             app,
-            language
+            language,
+            banner,
+            topBar,
+            subSections,
+            topTab,
+            footer
         };
     },
     __editLanguage : async (params) => {
@@ -1585,7 +1640,7 @@ const progressActions = {
 		return autoWithdrawResult;
     },
     __addLanguage : async (params) => {
-        const { app, language } = params;
+        const { app, language, banner, topBar, subSections, topTab, footer } = params;
         const languageParams = {
             isActivated: true,
             prefix: language.prefix,
@@ -1594,6 +1649,11 @@ const progressActions = {
         }
         let languageCustomization = new Language(languageParams);
         const languageCustomizationResult = await languageCustomization.register();
+        await BannersRepository.prototype.addNewLanguage({_id: app.customization.banners._id, language: {...banner, language: languageCustomizationResult._doc._id} })
+        await TopBarRepository.prototype.addNewLanguage({_id: app.customization.topBar._id, language: {...topBar, language: languageCustomizationResult._doc._id} })
+        await TopTabRepository.prototype.addNewLanguage({_id: app.customization.topTab._id, language: {...topTab, language: languageCustomizationResult._doc._id} })
+        await SubSectionsRepository.prototype.addNewLanguage({_id: app.customization.subSections._id, language: {...subSections, language: languageCustomizationResult._doc._id} })
+        await FooterRepository.prototype.addNewLanguage({_id: app.customization.footer._id, language: {...footer, language: languageCustomizationResult._doc._id} })
         await CustomizationRepository.prototype.addNewLanguage(app.customization._id, languageCustomizationResult._doc._id);
 		return languageCustomizationResult._doc;
     },

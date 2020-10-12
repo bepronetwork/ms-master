@@ -4,11 +4,25 @@ let populate_customization_all = [
         path : 'topBar',
         model : 'TopBar',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'language',
+                model : 'Language',
+                select : { '__v': 0},
+            }
+        ]
     },
     {
         path : 'banners',
         model : 'Banners',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'language',
+                model : 'Language',
+                select : { '__v': 0},
+            }
+        ]
     },
     {
         path : 'socialLink',
@@ -19,6 +33,13 @@ let populate_customization_all = [
         path : 'subSections',
         model : 'SubSections',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'language',
+                model : 'Language',
+                select : { '__v': 0},
+            }
+        ]
     },
     {
         path : 'icons',
@@ -44,6 +65,13 @@ let populate_customization_all = [
         path : 'topTab',
         model : 'TopTab',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'language',
+                model : 'Language',
+                select : { '__v': 0},
+            }
+        ]
     },
     {
         path : 'loadingGif',
@@ -85,6 +113,11 @@ let populate_customization_all = [
                 model : 'Link',
                 select : { '__v': 0}
             },
+            {
+                path : 'language',
+                model : 'Language',
+                select : { '__v': 0},
+            }
         ]
     },
 ] 

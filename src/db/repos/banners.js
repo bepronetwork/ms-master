@@ -58,6 +58,23 @@ class BannersRepository extends MongoComponent{
         });
     }
 
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
+            BannersRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $push: { 
+                    "languages" : language
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
 }
 
 BannersRepository.prototype.schema = new BannersSchema();
