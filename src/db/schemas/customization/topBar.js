@@ -9,6 +9,7 @@ TopBarSchema.prototype.schema =  {
     languages: [
         {
             language : { type : mongoose.Schema.Types.ObjectId, ref: 'Language' },
+            useStandardLanguage : { type : Boolean, default : true},
             text                  : { type : String},
             backgroundColor       : { type : String},
             textColor             : { type : String},

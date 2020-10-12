@@ -10,6 +10,7 @@ TopTabSchema.prototype.schema =  {
     languages: [
         {
             language : { type : mongoose.Schema.Types.ObjectId, ref: 'Language' },
+            useStandardLanguage : { type : Boolean, default : true},
             ids : [{
                 name      : {type : String, required: true},
                 icon      : {type : String, required: true},

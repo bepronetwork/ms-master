@@ -9,6 +9,7 @@ SubSectionsSchema.prototype.schema =  {
     languages: [
         {
             language : { type : mongoose.Schema.Types.ObjectId, ref: 'Language' },
+            useStandardLanguage : { type : Boolean, default : true},
             ids : [{
                 title            : {type : String},
                 text             : {type : String},

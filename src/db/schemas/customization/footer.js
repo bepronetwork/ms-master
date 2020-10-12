@@ -11,6 +11,7 @@ FooterSchema.prototype.schema =  {
     languages: [
         {
             language : { type : mongoose.Schema.Types.ObjectId, ref: 'Language' },
+            useStandardLanguage : { type : Boolean, default : true},
             supportLinks    : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Link'}],
             communityLinks  : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Link'}]
         }

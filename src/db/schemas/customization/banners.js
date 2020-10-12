@@ -9,6 +9,7 @@ BannersSchema.prototype.schema =  {
     languages: [
         {
             language : { type : mongoose.Schema.Types.ObjectId, ref: 'Language' },
+            useStandardLanguage : { type : Boolean, default : true},
             ids                     : [{
                 image_url   : {type : String},
                 link_url    : {type : String},
