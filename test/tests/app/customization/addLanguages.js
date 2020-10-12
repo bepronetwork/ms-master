@@ -14,7 +14,6 @@ context('Edit Languages', async () => {
     });
 
     it('should be able to Add languages to app', mochaAsync(async () => {
-        console.log("App Id: ",app.id)
         const postData = {
             app: app.id,
             prefix : "RU"
@@ -26,12 +25,10 @@ context('Edit Languages', async () => {
 
         const { status } = res.data;
         expect(status).to.be.equal(200);
-        console.log("res.data:: ",res.data)
         language_id = res.data.message._id;
     }));
 
     it('should be able to edit app languages', mochaAsync(async () => {
-        console.log("App Id: ",app.id)
         const postData = {
             app: app.id,
             language_id,
