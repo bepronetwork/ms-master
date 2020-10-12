@@ -41,13 +41,12 @@ class SubSectionsRepository extends MongoComponent{
 
     findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
-            SubSectionsRepository.prototype.schema.model.findByIdAndUpdate(
-                _id, 
-                { $set: { 
-                    "ids"          : newStructure.ids
-                } },
-                { 'new': true })
-                .lean()
+            SubSectionsRepository.prototype.schema.model.updateOne(
+                {_id, "languages.language": newStructure.language},
+                { $set: {
+                    "languages.$.ids"                 : newStructure.ids,
+                    "languages.$.useStandardLanguage" : newStructure.useStandardLanguage
+                } })
                 .exec( (err, item) => {
                     if(err){reject(err)}
                     resolve(item);

@@ -35,7 +35,8 @@ context('Add Banner', async () => {
             ],
             app : app.id,
             autoDisplay : true,
-            fullWidth: true
+            fullWidth: true,
+            language: ""
         };
 
         let res = await editBannersCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});

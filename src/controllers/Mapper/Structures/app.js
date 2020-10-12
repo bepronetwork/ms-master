@@ -176,44 +176,9 @@ const app_object = (object) => {
                         "hex": color.hex
                     })
                 }) : object.app.customization.colors,
-                "topBar": !object.app.customization.topBar ? {} : {
-                    "_id": object.app.customization.topBar._id,
-                    "isActive": object.app.customization.topBar.isActive,
-                    "backgroundColor": object.app.customization.topBar.backgroundColor,
-                    "text": object.app.customization.topBar.text,
-                    "textColor": object.app.customization.topBar.textColor,
-                    "isTransparent": object.app.customization.topBar.isTransparent,
-                },
-                "banners": !object.app.customization.banners ? {} : {
-                    "_id": object.app.customization.banners._id,
-                    "autoDisplay": object.app.customization.banners.autoDisplay,
-                    "fullWidth": object.app.customization.banners.fullWidth,
-                    "ids": !object.app.customization.banners.ids ? [] : object.app.customization.banners.ids.map(id => {
-                        return ({
-                            "_id": id._id,
-                            "image_url": id.image_url,
-                            "link_url": id.link_url,
-                            "button_text": id.button_text,
-                            "title": id.title,
-                            "subtitle": id.subtitle,
-                        })
-                    })
-                },
-                "subSections": !object.app.customization.subSections ? {} : {
-                    "_id": object.app.customization.subSections._id,
-                    "ids": !object.app.customization.subSections.ids ? [] : object.app.customization.subSections.ids.map(id => {
-                        return ({
-                            "_id": id._id,
-                            "title": id.title,
-                            "text": id.text,
-                            "image_url": id.image_url,
-                            "background_url": id.background_url,
-                            "background_color": id.background_color,
-                            "position": id.position,
-                            "location": id.location
-                        })
-                    })
-                },
+                "topBar": !object.app.customization.topBar ? {} : object.app.customization.topBar,
+                "banners": !object.app.customization.banners ? {} : object.app.customization.banners,
+                "subSections": !object.app.customization.subSections ? {} : object.app.customization.subSections,
                 "logo": !object.app.customization.logo ? {} : {
                     "_id": object.app.customization.logo._id,
                     "id": !object.app.customization.logo.id ? '' : object.app.customization.logo.id
@@ -222,25 +187,7 @@ const app_object = (object) => {
                     "_id": object.app.customization.background._id,
                     "id": !object.app.customization.background.id ? '' : object.app.customization.background.id
                 },
-                "footer": !object.app.customization.footer ? {} : {
-                    "_id": object.app.customization.footer._id,
-                    "supportLinks": !object.app.customization.footer.supportLinks ? [] : object.app.customization.footer.supportLinks.map(support_link => {
-                        return ({
-                            "_id": support_link._id,
-                            "name": support_link.name,
-                            "href": support_link.href,
-                            "image_url": support_link.image_url,
-                        })
-                    }),
-                    "communityLinks": !object.app.customization.footer.communityLinks ? [] : object.app.customization.footer.communityLinks.map(community_link => {
-                        return ({
-                            "_id": community_link._id,
-                            "name": community_link.name,
-                            "href": community_link.href,
-                            "image_url": community_link.image_url,
-                        })
-                    })
-                },
+                "footer": !object.app.customization.footer ? {} : object.app.customization.footer,
                 "topIcon": !object.app.customization.topIcon ? {} : {
                     "_id": object.app.customization.topIcon._id,
                     "id": !object.app.customization.topIcon.id ? '' : object.app.customization.topIcon.id

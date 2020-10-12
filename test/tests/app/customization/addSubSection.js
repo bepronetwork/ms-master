@@ -37,7 +37,8 @@ context('Add SubSection', async () => {
                     location         : 2
                 }
             ],
-            app : app.id
+            app : app.id,
+            language: ""
         };
 
         let res = await editSubSectionsCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});

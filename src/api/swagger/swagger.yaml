@@ -4390,6 +4390,7 @@ definitions:
       - autoDisplay
       - fullWidth
       - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4397,6 +4398,12 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
       banners:
         type : array
         items : 
@@ -4416,6 +4423,9 @@ definitions:
         type : boolean
         example: true
       fullWidth:
+        type : boolean
+        example: true
+      useStandardLanguage:
         type : boolean
         example: true
   AppSocialLink :
@@ -4488,6 +4498,7 @@ definitions:
       - app
       - subSections
       - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4495,6 +4506,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      useStandardLanguage:
+        type : boolean
+        example: true
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
       subSections:
         type : array
         items : 
@@ -4609,6 +4629,7 @@ definitions:
       - supportLinks
       - communityLinks
       - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4616,6 +4637,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
+      useStandardLanguage:
+        type : boolean
+        example: true
       supportLinks :
         type : array
         items:
@@ -4689,6 +4719,7 @@ definitions:
       - text
       - isActive
       - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4696,6 +4727,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
+      useStandardLanguage:
+        type : boolean
+        example: true
       backgroundColor:
         type : string
         format: name
@@ -4718,6 +4758,7 @@ definitions:
       - topTabParams
       - isTransparent
       - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4725,6 +4766,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
+      useStandardLanguage:
+        type : boolean
+        example: true
       isTransparent : 
         type : boolean
         example: true

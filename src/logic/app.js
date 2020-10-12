@@ -1936,13 +1936,15 @@ const progressActions = {
         return true;
     },
     __editTopBar  : async (params) => {
-        let { app, backgroundColor, textColor, text, isActive, isTransparent } = params;
+        let { app, backgroundColor, textColor, text, isActive, isTransparent, language, useStandardLanguage } = params;
         const { topBar } = app.customization;
         await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
             textColor,
             backgroundColor, 
             text,
-            isActive
+            isActive,
+            language,
+            useStandardLanguage
         })
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -1950,7 +1952,7 @@ const progressActions = {
         return params;
     },
     __editTopTab  : async (params) => {
-        let { app, topTabParams, isTransparent } = params;
+        let { app, topTabParams, isTransparent, language, useStandardLanguage } = params;
         let topTab = await Promise.all(topTabParams.map( async topTab => {
             if(topTab.icon.includes("https")){
                 /* If it is a link already */
@@ -1967,7 +1969,9 @@ const progressActions = {
         await TopTabRepository.prototype.findByIdAndUpdateTopTab({
             _id: app.customization.topTab._id,
             newStructure: topTab,
-            isTransparent
+            isTransparent,
+            language,
+            useStandardLanguage
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -2024,7 +2028,7 @@ const progressActions = {
         return true;
     },
     __editBanners : async (params) => {
-        let { app, autoDisplay, banners, fullWidth } = params;
+        let { app, autoDisplay, banners, fullWidth, language, useStandardLanguage } = params;
         let ids = await Promise.all(banners.map( async b => {
             if(b.image_url.includes("https")){
                 /* If it is a link already */
@@ -2043,7 +2047,9 @@ const progressActions = {
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
             autoDisplay,
             ids,
-            fullWidth
+            fullWidth,
+            language,
+            useStandardLanguage
         })
         // Save info on Customization Part
         return params;
@@ -2114,7 +2120,7 @@ const progressActions = {
         return params;
     },
     __editFooter : async (params) => {
-        let { app, communityLinks, supportLinks } = params;
+        let { app, communityLinks, supportLinks, language, useStandardLanguage } = params;
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
             var imageCommunity = ''
             if(c.image_url.includes("https")){
@@ -2147,7 +2153,8 @@ const progressActions = {
 
         let footer = await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,
-            supportLinks : supportLinkIDs,
+            supportLinks   : supportLinkIDs,
+            language
         })
 
         let result = await FooterRepository.prototype.findById(footer._id)
@@ -2216,7 +2223,7 @@ const progressActions = {
         return params;
     },
     __editSubSections : async (params) => {
-        let { app, subSections } = params;
+        let { app, subSections, language, useStandardLanguage } = params;
         let ids = await Promise.all(subSections.map( async s => {
             if(s.image_url.includes("https") && s.image_url.includes("https")){
                 /* If it is a link already */
@@ -2235,7 +2242,9 @@ const progressActions = {
             }
         }))
         await SubSectionsRepository.prototype.findByIdAndUpdate(app.customization.subSections._id, {
-            ids
+            ids,
+            language,
+            useStandardLanguage
         })
         // Save info on Customization Part
         return true;

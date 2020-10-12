@@ -41,7 +41,8 @@ context('Edit Footer', async () => {
                     "image_url": image_data
                 },
             ],
-            app: app.id
+            app: app.id,
+            language: ""
         };
 
         let res = await editFooterCustomizationApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });

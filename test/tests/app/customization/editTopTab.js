@@ -23,7 +23,8 @@ context('Edit Top Tab', async () => {
                 icon: image_data,
                 link_url: "test.com"
             }],
-            isTransparent : true
+            isTransparent : true,
+            language: ""
         };
 
         let res = await editTopTabCustomizationApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });
