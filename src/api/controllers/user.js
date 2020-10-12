@@ -290,12 +290,14 @@ async function webhookDeposit(req, res) {
         let params = req.body;
         var dataTransaction = null;
         let user = null;
+        let userWallet = null;
+        let addressUser = null;
         switch ((req.body.ticker).toLowerCase()) {
             case 'eth':
                 dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
                 user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
-                let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "eth");
-                let addressUser = userWallet.depositAddresses[0].address;
+                userWallet      = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "eth");
+                addressUser     = userWallet.depositAddresses[0].address;
                 if(addressUser != dataTransaction.payload.to){
                     throwError("USER_ADDRESS_IS_NOT_VALID");
                 }
@@ -304,9 +306,8 @@ async function webhookDeposit(req, res) {
                 params.txHash = params.txid;
                 dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
                 user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
-
-                let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
-                let addressUser = userWallet.depositAddresses[0].address;
+                userWallet      = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
+                addressUser     = userWallet.depositAddresses[0].address;
                 let indexAddress = SearchSingleton.indexOfByObjectAddress(dataTransaction.payload.txouts, addressUser);
                 if(indexAddress==-1) {
                     throwError("USER_ADDRESS_IS_NOT_VALID");
