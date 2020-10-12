@@ -4469,6 +4469,7 @@ definitions:
       - banners
       - autoDisplay
       - fullWidth
+      - language
     properties:
       app:
         type : string
@@ -4566,6 +4567,7 @@ definitions:
     required:
       - app
       - subSections
+      - language
     properties:
       app:
         type : string
@@ -4686,6 +4688,7 @@ definitions:
       - app
       - supportLinks
       - communityLinks
+      - language
     properties:
       app:
         type : string
@@ -4765,6 +4768,7 @@ definitions:
       - textColor
       - text
       - isActive
+      - language
     properties:
       app:
         type : string
@@ -4793,6 +4797,7 @@ definitions:
       - app
       - topTabParams
       - isTransparent
+      - language
     properties:
       app:
         type : string

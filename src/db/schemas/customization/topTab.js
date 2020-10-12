@@ -7,14 +7,19 @@ class TopTabSchema{};
 TopTabSchema.prototype.name = 'TopTab';
 
 TopTabSchema.prototype.schema =  {
-    ids : [{
-        name      : {type : String, required: true},
-        icon      : {type : String, required: true},
-        link_url  : {type : String, required: true}
-    }],
-    isTransparent : { type : Boolean, default : false},
+    languages: [
+        {
+            language : { type : mongoose.Schema.Types.ObjectId, ref: 'Language' },
+            useStandardLanguage : { type : Boolean, default : true},
+            ids : [{
+                name      : {type : String, required: true},
+                icon      : {type : String, required: true},
+                link_url  : {type : String, required: true}
+            }],
+            isTransparent : { type : Boolean, default : false},
+        }
+    ]
 }
-
 
 TopTabSchema.prototype.model = db.model(TopTabSchema.prototype.name, new db.Schema(TopTabSchema.prototype.schema));
 export {
