@@ -42,7 +42,7 @@ context('Edit Footer', async () => {
                 },
             ],
             app: app.id,
-            language: app.customization.language
+            language: app.customization.languages[0]
         };
 
         let res = await editFooterCustomizationApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });

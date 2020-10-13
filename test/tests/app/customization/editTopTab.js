@@ -24,7 +24,7 @@ context('Edit Top Tab', async () => {
                 link_url: "test.com"
             }],
             isTransparent : true,
-            language: app.customization.language
+            language: app.customization.languages[0]
         };
 
         let res = await editTopTabCustomizationApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });

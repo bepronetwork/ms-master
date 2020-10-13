@@ -21,7 +21,7 @@ context('Add TopBar Info', async () => {
             app : app.id,
             text : 'yep!',
             isActive : true,
-            language: app.customization.language
+            language: app.customization.languages[0]
         };
 
         let res = await editTopBarCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
