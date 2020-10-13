@@ -11,6 +11,7 @@ context('Edit Footer', async () => {
     before(async () => {
         app = global.test.app;
         admin = global.test.admin;
+        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
 
@@ -42,7 +43,8 @@ context('Edit Footer', async () => {
                 },
             ],
             app: app.id,
-            language: app.customization.languages[0]
+            language: app.customization.languages[0],
+            useStandardLanguage: true
         };
 
         let res = await editFooterCustomizationApp({ ...postData, admin: admin.id }, admin.security.bearerToken, { id: admin.id });

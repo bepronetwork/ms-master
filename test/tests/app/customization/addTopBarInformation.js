@@ -10,6 +10,7 @@ context('Add TopBar Info', async () => {
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;
+        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
 
@@ -21,7 +22,8 @@ context('Add TopBar Info', async () => {
             app : app.id,
             text : 'yep!',
             isActive : true,
-            language: app.customization.languages[0]
+            language: app.customization.languages[0],
+            useStandardLanguage: true
         };
 
         let res = await editTopBarCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
