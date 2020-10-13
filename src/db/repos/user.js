@@ -511,6 +511,30 @@ class UsersRepository extends MongoComponent{
         }
     }
 
+    async changeDepositPosition(_id, state){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findByIdAndUpdate(
+                    { _id: _id },
+                    { $set: { "isDepositing" : state} })
+                    .lean() 
+                    .exec( (err, item) => {
+                        if(err){reject(err)}
+                        try{
+                            if((state == true) && (item.isDepositing == true)){throwError('DEPOSIT_MODE_IN_API')}
+                            resolve(item);
+                        }catch(err){
+                            reject(err);
+                        }
+
+                    }
+                )
+            })
+        }catch(err){
+            throw (err)
+        }
+    }
+
     async getAllUsersBalance({app}){
         try{
             return new Promise( (resolve, reject) => {

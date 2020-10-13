@@ -326,5 +326,9 @@
     "081" : {
         "key"      : "LANGUAGE_NOT_EXISTENT",
         "message"   : "Language doesn't exist, please contact support."
+    },
+    "082" : {
+        "key"      : "DEPOSIT_MODE_IN_API",
+        "message"   : "The system is already processing your action"
     }
 }

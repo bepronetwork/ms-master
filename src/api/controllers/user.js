@@ -7,6 +7,7 @@ import PusherSingleton from '../../logic/third-parties/pusher';
 import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
 import { SearchSingleton } from '../../logic/utils/search';
 import { UsersRepository } from '../../db/repos';
+import { throwError } from '../../controllers/Errors/ErrorManager';
 
 /**
  * Description of the function.
@@ -288,18 +289,29 @@ async function webhookDeposit(req, res) {
         req.body.isApp = req.query.isApp;
         let params = req.body;
         var dataTransaction = null;
+        let user = null;
+        let userWallet = null;
+        let addressUser = null;
         switch ((req.body.ticker).toLowerCase()) {
             case 'eth':
                 dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
+                user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+                userWallet      = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "eth");
+                addressUser     = userWallet.depositAddresses[0].address;
+                if(addressUser != dataTransaction.payload.to){
+                    throwError("USER_ADDRESS_IS_NOT_VALID");
+                }
                 break;
             case 'btc':
                 params.txHash = params.txid;
                 dataTransaction = await cryptoBtc.CryptoBtcSingleton.getTransaction(params.txHash);
-                let user        = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
-
-                let userWallet  = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
-                let addressUser = userWallet.depositAddresses[0].address;
+                user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+                userWallet      = user.wallet.find((w) => w.currency.ticker.toLowerCase() == "btc");
+                addressUser     = userWallet.depositAddresses[0].address;
                 let indexAddress = SearchSingleton.indexOfByObjectAddress(dataTransaction.payload.txouts, addressUser);
+                if(indexAddress==-1) {
+                    throwError("USER_ADDRESS_IS_NOT_VALID");
+                }
                 dataTransaction = {
                     payload: {
                         hash: dataTransaction.payload.txid,
