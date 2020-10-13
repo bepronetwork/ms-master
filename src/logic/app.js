@@ -2256,7 +2256,8 @@ const progressActions = {
         let footer = await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,
             supportLinks   : supportLinkIDs,
-            language
+            language,
+            useStandardLanguage
         })
 
         let result = await FooterRepository.prototype.findById(footer._id)
