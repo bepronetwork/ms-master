@@ -40,10 +40,11 @@ context('Add TopBar Info', async () => {
         expect(status).to.be.equal(200);
 
         const { topBar } = res_app.data.message.customization;
-
-        expect(postData.backgroundColor).to.be.equal(topBar.backgroundColor);
-        expect(postData.textColor).to.be.equal(topBar.textColor);
-        expect(postData.text).to.be.equal(topBar.text);
-        expect(postData.isActive).to.be.equal(topBar.isActive);
+        console.log(topBar.languages);
+        console.log(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id));
+        expect(postData.backgroundColor).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).backgroundColor);
+        expect(postData.textColor).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).textColor);
+        expect(postData.text).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).text);
+        expect(postData.isActive).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).isActive);
     }));
 });

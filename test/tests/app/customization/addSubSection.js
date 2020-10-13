@@ -54,17 +54,17 @@ context('Add SubSection', async () => {
 
         const { subSections } = res_app.data.message.customization;
 
-        expect(postData.subSections[0].title).to.be.equal(subSections.ids[0].title);
-        expect(postData.subSections[0].text).to.be.equal(subSections.ids[0].text);
-        expect(postData.subSections[0].background_color).to.be.equal(subSections.ids[0].background_color);
-        expect(postData.subSections[0].position).to.be.equal(subSections.ids[0].position);
-        expect(postData.subSections[0].location).to.be.equal(subSections.ids[0].location);
+        expect(postData.subSections[0].title).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[0].title);
+        expect(postData.subSections[0].text).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[0].text);
+        expect(postData.subSections[0].background_color).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[0].background_color);
+        expect(postData.subSections[0].position).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[0].position);
+        expect(postData.subSections[0].location).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[0].location);
 
-        expect(postData.subSections[1].title).to.be.equal(subSections.ids[1].title);
-        expect(postData.subSections[1].text).to.be.equal(subSections.ids[1].text);
-        expect(postData.subSections[1].background_color).to.be.equal(subSections.ids[1].background_color);
-        expect(postData.subSections[1].position).to.be.equal(subSections.ids[1].position);
-        expect(postData.subSections[1].location).to.be.equal(subSections.ids[1].location);
+        expect(postData.subSections[1].title).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[1].title);
+        expect(postData.subSections[1].text).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[1].text);
+        expect(postData.subSections[1].background_color).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[1].background_color);
+        expect(postData.subSections[1].position).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[1].position);
+        expect(postData.subSections[1].location).to.be.equal(subSections.languages.find((language)=>language.language._id==app.customization.languages[0]._id).ids[1].location);
 
     }));
 });
