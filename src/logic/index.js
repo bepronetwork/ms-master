@@ -60,8 +60,10 @@ import SocialLinkLogic from "./socialLink";
 import FreeCurrencyLogic from "./freeCurrency";
 import AnalyticsLogic from "./analytics";
 import TopUpLogic from "./topUp";
+import LanguageLogic from "./language";
 
 export {
+    LanguageLogic,
     TopUpLogic,
     SocialLinkLogic,
     AnalyticsLogic,

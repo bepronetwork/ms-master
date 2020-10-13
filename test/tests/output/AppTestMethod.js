@@ -104,12 +104,6 @@ module.exports = {
         expect(data.message.customization).to.include({ _id: data.message.customization._id, topBar: data.message.customization.topBar, banners: data.message.customization.banners, subSections: data.message.customization.subSections });
         expect(data.message.customization._id).to.not.be.null;
         expect(data.message.customization._id).to.be.an('string');
-        expect(data.message.customization.topBar).to.not.be.null;
-        expect(data.message.customization.topBar).to.be.an('object');
-        expect(data.message.customization.topBar).to.include({ isActive: data.message.customization.topBar.isActive, _id: data.message.customization.topBar._id });
-        expect(data.message.customization.topBar.isActive).to.not.be.null;
-        expect(data.message.customization.topBar._id).to.not.be.null;
-        expect(data.message.customization.topBar._id).to.be.an('string');
     },
     shouldGetAppData(data, expect) {
         expect(data.status).to.not.be.null;

@@ -10,17 +10,19 @@ context('Add TopBar Info', async () => {
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;
+        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
 
     it('should be able to edit top bar info', mochaAsync(async () => {
-
         const postData = {
             backgroundColor : '#ccc',
             textColor : '#ccc',
             app : app.id,
             text : 'yep!',
-            isActive : true
+            isActive : true,
+            language: app.customization.languages[0]._id,
+            useStandardLanguage: true
         };
 
         let res = await editTopBarCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});
@@ -33,10 +35,9 @@ context('Add TopBar Info', async () => {
         expect(status).to.be.equal(200);
 
         const { topBar } = res_app.data.message.customization;
-
-        expect(postData.backgroundColor).to.be.equal(topBar.backgroundColor);
-        expect(postData.textColor).to.be.equal(topBar.textColor);
-        expect(postData.text).to.be.equal(topBar.text);
-        expect(postData.isActive).to.be.equal(topBar.isActive);
+        expect(postData.backgroundColor).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).backgroundColor);
+        expect(postData.textColor).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).textColor);
+        expect(postData.text).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).text);
+        expect(postData.isActive).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).isActive);
     }));
 });

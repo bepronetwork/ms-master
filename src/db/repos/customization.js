@@ -73,6 +73,23 @@ class CustomizationRepository extends MongoComponent{
         });
     }
 
+    addNewLanguage(_id, language_id){
+        return new Promise( (resolve,reject) => {
+            CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
+                _id, 
+                { $push: { 
+                    "languages" : language_id,
+                } },
+                { 'new': true })
+                .lean()
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
     setSubSectionId(_id, subSection_id){
         return new Promise( (resolve,reject) => {
             CustomizationRepository.prototype.schema.model.findByIdAndUpdate(
