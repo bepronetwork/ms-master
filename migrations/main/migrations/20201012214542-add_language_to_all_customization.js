@@ -19,7 +19,6 @@ class Progress {
 
 }
 
-
 module.exports = {
   async up(db, client) {
     let index = -1;
@@ -34,49 +33,92 @@ module.exports = {
       for (let app of apps) {
         processObj.setProcess(processIndex);
         processIndex--;
-        let customization = await db.collection('customizations').findOne({ _id: app.customization});
-        let languageId    = customization.languages[0];
-
-        let bannerFind    = await db.collection('banners').findOne({_id: customization.banners});
-        // console.log("bannerFind ", bannerFind);
-        await db.collection('banners').updateOne({_id: customization.banners},        { $set: { "languages":  [
-          {
-            language: languageId,
-            ...bannerFind
+        if (app.customization) {
+          let customization = await db.collection('customizations').findOne({ _id: app.customization });
+          let languageId = null;
+          if (!customization.languages[0]) {
+            let newlanguages = await db.collection('languages').insertOne({
+              isActivated: true,
+              prefix: "EN",
+              name: "English",
+              logo: "https://i.ibb.co/HBxGmJ2/reino-unido.png",
+              __v: 0
+            });
+            await db.collection('customizations').updateOne(
+              { _id: customization._id },
+              { $push: { "languages": newlanguages.ops[0]._id } }
+            )
+            languageId = newlanguages.ops[0]._id
+          } else {
+            languageId = customization.languages[0]
           }
-        ]} });
-        let footersFind    = await db.collection('footers').findOne({_id: customization.footer});
-        // console.log("footersFind ",footersFind);
-        await db.collection('footers').updateOne({_id: customization.footer},         { $set: { "languages":  [
-          {
-            language: languageId,
-            ...footersFind
+          console.log(languageId)
+          let bannerFind = await db.collection('banners').findOne({ _id: customization.banners });
+          if (bannerFind && !bannerFind.languages) {
+            await db.collection('banners').updateOne({ _id: customization.banners }, {
+              $set: {
+                "languages": [
+                  {
+                    language: languageId,
+                    ...bannerFind
+                  }
+                ]
+              }
+            });
           }
-        ]} });
-        let subsectionsFind    = await db.collection('subsections').findOne({_id: customization.subSections});
-        // console.log("subsectionsFind ",subsectionsFind);
-        await db.collection('subsections').updateOne({_id: customization.subSections},{ $set: { "languages":  [
-          {
-            language: languageId,
-            ...subsectionsFind
+          let footersFind = await db.collection('footers').findOne({ _id: customization.footer });
+          if (footersFind && !footersFind.languages) {
+            await db.collection('footers').updateOne({ _id: customization.footer }, {
+              $set: {
+                "languages": [
+                  {
+                    language: languageId,
+                    ...footersFind
+                  }
+                ]
+              }
+            });
           }
-        ]} });
-        let topbarsFind    = await db.collection('topbars').findOne({_id: customization.topBar});
-        // console.log("topbarsFind ",topbarsFind);
-        await db.collection('topbars').updateOne({_id: customization.topBar},         { $set: { "languages":  [
-          {
-            language: languageId,
-            ...topbarsFind
+          let subsectionsFind = await db.collection('subsections').findOne({ _id: customization.subSections });
+          if (subsectionsFind && !subsectionsFind.languages) {
+            await db.collection('subsections').updateOne({ _id: customization.subSections }, {
+              $set: {
+                "languages": [
+                  {
+                    language: languageId,
+                    ...subsectionsFind
+                  }
+                ]
+              }
+            });
           }
-        ]} });
-        let toptabsFind    = await db.collection('toptabs').findOne({_id: customization.topTab});
-        // console.log("toptabsFind ",toptabsFind);
-        await db.collection('toptabs').updateOne({_id: customization.topTab},         { $set: { "languages":  [
-          {
-            language: languageId,
-            ...toptabsFind
+          let topbarsFind = await db.collection('topbars').findOne({ _id: customization.topBar });
+          if (topbarsFind && !topbarsFind.languages) {
+            await db.collection('topbars').updateOne({ _id: customization.topBar }, {
+              $set: {
+                "languages": [
+                  {
+                    language: languageId,
+                    ...topbarsFind
+                  }
+                ]
+              }
+            });
           }
-        ]} });
+          let toptabsFind = await db.collection('toptabs').findOne({ _id: customization.topTab });
+          if (toptabsFind && !toptabsFind.languages) {
+            await db.collection('toptabs').updateOne({ _id: customization.topTab }, {
+              $set: {
+                "languages": [
+                  {
+                    language: languageId,
+                    ...toptabsFind
+                  }
+                ]
+              }
+            });
+          }
+        }
       }
       processObj.destroyProgress();
     }
