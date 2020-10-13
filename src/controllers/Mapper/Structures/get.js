@@ -95,7 +95,7 @@ const get_object = (object) => {
                 })
             }) : object.customization.colors,
             "topBar": !object.customization.topBar ? {} : object.customization.topBar,
-            "banners": !object.customization.banners,
+            "banners": !object.customization.banners ? {} : object.customization.banners,
             "subSections": !object.customization.subSections ? {} : object.customization.subSections,
             "logo": !object.customization.logo ? {} : {
                 "_id": object.customization.logo._id,
