@@ -37,7 +37,7 @@ context('Add Banner', async () => {
             app : app.id,
             autoDisplay : true,
             fullWidth: true,
-            language: app.customization.languages[0],
+            language: app.customization.languages[0]._id,
             useStandardLanguage: true
         };
 

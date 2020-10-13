@@ -43,7 +43,7 @@ context('Edit Footer', async () => {
                 },
             ],
             app: app.id,
-            language: app.customization.languages[0],
+            language: app.customization.languages[0]._id,
             useStandardLanguage: true
         };
 

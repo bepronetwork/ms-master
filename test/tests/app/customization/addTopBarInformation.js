@@ -26,7 +26,7 @@ context('Add TopBar Info', async () => {
             app : app.id,
             text : 'yep!',
             isActive : true,
-            language: app.customization.languages[0],
+            language: app.customization.languages[0]._id,
             useStandardLanguage: true
         };
 

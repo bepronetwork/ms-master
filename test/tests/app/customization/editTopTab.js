@@ -25,7 +25,7 @@ context('Edit Top Tab', async () => {
                 link_url: "test.com"
             }],
             isTransparent : true,
-            language: app.customization.languages[0],
+            language: app.customization.languages[0]._id,
             useStandardLanguage: true
         };
 
