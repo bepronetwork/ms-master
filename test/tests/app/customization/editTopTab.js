@@ -16,7 +16,6 @@ context('Edit Top Tab', async () => {
 
 
     it('should be able to edit app Top Tab', mochaAsync(async () => {
-        console.log("App Id: ",app.id)
         const postData = {
             app: app.id,
             topTabParams: [{

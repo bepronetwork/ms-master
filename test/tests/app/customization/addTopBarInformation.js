@@ -15,11 +15,6 @@ context('Add TopBar Info', async () => {
 
 
     it('should be able to edit top bar info', mochaAsync(async () => {
-
-        console.log(app);
-        console.log(app.customization);
-        console.log(app.customization.languages);
-
         const postData = {
             backgroundColor : '#ccc',
             textColor : '#ccc',
@@ -40,8 +35,6 @@ context('Add TopBar Info', async () => {
         expect(status).to.be.equal(200);
 
         const { topBar } = res_app.data.message.customization;
-        console.log(topBar.languages);
-        console.log(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id));
         expect(postData.backgroundColor).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).backgroundColor);
         expect(postData.textColor).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).textColor);
         expect(postData.text).to.be.equal(topBar.languages.find((language)=>language.language._id==app.customization.languages[0]._id).text);
