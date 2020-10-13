@@ -12,7 +12,7 @@ context('Add SubSection', async () => {
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;
-        app = (await getAppAuth({app : admin.app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
+        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
 
