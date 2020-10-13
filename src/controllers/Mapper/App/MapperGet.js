@@ -1,5 +1,6 @@
 import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
 import { Security } from "../../Security";
+import { LanguageSingleton } from "../../../logic/utils/language";
 
 let self;
 
@@ -146,9 +147,9 @@ let outputs = {
                         "hex": color.hex
                     })
                 }) : object.customization.colors,
-                "topBar": !object.customization.topBar ? {} : object.customization.topBar,
-                "banners": !object.customization.banners ? {} : object.customization.banners,
-                "subSections": !object.customization.subSections ? {} : object.customization.subSections,
+                "topBar": !object.customization.topBar ? {} : {...object.customization.topBar, languages: LanguageSingleton.filterLanguageEN(object.customization.topBar.languages) },
+                "banners": !object.customization.banners ? {} : {...object.customization.banners, languages: LanguageSingleton.filterLanguageEN(object.customization.banners.languages) },
+                "subSections": !object.customization.subSections ? {} : {...object.customization.subSections, languages: LanguageSingleton.filterLanguageEN(object.customization.subSections.languages) },
                 "logo": !object.customization.logo ? {} : {
                     "_id": object.customization.logo._id,
                     "id": !object.customization.logo.id ? '' : object.customization.logo.id
@@ -157,7 +158,7 @@ let outputs = {
                     "_id": object.customization.background._id,
                     "id": !object.customization.background.id ? '' : object.customization.background.id
                 },
-                "footer": !object.customization.footer ? {} : object.customization.footer,
+                "footer": !object.customization.footer ? {} : {...object.customization.footer, languages: LanguageSingleton.filterLanguageEN(object.customization.footer.languages) },
                 "topIcon": !object.customization.topIcon ? {} : {
                     "_id": object.customization.topIcon._id,
                     "id": !object.customization.topIcon.id ? '' : object.customization.topIcon.id
@@ -167,7 +168,7 @@ let outputs = {
                     "id": !object.customization.loadingGif.id ? '' : object.customization.loadingGif.id
                 },
                 "esportsScrenner": object.customization.esportsScrenner,
-                "topTab": object.customization.topTab
+                "topTab": !object.customization.topTab ? {} : {...object.customization.topTab, languages: LanguageSingleton.filterLanguageEN(object.customization.topTab.languages) },
             },
             "integrations": !object.integrations ? {} : {
                 "_id": object.integrations._id,

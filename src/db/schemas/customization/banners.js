@@ -1,6 +1,6 @@
 import { globals } from "../../../Globals";
 let db = globals.main_db;
-
+import mongoose from 'mongoose';
 class BannersSchema{};
 
 BannersSchema.prototype.name = 'Banners';

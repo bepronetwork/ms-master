@@ -1,4 +1,5 @@
 context('Customization', async () => {
+    require('./addLanguages');
     require('./editVirtualCurrency');
     require('./addTopBarInformation');
     require('./addBackground');
@@ -16,5 +17,4 @@ context('Customization', async () => {
     require('./editTheme');
     require('./editEsportsScrenner')
     require('./editTopTab');
-    require('./addLanguages')
 });
