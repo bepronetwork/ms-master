@@ -16,6 +16,10 @@ context('Add TopBar Info', async () => {
 
     it('should be able to edit top bar info', mochaAsync(async () => {
 
+        console.log(app);
+        console.log(app.customization);
+        console.log(app.customization.languages);
+
         const postData = {
             backgroundColor : '#ccc',
             textColor : '#ccc',
