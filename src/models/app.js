@@ -1022,8 +1022,8 @@ class App extends ModelComponent {
 
     async editTopBar() {
         try {
-            let app = await this.process('EditTopBar');
-            return MapperEditTopBarSingleton.output('EditTopBar', app);
+            await this.process('EditTopBar');
+            return true;
         } catch (err) {
             throw err;
         }
@@ -1037,8 +1037,8 @@ class App extends ModelComponent {
     async editTopTab() {
         //output = boolean
         try {
-            let app = await this.process('EditTopTab');
-            return app
+            await this.process('EditTopTab');
+            return true;
         } catch (err) {
             throw err;
         }
@@ -1051,8 +1051,8 @@ class App extends ModelComponent {
 
     async editBanners() {
         try {
-            let app = await this.process('EditBanners');
-            return MapperEditBannersSingleton.output('EditBanners', app);
+            await this.process('EditBanners');
+            return true;
         } catch (err) {
             throw err;
         }
@@ -1149,8 +1149,8 @@ class App extends ModelComponent {
 
     async editFooter() {
         try {
-            let app = await this.process('EditFooter');
-            return MapperEditFooterSingleton.output('EditFooter', app);
+            await this.process('EditFooter');
+            return true;
         } catch (err) {
             throw err;
         }

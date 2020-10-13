@@ -38,6 +38,7 @@ module.exports = {
         let languageId    = customization.languages[0];
 
         let bannerFind    = await db.collection('banners').findOne({_id: customization.banners});
+        // console.log("bannerFind ", bannerFind);
         await db.collection('banners').updateOne({_id: customization.banners},        { $set: { "languages":  [
           {
             language: languageId,
@@ -45,6 +46,7 @@ module.exports = {
           }
         ]} });
         let footersFind    = await db.collection('footers').findOne({_id: customization.footer});
+        // console.log("footersFind ",footersFind);
         await db.collection('footers').updateOne({_id: customization.footer},         { $set: { "languages":  [
           {
             language: languageId,
@@ -52,6 +54,7 @@ module.exports = {
           }
         ]} });
         let subsectionsFind    = await db.collection('subsections').findOne({_id: customization.subSections});
+        // console.log("subsectionsFind ",subsectionsFind);
         await db.collection('subsections').updateOne({_id: customization.subSections},{ $set: { "languages":  [
           {
             language: languageId,
@@ -59,6 +62,7 @@ module.exports = {
           }
         ]} });
         let topbarsFind    = await db.collection('topbars').findOne({_id: customization.topBar});
+        // console.log("topbarsFind ",topbarsFind);
         await db.collection('topbars').updateOne({_id: customization.topBar},         { $set: { "languages":  [
           {
             language: languageId,
@@ -66,6 +70,7 @@ module.exports = {
           }
         ]} });
         let toptabsFind    = await db.collection('toptabs').findOne({_id: customization.topTab});
+        // console.log("toptabsFind ",toptabsFind);
         await db.collection('toptabs').updateOne({_id: customization.topTab},         { $set: { "languages":  [
           {
             language: languageId,
