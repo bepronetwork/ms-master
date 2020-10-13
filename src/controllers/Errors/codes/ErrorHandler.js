@@ -95,7 +95,8 @@ ErrorHandler.prototype.KEYS =  {
     'NO_FREE_CURRENCY'                      : "078",
     'FREE_CURRENCY_NO_ACTIVATED'            : "079",
     'INSUFFICIENT_FUNDS_APP'                : "080",
-    'DEPOSIT_MODE_IN_API'                   : "081"
+    'LANGUAGE_NOT_EXISTENT'                 : "081",
+    'DEPOSIT_MODE_IN_API'                   : "082"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {

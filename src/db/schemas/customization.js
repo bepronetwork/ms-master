@@ -22,6 +22,7 @@ CustomizationSchema.prototype.schema =  {
     icons          : { type : mongoose.Schema.Types.ObjectId, ref: 'Icons', required : true },
     esportsScrenner  : { type : mongoose.Schema.Types.ObjectId, ref: 'EsportsScrenner', required : true },
     socialLink     : { type : mongoose.Schema.Types.ObjectId, ref: 'SocialLink', required : true },
+    languages      : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Language', required : true }],
 }
 
 

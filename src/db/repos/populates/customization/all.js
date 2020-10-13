@@ -4,11 +4,25 @@ let populate_customization_all = [
         path : 'topBar',
         model : 'TopBar',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'languages.language',
+                model : 'Language',
+                select : { '__v': 0}
+            },
+        ]
     },
     {
         path : 'banners',
         model : 'Banners',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'languages.language',
+                model : 'Language',
+                select : { '__v': 0}
+            },
+        ]
     },
     {
         path : 'socialLink',
@@ -19,6 +33,13 @@ let populate_customization_all = [
         path : 'subSections',
         model : 'SubSections',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'languages.language',
+                model : 'Language',
+                select : { '__v': 0}
+            },
+        ]
     },
     {
         path : 'icons',
@@ -44,6 +65,13 @@ let populate_customization_all = [
         path : 'topTab',
         model : 'TopTab',
         select : { '__v': 0},
+        populate : [
+            {
+                path : 'languages.language',
+                model : 'Language',
+                select : { '__v': 0}
+            },
+        ]
     },
     {
         path : 'loadingGif',
@@ -66,20 +94,30 @@ let populate_customization_all = [
         select : { '__v': 0},
     },
     {
+        path : 'languages',
+        model : 'Language',
+        select : { '__v': 0},
+    },
+    {
         path : 'footer',
         model : 'Footer',
         select : { '__v': 0},
         populate : [
             {
-                path : 'supportLinks',
+                path : 'languages.supportLinks',
                 model : 'Link',
                 select : { '__v': 0}
             },
             {
-                path : 'communityLinks',
+                path : 'languages.communityLinks',
                 model : 'Link',
                 select : { '__v': 0}
             },
+            {
+                path : 'languages.language',
+                model : 'Language',
+                select : { '__v': 0}
+            }
         ]
     },
 ] 

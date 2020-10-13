@@ -41,13 +41,29 @@ class TopBarRepository extends MongoComponent{
 
     findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
+            TopBarRepository.prototype.schema.model.updateOne(
+                {_id, "languages.language": newStructure.language},
+                { $set: {
+                    "languages.$.isActive"            : newStructure.isActive,
+                    "languages.$.backgroundColor"     : newStructure.backgroundColor,
+                    "languages.$.textColor"           : newStructure.textColor,
+                    "languages.$.text"                : newStructure.text,
+                    "languages.$.useStandardLanguage" : newStructure.useStandardLanguage,
+                } })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
             TopBarRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
-                { $set: { 
-                    "isActive"          : newStructure.isActive,
-                    "backgroundColor"   : newStructure.backgroundColor,
-                    "textColor"         : newStructure.textColor,
-                    "text"              : newStructure.text
+                { $push: { 
+                    "languages" : language
                 } },
                 { 'new': true })
                 .lean()

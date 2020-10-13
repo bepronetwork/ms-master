@@ -44,11 +44,27 @@ class FooterRepository extends MongoComponent{
 
     findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
+            FooterRepository.prototype.schema.model.updateOne(
+                {_id, "languages.language": newStructure.language},
+                { $set: {
+                    "languages.$.communityLinks"       : newStructure.communityLinks,
+                    "languages.$.supportLinks"         : newStructure.supportLinks,
+                    "languages.$.useStandardLanguage"  : newStructure.useStandardLanguage,
+                } })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
             FooterRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
-                { $set: { 
-                    "communityLinks"           : newStructure.communityLinks,
-                    "supportLinks"             : newStructure.supportLinks
+                { $push: { 
+                    "languages" : language
                 } },
                 { 'new': true })
                 .lean()

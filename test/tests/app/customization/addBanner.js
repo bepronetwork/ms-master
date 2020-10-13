@@ -12,6 +12,7 @@ context('Add Banner', async () => {
     before( async () =>  {
         app = global.test.app;
         admin = global.test.admin;
+        app = (await getAppAuth({app : app.id, admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
     });
 
 
@@ -35,7 +36,9 @@ context('Add Banner', async () => {
             ],
             app : app.id,
             autoDisplay : true,
-            fullWidth: true
+            fullWidth: true,
+            language: app.customization.languages[0]._id,
+            useStandardLanguage: true
         };
 
         let res = await editBannersCustomizationApp({...postData, admin: admin.id}, admin.security.bearerToken , {id : admin.id});

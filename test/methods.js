@@ -96,6 +96,22 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async addLanguage(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/language/add')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async editLanguage(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/customization/language/edit')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editCripsrIntegration(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/integrations/cripsr/edit')
@@ -123,6 +139,12 @@ module.exports = {
     async getSkinEcosystem(params) {
         return request(global.server)
         .get('/api/app/skinEcosystem/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async getLanguagesEcosystem(params) {
+        return request(global.server)
+        .get('/api/app/languageEcosystem/get')
         .send(params)
         .then(res => detectServerError(res))
     },

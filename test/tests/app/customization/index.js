@@ -1,4 +1,5 @@
 context('Customization', async () => {
+    require('./addLanguages');
     require('./editVirtualCurrency');
     require('./addTopBarInformation');
     require('./addBackground');
