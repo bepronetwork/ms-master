@@ -28,7 +28,7 @@ UserSchema.prototype.schema = {
     register_timestamp  : { type: Date, required : true},
     metadata            : { type : JSON },
     isWithdrawing       : { type : Boolean, default : false, required : true },
-    isDepositing       : { type : Boolean, default : false, required : true },
+    isDepositing        : { type : Boolean, default : false, required : true },
     security            : { type: mongoose.Schema.Types.ObjectId, ref: 'Security', required : true},
     email_confirmed     : { type : Boolean, default : false, required : true },
     points              : { type: Number, required : true, default: 0 },

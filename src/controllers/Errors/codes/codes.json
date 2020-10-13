@@ -322,5 +322,9 @@
     "080" : {
         "key"      : "INSUFFICIENT_FUNDS_APP",
         "message"   : "Seems of casino don´t have enought funds to procced with this transaction."
+    },
+    "081" : {
+        "key"      : "DEPOSIT_MODE_IN_API",
+        "message"   : "The system is already processing your action"
     }
 }
