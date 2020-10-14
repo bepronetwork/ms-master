@@ -85,19 +85,19 @@ class Globals{
         this.main_db = new Mongoose();
         this.main_db.set('useFindAndModify', false);
         await this.main_db.connect(`${MONGO_CONNECTION_STRING}/main?ssl=true&authSource=admin&retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true});
-        this.main_db.set('maxTimeMS', !TIMEOUT_MONGO_MS ? (15*1000) : (TIMEOUT_MONGO_MS*1000));
+        this.main_db.set('maxTimeMS', TIMEOUT_MONGO_MS);
         this.main_db.Promise = bluebird;
         // Ecosystem DB
         this.ecosystem_db = new Mongoose();
         this.ecosystem_db.set('useFindAndModify', false);
         await this.ecosystem_db.connect(`${MONGO_CONNECTION_STRING}/ecosystem?ssl=true&authSource=admin&retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true});
-        this.ecosystem_db.set('maxTimeMS', !TIMEOUT_MONGO_MS ? (15*1000) : (TIMEOUT_MONGO_MS*1000));
+        this.ecosystem_db.set('maxTimeMS', TIMEOUT_MONGO_MS);
         this.ecosystem_db.Promise = bluebird;
         // Redis DB
         this.redis_db = new Mongoose();
         this.redis_db.set('useFindAndModify', false);
         await this.redis_db.connect(`${MONGO_CONNECTION_STRING}/redis?ssl=true&authSource=admin&retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true});
-        this.redis_db.set('maxTimeMS', !TIMEOUT_MONGO_MS ? (15*1000) : (TIMEOUT_MONGO_MS*1000));
+        this.redis_db.set('maxTimeMS', TIMEOUT_MONGO_MS);
         this.redis_db.Promise = bluebird;
         // Main DB
         this.default = new Mongoose();
