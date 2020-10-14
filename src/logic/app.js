@@ -553,15 +553,7 @@ const processActions = {
         const subSections = {
             language : "",
             useStandardLanguage : true,
-            ids : [{
-                title            : "",
-                text             : "",
-                image_url        : "",
-                background_url   : "",
-                background_color : "",
-                position         : "",
-                location         : ""
-            }]
+            ids : []
         }
         const topBar = {
             language : "",
