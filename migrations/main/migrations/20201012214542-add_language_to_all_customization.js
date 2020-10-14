@@ -36,7 +36,7 @@ module.exports = {
         if (app.customization) {
           let customization = await db.collection('customizations').findOne({ _id: app.customization });
           let languageId = null;
-          if (!customization.languages[0]) {
+          if (!customization.languages) {
             let newlanguages = await db.collection('languages').insertOne({
               isActivated: true,
               prefix: "EN",
