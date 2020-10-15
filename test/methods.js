@@ -112,6 +112,14 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getDeposit(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/app/deposit/get')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async editCripsrIntegration(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/integrations/cripsr/edit')

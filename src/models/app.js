@@ -317,6 +317,20 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+   * @param {String} 
+   * @return {bool || Exception}  
+   */
+  async getDeposit() {
+    try {
+        let app = await this.process('GetDeposit');
+        // output Boolean
+        return app;
+    } catch (err) {
+        throw err;
+    }
+}
+
 
     /**
    * @param {String} 

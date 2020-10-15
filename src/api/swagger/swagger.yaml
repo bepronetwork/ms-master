@@ -2882,6 +2882,37 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /app/deposit/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Deposits from App
+      operationId: getDeposit
+      description: Get Deposits from App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/getDepositRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /app/freeCurrency/get:
     x-swagger-router-controller: user
     post:
@@ -5587,7 +5618,44 @@ definitions:
         example: "2002-12-09"
         description: |
           End Date
-
+  getDepositRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          admin ID
+      size:
+        type : number
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+      user :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User Id
   AppGetUsersBetsRequest:
     type: object
     required:

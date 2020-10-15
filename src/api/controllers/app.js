@@ -401,6 +401,20 @@ async function addCurrencyWallet(req, res) {
     }
 }
 
+async function getDeposit(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getDeposit();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 // JSON WebToken Security Functions
 async function getGame(req, res) {
     try {
@@ -1255,6 +1269,7 @@ async function getCompliance(req, res) {
 
 
 export {
+    getDeposit,
     editLanguage,
     addLanguage,
     editAnalyticsKey,
