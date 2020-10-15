@@ -26,27 +26,27 @@ module.exports = {
       {
         "prefix": "EN",
         "name": "English",
-        "logo": "https://i.ibb.co/HBxGmJ2/reino-unido.png"
+        "logo": "https://storage.googleapis.com/betprotocol-apps/english.jpg"
       },
       {
         "prefix": "KR",
         "name": "Korean",
-        "logo": "https://i.ibb.co/TLvFxMz/coreia-do-sul.png"
+        "logo": "https://storage.googleapis.com/betprotocol-apps/korean.jpg"
       },
       {
         "prefix": "RU",
         "name": "Russian",
-        "logo": "https://i.ibb.co/tQ75PmB/russia.png"
+        "logo": "https://storage.googleapis.com/betprotocol-apps/russian.jpg"
       },
       {
         "prefix": "CH",
         "name": "Chinese",
-        "logo": "https://i.ibb.co/wRsJKQd/china.png"
+        "logo": "https://storage.googleapis.com/betprotocol-apps/chinese.jpg"
       },
       {
         "prefix": "JP",
         "name": "Japanese",
-        "logo": "https://i.ibb.co/x6tLddF/japao.png"
+        "logo": "https://storage.googleapis.com/betprotocol-apps/japanese.jpg"
       },
     ]
     for(let languagesAvailable of languagesToEcosystem){

@@ -17,8 +17,8 @@ SubSectionsSchema.prototype.schema =  {
                 image_url        : {type : String},
                 background_url   : {type : String},
                 background_color : {type : String},
-                position         : {type : Number},
-                location         : {type : Number}
+                position         : {type : Number, default: 0},
+                location         : {type : Number, default: 0}
             }]
         }
     ]

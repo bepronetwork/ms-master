@@ -41,7 +41,7 @@ module.exports = {
               isActivated: true,
               prefix: "EN",
               name: "English",
-              logo: "https://i.ibb.co/HBxGmJ2/reino-unido.png",
+              logo: "https://storage.googleapis.com/betprotocol-apps/english.jpg",
               __v: 0
             });
             await db.collection('customizations').updateOne(
