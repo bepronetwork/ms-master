@@ -3,7 +3,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { Color } from '../models';
+import { Banners, Color, Footer, Language, SubSections, TopBar, TopTab } from '../models';
 let error = new ErrorManager();
 
 
@@ -41,7 +41,7 @@ const processActions = {
   
 const progressActions = {
 	__register : async (params) => {
-		try{            
+		try{
             let { colors } = params;
             /* Save all Colors customization */
             let ids = await Promise.all(colors.map( async c => {
@@ -49,8 +49,33 @@ const progressActions = {
             }));
 
             params.colors = ids;
+			let languages = [ (await (new Language(
+				{
+					isActivated : true,
+					prefix      : "EN",
+					name        : "English",
+					logo        : "https://i.ibb.co/HBxGmJ2/reino-unido.png"
+				}
+			)).register())._doc._id ];
 
-            let customization = await self.save(params);
+			let topBar 		= (await (new TopBar({languages: [{language: languages[0]}]})).register())._doc._id;
+			let banners 	= (await (new Banners({languages: [{language: languages[0]}]})).register())._doc._id;
+			let subSections = (await (new SubSections({languages: [{language: languages[0]}]})).register())._doc._id;
+			let footer 		= (await (new Footer({languages: [{language: languages[0]}]})).register())._doc._id;
+			let topTab      = (await (new TopTab({
+				languages : [{
+					language: languages[0],
+					ids: [
+						{
+							name: "Casino",
+							icon: "https://i.ibb.co/h96g1bx/Casino.png",
+							link_url: "/"
+						}
+					]
+				}]
+			})).register())._doc._id;
+
+            let customization = await self.save({...params, languages, topBar, banners, subSections, footer, topTab});
 			return {
 				...customization,
 				type : 'customization'
