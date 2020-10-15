@@ -58,11 +58,11 @@ const progressActions = {
 				}
 			)).register())._doc._id ];
 
-			let topBar 		= new TopBar({languages: [{language: languages[0]}]});
-			let banners 	= new Banners({languages: [{language: languages[0]}]});
-			let subSections = new SubSections({languages: [{language: languages[0]}]});
-			let footer 		= new Footer({languages: [{language: languages[0]}]});
-			let topTab      = new TopTab({
+			let topBar 		= await (new TopBar({languages: [{language: languages[0]}]})).register();
+			let banners 	= await (new Banners({languages: [{language: languages[0]}]})).register();
+			let subSections = await (new SubSections({languages: [{language: languages[0]}]})).register();
+			let footer 		= await (new Footer({languages: [{language: languages[0]}]})).register();
+			let topTab      = await (new TopTab({
 				languages : [{
 					language: languages[0],
 					ids: [
@@ -73,7 +73,7 @@ const progressActions = {
 						}
 					]
 				}]
-			});
+			})).register();
 
 			console.log(topBar," 1 ", banners," 2 ", subSections," 3 ", footer," 4 ", topTab)
 
