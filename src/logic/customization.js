@@ -49,10 +49,7 @@ const progressActions = {
             }));
 
             params.colors = ids;
-			let languages = [ (await (new Language()).register())._id ];
-			console.log(languages);
-			let languages2 = [ (await (new Language()).register())._doc._id ];
-			console.log(languages2);
+			let languages = [ (await (new Language()).register())._doc._id ];
             let customization = await self.save({...params, languages});
 			return {
 				...customization,
