@@ -75,8 +75,6 @@ const progressActions = {
 				}]
 			})).register())._doc._id;
 
-			console.log(topBar," 1 ", banners," 2 ", subSections," 3 ", footer," 4 ", topTab)
-
             let customization = await self.save({...params, languages, topBar, banners, subSections, footer, topTab});
 			return {
 				...customization,
