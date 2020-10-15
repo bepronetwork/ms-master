@@ -30,7 +30,6 @@ class Customization extends ModelComponent {
                     new Skin(params),
                     new Background(params),
                     new EsportsScrenner(params),
-                    new Language(params),
                     new SocialLink(params),
                     new TopTab({
                         ids: [

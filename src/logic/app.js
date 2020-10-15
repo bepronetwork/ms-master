@@ -1345,6 +1345,7 @@ const progressActions = {
     },
 	__register : async (params) => {
         let app = await self.save(params);
+        console.log(app._id);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
         let email = admin.email;
         let attributes = {

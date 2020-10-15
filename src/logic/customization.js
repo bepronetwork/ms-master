@@ -3,7 +3,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { Color } from '../models';
+import { Color, Language } from '../models';
 let error = new ErrorManager();
 
 
@@ -49,8 +49,11 @@ const progressActions = {
             }));
 
             params.colors = ids;
-
-            let customization = await self.save(params);
+			let languages = [ (await (new Language()).register())._id ];
+			console.log(languages);
+			let languages2 = [ (await (new Language()).register())._doc._id ];
+			console.log(languages2);
+            let customization = await self.save({...params, languages});
 			return {
 				...customization,
 				type : 'customization'
