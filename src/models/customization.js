@@ -12,6 +12,8 @@ class Customization extends ModelComponent {
 
         let db = new CustomizationRepository();
 
+        console.log(">>>>>>>>>>>>> ", params)
+
         super(
             {
                 name: 'Customization',
