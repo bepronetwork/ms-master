@@ -8,7 +8,8 @@ import {
     pipeline_all_users_balance,
     pipeline_my_bets,
     pipeline_bets_esports,
-    pipeline_user_specific_stats
+    pipeline_user_specific_stats,
+    pipeline_users_deposits
 } from './pipelines/user';
 import { populate_user, populate_user_simple, populate_user_wallet, populate_users, populate_user_to_bet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
@@ -507,6 +508,62 @@ class UsersRepository extends MongoComponent{
                 )
             })
         }catch(err){
+            throw (err)
+        }
+    }
+
+    async changeDepositPosition(_id, state){
+        try{
+            return new Promise( (resolve, reject) => {
+                UsersRepository.prototype.schema.model.findByIdAndUpdate(
+                    { _id: _id },
+                    { $set: { "isDepositing" : state} })
+                    .lean() 
+                    .exec( (err, item) => {
+                        if(err){reject(err)}
+                        try{
+                            if((state == true) && (item.isDepositing == true)){throwError('DEPOSIT_MODE_IN_API')}
+                            resolve(item);
+                        }catch(err){
+                            reject(err);
+                        }
+
+                    }
+                )
+            })
+        }catch(err){
+            throw (err)
+        }
+    }
+
+    async getDepositByApp({app, offset, size, begin_at, end_at, user }) {
+        switch (begin_at) {
+            case "all":
+                begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                break;
+            case undefined:
+                begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                break;
+        }
+        switch (end_at) {
+            case undefined:
+                end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                break;
+            case end_at:
+                end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                break;
+        }
+        try {
+            return new Promise((resolve, reject) => {
+                UsersRepository.prototype.schema.model
+                .aggregate(pipeline_users_deposits({ app, offset, size, begin_at, end_at, user }))
+                .exec(async (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                });
+            });
+        } catch (err) {
             throw (err)
         }
     }

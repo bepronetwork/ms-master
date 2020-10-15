@@ -45,11 +45,11 @@ import {
     MoonPayRepository,
     FreeCurrencyRepository,
     AnalyticsRepository,
-    ComplianceFileRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
@@ -279,6 +279,17 @@ const processActions = {
             storeAddOn: addOns
         }
 		return normalized;
+    },
+    __getDeposit : async (params) => {
+        let deposits = await UsersRepository.prototype.getDepositByApp({
+            app: params.app,
+            offset: params.offset,
+            size : params.size,
+            user: params.user,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return deposits;
     },
     __getAuth : async (params) => {
         let app = await AppRepository.prototype.findAppById(params.app, "get_app_auth");
@@ -530,6 +541,69 @@ const processActions = {
             app
         }
 		return res;
+    },
+    __addLanguage : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdPopulateCustomization(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        const languagesAvailable = await LanguageEcoRepository.prototype.getAll();
+        const language = languagesAvailable.find(language => language.prefix.toLowerCase() == params.prefix.toLowerCase());
+        if(!language){throwError('LANGUAGE_NOT_EXISTENT')}
+        const banner = {
+            language : "", 
+            useStandardLanguage : true,
+            ids                     : [{
+                image_url   : "",
+                link_url    : "",
+                button_text : "",
+                title       : "",
+                subtitle    : ""
+            }],
+            autoDisplay : false,
+            fullWidth   : false
+        };
+        const subSections = {
+            language : "",
+            useStandardLanguage : true,
+            ids : []
+        }
+        const topBar = {
+            language : "",
+            useStandardLanguage : true,
+            text                  : "",
+            backgroundColor       : "",
+            textColor             : "",
+            isActive              : false,
+        }
+        const topTab = {
+            language : "",
+            useStandardLanguage : true,
+            ids : [{
+                name      : "",
+                icon      : "",
+                link_url  : ""
+            }],
+            isTransparent : false,
+        }
+        const footer = {
+            language : "",
+            useStandardLanguage : true,
+            supportLinks    : [],
+            communityLinks  : []
+        }
+		return {
+            app,
+            language,
+            banner,
+            topBar,
+            subSections,
+            topTab,
+            footer
+        };
+    },
+    __editLanguage : async (params) => {
+        let app = await AppRepository.prototype.findAppByIdPopulateCustomization(params.app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+		return params;
     },
     __addAddonFreeCurrency: async (params) => {
         try {
@@ -1282,6 +1356,7 @@ const progressActions = {
     },
 	__register : async (params) => {
         let app = await self.save(params);
+        console.log(app._id);
         let admin = await AdminsRepository.prototype.addApp(params.admin_id, app);
         let email = admin.email;
         let attributes = {
@@ -1349,6 +1424,9 @@ const progressActions = {
                 key : PUSHER_APP_KEY
             }
         }
+		return params;
+    },
+    __getDeposit : async (params) => {
 		return params;
     },
     __getAuth : async (params) => {
@@ -1567,6 +1645,37 @@ const progressActions = {
         const autoWithdrawResult = await autoWithdraw.register();
         await addOnRepository.prototype.addAddonAutoWithdraw(app.addOn, autoWithdrawResult._doc._id);
 		return autoWithdrawResult;
+    },
+    __addLanguage : async (params) => {
+        const { app, language, banner, topBar, subSections, topTab, footer } = params;
+        const languageParams = {
+            isActivated: true,
+            prefix: language.prefix,
+            name: language.name,
+            logo: language.logo,
+        }
+        let languageCustomization = new Language(languageParams);
+        const languageCustomizationResult = await languageCustomization.register();
+        await BannersRepository.prototype.addNewLanguage({_id: app.customization.banners._id, language: {...banner, language: languageCustomizationResult._doc._id} })
+        await TopBarRepository.prototype.addNewLanguage({_id: app.customization.topBar._id, language: {...topBar, language: languageCustomizationResult._doc._id} })
+        await TopTabRepository.prototype.addNewLanguage({_id: app.customization.topTab._id, language: {...topTab, language: languageCustomizationResult._doc._id} })
+        await SubSectionsRepository.prototype.addNewLanguage({_id: app.customization.subSections._id, language: {...subSections, language: languageCustomizationResult._doc._id} })
+        await FooterRepository.prototype.addNewLanguage({_id: app.customization.footer._id, language: {...footer, language: languageCustomizationResult._doc._id} })
+        await CustomizationRepository.prototype.addNewLanguage(app.customization._id, languageCustomizationResult._doc._id);
+		return languageCustomizationResult._doc;
+    },
+    __editLanguage : async (params) => {
+        const { language_id, logo, isActivated } = params;
+        let image_url="";
+        if(logo.includes("https")){
+            /* If it is a link already */
+            image_url = logo;
+        }else {
+            /* Does not have a Link and is a blob encoded64 */
+            image_url = !logo ? logo : await GoogleStorageSingleton.uploadFile({bucketName : 'betprotocol-apps', file : logo});
+        }
+        await LanguageRepository.prototype.findByIdAndUpdate({_id: language_id, logo: image_url, isActivated});
+		return true;
     },
     __addAddonFreeCurrency: async (params) => {
         const { app, wallets } = params;
@@ -1936,13 +2045,15 @@ const progressActions = {
         return true;
     },
     __editTopBar  : async (params) => {
-        let { app, backgroundColor, textColor, text, isActive, isTransparent } = params;
+        let { app, backgroundColor, textColor, text, isActive, isTransparent, language, useStandardLanguage } = params;
         const { topBar } = app.customization;
         await TopBarRepository.prototype.findByIdAndUpdate(topBar._id, {
             textColor,
             backgroundColor, 
             text,
-            isActive
+            isActive,
+            language,
+            useStandardLanguage
         })
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -1950,7 +2061,7 @@ const progressActions = {
         return params;
     },
     __editTopTab  : async (params) => {
-        let { app, topTabParams, isTransparent } = params;
+        let { app, topTabParams, isTransparent, language, useStandardLanguage } = params;
         let topTab = await Promise.all(topTabParams.map( async topTab => {
             if(topTab.icon.includes("https")){
                 /* If it is a link already */
@@ -1967,7 +2078,9 @@ const progressActions = {
         await TopTabRepository.prototype.findByIdAndUpdateTopTab({
             _id: app.customization.topTab._id,
             newStructure: topTab,
-            isTransparent
+            isTransparent,
+            language,
+            useStandardLanguage
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id})
@@ -2024,7 +2137,7 @@ const progressActions = {
         return true;
     },
     __editBanners : async (params) => {
-        let { app, autoDisplay, banners, fullWidth } = params;
+        let { app, autoDisplay, banners, fullWidth, language, useStandardLanguage } = params;
         let ids = await Promise.all(banners.map( async b => {
             if(b.image_url.includes("https")){
                 /* If it is a link already */
@@ -2043,7 +2156,9 @@ const progressActions = {
         await BannersRepository.prototype.findByIdAndUpdate(app.customization.banners._id, {
             autoDisplay,
             ids,
-            fullWidth
+            fullWidth,
+            language,
+            useStandardLanguage
         })
         // Save info on Customization Part
         return params;
@@ -2114,7 +2229,7 @@ const progressActions = {
         return params;
     },
     __editFooter : async (params) => {
-        let { app, communityLinks, supportLinks } = params;
+        let { app, communityLinks, supportLinks, language, useStandardLanguage } = params;
         let communityLinkIDs = await Promise.all(communityLinks.map( async c => {
             var imageCommunity = ''
             if(c.image_url.includes("https")){
@@ -2147,7 +2262,9 @@ const progressActions = {
 
         let footer = await FooterRepository.prototype.findByIdAndUpdate(app.customization.footer._id, {
             communityLinks : communityLinkIDs,
-            supportLinks : supportLinkIDs,
+            supportLinks   : supportLinkIDs,
+            language,
+            useStandardLanguage
         })
 
         let result = await FooterRepository.prototype.findById(footer._id)
@@ -2216,7 +2333,7 @@ const progressActions = {
         return params;
     },
     __editSubSections : async (params) => {
-        let { app, subSections } = params;
+        let { app, subSections, language, useStandardLanguage } = params;
         let ids = await Promise.all(subSections.map( async s => {
             if(s.image_url.includes("https") && s.image_url.includes("https")){
                 /* If it is a link already */
@@ -2235,7 +2352,9 @@ const progressActions = {
             }
         }))
         await SubSectionsRepository.prototype.findByIdAndUpdate(app.customization.subSections._id, {
-            ids
+            ids,
+            language,
+            useStandardLanguage
         })
         // Save info on Customization Part
         return true;
@@ -2359,6 +2478,9 @@ class AppLogic extends LogicComponent{
                 case 'Get' : {
 					return await library.process.__get(params); break;
                 };
+                case 'GetDeposit' : {
+					return await library.process.__getDeposit(params); break;
+                };
                 case 'GetAuth' : {
 					return await library.process.__getAuth(params); break;
                 };
@@ -2382,6 +2504,12 @@ class AppLogic extends LogicComponent{
                 };
                 case 'addAddonAutoWithdraw' : {
                     return await library.process.__addAddonAutoWithdraw(params); break;
+                };
+                case 'AddLanguage' : {
+                    return await library.process.__addLanguage(params); break;
+                };
+                case 'EditLanguage' : {
+                    return await library.process.__editLanguage(params); break;
                 };
                 case 'AddAddonTxFee' : {
                     return await library.process.__addAddonTxFee(params); break;
@@ -2615,6 +2743,12 @@ class AppLogic extends LogicComponent{
                 case 'addAddonAutoWithdraw' : {
                     return await library.progress.__addAddonAutoWithdraw(params); break;
                 };
+                case 'AddLanguage' : {
+                    return await library.progress.__addLanguage(params); break;
+                };
+                case 'EditLanguage' : {
+                    return await library.progress.__editLanguage(params); break;
+                };
                 case 'AddAddonTxFee' : {
                     return await library.progress.__addAddonTxFee(params); break;
                 };
@@ -2647,6 +2781,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'Get' : {
 					return await library.progress.__get(params); break;
+                };
+                case 'GetDeposit' : {
+					return await library.progress.__getDeposit(params); break;
                 };
                 case 'GetAuth' : {
 					return await library.progress.__getAuth(params); break;

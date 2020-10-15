@@ -41,12 +41,28 @@ class BannersRepository extends MongoComponent{
 
     findByIdAndUpdate(_id, newStructure){
         return new Promise( (resolve,reject) => {
+            BannersRepository.prototype.schema.model.updateOne(
+                {_id, "languages.language": newStructure.language},
+                { $set: {
+                    "languages.$.ids"                 : newStructure.ids,
+                    "languages.$.autoDisplay"         : newStructure.autoDisplay,
+                    "languages.$.fullWidth"           : newStructure.fullWidth,
+                    "languages.$.useStandardLanguage" : newStructure.useStandardLanguage,
+                } })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    addNewLanguage({_id, language}){
+        return new Promise( (resolve,reject) => {
             BannersRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
-                { $set: { 
-                    "ids"          : newStructure.ids,
-                    "autoDisplay"  : newStructure.autoDisplay,
-                    "fullWidth"    : newStructure.fullWidth
+                { $push: { 
+                    "languages" : language
                 } },
                 { 'new': true })
                 .lean()

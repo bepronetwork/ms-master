@@ -55,8 +55,10 @@ import { FreeCurrencySchema } from "./addOn/freeCurrency";
 import { AnalyticsSchema } from "./analytics";
 import { TopUpSchema } from "./topUp";
 import { ComplianceFileSchema } from "./complianceFile";
+import { LanguageSchema } from "./customization/language";
 
 export {
+    LanguageSchema,
     TopUpSchema,
     SocialLinkSchema,
     AnalyticsSchema,

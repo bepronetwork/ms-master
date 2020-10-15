@@ -19,6 +19,7 @@ import {
 import { populate_app_all, populate_app_to_bet, populate_app_affiliates, populate_jackpot, populate_app_simple, populate_app_wallet, populate_app_address, populate_app_auth, populate_app_game, populate_app_convert_points, populate_app_add_currency_wallet } from './populates';
 import { throwError } from '../../controllers/Errors/ErrorManager';
 import { BetRepository } from "./";
+import populate_customization_all from './populates/customization/all';
 
 
 let foreignKeys = ['wallet', 'users', 'games'];
@@ -533,6 +534,32 @@ class AppRepository extends MongoComponent{
             throw err;
         }
     }
+    findAppByIdPopulateCustomization(_id){ 
+        try{
+            return new Promise( (resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id,
+                    {
+                        _id: 1,
+                        customization: 1
+                })
+                .populate([
+                    {
+                        path : 'customization',
+                        model : 'Customization',
+                        select : { '__v': 0 },
+                        populate : populate_customization_all
+                    }
+                ])
+                .exec( (err, App) => {
+                    if(err) { reject(err)}
+                    resolve(App);
+                });
+            });
+        }catch(err){
+            throw err;
+        }
+    }
+
     findAppByIdNotPopulated(_id){ 
         try{
             return new Promise( (resolve, reject) => {

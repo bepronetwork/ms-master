@@ -1,9 +1,6 @@
-
-
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { Banners, Color, Footer, Language, SubSections, TopBar, TopTab } from '../models';
 let error = new ErrorManager();
 
 
@@ -42,43 +39,12 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{
-            let { colors } = params;
-            /* Save all Colors customization */
-            let ids = await Promise.all(colors.map( async c => {
-                return (await new Color(c).register())._doc._id;
-            }));
-
-            params.colors = ids;
-			let languages = [ (await (new Language(
-				{
-					isActivated : true,
-					prefix      : "EN",
-					name        : "English",
-					logo        : "https://i.ibb.co/HBxGmJ2/reino-unido.png"
-				}
-			)).register())._doc._id ];
-
-			let topBar 		= (await (new TopBar({languages: [{language: languages[0]}]})).register())._doc._id;
-			let banners 	= (await (new Banners({languages: [{language: languages[0]}]})).register())._doc._id;
-			let subSections = (await (new SubSections({languages: [{language: languages[0]}]})).register())._doc._id;
-			let footer 		= (await (new Footer({languages: [{language: languages[0]}]})).register())._doc._id;
-			let topTab      = (await (new TopTab({
-				languages : [{
-					language: languages[0],
-					ids: [
-						{
-							name: "Casino",
-							icon: "https://i.ibb.co/h96g1bx/Casino.png",
-							link_url: "/"
-						}
-					]
-				}]
-			})).register())._doc._id;
-
-            let customization = await self.save({...params, languages, topBar, banners, subSections, footer, topTab});
+            
+            let Language = await self.save(params);
+        
 			return {
-				...customization,
-				type : 'customization'
+				...Language,
+				type : 'language'
 			};
 		}catch(err){
 			throw err;
@@ -87,7 +53,7 @@ const progressActions = {
 }
 
 /**
- * Main Customization logic.
+ * Main Language logic.
  *
  * @class
  * @memberof logic
@@ -100,14 +66,14 @@ const progressActions = {
  * @param {ZSchema} schema
  * @param {Object} logger
  * @param {function} cb - Callback function
- * @property {Customization_model} model
- * @property {Customization_schema} schema
+ * @property {Language_model} model
+ * @property {Language_schema} schema
  * @returns {setImmediate} error, this
  * @todo Add description for the params
  */
 
 
-class CustomizationLogic extends LogicComponent {
+class LanguageLogic extends LogicComponent {
 	constructor(scope) {
 		super(scope);
 		self = this;
@@ -125,10 +91,10 @@ class CustomizationLogic extends LogicComponent {
 
 
     /**
-	 * Validates Customization schema.
+	 * Validates Language schema.
 	 *
-	 * @param {Customization} Customization
-	 * @returns {Customization} Customization
+	 * @param {Language} Language
+	 * @returns {Language} Language
 	 * @throws {string} On schema.validate failure
 	 */
 	async objectNormalize(params, processAction) {
@@ -144,16 +110,16 @@ class CustomizationLogic extends LogicComponent {
 	}
 
 	 /**
-	 * Tests Customization schema.
+	 * Tests Language schema.
 	 *
-	 * @param {Customization} Customization
-	 * @returns {Customization} Customization
+	 * @param {Language} Language
+	 * @returns {Language} Language
 	 * @throws {string} On schema.validate failure
 	 */
 
 	testParams(params, action){
 		try{
-			error.customization(params, action);
+			error.language(params, action);
 		}catch(err){
 			throw err;
 		}
@@ -175,4 +141,4 @@ class CustomizationLogic extends LogicComponent {
 }
 
 // Export Default Module
-export default CustomizationLogic;
+export default LanguageLogic;

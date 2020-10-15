@@ -39,13 +39,29 @@ class TopTabRepository extends MongoComponent{
         });
     }
 
-    findByIdAndUpdateTopTab({_id, newStructure, isTransparent}){
+    findByIdAndUpdateTopTab({_id, newStructure, isTransparent, useStandardLanguage, language}){
+        return new Promise( (resolve,reject) => {
+            TopTabRepository.prototype.schema.model.updateOne(
+                {_id, "languages.language": language},
+                { $set: {
+                    "languages.$.ids"                 : newStructure,
+                    "languages.$.isTransparent"       : isTransparent,
+                    "languages.$.useStandardLanguage" : useStandardLanguage,
+                } })
+                .exec( (err, item) => {
+                    if(err){reject(err)}
+                    resolve(item);
+                }
+            )
+        });
+    }
+
+    addNewLanguage({_id, language}){
         return new Promise( (resolve,reject) => {
             TopTabRepository.prototype.schema.model.findByIdAndUpdate(
                 _id, 
-                { $set: { 
-                    "ids"            : newStructure,
-                    "isTransparent"  : isTransparent 
+                { $push: { 
+                    "languages" : language
                 } },
                 { 'new': true })
                 .lean()

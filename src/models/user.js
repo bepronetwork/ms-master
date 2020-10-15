@@ -179,9 +179,11 @@ class User extends ModelComponent {
 
     async updateWallet() {
         // No Output
-        const { user } = this.self.params;
+        const { id } = this.self.params;
         try {
+            await UsersRepository.prototype.changeDepositPosition(id, true);
             let res = await this.process('UpdateWallet');
+            UsersRepository.prototype.changeDepositPosition(id, false);
             return res;
         } catch (err) {
             throw err;

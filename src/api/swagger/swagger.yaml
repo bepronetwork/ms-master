@@ -1090,6 +1090,66 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/customization/language/add:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Add Language To Customization
+      operationId: addLanguage
+      description: Add Language
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AddLanguageRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/customization/language/edit:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Edit Language Of Customization
+      operationId: editLanguage
+      description: Edit Language
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/EditLanguageRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/customization/theme : 
     x-swagger-router-controller: app
     post:
@@ -2384,6 +2444,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/languageEcosystem/get:
+    x-swagger-router-controller: ecosystem
+    get:
+      tags:
+      - ecosystem
+      summary: Get All Languages Available 
+      operationId: getLanguagesEcosystem
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/skinEcosystem/get:
     x-swagger-router-controller: ecosystem
     get:
@@ -2790,6 +2870,37 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/getComplianceFileRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /app/deposit/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Deposits from App
+      operationId: getDeposit
+      description: Get Deposits from App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/getDepositRequest'
       responses:
         "200":
           description: Success
@@ -4389,6 +4500,8 @@ definitions:
       - banners
       - autoDisplay
       - fullWidth
+      - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4396,6 +4509,12 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
       banners:
         type : array
         items : 
@@ -4415,6 +4534,9 @@ definitions:
         type : boolean
         example: true
       fullWidth:
+        type : boolean
+        example: true
+      useStandardLanguage:
         type : boolean
         example: true
   AppSocialLink :
@@ -4486,6 +4608,8 @@ definitions:
     required:
       - app
       - subSections
+      - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4493,6 +4617,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      useStandardLanguage:
+        type : boolean
+        example: true
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
       subSections:
         type : array
         items : 
@@ -4606,6 +4739,8 @@ definitions:
       - app
       - supportLinks
       - communityLinks
+      - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4613,6 +4748,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
+      useStandardLanguage:
+        type : boolean
+        example: true
       supportLinks :
         type : array
         items:
@@ -4685,6 +4829,8 @@ definitions:
       - textColor
       - text
       - isActive
+      - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4692,6 +4838,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
+      useStandardLanguage:
+        type : boolean
+        example: true
       backgroundColor:
         type : string
         format: name
@@ -4713,6 +4868,8 @@ definitions:
       - app
       - topTabParams
       - isTransparent
+      - language
+      - useStandardLanguage
     properties:
       app:
         type : string
@@ -4720,6 +4877,15 @@ definitions:
         example: "wertwertwertwert"
         description: |
           App id
+      language:
+        type : string
+        format: name
+        example: "language"
+        description: |
+          language
+      useStandardLanguage:
+        type : boolean
+        example: true
       isTransparent : 
         type : boolean
         example: true
@@ -5452,7 +5618,44 @@ definitions:
         example: "2002-12-09"
         description: |
           End Date
-
+  getDepositRequest : 
+    type: object
+    required:
+      - app
+      - admin
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          admin ID
+      size:
+        type : number
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+      user :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User Id
   AppGetUsersBetsRequest:
     type: object
     required:
@@ -5633,7 +5836,65 @@ definitions:
         example: "0xhi834ty2034thg"
         description: |
           Reason Of Modify Balance
-
+  AddLanguageRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - prefix
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      prefix :
+        type : string
+        format: name
+        example: "EN"
+        description: |
+          Prefix of Language
+  EditLanguageRequest :
+    type: object
+    required:
+      - app
+      - admin
+      - language_id
+    properties:
+      app :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          App ID
+      admin :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Admin ID
+      language_id :
+        type : string
+        format: name
+        example: "0xhi834ty2034thg"
+        description: |
+          Language ID
+      logo :
+        type : string
+        format: name
+        example: "test.png"
+        description: |
+          Logo of Language
+      isActivated :
+        type : boolean
+        example: true
   AddAddonBalanceRequest :
     type: object
     required:

@@ -330,6 +330,34 @@ async function addAddonDepositBonus(req, res) {
     }
 }
 
+async function addLanguage(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addLanguage();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function editLanguage(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "customization"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.editLanguage();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function editAddonPointSystem(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -365,6 +393,20 @@ async function addCurrencyWallet(req, res) {
         let params = req.body;
         let app = new App(params);
         let data = await app.addCurrencyWallet();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function getDeposit(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getDeposit();
         MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -1227,6 +1269,9 @@ async function getCompliance(req, res) {
 
 
 export {
+    getDeposit,
+    editLanguage,
+    addLanguage,
     editAnalyticsKey,
     editEsportScrenner,
     editVideogameEdge,

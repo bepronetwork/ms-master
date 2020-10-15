@@ -87,7 +87,7 @@ export const CRYPTO_API = process.env.CRYPTO_API;
 
 export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
-export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
+export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS ? parseInt(process.env.TIMEOUT_MONGO_MS) : (15*1000);
 
 export const CHAT_PRIVATE_KEY = process.env.CHAT_PRIVATE_KEY;
 
