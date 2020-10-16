@@ -20,7 +20,7 @@ DepositSchema.prototype.schema = {
     callback_URL            : { type: String},
     confirmations           : { type: Number, required : true, default : 0},
     maxConfirmations        : { type: Number, required : true, default : 0},
-    confirmed               : { type: Boolean, default : false},
+    confirmed               : { type: Boolean, default : true},
     link_url                : { type: String, default : null},
     /* If Purchase */
     isPurchase              : { type: Boolean, default : false, required : true},
