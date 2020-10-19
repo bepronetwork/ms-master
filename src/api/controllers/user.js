@@ -306,7 +306,7 @@ async function webhookDeposit(req, res) {
                 if(tokenToWallet=="eth" && addressUser != dataTransaction.payload.to){
                     throwError("USER_ADDRESS_IS_NOT_VALID");
                 }
-                if(tokenToWallet!="eth" && !(transaction.payload.token_transfers.find(w=>w.to==addressUser))){
+                if(tokenToWallet!="eth" && !(dataTransaction.payload.token_transfers.find(w=>w.to==addressUser))){
                     throwError("USER_ADDRESS_IS_NOT_VALID");
                 }
                 break;
