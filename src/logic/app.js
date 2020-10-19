@@ -280,6 +280,17 @@ const processActions = {
         }
 		return normalized;
     },
+    __getDeposit : async (params) => {
+        let deposits = await UsersRepository.prototype.getDepositByApp({
+            app: params.app,
+            offset: params.offset,
+            size : params.size,
+            user: params.user,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return deposits;
+    },
     __getAuth : async (params) => {
         let app = await AppRepository.prototype.findAppById(params.app, "get_app_auth");
         let addOns  = await AddOnsEcoRepository.prototype.getAll();
@@ -1415,6 +1426,9 @@ const progressActions = {
         }
 		return params;
     },
+    __getDeposit : async (params) => {
+		return params;
+    },
     __getAuth : async (params) => {
         let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
         /* Add Decrypted API Key */
@@ -2464,6 +2478,9 @@ class AppLogic extends LogicComponent{
                 case 'Get' : {
 					return await library.process.__get(params); break;
                 };
+                case 'GetDeposit' : {
+					return await library.process.__getDeposit(params); break;
+                };
                 case 'GetAuth' : {
 					return await library.process.__getAuth(params); break;
                 };
@@ -2764,6 +2781,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'Get' : {
 					return await library.progress.__get(params); break;
+                };
+                case 'GetDeposit' : {
+					return await library.progress.__getDeposit(params); break;
                 };
                 case 'GetAuth' : {
 					return await library.progress.__getAuth(params); break;
