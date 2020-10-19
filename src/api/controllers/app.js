@@ -75,6 +75,71 @@ async function getApp(req, res) {
     }
 }
 
+async function betscanGetBets(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.betscanGetBets();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function betscanGetBetsEsports(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.betscanGetBetsEsports();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function betscanGetUsers(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.betscanGetUsers();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function betscanGetDeposits(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.betscanGetDeposits();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
+async function betscanGetWithdraws(req, res) {
+    try {
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.betscanGetWithdraws();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function getBetInfo(req, res) {
     try {
         // await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
@@ -641,13 +706,13 @@ async function resolveBet(req, res) {
 async function resolveGame (req, res) {
     try{
         let params = req.body;
-		let event = new Event(params);
+        let event = new Event(params);
         let data = await event.resolve();
         MiddlewareSingleton.respond(res, req, data);
-	}catch(err){
+    }catch(err){
         MiddlewareSingleton.log({type: "admin", req, code: err.code});
         MiddlewareSingleton.respondError(res, err, req);
-	}
+    }
 }
 */
 
@@ -1240,35 +1305,40 @@ async function generateAddresses(req, res) {
     }
 }
 async function editVideogameEdge(req, res) {
-    try{
-        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         let params = req.body;
-		let app = new App(params);
+        let app = new App(params);
         let data = await app.editVideogameEdge();
-        await MiddlewareSingleton.log({type: "admin", req, code: 200});
+        await MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
-	}catch(err){
-        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
+    } catch (err) {
+        await MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
-	}
+    }
 }
 
 async function getCompliance(req, res) {
-    try{
-        await SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
         let params = req.body;
         let app = new App(params);
         let data = await app.getCompliance();
-        await MiddlewareSingleton.log({type: "admin", req, code: 200});
+        await MiddlewareSingleton.log({ type: "admin", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
-	}catch(err){
-        await MiddlewareSingleton.log({type: "admin", req, code: err.code});
+    } catch (err) {
+        await MiddlewareSingleton.log({ type: "admin", req, code: err.code });
         MiddlewareSingleton.respondError(res, err);
-	}
+    }
 }
 
 
 export {
+    betscanGetWithdraws,
+    betscanGetDeposits,
+    betscanGetUsers,
+    betscanGetBetsEsports,
+    betscanGetBets,
     getDeposit,
     editLanguage,
     addLanguage,

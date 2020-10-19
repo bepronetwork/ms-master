@@ -154,6 +154,61 @@ class BetEsportsRepository extends MongoComponent{
             throw (err)
         }
     }
+
+    betscanGetBetsEsports({offset, size, begin_at, end_at}){
+        try{
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 1))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
+            return new Promise( (resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model.find({
+                    updatedAt: { 
+                        $gte: new Date( begin_at ), 
+                        $lte: new Date ( end_at )
+                    },
+                })
+                .sort({updatedAt: -1})
+                .populate([
+                    {
+                        path: 'app',
+                        model: 'App',
+                        select: { 
+                            '_id': 1,
+                            'name': 1
+                        },
+                    }
+                ])
+                .skip(offset == undefined ? 0 : offset)
+                .limit((size > 500 || !size || size <= 0) ? 500 : size) // If limit > 500 then limit is equal 500, because limit must be 500 maximum
+                .exec( async (err, item) => {
+                    const totalCount = await BetEsportsRepository.prototype.schema.model.find({
+                        updatedAt: { 
+                            $gte: new Date( begin_at ), 
+                            $lte: new Date ( end_at )
+                        },
+                    }).countDocuments().exec();
+                    if(err){reject(err)}
+                    resolve({list: item, totalCount });
+                })
+            });
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 BetEsportsRepository.prototype.schema = new BetEsportsSchema();

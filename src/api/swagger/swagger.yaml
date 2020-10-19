@@ -970,6 +970,156 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /betscan/casino/bets/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Bets Casino For BetScan
+      operationId: betscanGetBets
+      description: Get Bets Casino For BetScan
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/BetscanGetBetsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /betscan/esports/bets/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Bets E-Sports For BetScan
+      operationId: betscanGetBetsEsports
+      description: Get Bets E-Sports For BetScan
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/BetscanGetBetsEsportsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /betscan/users/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Users For BetScan
+      operationId: betscanGetUsers
+      description: Get Users For BetScan
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/BetscanGetUsersRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /betscan/deposits/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Deposits For BetScan
+      operationId: betscanGetDeposits
+      description: Get Deposits For BetScan
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/BetscanGetDepositsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /betscan/withdraws/get:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Get Withdraws For BetScan
+      operationId: betscanGetWithdraws
+      description: Get Withdraws For BetScan
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/BetscanGetWithdrawsRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/wallet/currency/add:
     x-swagger-router-controller: app
     post:
@@ -5736,6 +5886,106 @@ definitions:
         example: "simple or multiple"
         description: |
           Type of bet (E-Sports)
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+  BetscanGetBetsRequest:
+    type: object
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+  BetscanGetBetsEsportsRequest:
+    type: object
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+  BetscanGetUsersRequest:
+    type: object
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+  BetscanGetDepositsRequest:
+    type: object
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+  BetscanGetWithdrawsRequest:
+    type: object
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Amount of Bets Wanted
+      offset :
+        type : number
       begin_at :
         type : string
         example: "2002-12-09"

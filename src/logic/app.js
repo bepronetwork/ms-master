@@ -45,7 +45,7 @@ import {
     MoonPayRepository,
     FreeCurrencyRepository,
     AnalyticsRepository,
-    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, WithdrawRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -290,6 +290,51 @@ const processActions = {
             end_at: params.end_at
         });
 		return deposits;
+    },
+    __betscanGetBets : async (params) => {
+        let bets = await BetRepository.prototype.betscanGetBets({
+            offset: params.offset,
+            size : params.size,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return bets;
+    },
+    __betscanGetBetsEsports : async (params) => {
+        let bets = await BetEsportsRepository.prototype.betscanGetBetsEsports({
+            offset: params.offset,
+            size : params.size,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return bets;
+    },
+    __betscanGetUsers : async (params) => {
+        let users = await UsersRepository.prototype.betscanGetUsers({
+            offset: params.offset,
+            size : params.size,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return users;
+    },
+    __betscanGetDeposits : async (params) => {
+        let users = await DepositRepository.prototype.betscanGetDeposits({
+            offset: params.offset,
+            size : params.size,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return users;
+    },
+    __betscanGetWithdraws : async (params) => {
+        let withdraws = await WithdrawRepository.prototype.betscanGetWithdraws({
+            offset: params.offset,
+            size : params.size,
+            begin_at: params.begin_at,
+            end_at: params.end_at
+        });
+		return withdraws;
     },
     __getAuth : async (params) => {
         let app = await AppRepository.prototype.findAppById(params.app, "get_app_auth");
@@ -1429,6 +1474,21 @@ const progressActions = {
     __getDeposit : async (params) => {
 		return params;
     },
+    __betscanGetBets : async (params) => {
+		return params;
+    },
+    __betscanGetBetsEsports : async (params) => {
+		return params;
+    },
+    __betscanGetUsers : async (params) => {
+		return params;
+    },
+    __betscanGetDeposits : async (params) => {
+		return params;
+    },
+    __betscanGetWithdraws : async (params) => {
+		return params;
+    },
     __getAuth : async (params) => {
         let apiKeyEncrypted = params._doc.integrations.mailSender.apiKey;
         /* Add Decrypted API Key */
@@ -2481,6 +2541,21 @@ class AppLogic extends LogicComponent{
                 case 'GetDeposit' : {
 					return await library.process.__getDeposit(params); break;
                 };
+                case 'BetscanGetBets' : {
+					return await library.process.__betscanGetBets(params); break;
+                };
+                case 'BetscanGetBetsEsports' : {
+					return await library.process.__betscanGetBetsEsports(params); break;
+                };
+                case 'BetscanGetUsers' : {
+					return await library.process.__betscanGetUsers(params); break;
+                };
+                case 'BetscanGetDeposits' : {
+					return await library.process.__betscanGetDeposits(params); break;
+                };
+                case 'BetscanGetWithdraws' : {
+					return await library.process.__betscanGetWithdraws(params); break;
+                };
                 case 'GetAuth' : {
 					return await library.process.__getAuth(params); break;
                 };
@@ -2784,6 +2859,21 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetDeposit' : {
 					return await library.progress.__getDeposit(params); break;
+                };
+                case 'BetscanGetBets' : {
+					return await library.progress.__betscanGetBets(params); break;
+                };
+                case 'BetscanGetBetsEsports' : {
+					return await library.progress.__betscanGetBetsEsports(params); break;
+                };
+                case 'BetscanGetUsers' : {
+					return await library.progress.__betscanGetUsers(params); break;
+                };
+                case 'BetscanGetDeposits' : {
+					return await library.progress.__betscanGetDeposits(params); break;
+                };
+                case 'BetscanGetWithdraws' : {
+					return await library.progress.__betscanGetWithdraws(params); break;
                 };
                 case 'GetAuth' : {
 					return await library.progress.__getAuth(params); break;

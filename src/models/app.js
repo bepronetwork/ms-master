@@ -304,6 +304,76 @@ class App extends ModelComponent {
     }
 
     /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+    async betscanGetBets() {
+        // output Boolean
+        try {
+            let app = await this.process('BetscanGetBets');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+  * @param {String} 
+  * @return {bool || Exception}  
+  */
+    async betscanGetBetsEsports() {
+        // output Boolean
+        try {
+            let app = await this.process('BetscanGetBetsEsports');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+    async betscanGetUsers() {
+        // output Boolean
+        try {
+            let app = await this.process('BetscanGetUsers');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+    async betscanGetDeposits() {
+        // output Boolean
+        try {
+            let app = await this.process('BetscanGetDeposits');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @param {String} 
+     * @return {bool || Exception}  
+     */
+    async betscanGetWithdraws() {
+        // output Boolean
+        try {
+            let app = await this.process('BetscanGetWithdraws');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
    * @param {String} 
    * @return {bool || Exception}  
    */
@@ -321,15 +391,15 @@ class App extends ModelComponent {
    * @param {String} 
    * @return {bool || Exception}  
    */
-  async getDeposit() {
-    try {
-        let app = await this.process('GetDeposit');
-        // output Boolean
-        return app;
-    } catch (err) {
-        throw err;
+    async getDeposit() {
+        try {
+            let app = await this.process('GetDeposit');
+            // output Boolean
+            return app;
+        } catch (err) {
+            throw err;
+        }
     }
-}
 
 
     /**
