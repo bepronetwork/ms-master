@@ -296,7 +296,10 @@ async function webhookDeposit(req, res) {
             case 'eth':
                 dataTransaction = await cryptoEth.CryptoEthSingleton.getTransaction(params.txHash);
                 user            = await UsersRepository.prototype.findUserById(req.body.id, "wallet");
+                console.log("user.wallet:: ", user.wallet);
+                console.log("params1:: ",params );
                 let tokenToWallet = (params.token_symbol == undefined ? (req.body.ticker).toLowerCase() : (params.token_symbol).toLowerCase());
+                console.log("tokenToWallet ",tokenToWallet);
                 userWallet      = user.wallet.find((w) => w.currency.ticker.toLowerCase() == tokenToWallet);
                 addressUser     = userWallet.depositAddresses[0].address;
                 if(addressUser != dataTransaction.payload.to){
