@@ -302,7 +302,11 @@ async function webhookDeposit(req, res) {
                 console.log("tokenToWallet ",tokenToWallet);
                 userWallet      = user.wallet.find((w) => w.currency.ticker.toLowerCase() == tokenToWallet);
                 addressUser     = userWallet.depositAddresses[0].address;
-                if(addressUser != dataTransaction.payload.to){
+
+                if(tokenToWallet=="eth" && addressUser != dataTransaction.payload.to){
+                    throwError("USER_ADDRESS_IS_NOT_VALID");
+                }
+                if(tokenToWallet!="eth" && !(transaction.payload.token_transfers.find(w=>w.to==addressUser))){
                     throwError("USER_ADDRESS_IS_NOT_VALID");
                 }
                 break;
