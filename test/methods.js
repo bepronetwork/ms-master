@@ -528,6 +528,36 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async betscanGetBets(params) {
+        return request(global.server)
+        .post('/api/betscan/casino/bets/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async betscanGetBetsEsports(params) {
+        return request(global.server)
+        .post('/api/betscan/esports/bets/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async betscanGetUsers(params) {
+        return request(global.server)
+        .post('/api/betscan/users/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async betscanGetDeposits(params) {
+        return request(global.server)
+        .post('/api/betscan/deposits/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async betscanGetWithdraws(params) {
+        return request(global.server)
+        .post('/api/betscan/withdraws/get')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async getAppLastBets(params) {
         return request(global.server)
         .post('/api/app/lastBets')
