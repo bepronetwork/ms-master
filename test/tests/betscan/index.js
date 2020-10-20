@@ -14,6 +14,8 @@ context('Betscan', async () => {
 
     it('should Get Bets Casino for Betscan', mochaAsync(async () => {
         let res = await betscanGetBets();
+        console.log("Res:: ",res)
+        console.log("ResDATA:: ",res.data)
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(200);
     }));
