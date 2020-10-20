@@ -1522,7 +1522,7 @@ const progressActions = {
 
 
                 /* Record webhooks */
-                await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id});
+                await BitGoSingleton.addAppDepositWebhook({wallet : bitgo_wallet, id : app._id, currency_id : currency._id, ticker: currency.ticker});
                 /* Create Policy for Day */
                 await BitGoSingleton.addPolicyToWallet({
                     ticker : currency.ticker,
