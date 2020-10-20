@@ -6,7 +6,7 @@ import {
     betscanGetWithdraws
 } from '../../methods';
 
-import { mochaAsync } from '../../../utils';
+import { mochaAsync } from '../../utils';
 import chai from 'chai';
 const expect = chai.expect;
 
