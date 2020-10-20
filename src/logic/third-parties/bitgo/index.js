@@ -84,6 +84,10 @@ class BitGoClass {
 
     async addAppDepositWebhook({wallet, id, currency_id, ticker}){
         let res = null;
+        console.log("wallet:: ", wallet)
+        console.log("id:: ", id)
+        console.log("currency_id:: ", currency_id)
+        console.log("ticker:: ", ticker)
         switch (ticker.toLowerCase()) {
             case 'eth':
                 res = await wallet.addWebhook({
