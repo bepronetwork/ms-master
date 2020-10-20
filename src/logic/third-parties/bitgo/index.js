@@ -67,7 +67,7 @@ class BitGoClass {
 
     async getTransaction({id, wallet_id, ticker}){
         const wallet = await this.getWallet({ticker, id : wallet_id});
-        var res = await wallet.getTransfer({id});
+        var res = await wallet.getTransfer({id, allTokens : true});
         // Update Amount based on the type of Wei or Sats
         res.value = getCurrencyAmountFromBitGo({ticker, amount : res.value});
         return res;
@@ -77,7 +77,7 @@ class BitGoClass {
         
         let res = await wallet.addWebhook({
             url: `${MS_MASTER_URL}/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`,
-            //allToken : true,
+            allToken : true,
             type: "transfer",
             numConfirmations : 3,
             listenToFailureStates : false
