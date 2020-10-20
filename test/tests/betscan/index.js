@@ -4,7 +4,7 @@ import {
     betscanGetUsers,
     betscanGetDeposits,
     betscanGetWithdraws
-} from '../../../methods';
+} from '../../methods';
 
 import { mochaAsync } from '../../../utils';
 import chai from 'chai';
