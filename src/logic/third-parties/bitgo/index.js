@@ -69,10 +69,6 @@ class BitGoClass {
         const wallet = await this.getWallet({ticker, id : wallet_id});
         let res = null;
         switch (ticker.toLowerCase()) {
-            case 'eth':
-                res = await wallet.getTransfer({id, allTokens : true});
-                break;
-
             case 'btc':
                 res = await wallet.getTransfer({id});
                 break;
@@ -81,7 +77,6 @@ class BitGoClass {
                 res = await wallet.getTransfer({id, allTokens : true});
                 break;
         }
-        var res = await wallet.getTransfer({id, allTokens : true});
         // Update Amount based on the type of Wei or Sats
         res.value = getCurrencyAmountFromBitGo({ticker, amount : res.value});
         return res;
@@ -90,16 +85,6 @@ class BitGoClass {
     async addAppDepositWebhook({wallet, id, currency_id, ticker}){
         let res = null;
         switch (ticker.toLowerCase()) {
-            case 'eth':
-                res = await wallet.addWebhook({
-                    url: `${MS_MASTER_URL}/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`,
-                    allToken : true,
-                    type: "transfer",
-                    numConfirmations : 3,
-                    listenToFailureStates : false
-                });
-                break;
-
             case 'btc':
                 res = await wallet.addWebhook({
                     url: `${MS_MASTER_URL}/api/app/webhookBitgoDeposit?id=${id}&currency=${currency_id}`,
