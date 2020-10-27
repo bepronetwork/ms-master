@@ -37,6 +37,7 @@ class Security{
     }
 
     verifyByCountry = async ({req}) => {
+        console.log(req);
         try {
             let countries = (await AppRepository.prototype.findAppById(req.body['app'], "none")).restrictedCountries;
             countries = countries == null ? [] : countries;

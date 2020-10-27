@@ -19,6 +19,7 @@ import PusherSingleton from '../../logic/third-parties/pusher';
 async function registUser(req, res) {
     try {
         await SecuritySingleton.verifyByCountry({ req });
+        console.log(">>>>>>>>><<<<<<<<<<<<");
         let params = req.body;
         let user = new User(params);
         let data = await user.register();
