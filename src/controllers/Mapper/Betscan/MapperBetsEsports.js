@@ -17,8 +17,9 @@ let outputs = {
                 return ({
                     "_id": list._id,
                     "videogames": list.videogames,
-                    "app": list.app,
-                    "ticker": list.currency.ticker,
+                    "appId": !list.app ? null : list.app._id,
+                    "appName": !list.app ? null : list.app.name,
+                    "ticker": !list.currency.ticker ? null : list.currency.ticker,
                     "user": list.user,
                     "isWon": list.isWon,
                     "result": list.result,

@@ -17,10 +17,11 @@ let outputs = {
                 return ({
                     "_id": list._id,
                     "user": list.user,
-                    "app": list.app,
+                    "appId": !list.app ? null : list.app._id,
+                    "appName": !list.app ? null : list.app.name,
                     "creation_timestamp": list.creation_timestamp,
                     "last_update_timestamp": list.last_update_timestamp,
-                    "ticker": list.currency.ticker,
+                    "ticker": !list.currency.ticker ? null : list.currency.ticker,
                     "address": list.address,
                     "amount": list.amount,
                     "fee": list.fee,
