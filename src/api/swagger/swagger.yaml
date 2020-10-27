@@ -3542,7 +3542,6 @@ paths:
       deprecated: false
       produces:
       - application/json
-      
       parameters:
       - name: Authorization
         in: header
@@ -8401,7 +8400,8 @@ definitions:
       services:
         type: array
         items:
-          type: string
+          type: integer
+          format: int32
     required:
     - app
     - services
