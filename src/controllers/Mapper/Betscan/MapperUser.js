@@ -15,8 +15,13 @@ let outputs = {
         return {
             "list": !object.list ? [] : object.list.map(list => {
                 return ({
-                    "_id": list._id,
-                    "wallet": list.wallet,
+                    "externalId": list._id,
+                    "wallet": !list.wallet ? [] : list.wallet.map(wallet => {
+                        return ({
+                            "playBalance": wallet.playBalance,
+                            "ticker": wallet.currency.ticker,
+                        })
+                    }),
                 })
             }),
             "totalCount": object.totalCount,

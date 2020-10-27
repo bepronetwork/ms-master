@@ -15,7 +15,7 @@ let outputs = {
         return {
             "list": !object.list ? [] : object.list.map(list => {
                 return ({
-                    "_id": list._id,
+                    "externalId": list._id,
                     "result": list.result,
                     "isResolved": list.isResolved,
                     "ticker": !list.currency.ticker ? null : list.currency.ticker,
