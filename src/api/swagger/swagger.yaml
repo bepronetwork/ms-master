@@ -3366,6 +3366,7 @@ paths:
             application/json:
               message: Internal Server Error
   /app/user/get:
+    x-swagger-router-controller: user
     post:
       description: Get all User Info
       summary: getUserInfo
@@ -4778,6 +4779,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/register:
+    x-swagger-router-controller: user
     post:
       description: Search for matching accounts in the system.
       summary: registUser
@@ -4822,6 +4824,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/auth:
+    x-swagger-router-controller: user
     post:
       description: Login User Data
       summary: authUser
@@ -4882,6 +4885,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/2fa/set:
+    x-swagger-router-controller: user
     post:
       description: Search for matching accounts in the system.
       summary: setUser2FA
@@ -4942,6 +4946,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/bets:
+    x-swagger-router-controller: user
     post:
       description: Get all Bets for the User
       summary: getBets
@@ -5002,6 +5007,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/summary:
+    x-swagger-router-controller: user
     post:
       description: Get Summary Data for User
       summary: userSummary
@@ -5062,6 +5068,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/get/bets:
+    x-swagger-router-controller: user
     post:
       description: Get User Bets
       summary: userGetBets
@@ -5122,6 +5129,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/password/reset/ask:
+    x-swagger-router-controller: user
     post:
       description: reset password
       summary: resetPassword
@@ -5166,6 +5174,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/password/reset/set:
+    x-swagger-router-controller: user
     post:
       description: reset password set
       summary: setPassword
@@ -5210,6 +5219,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/email/confirm:
+    x-swagger-router-controller: user
     post:
       description: Confirm Email
       summary: confirmEmail
@@ -5254,6 +5264,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/email/resend:
+    x-swagger-router-controller: user
     post:
       description: Resend Confirm Email
       summary: resendEmail
@@ -5314,6 +5325,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/login:
+    x-swagger-router-controller: user
     post:
       description: Login User Data
       summary: loginUser
@@ -5358,6 +5370,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/login/2fa:
+    x-swagger-router-controller: user
     post:
       description: Login User Data
       summary: loginUser2FA
@@ -5402,6 +5415,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/pusher/auth:
+    x-swagger-router-controller: user
     post:
       description: Get Push Notifications Channel For user auth
       summary: pusherNotificationsAuth
@@ -5466,6 +5480,7 @@ paths:
             application/json:
               message: Internal Server Error
   /users/pusher/ping:
+    x-swagger-router-controller: user
     post:
       description: Get Push Notifications Channel For user ping
       summary: pingPushNotifications
@@ -5526,6 +5541,7 @@ paths:
             application/json:
               message: Internal Server Error
   /app/address/get:
+    x-swagger-router-controller: user
     post:
       description: Change Footer
       summary: getDepositAddress
