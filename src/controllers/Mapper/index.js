@@ -1,3 +1,11 @@
+import { 
+    MapperGetBetCasinoBetscanSingleton,
+    MapperGetBetEsportsBetscanSingleton,
+    MapperGetDepositBetscanSingleton,
+    MapperGetUserBetscanSingleton,
+    MapperGetWithdrawBetscanSingleton
+ } from "./Betscan";
+
 import {
     MapperRegisterUserSingleton,
     MapperLoginUserSingleton,
@@ -91,6 +99,11 @@ import {
 } from "./Jackpot";
 
 export {
+    MapperGetBetCasinoBetscanSingleton,
+    MapperGetBetEsportsBetscanSingleton,
+    MapperGetDepositBetscanSingleton,
+    MapperGetUserBetscanSingleton,
+    MapperGetWithdrawBetscanSingleton,
     MapperGetPotJackpotSingleton,
     MapperGetBetSingleton,
     MapperRegisterUserSingleton,

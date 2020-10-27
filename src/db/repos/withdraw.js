@@ -137,7 +137,15 @@ class WithdrawRepository extends MongoComponent {
                                 '_id': 1,
                                 'name': 1
                             },
-                        }
+                        },
+                        {
+                            path: 'currency',
+                            model: 'Currency',
+                            select: { 
+                                '_id': 1,
+                                'ticker': 1
+                             }
+                        },
                     ])
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 500 || !size || size <= 0) ? 500 : size) // If limit > 500 then limit is equal 500, because limit must be 500 maximum

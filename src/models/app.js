@@ -42,7 +42,12 @@ import {
     MapperGetBetSingleton,
     MapperEditThemeSingleton,
     MapperEditBackgroundSingleton,
-    MapperSummaryOneGamesSingleton
+    MapperSummaryOneGamesSingleton,
+    MapperGetBetCasinoBetscanSingleton,
+    MapperGetBetEsportsBetscanSingleton,
+    MapperGetUserBetscanSingleton,
+    MapperGetDepositBetscanSingleton,
+    MapperGetWithdrawBetscanSingleton
 } from '../controllers/Mapper';
 import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
@@ -308,10 +313,9 @@ class App extends ModelComponent {
   * @return {bool || Exception}  
   */
     async betscanGetBets() {
-        // output Boolean
         try {
             let app = await this.process('BetscanGetBets');
-            return app;
+            return MapperGetBetCasinoBetscanSingleton.output('GetBetCasinoBetscan', app);
         } catch (err) {
             throw err;
         }
@@ -322,10 +326,9 @@ class App extends ModelComponent {
   * @return {bool || Exception}  
   */
     async betscanGetBetsEsports() {
-        // output Boolean
         try {
             let app = await this.process('BetscanGetBetsEsports');
-            return app;
+            return MapperGetBetEsportsBetscanSingleton.output('GetBetEsportsBetscan', app);
         } catch (err) {
             throw err;
         }
@@ -339,7 +342,7 @@ class App extends ModelComponent {
         // output Boolean
         try {
             let app = await this.process('BetscanGetUsers');
-            return app;
+            return MapperGetUserBetscanSingleton.output('GetUserBetscan', app);
         } catch (err) {
             throw err;
         }
@@ -353,7 +356,7 @@ class App extends ModelComponent {
         // output Boolean
         try {
             let app = await this.process('BetscanGetDeposits');
-            return app;
+            return MapperGetDepositBetscanSingleton.output('GetDepositBetscan', app);
         } catch (err) {
             throw err;
         }
@@ -367,7 +370,7 @@ class App extends ModelComponent {
         // output Boolean
         try {
             let app = await this.process('BetscanGetWithdraws');
-            return app;
+            return MapperGetWithdrawBetscanSingleton.output('GetWithdrawBetscan', app);
         } catch (err) {
             throw err;
         }
