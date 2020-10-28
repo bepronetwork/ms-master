@@ -7010,8 +7010,8 @@ definitions:
       game:
         type: string
       tableLimit:
-        type: integer
-        format: int32
+        type: number
+        
       wallet:
         type: string
     required:
@@ -7032,8 +7032,8 @@ definitions:
       game:
         type: string
       edge:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - game
@@ -7134,8 +7134,8 @@ definitions:
         items:
           $ref: '#/definitions/Result'
       nonce:
-        type: integer
-        format: int32
+        type: number
+        
       currency:
         type: string
     required:
@@ -7153,11 +7153,11 @@ definitions:
     type: object
     properties:
       place:
-        type: integer
-        format: int32
+        type: number
+        
       value:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - place
     - value
@@ -7174,8 +7174,8 @@ definitions:
       game:
         type: string
       maxBet:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - game
@@ -7221,8 +7221,8 @@ definitions:
         items:
           $ref: '#/definitions/Structure'
       affiliateTotalCut:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - structures
@@ -7235,11 +7235,11 @@ definitions:
     type: object
     properties:
       level:
-        type: integer
-        format: int32
+        type: number
+        
       percentageOnLoss:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - level
     - percentageOnLoss
@@ -7254,8 +7254,8 @@ definitions:
       app:
         type: string
       affiliatePercentage:
-        type: integer
-        format: int32
+        type: number
+        
       user:
         type: string
     required:
@@ -7574,8 +7574,8 @@ definitions:
     type: object
     properties:
       position:
-        type: integer
-        format: int32
+        type: number
+        
       link:
         type: string
       name:
@@ -7645,11 +7645,11 @@ definitions:
       background_color:
         type: string
       position:
-        type: integer
-        format: int32
+        type: number
+        
       location:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - title
     - text
@@ -8026,8 +8026,8 @@ definitions:
       functionName:
         type: string
       template_id:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - functionName
     - template_id
@@ -8148,7 +8148,7 @@ definitions:
     example:
       name: <name>
       description: <description>
-      marketType: <integer>
+      marketType: <number>
       metadataJSON: <string>
       admin_id: <string>
       virtual: true
@@ -8159,8 +8159,8 @@ definitions:
       description:
         type: string
       marketType:
-        type: integer
-        format: int32
+        type: number
+        
       metadataJSON:
         type: string
       admin_id:
@@ -8256,8 +8256,8 @@ definitions:
       app:
         type: string
       esports_edge:
-        type: integer
-        format: int32
+        type: number
+        
       admin:
         type: string
     required:
@@ -8310,11 +8310,11 @@ definitions:
         items:
           $ref: '#/definitions/Filter'
       size:
-        type: integer
-        format: int32
+        type: number
+        
       offset:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - filters
@@ -8384,13 +8384,13 @@ definitions:
       app:
         type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       user:
         type: string
       offset:
-        type: integer
-        format: int32
+        type: number
+        
       username:
         type: string
       email:
@@ -8407,8 +8407,8 @@ definitions:
     example:
       app: <name>
       services:
-      - <integer>
-      - <integer>
+      - <number>
+      - <number>
     type: object
     properties:
       app:
@@ -8416,8 +8416,8 @@ definitions:
       services:
         type: array
         items:
-          type: integer
-          format: int32
+          type: number
+          
     required:
     - app
     - services
@@ -8519,11 +8519,11 @@ definitions:
       admin:
         type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       offset:
-        type: integer
-        format: int32
+        type: number
+        
       begin_at:
         type: string
       end_at:
@@ -8638,11 +8638,11 @@ definitions:
         items:
           type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       offset:
-        type: integer
-        format: int32
+        type: number
+        
       type:
         type: string
       begin_at:
@@ -8696,8 +8696,8 @@ definitions:
       wallet:
         type: string
       newBalance:
-        type: integer
-        format: int32
+        type: number
+        
       reason:
         type: string
       currency:
@@ -8724,8 +8724,8 @@ definitions:
       currency:
         type: string
       amount:
-        type: integer
-        format: int32
+        type: number
+        
       admin:
         type: string
     required:
@@ -8980,13 +8980,13 @@ definitions:
       tag:
         type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       periodicity:
         type: string
       offset:
-        type: integer
-        format: int32
+        type: number
+        
       game:
         type: string
       type:
@@ -9039,11 +9039,11 @@ definitions:
       user:
         type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       offset:
-        type: integer
-        format: int32
+        type: number
+        
       bet:
         type: string
       game:
@@ -9182,8 +9182,8 @@ definitions:
       wallet_id:
         type: string
       amount:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - wallet_id
@@ -9205,11 +9205,11 @@ definitions:
       admin:
         type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       offset:
-        type: integer
-        format: int32
+        type: number
+        
       begin_at:
         type: string
       end_at:
@@ -9276,11 +9276,11 @@ definitions:
       currency:
         type: string
       time:
-        type: integer
-        format: int32
+        type: number
+        
       value:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - admin
@@ -9342,11 +9342,11 @@ definitions:
       verifiedKYC:
         type: boolean
       maxWithdrawAmountCumulative:
-        type: integer
-        format: int32
+        type: number
+        
       maxWithdrawAmountPerTransaction:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - isAutoWithdraw
     - verifiedKYC
@@ -9380,8 +9380,8 @@ definitions:
       admin:
         type: string
       balance:
-        type: integer
-        format: int32
+        type: number
+        
       currency:
         type: string
     required:
@@ -9445,8 +9445,8 @@ definitions:
       name:
         type: string
       ratio:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - isValid
     - logo
@@ -9506,17 +9506,17 @@ definitions:
       isDepositBonus:
         type: boolean
       min_deposit:
-        type: integer
-        format: int32
+        type: number
+        
       percentage:
-        type: integer
-        format: int32
+        type: number
+        
       max_deposit:
-        type: integer
-        format: int32
+        type: number
+        
       multiplier:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - isDepositBonus
     - min_deposit
@@ -9573,11 +9573,11 @@ definitions:
       isTxFee:
         type: boolean
       deposit_fee:
-        type: integer
-        format: int32
+        type: number
+        
       withdraw_fee:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - isTxFee
     - deposit_fee
@@ -9609,8 +9609,8 @@ definitions:
       admin:
         type: string
       edge:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - admin
@@ -9652,8 +9652,8 @@ definitions:
       image:
         type: string
       price:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - admin
@@ -9677,11 +9677,11 @@ definitions:
       filter:
         type: string
       size:
-        type: integer
-        format: int32
+        type: number
+        
       offset:
-        type: integer
-        format: int32
+        type: number
+        
     required:
     - app
     - admin
