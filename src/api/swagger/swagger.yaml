@@ -9630,16 +9630,11 @@ definitions:
         type: string
       size:
         type: number
-        
       offset:
         type: number
-        
     required:
     - app
     - admin
-    - filter
-    - size
-    - offset
   pingPostRequest:
     title: pingPostRequest
     example:
