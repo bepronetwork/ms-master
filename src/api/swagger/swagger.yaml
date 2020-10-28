@@ -9656,7 +9656,6 @@ definitions:
     required:
     - app
     - admin
-    - image
   getLogsRequest:
     title: getLogsRequest
     example:
