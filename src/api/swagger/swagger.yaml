@@ -9653,13 +9653,11 @@ definitions:
         type: string
       price:
         type: number
-        
     required:
     - app
     - admin
     - currency
     - image
-    - price
   getLogsRequest:
     title: getLogsRequest
     example:
