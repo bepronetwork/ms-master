@@ -8399,10 +8399,6 @@ definitions:
         type: string
       tag:
         type: string
-    required:
-    - app
-    - game
-    - tag
   getBiggestBetWinnersRequest:
     title: getBiggestBetWinnersRequest
     example:
@@ -8416,7 +8412,6 @@ definitions:
         type: string
     required:
     - app
-    - tag
   getBiggestUserWinnersRequest:
     title: getBiggestUserWinnersRequest
     example:
@@ -8430,7 +8425,6 @@ definitions:
         type: string
     required:
     - app
-    - tag
   getPopularNumbersRequest:
     title: getPopularNumbersRequest
     example:
@@ -8484,10 +8478,8 @@ definitions:
         type: string
       size:
         type: number
-        
       offset:
         type: number
-        
       begin_at:
         type: string
       end_at:
