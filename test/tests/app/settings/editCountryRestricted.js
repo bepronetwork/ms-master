@@ -33,11 +33,9 @@ context(`Logs Data`, async () =>  {
     }));
 
     it('should try to register user with country not allowed LH(localhost)', mochaAsync(async () => {
-        console.log(1111);
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456)
         }));
-        console.log(userPostData);
         var res = await registerUser(userPostData);
         expect(res.data.status).to.equals(59);
     }));
