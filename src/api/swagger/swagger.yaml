@@ -7274,9 +7274,6 @@ definitions:
     required:
     - app
     - admin
-    - language_id
-    - logo
-    - isActivated
   editThemeRequest:
     title: editThemeRequest
     example:
@@ -7878,9 +7875,6 @@ definitions:
         type: boolean
     required:
     - app
-    - key
-    - moonpay_id
-    - isActive
   editIntegrationRequest:
     title: editIntegrationRequest
     example:
@@ -7906,11 +7900,6 @@ definitions:
         type: boolean
     required:
     - app
-    - publicKey
-    - privateKey
-    - integration_id
-    - integration_type
-    - isActive
   editCripsrIntegrationRequest:
     title: editCripsrIntegrationRequest
     example:
@@ -8458,9 +8447,6 @@ definitions:
     required:
     - app
     - admin
-    - analytics_id
-    - google_tracking_id
-    - isActive
   getComplianceRequest:
     title: getComplianceRequest
     example:
