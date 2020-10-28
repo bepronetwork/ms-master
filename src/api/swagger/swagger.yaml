@@ -8982,10 +8982,8 @@ definitions:
         type: string
       size:
         type: number
-        
       offset:
         type: number
-        
       bet:
         type: string
       game:
@@ -8994,11 +8992,6 @@ definitions:
         type: string
     required:
     - user
-    - size
-    - offset
-    - bet
-    - game
-    - currency
   resetPasswordRequest:
     title: resetPasswordRequest
     example:
