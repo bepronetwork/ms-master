@@ -51,15 +51,6 @@ export async function createUserDeposit({user, tokenAmount, app, currency,  depo
 }
 
 export async function editAppStructure({app, admin, structures}){
-
-    console.log({
-        admin: admin.id,
-        app : app.id,
-        structures,
-        affiliateTotalCut : structures.reduce( (acc, s) => acc+s.percentageOnLoss, 0)
-    });
-    console.log(admin.security.bearerToken," - ", {id : admin.id})
-
     return await editAffiliateStructure({
         admin: admin.id,
         app : app.id,
