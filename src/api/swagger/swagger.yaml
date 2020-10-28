@@ -3482,7 +3482,6 @@ paths:
       deprecated: false
       produces:
       - application/json
-      
       parameters:
       - name: Authorization
         in: header
@@ -8357,23 +8356,16 @@ definitions:
         type: string
       size:
         type: number
-        
       user:
         type: string
       offset:
         type: number
-        
       username:
         type: string
       email:
         type: string
     required:
     - app
-    - size
-    - user
-    - offset
-    - username
-    - email
   addServicesRequest:
     title: addServicesRequest
     example:
