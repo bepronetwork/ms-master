@@ -8927,7 +8927,6 @@ definitions:
     - name
     - email
     - app
-    - affiliateLink
   authUserRequest:
     title: authUserRequest
     example:
