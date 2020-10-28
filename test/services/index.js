@@ -58,6 +58,7 @@ export async function editAppStructure({app, admin, structures}){
         structures,
         affiliateTotalCut : structures.reduce( (acc, s) => acc+s.percentageOnLoss, 0)
     });
+    console.log(admin.security.bearerToken," - ", {id : admin.id})
 
     return await editAffiliateStructure({
         admin: admin.id,
