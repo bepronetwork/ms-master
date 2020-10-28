@@ -7236,13 +7236,8 @@ definitions:
     properties:
       level:
         type: number
-        
       percentageOnLoss:
         type: number
-        
-    required:
-    - level
-    - percentageOnLoss
   createAffiliateCustomRequest:
     title: createAffiliateCustomRequest
     example:
