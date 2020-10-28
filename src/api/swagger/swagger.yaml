@@ -9656,7 +9656,6 @@ definitions:
     required:
     - app
     - admin
-    - currency
     - image
   getLogsRequest:
     title: getLogsRequest
