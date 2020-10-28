@@ -5673,7 +5673,6 @@ paths:
       deprecated: false
       produces:
       - application/json
-      
       parameters:
       - name: Authorization
         in: header
@@ -5734,28 +5733,6 @@ paths:
       deprecated: false
       produces:
       - application/json
-      
-      parameters:
-      - name: Authorization
-        in: header
-        required: false
-        default: Bearer {token}
-        type: string
-      - name: id
-        in: query
-        required: true
-        type: string
-        description: (Required)
-      - name: Content-Type
-        in: header
-        required: true
-        type: string
-        description: (Required) application/json
-      - name: payload
-        in: header
-        required: true
-        type: string
-        description: (Required) {id:uid}
       responses:
         200:
           description: ''

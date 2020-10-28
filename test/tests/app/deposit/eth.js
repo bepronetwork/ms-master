@@ -41,6 +41,7 @@ context(`${ticker}`, async () => {
 
         await delay(100* 1000);
         let res = await webhookConfirmDepositFromBitgo(body, app.id, currencyWallet.currency._id);
+        console.log(res);
         /** provide funds for furthger testing */
         await provideFunds({wallet : currencyWallet._id, amount : 1});
         const { status } = res.data;
