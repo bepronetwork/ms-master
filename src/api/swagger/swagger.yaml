@@ -8271,15 +8271,10 @@ definitions:
           $ref: '#/definitions/Filter'
       size:
         type: number
-        
       offset:
         type: number
-        
     required:
     - app
-    - filters
-    - size
-    - offset
   Filter:
     title: Filter
     example:
@@ -8473,10 +8468,6 @@ definitions:
     required:
     - app
     - admin
-    - size
-    - offset
-    - begin_at
-    - end_at
   editAppRequest:
     title: editAppRequest
     example:
@@ -8581,10 +8572,8 @@ definitions:
           type: string
       size:
         type: number
-        
       offset:
         type: number
-        
       type:
         type: string
       begin_at:
@@ -8594,19 +8583,6 @@ definitions:
     required:
     - app
     - admin
-    - user
-    - currency
-    - bet
-    - game
-    - isJackpot
-    - tag
-    - username
-    - videogames
-    - size
-    - offset
-    - type
-    - begin_at
-    - end_at
   getAppAuthRequest:
     title: getAppAuthRequest
     example:
@@ -8923,12 +8899,10 @@ definitions:
         type: string
       size:
         type: number
-        
       periodicity:
         type: string
       offset:
         type: number
-        
       game:
         type: string
       type:
@@ -8937,14 +8911,6 @@ definitions:
         type: string
     required:
     - user
-    - currency
-    - tag
-    - size
-    - periodicity
-    - offset
-    - game
-    - type
-    - slug
   userSummaryRequest:
     title: userSummaryRequest
     example:
@@ -9154,11 +9120,6 @@ definitions:
     required:
     - app
     - admin
-    - size
-    - offset
-    - begin_at
-    - end_at
-    - user
   addAddonFreeCurrencyRequest:
     title: addAddonFreeCurrencyRequest
     example:
