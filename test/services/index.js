@@ -25,10 +25,12 @@ export async function createUser({app_id, affiliateLink}){
         username : 'User-' + Random(11, 234234),
         affiliateLink : affiliateLink
     }));
+    console.log(userPostData);
     await registerUser(userPostData);
     
     /* Login User */
     var data = (await loginUser(userPostData)).data;
+    console.log(data);
     await provideFunds({wallet : data.message.wallet[0]._id, amount : 0.1});
 
     data.message.password = userPostData.password;
