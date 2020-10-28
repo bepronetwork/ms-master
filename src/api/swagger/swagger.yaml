@@ -8308,7 +8308,6 @@ definitions:
     required:
     - bet
     - app
-    - tag
   getUsersRequest:
     title: getUsersRequest
     example:
