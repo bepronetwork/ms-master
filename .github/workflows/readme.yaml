@@ -2,8 +2,7 @@ name: Sync OAS to ReadMe
 on:
   push:
     branches:
-      - master
-      - main
+      - issue-735
 jobs:
   build:
     runs-on: ubuntu-latest
