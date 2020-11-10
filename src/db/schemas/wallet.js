@@ -40,7 +40,10 @@ WalletSchema.prototype.schema = {
     minBetAmountForBonusUnlocked : { type : Number, default : 0, required : true},
     incrementBetAmountForBonus   : { type : Number, default : 0, required : true},
     isPending                    : { type : Boolean, default: false},
-    bitgo_id_not_webhook         : { type : String}
+    bitgo_id_not_webhook         : { type : String},
+    freeCurrencyAmount                  : { type : Number, default : 0, required : true},
+    minBetAmountForFreeCurrencyUnlocked : { type : Number, default : 0, required : true},
+    incrementBetAmountForFreeCurrency   : { type : Number, default : 0, required : true}
 }
 
 WalletSchema.prototype.model = db.model(WalletSchema.prototype.name, new db.Schema(WalletSchema.prototype.schema));

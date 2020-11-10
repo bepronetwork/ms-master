@@ -164,6 +164,8 @@ const processActions = {
             let userBalance                     = userWallet.playBalance;
             const amountBonus                   = userWallet.bonusAmount;
             const minBetAmountForBonusUnlocked  = userWallet.minBetAmountForBonusUnlocked;
+            const minBetAmountForFreeCurrencyUnlocked  = userWallet.minBetAmountForFreeCurrencyUnlocked;
+            const incrementBetAmountForFreeCurrency  = userWallet.incrementBetAmountForFreeCurrency;
             const incrementBetAmountForBonus    = userWallet.incrementBetAmountForBonus;
 
             let resultBetted = CasinoLogicSingleton.normalizeBet(params.result, game.resultSpace);
@@ -275,6 +277,8 @@ const processActions = {
                 serverSeed          :   serverSeed,
                 amountBonus,
                 minBetAmountForBonusUnlocked,
+                minBetAmountForFreeCurrencyUnlocked,
+                incrementBetAmountForFreeCurrency,
                 incrementBetAmountForBonus,
                 points: points.value
             }
@@ -304,7 +308,7 @@ const processActions = {
 const progressActions = {
     __auto : async (params) => {
 
-        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points } = params;
+        const {isWon, playBalance, isUserAffiliated, affiliateReturns, result, user_delta, app_delta, wallet, appWallet, amountBonus, minBetAmountForBonusUnlocked, incrementBetAmountForBonus, virtual, user, points, minBetAmountForFreeCurrencyUnlocked, incrementBetAmountForFreeCurrency } = params;
         PerformanceBet.start({id : 'UsersRepository.insertPoints'});
         if(points > 0){
             await UsersRepository.prototype.insertPoints(user, points*params.totalBetAmount);

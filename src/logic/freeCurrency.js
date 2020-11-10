@@ -63,7 +63,9 @@ const processActions = {
             if(appWallet.playBalance < freeCurrencyWallet.value) {
                 throwError("INSUFFICIENT_FUNDS_APP");
             }
+            let minBetAmountForFreeCurrencyUnlocked = (freeCurrencyWallet.value * freeCurrencyWallet.multiplier)
             return {
+                minBetAmountForFreeCurrencyUnlocked,
                 freeCurrency : freeCurrencyWallet,
                 userWallet,
                 user,
@@ -103,9 +105,10 @@ const progressActions = {
     },
     __getAddonFreeCurrency: async (params) => {
         try {
-            let { freeCurrency, appWallet, userWallet, user, currency } = params;
+            let { freeCurrency, appWallet, userWallet, user, currency, minBetAmountForFreeCurrencyUnlocked } = params;
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -freeCurrency.value);
-            await WalletsRepository.prototype.updatePlayBalance(userWallet._id, freeCurrency.value);
+            await WalletsRepository.prototype.updatePlayBalanceFreeCurrency(userWallet._id, freeCurrency.value);
+            await WalletsRepository.prototype.updateMinBetAmountForFreeCurrencyUnlocked(userWallet._id, minBetAmountForFreeCurrencyUnlocked);
             await UsersRepository.prototype.updateLastTimeCurrencyFree(user._id, (new Date()).getTime(), currency);
 
             return {value:freeCurrency.value};
