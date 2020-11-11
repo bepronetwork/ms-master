@@ -24,11 +24,15 @@ const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
 const BOILERPLATES = global.BOILERPLATES;
 
 context('Login & Register', async () => {
-    var app, user, userPostData, secret;
+    var app, user, userPostData, secret, kyc_needed;
 
 
     before( async () =>  {
         app = global.test.app;
+        kyc_needed = false
+        if(!app.virtual){
+            kyc_needed = true;
+        }
     });
 
     it('should register the User', mochaAsync(async () => {
@@ -38,6 +42,7 @@ context('Login & Register', async () => {
         var res = await registerUser(userPostData);
         user = res.data.message;
         expect(res.data.status).to.equal(200);
+        expect(kyc_needed).to.equal(user.kyc_needed);
     }));
 
     it('should´nt register the user same username', mochaAsync(async () => {
