@@ -42,7 +42,6 @@ context('Login & Register', async () => {
         var res = await registerUser(userPostData);
         user = res.data.message;
         expect(res.data.status).to.equal(200);
-        console.log("user:: ", user)
         user_kyc = user.kyc_needed
     }));
 
