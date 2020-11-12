@@ -46,7 +46,7 @@ context('Login & Register', async () => {
         user_kyc = user.kyc_needed
     }));
 
-    it('should Check If KYC is true when register', mochaAsync(async () => {
+    it('should Check If KYC is right when register', mochaAsync(async () => {
         expect(kyc_needed).to.equal(user_kyc);
     }));
 
