@@ -57,6 +57,8 @@ let outputs = {
             "email": object.email,
             "external_user": object.external_user,
             "external_id": object.external_id,
+            "kyc_needed": object.kyc_needed,
+            "kyc_status": object.kyc_status,
             "affiliateLink": {
                 "parentAffiliatedLinks": object.affiliateLink.parentAffiliatedLinks ? object.affiliateLink.parentAffiliatedLinks.map(parentAffiliatedLink_id => parentAffiliatedLink_id) : object.affiliateLink.parentAffiliatedLinks,
                 "_id": object.affiliateLink._id,
