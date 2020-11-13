@@ -312,9 +312,9 @@ const processActions = {
             balanceInitial,
             url,
             kyc_needed,
-            birthday: params.birthday.toUpperCase(),
-            country: params.country,
-            country_acronym: params.country_acronym.toUpperCase()
+            birthday: new Date(params.birthday),
+            country: new String(params.country).toUpperCase(),
+            country_acronym: new String(params.country_acronym).toUpperCase()
         }
         return normalized;
     },
