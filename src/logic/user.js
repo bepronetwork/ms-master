@@ -268,8 +268,10 @@ const processActions = {
 
         let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
-        const countryAvailable = app.restrictedCountries.find(c => c.toLowerCase() == params.country_acronym.toLowerCase());
-        if(countryAvailable){throwError('COUNTRY_RESTRICTED')} 
+        if(app.restrictedCountries.length != 0){
+            const countryAvailable = app.restrictedCountries.find(c => new String(c).toLowerCase() == new String(params.country_acronym).toLowerCase());
+            if(countryAvailable){throwError('COUNTRY_RESTRICTED')} 
+        }
         if(app.wallet.length<=0) {throwError("REGISTER_NOT_CURRENCY_ADDED");}
         let kyc_needed = false;
         if(!app.virtual){
