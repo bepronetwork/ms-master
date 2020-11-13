@@ -291,7 +291,6 @@ const processActions = {
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
         let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
-
         let normalized = {
             alreadyExists: alreadyExists,
             username: username,
