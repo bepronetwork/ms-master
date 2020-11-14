@@ -259,7 +259,8 @@ const processActions = {
         if (userEmail) { throwError('ALREADY_EXISTING_EMAIL') }
         let userUsername = await __private.db.findUser(username);
         if (userUsername) { throwError('USERNAME_ALREADY_EXISTS') }
-
+        const age = parseInt((new Date().getTime() - new Date(params.birthday).getTime())/1000/60/60/24/365);
+        if(age < 18){throwError('INSUFFICIENT_AGE')} 
         const { affiliateLink, affiliate } = params;
         var input_params = params;
         //Set up Password Structure
@@ -267,6 +268,10 @@ const processActions = {
 
         let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
+        if(app.restrictedCountries.length != 0){
+            const countryAvailable = app.restrictedCountries.find(c => new String(c).toLowerCase() == new String(params.country_acronym).toLowerCase());
+            if(countryAvailable){throwError('COUNTRY_RESTRICTED')} 
+        }
         if(app.wallet.length<=0) {throwError("REGISTER_NOT_CURRENCY_ADDED");}
         let kyc_needed = false;
         if(!app.virtual){
@@ -286,7 +291,6 @@ const processActions = {
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
         let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
-
         let normalized = {
             alreadyExists: alreadyExists,
             username: username,
@@ -306,7 +310,10 @@ const processActions = {
             external_user: false,
             balanceInitial,
             url,
-            kyc_needed
+            kyc_needed,
+            birthday: new Date(params.birthday),
+            country: new String(params.country).toUpperCase(),
+            country_acronym: new String(params.country_acronym).toUpperCase()
         }
         return normalized;
     },

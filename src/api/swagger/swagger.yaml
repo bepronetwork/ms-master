@@ -3977,6 +3977,24 @@ definitions:
         minLength: 1
         description: |
           App Id
+      birthday:
+        type : string
+        example: "30-01-2020"
+        minLength: 1
+        description: |
+          Date of Birthday
+      country:
+        type : string
+        example: "Brazil"
+        minLength: 1
+        description: |
+          Country Name
+      country_acronym:
+        type : string
+        example: "BR"
+        minLength: 1
+        description: |
+          Country Acronym
 
   GetBetInfoRequest:
     type: object
