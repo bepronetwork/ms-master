@@ -5079,6 +5079,7 @@ definitions:
       - app
       - clientId
       - flowId
+      - client_secret
       - isActive
     properties:
       kyc_id:
@@ -5104,6 +5105,10 @@ definitions:
         format: name
         example: "gw293847ncv2"
       flowId:
+        type : string
+        format: name
+        example: "3456g334"
+      client_secret:
         type : string
         format: name
         example: "3456g334"
