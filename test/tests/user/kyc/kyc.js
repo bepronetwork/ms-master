@@ -1,7 +1,8 @@
 import {
     editKycNeeded,
     getUserAuth,
-    kycWebhook
+    kycWebhook,
+    loginUser
 } from '../../../methods';
 import chai from 'chai';
 import { mochaAsync } from '../../../utils';
@@ -15,6 +16,7 @@ context('Kyc', async () =>  {
     before( async () =>  {
         app     = global.test.app;
         user    = global.test.user;
+        user    = await loginUser({username:"sivapof211@x1post.com", password: "sivapof211@x1post.com", app: "5f5295d31534320027631bb4"});
         user    = (await getUserAuth({ user: user.id, app: app.id }, user.bearerToken, { id: user.id })).data.message;
         admin   = global.test.admin;
     });
@@ -29,19 +31,19 @@ context('Kyc', async () =>  {
         expect(res.data.status).to.equal(200);
     }));
 
-    it('should Kyc', mochaAsync(async () => {
+    it('should webhook confirm Kyc', mochaAsync(async () => {
         let webhookData = {
             eventName: 'verification_updated',
-            details: { age: { data: 25 }, isDocumentExpired: {}},
-            identityStatus: 'reviewNeeded',
-            matiDashboardUrl: 'https://dashboard.getmati.com/identities/5faec24bc326eb001b29ca58',
-            resource: 'https://api.getmati.com/v2/verifications/5faec24bc326eb001b29ca5a',
+            details: { age: { data: 25 }, isDocumentExpired: { data: [Object] } },
+            identityStatus: 'verified',
+            matiDashboardUrl: 'https://dashboard.getmati.com/identities/5fb01f60c326eb001b2bb4de',
+            metadata: { id: '5fa9419959141a001789e736' },
+            resource: 'https://api.getmati.com/v2/verifications/5fb01f60c326eb001b2bb4e0',
             status: 'reviewNeeded',
-            timestamp: '2020-11-14T15:16:00.914Z'
-        }
+            timestamp: '2020-11-14T18:46:55.712Z'
+          }
         await kycWebhook(webhookData);
-
-        let res = await editKycNeeded(postData , admin.security.bearerToken , {id : admin.id})
-        expect(res.data.status).to.equal(200);
+        user = (await getUserAuth({ user: user.id, app: app.id }, user.bearerToken, { id: user.id })).data.message;
+        expect(user.kyc_needed).to.equal(false);
     }));
 });
