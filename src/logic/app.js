@@ -50,14 +50,14 @@ import {
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language } from '../models';
-import { fromPeriodicityToDates } from './utils/date';
+import addYYYYMMDD, { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
-import { SendInBlueAttributes } from './third-parties';
+import { MatiKYCSingleton, SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
@@ -1259,10 +1259,18 @@ const processActions = {
         if(!verifyKYC(params.metadata)) {
             return false;
         }
+
         const user_id = params.metadata.id;
-        const user = await UsersRepository.prototype.findUserById(user_id);
+        const user    = await UsersRepository.prototype.findUserById(user_id);
+
+        const clientId     = user.app_id.integrations.kyc.clientId;
+        const clientSecret = user.app_id.integrations.kyc.client_secret;
+
+        const tokenKyc          = (await MatiKYCSingleton.getBearerToken(clientId, clientSecret)).access_token;
+        const verificationData  = await MatiKYCSingleton.getData(params.resource, tokenKyc);
+
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        return params;
+        return {...params, dataVerification: verificationData, app: user.app_id, user};
     }
 }
 
@@ -1973,14 +1981,16 @@ const progressActions = {
         return params;
     },
     __editKycIntegration : async (params) => {
-        let { flowId, clientId, isActive, app, kyc_id } = params;
-        let hashedFlowId    = Security.prototype.encryptData(flowId);
-        let hashedClientId  = Security.prototype.encryptData(clientId);
+        let { flowId, clientId, isActive, app, kyc_id, client_secret } = params;
+        let hashedFlowId        = Security.prototype.encryptData(flowId);
+        let hashedClientId      = Security.prototype.encryptData(clientId);
+        let hashedClient_secret = Security.prototype.encryptData(client_secret);
 
         await KycRepository.prototype.findByIdAndUpdate(kyc_id, {
-            flowId   : hashedFlowId,
-            clientId : hashedClientId,
-            isActive : isActive
+            flowId        : hashedFlowId,
+            clientId      : hashedClientId,
+            isActive      : isActive,
+            client_secret : hashedClient_secret
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id});
@@ -2403,10 +2413,27 @@ const progressActions = {
         if(!params) {return false;}
         if(params.identityStatus!=undefined) {
             const user_id = params.metadata.id;
+            if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
+                await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
+                return;
+            }
+            if(params.user.country_acronym!=null && params.dataVerification.documents[0].country.toUpperCase()!=params.user.country_acronym.toUpperCase()) {
+                await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
+                return;
+            }
+            addYYYYMMDD();
+            if(params.user.birthday!=null && (new Date(params.user.birthday)).yyyymmdd() != params.dataVerification.fields.dateOfBirth.value) {
+                await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
+                return;
+            }
             if(params.identityStatus=="verified") {
                 await UsersRepository.prototype.editKycNeeded(user_id, false);
             }
-            await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
+            // const ageWithBirthday = parseInt(((new Date(params.user.birthday)).getTime() / 1000 / 60 / 60 /24 / 365 ).toFixed(0));
+            // const ageKyc          = parseInt(params.dataVerification.computed.age.data);
+            // if(params.user.birthday!=null && ageWithBirthday!= ageKyc) {
+            //     return;
+            // }
         }
         return true;
     }
