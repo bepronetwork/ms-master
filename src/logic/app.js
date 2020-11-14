@@ -1263,8 +1263,8 @@ const processActions = {
         const user_id = params.metadata.id;
         const user    = await UsersRepository.prototype.findUserById(user_id);
 
-        const clientId     = user.app_id.integrations.kyc.clientId;
-        const clientSecret = user.app_id.integrations.kyc.client_secret;
+        const clientId     = Security.prototype.decryptData(user.app_id.integrations.kyc.clientId);
+        const clientSecret = Security.prototype.decryptData(user.app_id.integrations.kyc.client_secret);
 
         const tokenKyc          = (await MatiKYCSingleton.getBearerToken(clientId, clientSecret)).access_token;
         const verificationData  = await MatiKYCSingleton.getData(params.resource, tokenKyc);
@@ -2422,12 +2422,16 @@ const progressActions = {
                 return;
             }
             addYYYYMMDD();
-            if(params.user.birthday!=null && (new Date(params.user.birthday)).yyyymmdd() != params.dataVerification.fields.dateOfBirth.value) {
+            console.log(params.dataVerification.documents[0].fields);
+            if(params.user.birthday!=null && (new Date(params.user.birthday)).yyyymmdd() != params.dataVerification.documents[0].fields.dateOfBirth.value) {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
                 return;
             }
             if(params.identityStatus=="verified") {
                 await UsersRepository.prototype.editKycNeeded(user_id, false);
+            }
+            if(params.identityStatus!=null) {
+                await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
             }
             // const ageWithBirthday = parseInt(((new Date(params.user.birthday)).getTime() / 1000 / 60 / 60 /24 / 365 ).toFixed(0));
             // const ageKyc          = parseInt(params.dataVerification.computed.age.data);
