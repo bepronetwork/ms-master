@@ -291,8 +291,9 @@ const processActions = {
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
         let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
-        let birthday = new Date(new Date(params.birthday).getTime());
-
+        console.log("ParamsB:: ",params.birthday)
+        console.log("Params:: ",new Date(params.birthday))
+        console.log("New Date:: ",new Date())
         let normalized = {
             alreadyExists: alreadyExists,
             username: username,
@@ -313,7 +314,7 @@ const processActions = {
             balanceInitial,
             url,
             kyc_needed,
-            birthday,
+            birthday: new Date(params.birthday),
             country: new String(params.country).toUpperCase(),
             country_acronym: new String(params.country_acronym).toUpperCase()
         }
