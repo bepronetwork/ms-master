@@ -28,6 +28,7 @@ context('Kyc', async () =>  {
             kyc_needed : true
         }
         let res = await editKycNeeded(postData , admin.security.bearerToken , {id : admin.id})
+        console.log(res);
         expect(res.data.status).to.equal(200);
     }));
 
