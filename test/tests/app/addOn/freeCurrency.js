@@ -49,8 +49,7 @@ context('Balance', async () => {
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"
         }));
-        console.log("userPostData:: ", userPostData)
-        await registerUser({...userPostData, birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"});
+        await registerUser(userPostData);
         var dataUser = (await loginUser(userPostData)).data.message;
         user = dataUser;
 

@@ -291,9 +291,6 @@ const processActions = {
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
         let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
-        console.log("ParamsB:: ",params.birthday)
-        console.log("Params:: ",new Date(params.birthday))
-        console.log("New Date:: ",new Date())
         let normalized = {
             alreadyExists: alreadyExists,
             username: username,
