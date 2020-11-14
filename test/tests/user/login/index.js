@@ -37,7 +37,7 @@ context('Login & Register', async () => {
 
     it('should register the User', mochaAsync(async () => {
         userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
-            username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02T03:00:00.000+00:00", country: "Brazil", country_acronym: "BR"
+            username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"
         }));
         var res = await registerUser(userPostData);
         user = res.data.message;
@@ -51,7 +51,7 @@ context('Login & Register', async () => {
 
     it('shouldnt register the User - Wrong Age', mochaAsync(async () => {
         userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
-            username: '678im67im' + Random(10000, 23409234235463456), birthday: "2020-01-02T03:00:00.000+00:00", country: "Brazil", country_acronym: "BR"
+            username: '678im67im' + Random(10000, 23409234235463456), birthday: "2020-01-02", country: "Brazil", country_acronym: "BR"
         }));
         var res = await registerUser(userPostData);
         user = res.data.message;
@@ -61,7 +61,7 @@ context('Login & Register', async () => {
 
     it('shouldnt register the User - Restricted Country', mochaAsync(async () => {
         userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
-            username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02T03:00:00.000+00:00", country: "Brazil", country_acronym: "BR"
+            username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"
         }));
         var res = await registerUser(userPostData);
         user = res.data.message;

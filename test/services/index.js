@@ -24,7 +24,7 @@ export async function createUser({app_id, affiliateLink}){
     var userPostData = genData(models.users.normal_register(user_eth_account.getAddress(), app_id, {
         username : 'User-' + Random(11, 234234),
         affiliateLink : affiliateLink,
-        birthday: "1998-01-02T03:00:00.000+00:00", 
+        birthday: "1998-01-02", 
         country: "Brazil", 
         country_acronym: "BR"
     }));
