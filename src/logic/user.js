@@ -291,6 +291,8 @@ const processActions = {
 
         let tokenConfirmEmail = MiddlewareSingleton.generateTokenEmail(params.email);
         let url = GenerateLink.confirmEmail([app.web_url, app.id, tokenConfirmEmail]);
+        let birthday = new Date(params.birthday).getTime()
+
         let normalized = {
             alreadyExists: alreadyExists,
             username: username,
@@ -311,7 +313,7 @@ const processActions = {
             balanceInitial,
             url,
             kyc_needed,
-            birthday: new Date(params.birthday),
+            birthday: new Date(birthday),
             country: new String(params.country).toUpperCase(),
             country_acronym: new String(params.country_acronym).toUpperCase()
         }
