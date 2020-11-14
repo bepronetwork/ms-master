@@ -24,7 +24,7 @@ const genData = (faker, data) => JSON.parse(faker.fake(JSON.stringify(data)));
 const BOILERPLATES = global.BOILERPLATES;
 
 context('Login & Register', async () => {
-    var app, user, userPostData, secret, kyc_needed, user_kyc;
+    var app, user, userPostData, secret, kyc_needed, user_kyc, userPostDataErrors;
 
 
     before( async () =>  {
@@ -49,34 +49,34 @@ context('Login & Register', async () => {
         expect(kyc_needed).to.equal(user_kyc);
     }));
 
+    it('should´nt register the user same username', mochaAsync(async () => {
+        var res = await registerUser({...userPostData, email : `somthing${Random(100,243534562345)}@gmail.com`});
+        expect(res.data.status).to.equal(54);
+    }));
+
+    it('should´nt register the user same email', mochaAsync(async () => {
+        var res = await registerUser({...userPostData, username : '678im67im' + Random(10000, 23409234235463456)});
+        expect(res.data.status).to.equal(8);
+    }));
+
     it('shouldnt register the User - Wrong Age', mochaAsync(async () => {
-        userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
+        userPostDataErrors = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456), birthday: "2020-01-02", country: "Brazil", country_acronym: "BR"
         }));
-        var res = await registerUser(userPostData);
+        var res = await registerUser(userPostDataErrors);
         user = res.data.message;
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(83);
     }));
 
     it('shouldnt register the User - Restricted Country', mochaAsync(async () => {
-        userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
+        userPostDataErrors = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Portugal", country_acronym: "PT"
         }));
-        var res = await registerUser(userPostData);
+        var res = await registerUser(userPostDataErrors);
         user = res.data.message;
         expect(res.data.status).to.not.null;
         expect(res.data.status).to.equal(84);
-    }));
-
-    it('should´nt register the user same username', mochaAsync(async () => {
-        var res = await registerUser({...userPostData, email : `somthing${Random(100,243534562345)}@gmail.com`, country: "Brazil", country_acronym: "BR"});
-        expect(res.data.status).to.equal(54);
-    }));
-
-    it('should´nt register the user same email', mochaAsync(async () => {
-        var res = await registerUser({...userPostData, username : '678im67im' + Random(10000, 23409234235463456), country: "Brazil", country_acronym: "BR"});
-        expect(res.data.status).to.equal(8);
     }));
 
     it('should login the User', mochaAsync(async () => {

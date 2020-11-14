@@ -34,12 +34,14 @@ module.exports = {
       for (let app of apps) {
         processObj.setProcess(processIndex);
         processIndex--;
-        if(!app.virtual){
-          for(let user of app.users){
-            await db.collection('users').updateOne(
-              { _id: user },
-              { $set: { "kyc_needed": true } }
-            );
+        if (!app.virtual) {
+          if (Array.isArray(app.users)) {
+            for (let user of app.users) {
+              await db.collection('users').updateOne(
+                { _id: user },
+                { $set: { "kyc_needed": true } }
+              );
+            }
           }
         }
         processObj.setProcess(processIndex);
