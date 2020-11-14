@@ -16,7 +16,7 @@ context('Kyc', async () =>  {
     before( async () =>  {
         app     = global.test.app;
         user    = global.test.user;
-        user    = await loginUser({username:"sivapof211@x1post.com", password: "sivapof211@x1post.com", app: "5f5295d31534320027631bb4"});
+        user    = (await loginUser({username:"sivapof211@x1post.com", password: "sivapof211@x1post.com", app: "5f5295d31534320027631bb4"})).data.message;
         user    = (await getUserAuth({ user: user.id, app: app.id }, user.bearerToken, { id: user.id })).data.message;
         admin   = global.test.admin;
     });
