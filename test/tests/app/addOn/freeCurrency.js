@@ -49,12 +49,8 @@ context('Balance', async () => {
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"
         }));
-        console.log("app:: ", app.restrictedCountries)
-        console.log("userPostData:: ", userPostData)
-        const test = await registerUser(userPostData);
-        console.log("test:: ", test.data)
+        await registerUser(userPostData);
         user = (await loginUser(userPostData)).data.message;
-        console.log("user:: ", user)
 
         await WalletsRepository.prototype.updatePlayBalance(app.wallet[0]._id, 1);
 
