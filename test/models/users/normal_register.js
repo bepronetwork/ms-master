@@ -10,7 +10,10 @@ const normal_register = (address, app_id, options={}) => {
         app : app_id,
         password : 'test123',
         user_external_id : '{{random.uuid}}',
-        affiliateLink : options.affiliateLink
+        affiliateLink : options.affiliateLink,
+        birthday: options.birthday,
+        country: options.country,
+        country_acronym: options.country_acronym
     }
 }
 
