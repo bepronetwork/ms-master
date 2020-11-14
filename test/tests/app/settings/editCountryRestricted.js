@@ -34,14 +34,14 @@ context(`Logs Data`, async () =>  {
 
     it('should try to register user with country not allowed LH(localhost)', mochaAsync(async () => {
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
-            username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"
+            username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "ANDORRA", country_acronym: "AD"
         }));
         var res = await registerUser(userPostData);
         expect(res.data.status).to.equals(59);
     }));
 
-    it('should edit restricted countries to ["BR","PT"] test', mochaAsync(async () => {
-        const res = await editRestrictedCountries({app: app.id, admin: admin.id, countries: ["BR","PT"]}, admin.security.bearerToken, {id : admin.id});
+    it('should edit restricted countries to ["AD","PT"] test', mochaAsync(async () => {
+        const res = await editRestrictedCountries({app: app.id, admin: admin.id, countries: ["AD","PT"]}, admin.security.bearerToken, {id : admin.id});
         expect(res.data.status).to.equals(200);
     }));
 
