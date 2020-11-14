@@ -2,7 +2,8 @@ import {
     editKycNeeded,
     getUserAuth,
     kycWebhook,
-    loginUser
+    loginUser,
+    getAppAuth
 } from '../../../methods';
 import chai from 'chai';
 import { mochaAsync } from '../../../utils';
@@ -14,11 +15,11 @@ context('Kyc', async () =>  {
 
 
     before( async () =>  {
-        app     = global.test.app;
-        user    = global.test.user;
+        admin   = (await authAdmin({ admin : "5f5295cc1534320027631b94" }, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWY1Mjk1Y2MxNTM0MzIwMDI3NjMxYjk0IiwidGltZSI6MTYwNDY4MzYwODUyMCwiaWF0IjoxNjAyMDkxNjA4fQ.DHHEWv4bvlWiA8sQpQKLuL-nqMK_de-Qn7oYe2SQGq-iZhaR4d69z84SAOj9MhK5zjaBiH6NxD7TQsHQA_ObGA", { id : "5f5295cc1534320027631b94"})).data.message;
+        console.log(admin);
+        app     = (await getAppAuth({app : "5f5295d31534320027631bb4", admin: admin.id}, admin.security.bearerToken, {id : admin.id})).data.message;
         user    = (await loginUser({username:"sivapof211@x1post.com", password: "sivapof211@x1post.com", app: "5f5295d31534320027631bb4"})).data.message;
         user    = (await getUserAuth({ user: user.id, app: app.id }, user.bearerToken, { id: user.id })).data.message;
-        admin   = global.test.admin;
     });
 
     it('should Edit Kyc', mochaAsync(async () => {
