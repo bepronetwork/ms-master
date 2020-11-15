@@ -37,7 +37,7 @@ context('Kyc', async () =>  {
     it('should webhook confirm Kyc', mochaAsync(async () => {
         let webhookData = {
             eventName: 'verification_updated',
-            details: { age: { data: 25 }, isDocumentExpired: { data: [Object] } },
+            details: { age: { data: 25 }, isDocumentExpired: { data: [] } },
             identityStatus: 'verified',
             matiDashboardUrl: 'https://dashboard.getmati.com/identities/5fb01f60c326eb001b2bb4de',
             metadata: { id: '5fa9419959141a001789e736' },
