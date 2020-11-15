@@ -3,7 +3,8 @@ import {
     getUserAuth,
     kycWebhook,
     loginUser,
-    getAppAuth
+    getAppAuth,
+    authAdmin
 } from '../../../methods';
 import chai from 'chai';
 import { mochaAsync } from '../../../utils';
