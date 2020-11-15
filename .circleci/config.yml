@@ -50,6 +50,7 @@ jobs: # a collection of steps
             echo 'export LIMIT=1' >> $BASH_ENV
             echo 'export RATE=100' >> $BASH_ENV
             echo 'export PANDA_SCORE_TOKEN=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0' >> $BASH_ENV
+            echo 'export MERCHANT_SECRET_KYC=mrFFriBbMk6jrGYkw7uVmg' >> $BASH_ENV
             source $BASH_ENV
       - run: # run tests
           name: test
