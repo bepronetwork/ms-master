@@ -50,7 +50,7 @@ import {
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
 import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language } from '../models';
-import addYYYYMMDD, { fromPeriodicityToDates } from './utils/date';
+import { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
 import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManager';
@@ -2421,9 +2421,7 @@ const progressActions = {
                 await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
                 return;
             }
-            addYYYYMMDD();
-            console.log(params.dataVerification.documents[0].fields);
-            if(params.user.birthday!=null && (new Date(params.user.birthday)).yyyymmdd() != params.dataVerification.documents[0].fields.dateOfBirth.value) {
+            if(params.user.birthday!=null && (new Date(params.user.birthday)).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
                 return;
             }
