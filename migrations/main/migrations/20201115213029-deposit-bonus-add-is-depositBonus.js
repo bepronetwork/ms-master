@@ -34,9 +34,9 @@ module.exports = {
         processObj.setProcess(processIndex);
         processIndex--;
 
-        let wallet = bonus.multiplier.map((item)=>{
+        let wallet = Array.isArray(bonus.multiplier) ? bonus.multiplier.map((item)=>{
           return {currency: item.currency, value: bonus.isDepositBonus};
-        });
+        }) : [];
 
         await db.collection('depositbonus').updateOne(
           { _id: bonus._id },
