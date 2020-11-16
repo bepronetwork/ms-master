@@ -6,6 +6,12 @@ import { globalsTest } from './GlobalsTest';
 import Numbers from './logic/services/numbers';
 
 module.exports = {
+    async kycWebhook(params) {
+        return request(global.server)
+        .post('/api/app/kyc_webhook')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async registerUser(params) {
         return request(global.server)
         .post('/api/users/register')

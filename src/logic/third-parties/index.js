@@ -5,6 +5,7 @@ import BitGoSingleton from './bitgo';
 const SendInBlueFunctions = require('./sendInBlue/functions.json');
 const SendInBlueAttributes = require('./sendInBlue/fields.json');
 import { LogOwlSingleton } from "./logOwl";
+import { MatiKYCSingleton } from "./mati_kyc";
 
 export {
     LogOwlSingleton,
@@ -14,5 +15,6 @@ export {
     SendInBlue,
     BitGoSingleton,
     SendInBlueFunctions,
-    SendInBlueAttributes
+    SendInBlueAttributes,
+    MatiKYCSingleton
 }
