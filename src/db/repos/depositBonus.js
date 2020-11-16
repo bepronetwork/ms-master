@@ -71,11 +71,11 @@ class DepositBonusRepository extends MongoComponent{
 
     findByIdAndUpdate(_id, currency, newStructure){ 
         return new Promise( (resolve, reject) => {
-            DepositBonusRepository.prototype.schema.model.findByIdAndUpdate(
-                _id,
+            DepositBonusRepository.prototype.schema.model.updateOne(
+                {_id, "isDepositBonus.currency": currency},
                 { $set: {
-                    "isDepositBonus"  : newStructure.isDepositBonus
-                }} 
+                    "isDepositBonus.$.value"  : newStructure.isDepositBonus
+                }}
                 )
             .exec( async (err, item) => {
                 await this.findByIdAndUpdateMaxDepositAmount(_id, currency, newStructure.max_deposit)
