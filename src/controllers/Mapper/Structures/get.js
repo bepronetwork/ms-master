@@ -140,6 +140,7 @@ const get_object = (object) => {
             "kyc": !object.integrations.kyc ? {} : {
                 "_id": object.integrations.kyc._id,
                 "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                "client_secret": !object.integrations.kyc.client_secret ? null : Security.prototype.decryptData(object.integrations.kyc.client_secret),
                 "flowId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
                 "link": object.integrations.kyc.link,
                 "isActive": object.integrations.kyc.isActive,
