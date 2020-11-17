@@ -6,12 +6,13 @@ class KycSchema{};
 KycSchema.prototype.name = 'Kyc';
 
 KycSchema.prototype.schema =  {
-    clientId : { type : String},
-    flowId   : { type : String},
-    isActive : { type : Boolean},
-    link     : { type : String, default : 'https://getmati.com'},
-    name     : { type : String, default : 'Kyc'},
-    metaName : { type : String, default : 'kyc'},
+    clientId      : { type : String},
+    flowId        : { type : String},
+    client_secret : { type : String},
+    isActive      : { type : Boolean},
+    link          : { type : String, default : 'https://getmati.com'},
+    name          : { type : String, default : 'Kyc'},
+    metaName      : { type : String, default : 'kyc'},
 }
 
 

@@ -2,6 +2,7 @@ import { games_object } from "./games"
 import { currencies_object } from "./currencies"
 import { wallet_object } from "./wallet"
 import { Security } from "../../Security"
+const fixRestrictCountry = require("../../../config/restrictedCountries.config.json");
 
 const get_object = (object) => {
     return {
@@ -63,7 +64,7 @@ const get_object = (object) => {
             "url": object.typography.url
         } : object.typography,
         "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
-        "restrictedCountries": object.restrictedCountries ? object.restrictedCountries : [],
+        "restrictedCountries": [...(object.restrictedCountries ? object.restrictedCountries : []), ...fixRestrictCountry],
         "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
         "isWithdrawing": object.isWithdrawing,
         "name": object.name,
@@ -140,6 +141,7 @@ const get_object = (object) => {
             "kyc": !object.integrations.kyc ? {} : {
                 "_id": object.integrations.kyc._id,
                 "clientId": !object.integrations.kyc.clientId ? null : Security.prototype.decryptData(object.integrations.kyc.clientId),
+                "client_secret": !object.integrations.kyc.client_secret ? null : Security.prototype.decryptData(object.integrations.kyc.client_secret),
                 "flowId": !object.integrations.kyc.flowId ? null : Security.prototype.decryptData(object.integrations.kyc.flowId),
                 "link": object.integrations.kyc.link,
                 "isActive": object.integrations.kyc.isActive,

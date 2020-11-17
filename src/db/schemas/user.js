@@ -37,7 +37,10 @@ UserSchema.prototype.schema = {
     lastTimeCurrencyFree: [{
         currency  : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency'},
         date      : { type: Number, default : 0}
-    }]
+    }],
+    birthday            : { type: Date, required : true},
+    country             : { type: String, required : true},
+    country_acronym     : { type: String, required : true},
 }
 
 let userInstance = new db.Schema(UserSchema.prototype.schema);

@@ -7,7 +7,10 @@ class DepositBonusSchema{};
 DepositBonusSchema.prototype.name = 'DepositBonus';
 
 DepositBonusSchema.prototype.schema =  {
-    isDepositBonus       : { type: Boolean, default: false },
+    isDepositBonus       : [{
+        currency             : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+        value                : { type: Boolean, required : true, default : false},
+    }],
     min_deposit          : [{
         currency             : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
         amount               : { type: Number, required : true, default : 0},

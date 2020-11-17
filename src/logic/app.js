@@ -57,7 +57,7 @@ import { throwError, throwErrorProvider } from '../controllers/Errors/ErrorManag
 import GoogleStorageSingleton from './third-parties/googleStorage';
 import { isHexColor } from '../helpers/string';
 import { mail } from '../mocks';
-import { SendInBlueAttributes } from './third-parties';
+import { MatiKYCSingleton, SendInBlueAttributes } from './third-parties';
 import { HerokuClientSingleton, BitGoSingleton } from './third-parties';
 import { Security } from '../controllers/Security';
 import { SendinBlueSingleton, SendInBlue } from './third-parties/sendInBlue';
@@ -78,7 +78,7 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
-
+const fixRestrictCountry = require("../config/restrictedCountries.config.json");
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars
@@ -1256,13 +1256,21 @@ const processActions = {
         };
     },
     __kycWebhook: async (params) => {
-        if(!verifyKYC(params.metadata)) {
+        const user_id = params.metadata.id;
+        const user    = await UsersRepository.prototype.findUserById(user_id);
+
+        if(!verifyKYC(params.metadata, String(user.app_id._id).toString())) {
             return false;
         }
-        const user_id = params.metadata.id;
-        const user = await UsersRepository.prototype.findUserById(user_id);
+
+        const clientId     = Security.prototype.decryptData(user.app_id.integrations.kyc.clientId);
+        const clientSecret = Security.prototype.decryptData(user.app_id.integrations.kyc.client_secret);
+
+        const tokenKyc          = (await MatiKYCSingleton.getBearerToken(clientId, clientSecret)).access_token;
+        const verificationData  = await MatiKYCSingleton.getData(params.resource, tokenKyc);
+
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        return params;
+        return {...params, dataVerification: verificationData, app: user.app_id, user};
     }
 }
 
@@ -1467,7 +1475,13 @@ const progressActions = {
     },
     __editRestrictedCountries : async (params) => {
         try {
-            const {app, countries} = params;
+            let {app, countries} = params;
+            for(let country of fixRestrictCountry){
+                let index = countries.indexOf(country);
+                if(index>=0){
+                    countries.splice(index, 1);
+                }
+            }
             await AppRepository.prototype.setCountries(app, countries);
             return true;
         } catch(err) {
@@ -1973,14 +1987,16 @@ const progressActions = {
         return params;
     },
     __editKycIntegration : async (params) => {
-        let { flowId, clientId, isActive, app, kyc_id } = params;
-        let hashedFlowId    = Security.prototype.encryptData(flowId);
-        let hashedClientId  = Security.prototype.encryptData(clientId);
+        let { flowId, clientId, isActive, app, kyc_id, client_secret } = params;
+        let hashedFlowId        = Security.prototype.encryptData(flowId);
+        let hashedClientId      = Security.prototype.encryptData(clientId);
+        let hashedClient_secret = Security.prototype.encryptData(client_secret);
 
         await KycRepository.prototype.findByIdAndUpdate(kyc_id, {
-            flowId   : hashedFlowId,
-            clientId : hashedClientId,
-            isActive : isActive
+            flowId        : hashedFlowId,
+            clientId      : hashedClientId,
+            isActive      : isActive,
+            client_secret : hashedClient_secret
         });
         /* Rebuild the App */
         await HerokuClientSingleton.deployApp({app : app.hosting_id});
@@ -2401,11 +2417,28 @@ const progressActions = {
     },
     __kycWebhook: async (params) => {
         if(!params) {return false;}
-        if(params.identityStatus!=undefined) {
-            const user_id = params.metadata.id;
-            if(params.identityStatus=="verified") {
-                await UsersRepository.prototype.editKycNeeded(user_id, false);
+        if(params.identityStatus==undefined) {
+            return false;
+        }
+        const user_id = params.metadata.id;
+        if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
+            await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
+            return;
+        }
+        if(params.user.birthday!=undefined && params.user.country_acronym!=undefined) {
+            if(params.user.country_acronym!=null && params.dataVerification.documents[0].country.toUpperCase()!=params.user.country_acronym.toUpperCase()) {
+                await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
+                return;
             }
+            if(params.user.birthday!=null && (new Date(params.user.birthday)).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
+                await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
+                return;
+            }
+        }
+        if(params.identityStatus=="verified") {
+            await UsersRepository.prototype.editKycNeeded(user_id, false);
+        }
+        if(params.identityStatus!=null) {
             await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
         }
         return true;

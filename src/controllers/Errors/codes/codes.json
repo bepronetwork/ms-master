@@ -330,5 +330,13 @@
     "082" : {
         "key"      : "DEPOSIT_MODE_IN_API",
         "message"   : "The system is already processing your action"
+    },
+    "083" : {
+        "key"      : "INSUFFICIENT_AGE",
+        "message"   : "You have to be over 18yo to register"
+    },
+    "084" : {
+        "key"      : "COUNTRY_RESTRICTED",
+        "message"   : "Currently we dont operate in your country"
     }
 }

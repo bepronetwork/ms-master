@@ -2,6 +2,7 @@ import MiddlewareSingleton from "./middleware";
 import { AdminsRepository, PermissionRepository, AppRepository } from "../../db/repos";
 import { throwError } from "../../controllers/Errors/ErrorManager";
 const geoip = require("geoip-lite");
+const fixRestrictCountry = require("../../config/restrictedCountries.config.json");
 
 class Security{
 
@@ -39,7 +40,7 @@ class Security{
     verifyByCountry = async ({req}) => {
         try {
             let countries = (await AppRepository.prototype.findAppById(req.body['app'], "none")).restrictedCountries;
-            countries = countries == null ? [] : countries;
+            countries = (countries == null) ? [...fixRestrictCountry] : [...countries, ...fixRestrictCountry];
 
             const ipFull = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',');
 

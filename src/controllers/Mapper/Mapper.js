@@ -8,6 +8,7 @@ let self;
  * @default 1Level Tier Object
  */
 
+ const fixRestrictCountry = require("../../config/restrictedCountries.config.json");
 
 
 let outputs = {
@@ -53,7 +54,7 @@ let outputs = {
                 "pusher" : object.integrations.pusher
             },
             "countriesAvailable"    : object.countriesAvailable,
-            "restrictedCountries"   : object.restrictedCountries,
+            "restrictedCountries"   : [...object.restrictedCountries, ...fixRestrictCountry],
             "games"                 : object.games ? object.games.map( game => {
                 return {
                     _id : game._id,
