@@ -11,7 +11,7 @@ let self;
  * @default 1Level Tier Object
  */
 
-
+const fixRestrictCountry = require("../../../config/restrictedCountries.config.json");
 
 let outputs = {
     get: (object) => {
@@ -116,7 +116,7 @@ let outputs = {
                 "url": object.typography.url
             } : object.typography,
             "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
-            "restrictedCountries": object.restrictedCountries ? object.restrictedCountries : [],
+            "restrictedCountries": [...(object.restrictedCountries ? object.restrictedCountries : []), ...fixRestrictCountry],
             "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
             "isWithdrawing": object.isWithdrawing,
             "name": object.name,
