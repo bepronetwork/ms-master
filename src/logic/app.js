@@ -1256,12 +1256,12 @@ const processActions = {
         };
     },
     __kycWebhook: async (params) => {
-        if(!verifyKYC(params.metadata)) {
-            return false;
-        }
-
         const user_id = params.metadata.id;
         const user    = await UsersRepository.prototype.findUserById(user_id);
+
+        if(!verifyKYC(params.metadata, String(user.app_id._id).toString())) {
+            return false;
+        }
 
         const clientId     = Security.prototype.decryptData(user.app_id.integrations.kyc.clientId);
         const clientSecret = Security.prototype.decryptData(user.app_id.integrations.kyc.client_secret);
@@ -2411,12 +2411,15 @@ const progressActions = {
     },
     __kycWebhook: async (params) => {
         if(!params) {return false;}
-        if(params.identityStatus!=undefined) {
-            const user_id = params.metadata.id;
-            if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
-                await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
-                return;
-            }
+        if(params.identityStatus==undefined) {
+            return false;
+        }
+        const user_id = params.metadata.id;
+        if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
+            await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
+            return;
+        }
+        if(params.user.birthday!=undefined && params.user.country_acronym!=undefined) {
             if(params.user.country_acronym!=null && params.dataVerification.documents[0].country.toUpperCase()!=params.user.country_acronym.toUpperCase()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
                 return;
@@ -2425,17 +2428,12 @@ const progressActions = {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
                 return;
             }
-            if(params.identityStatus=="verified") {
-                await UsersRepository.prototype.editKycNeeded(user_id, false);
-            }
-            if(params.identityStatus!=null) {
-                await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
-            }
-            // const ageWithBirthday = parseInt(((new Date(params.user.birthday)).getTime() / 1000 / 60 / 60 /24 / 365 ).toFixed(0));
-            // const ageKyc          = parseInt(params.dataVerification.computed.age.data);
-            // if(params.user.birthday!=null && ageWithBirthday!= ageKyc) {
-            //     return;
-            // }
+        }
+        if(params.identityStatus=="verified") {
+            await UsersRepository.prototype.editKycNeeded(user_id, false);
+        }
+        if(params.identityStatus!=null) {
+            await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
         }
         return true;
     }
