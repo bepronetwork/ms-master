@@ -37,6 +37,7 @@ context('Balance', async () => {
             currency: app.wallet[0].currency._id,
             time: 3600000,
             value: 1,
+            multiplier: 1,
             app: app.id,
             admin: admin.id
         }, admin.security.bearerToken, { id: admin.id });

@@ -235,19 +235,6 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
-    updatePlayBalanceFreeCurrency(id, amount){
-        return new Promise( (resolve, reject) => {
-            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
-                { $inc : { freeCurrencyAmount : parseFloat(amount) } } ,{ new: true }
-            )
-            .lean()
-            .exec( (err, wallet) => {
-                if(err) { reject(err)}
-                resolve(wallet);
-            });
-        });
-    }
-
     updateIncrementBetAmountForBonus(id, amount){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
@@ -265,19 +252,6 @@ class WalletsRepository extends MongoComponent{
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
                 { $inc : { minBetAmountForBonusUnlocked : parseFloat(amount) } } ,{ new: true }
-            )
-            .lean()
-            .exec( (err, wallet) => {
-                if(err) { reject(err)}
-                resolve(wallet);
-            });
-        });
-    }
-
-    updateMinBetAmountForFreeCurrencyUnlocked(id, amount){
-        return new Promise( (resolve, reject) => {
-            WalletsRepository.prototype.schema.model.findByIdAndUpdate(id,
-                { $inc : { minBetAmountForFreeCurrencyUnlocked : parseFloat(amount) } } ,{ new: true }
             )
             .lean()
             .exec( (err, wallet) => {
