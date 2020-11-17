@@ -1256,12 +1256,12 @@ const processActions = {
         };
     },
     __kycWebhook: async (params) => {
-        if(!verifyKYC(params.metadata)) {
-            return false;
-        }
-
         const user_id = params.metadata.id;
         const user    = await UsersRepository.prototype.findUserById(user_id);
+
+        if(!verifyKYC(params.metadata, user.app_id._id)) {
+            return false;
+        }
 
         const clientId     = Security.prototype.decryptData(user.app_id.integrations.kyc.clientId);
         const clientSecret = Security.prototype.decryptData(user.app_id.integrations.kyc.client_secret);
