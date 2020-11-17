@@ -1259,7 +1259,7 @@ const processActions = {
         const user_id = params.metadata.id;
         const user    = await UsersRepository.prototype.findUserById(user_id);
 
-        if(!verifyKYC(params.metadata, user.app_id._id)) {
+        if(!verifyKYC(params.metadata, String(user.app_id._id).toString())) {
             return false;
         }
 
