@@ -1475,7 +1475,13 @@ const progressActions = {
     },
     __editRestrictedCountries : async (params) => {
         try {
-            const {app, countries} = params;
+            let {app, countries} = params;
+            for(let country of fixRestrictCountry){
+                let index = countries.indexOf(country);
+                if(index>=0){
+                    countries.splice(index, 1);
+                }
+            }
             await AppRepository.prototype.setCountries(app, countries);
             return true;
         } catch(err) {
