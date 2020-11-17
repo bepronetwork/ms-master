@@ -78,7 +78,7 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
-
+const fixRestrictCountry = require("../config/restrictedCountries.config.json");
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars
@@ -2415,7 +2415,7 @@ const progressActions = {
             return false;
         }
         const user_id = params.metadata.id;
-        if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
+        if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
             return;
         }
