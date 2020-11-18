@@ -79,7 +79,7 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
-
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars
@@ -1476,7 +1476,13 @@ const progressActions = {
     },
     __editRestrictedCountries : async (params) => {
         try {
-            const {app, countries} = params;
+            let {app, countries} = params;
+            for(let country of fixRestrictCountry){
+                let index = countries.indexOf(country);
+                if(index>=0){
+                    countries.splice(index, 1);
+                }
+            }
             await AppRepository.prototype.setCountries(app, countries);
             return true;
         } catch(err) {
@@ -2417,7 +2423,7 @@ const progressActions = {
         }
         const user_id = params.metadata.id;
         IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: params.identityStatus});
-        if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
+        if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
             return;
         }
@@ -2426,7 +2432,7 @@ const progressActions = {
                 await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
                 return;
             }
-            if(params.user.birthday!=null && (new Date(params.user.birthday)).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
+            if(params.user.birthday!=null && (new Date(params.user.birthday.toISOString().split("T")[0])).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
                 return;
             }

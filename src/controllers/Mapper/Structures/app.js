@@ -1,5 +1,6 @@
+import ConverterSingleton from "../../../logic/utils/converter";
 import { Security } from "../../Security"
-
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 const app_object = (object) => {
     return {
         "app": !object.app ? object.app : {
@@ -145,7 +146,7 @@ const app_object = (object) => {
                 _id: object.app.typography._id
             },
             "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(country_available => country_available) : object.app.countriesAvailable,
-            "restrictedCountries": object.app.restrictedCountries ? object.app.restrictedCountries : [],
+            "restrictedCountries": [...(object.app.restrictedCountries ? object.app.restrictedCountries : []), ...fixRestrictCountry],
             "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
             "isWithdrawing": object.app.isWithdrawing,
             "virtual": object.app.virtual,

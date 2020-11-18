@@ -1,3 +1,4 @@
+import ConverterSingleton from "../../../logic/utils/converter";
 import { wallet_object } from "../Structures";
 
 let self;
@@ -9,6 +10,7 @@ let self;
  * @default 1Level Tier Object
  */
 
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 
 
 let outputs = {
@@ -95,7 +97,7 @@ let outputs = {
                 "isWithdrawing": object.app_id.isWithdrawing,
                 "isUsersAllLocked": object.app_id.isUsersAllLocked,
                 "virtual": object.app_id.virtual,
-                "restrictedCountries": object.app_id.restrictedCountries,
+                "restrictedCountries": [...object.app_id.restrictedCountries, ...fixRestrictCountry],
                 "typography": object.app_id.typography,
                 "name": object.app_id.name,
                 "affiliateSetup": object.app_id.affiliateSetup,

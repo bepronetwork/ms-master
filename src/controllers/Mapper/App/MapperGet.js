@@ -1,6 +1,7 @@
 import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
 import { Security } from "../../Security";
 import { LanguageSingleton } from "../../../logic/utils/language";
+import ConverterSingleton from "../../../logic/utils/converter";
 
 let self;
 
@@ -11,7 +12,7 @@ let self;
  * @default 1Level Tier Object
  */
 
-
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 
 let outputs = {
     get: (object) => {
@@ -116,7 +117,7 @@ let outputs = {
                 "url": object.typography.url
             } : object.typography,
             "countriesAvailable": object.countriesAvailable ? object.countriesAvailable.map(country_available => country_available) : object.countriesAvailable,
-            "restrictedCountries": object.restrictedCountries ? object.restrictedCountries : [],
+            "restrictedCountries": [...(object.restrictedCountries ? object.restrictedCountries : []), ...fixRestrictCountry],
             "licensesId": object.licensesId ? object.licensesId.map(license_id => license_id) : object.licensesId,
             "isWithdrawing": object.isWithdrawing,
             "name": object.name,
