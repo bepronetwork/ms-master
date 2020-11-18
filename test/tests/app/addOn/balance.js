@@ -30,7 +30,7 @@ context('Balance', async () => {
         expect(status).to.be.equal(200);
     }));
 
-    it(`should modify balance initial para ${valueBalance} eth`, mochaAsync(async () => {
+    it(`should modify balance initial to ${valueBalance} eth`, mochaAsync(async () => {
         const res = await editAddonBalance({
             app         : app.id,
             admin       : admin.id,
@@ -52,5 +52,18 @@ context('Balance', async () => {
         let balance = user.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == 'eth');
         expect(balance.bonusAmount).to.be.equal(valueBalance);
         expect(res.data.status).to.equal(200);
+    }));
+
+    it(`should modify balance initial to 0 eth`, mochaAsync(async () => {
+        const res = await editAddonBalance({
+            app         : app.id,
+            admin       : admin.id,
+            currency    : app.currencies[0]._id,
+            balance     : 0,
+            multiplier  : 0
+        }, admin.security.bearerToken , {id : admin.id});
+        expect(detectValidationErrors(res)).to.be.equal(false);
+        const { status} = res.data;
+        expect(status).to.be.equal(200);
     }));
 });
