@@ -78,7 +78,7 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
-const fixRestrictCountry = require("../config/restrictedCountries.config.json");
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars

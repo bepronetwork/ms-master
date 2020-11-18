@@ -1,3 +1,4 @@
+import ConverterSingleton from "../../logic/utils/converter";
 
 let self;
 
@@ -8,7 +9,7 @@ let self;
  * @default 1Level Tier Object
  */
 
- const fixRestrictCountry = require("../../config/restrictedCountries.config.json");
+ const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../config/restrictedCountries.config.json"));
 
 
 let outputs = {

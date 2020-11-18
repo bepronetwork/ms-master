@@ -1,6 +1,7 @@
 import { get_object, games_object, currencies_object, wallet_object } from "../Structures";
 import { Security } from "../../Security";
 import { LanguageSingleton } from "../../../logic/utils/language";
+import ConverterSingleton from "../../../logic/utils/converter";
 
 let self;
 
@@ -11,7 +12,7 @@ let self;
  * @default 1Level Tier Object
  */
 
-const fixRestrictCountry = require("../../../config/restrictedCountries.config.json");
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 
 let outputs = {
     get: (object) => {

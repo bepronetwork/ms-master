@@ -30,7 +30,8 @@ import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL, ETH_FEE_VARIABLE } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
 import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
-const fixRestrictCountry = require("../config/restrictedCountries.config.json");
+import ConverterSingleton from './utils/converter';
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 let error = new ErrorManager();
 

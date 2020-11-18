@@ -1,8 +1,9 @@
 import MiddlewareSingleton from "./middleware";
 import { AdminsRepository, PermissionRepository, AppRepository } from "../../db/repos";
 import { throwError } from "../../controllers/Errors/ErrorManager";
+import ConverterSingleton from "../../logic/utils/converter";
 const geoip = require("geoip-lite");
-const fixRestrictCountry = require("../../config/restrictedCountries.config.json");
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../config/restrictedCountries.config.json"));
 
 class Security{
 
