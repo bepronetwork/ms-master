@@ -618,7 +618,8 @@ const processActions = {
                     currency  : c._id,
                     activated : false,
                     time      : 3600000,
-                    value     : 0
+                    value     : 0,
+                    multiplier: 10
                 }
             }));
             let res = {
@@ -641,6 +642,7 @@ const processActions = {
                 return {
                     currency        : c._id,
                     initialBalance  : 0,
+                    multiplier      : 10
                 }
             }));
             let res = {
@@ -727,7 +729,7 @@ const processActions = {
         let multiplier = await Promise.all(arrayCurrency.map( async c => {
             return {
                 currency    : c._id,
-                multiple      : 0
+                multiple      : 10
             }
         }));
 

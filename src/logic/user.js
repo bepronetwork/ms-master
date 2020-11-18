@@ -25,7 +25,7 @@ import Mailer from './services/mailer';
 import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
-import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
+import {getBalancePerCurrency, getMultiplierBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL, ETH_FEE_VARIABLE } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
@@ -618,9 +618,15 @@ const progressActions = {
             params.wallet = await Promise.all(app.wallet.map(async w => {
                 return (await (new Wallet({
                     currency : w.currency,
-                    playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
+                    playBalance : 0,
+                    bonusAmount : getBalancePerCurrency(balanceInitial, w.currency._id),
+                    minBetAmountForBonusUnlocked : getMultiplierBalancePerCurrency(balanceInitial, w.currency._id),
                 })).register())._doc._id;
             }));
+
+            for(let app_wallet of app.wallet){
+                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, -getBalancePerCurrency(balanceInitial, app_wallet.currency._id));
+            }
 
             params.lastTimeCurrencyFree = app.wallet.map(w => {
                 return {currency: w.currency._id, date: 0}
