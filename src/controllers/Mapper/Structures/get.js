@@ -2,7 +2,8 @@ import { games_object } from "./games"
 import { currencies_object } from "./currencies"
 import { wallet_object } from "./wallet"
 import { Security } from "../../Security"
-const fixRestrictCountry = require("../../../config/restrictedCountries.config.json");
+import ConverterSingleton from "../../../logic/utils/converter";
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 
 const get_object = (object) => {
     return {

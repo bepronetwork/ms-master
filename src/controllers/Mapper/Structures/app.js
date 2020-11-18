@@ -1,5 +1,6 @@
+import ConverterSingleton from "../../../logic/utils/converter";
 import { Security } from "../../Security"
-const fixRestrictCountry = require("../../../config/restrictedCountries.config.json");
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 const app_object = (object) => {
     return {
         "app": !object.app ? object.app : {
