@@ -170,8 +170,6 @@ context('Login & Register', async () => {
     }));
 
     it('shouldnt register the User - Restricted Country', mochaAsync(async () => {
-        console.log("app:: ", app)
-        console.log("app.restrictedCountries:: ", app.restrictedCountries)
         userPostDataErrors = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Portugal", country_acronym: "PT"
         }));
