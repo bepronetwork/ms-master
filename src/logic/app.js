@@ -2430,7 +2430,7 @@ const progressActions = {
                 await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
                 return;
             }
-            if(params.user.birthday!=null && (new Date(params.user.birthday)).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
+            if(params.user.birthday!=null && (new Date(params.user.birthday.toISOString().split("T")[0])).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
                 return;
             }
