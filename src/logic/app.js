@@ -79,6 +79,7 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
+import Mailer from './services/mailer';
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 // Private fields
@@ -2439,6 +2440,10 @@ const progressActions = {
         }
         if(params.identityStatus=="verified") {
             await UsersRepository.prototype.editKycNeeded(user_id, false);
+            let attributes = {
+                TEXT: `Your KYC was approved`
+            };
+			(new Mailer()).sendEmail({app_id : params.app._id, user: params.user, action : 'USER_NOTIFICATION', attributes});
         }
         if(params.identityStatus!=null) {
             await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
