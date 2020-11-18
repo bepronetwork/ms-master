@@ -71,6 +71,7 @@ import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
 import MiddlewareSingleton from '../api/helpers/middleware';
 import ConverterSingleton from './utils/converter';
+import {IOSingleton} from './utils/io';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 const axios = require('axios');
@@ -2415,6 +2416,7 @@ const progressActions = {
             return false;
         }
         const user_id = params.metadata.id;
+        IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: params.identityStatus});
         if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
             return;
