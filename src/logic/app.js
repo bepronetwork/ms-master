@@ -79,6 +79,7 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
+import Mailer from './services/mailer';
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 // Private fields
@@ -2424,26 +2425,33 @@ const progressActions = {
             return false;
         }
         const user_id = params.metadata.id;
-        IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: params.identityStatus});
         if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
+            IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "country not allowed"});
             return;
         }
         if(params.user.birthday!=undefined && params.user.country_acronym!=undefined) {
             if(params.user.country_acronym!=null && params.dataVerification.documents[0].country.toUpperCase()!=params.user.country_acronym.toUpperCase()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
+                IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "country other than registration"});
                 return;
             }
             if(params.user.birthday!=null && (new Date(params.user.birthday.toISOString().split("T")[0])).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
+                IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "different birthday data"});
                 return;
             }
         }
         if(params.identityStatus=="verified") {
             await UsersRepository.prototype.editKycNeeded(user_id, false);
+            let attributes = {
+                TEXT: `Your KYC was approved`
+            };
+			(new Mailer()).sendEmail({app_id : params.app._id, user: params.user, action : 'USER_NOTIFICATION', attributes});
         }
         if(params.identityStatus!=null) {
             await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
+            IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: params.identityStatus});
         }
         return true;
     }
