@@ -35,21 +35,22 @@ context('Balance', async () => {
             app         : app.id,
             admin       : admin.id,
             currency    : app.currencies[0]._id,
-            balance     : valueBalance
+            balance     : valueBalance,
+            multiplier  : 10
         }, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status} = res.data;
         expect(status).to.be.equal(200);
     }));
 
-    it(`should register the User and checks if the balance initial has changed to ${valueBalance} eth`, mochaAsync(async () => {
+    it(`should register the User and checks if the balance initial has changed to ${valueBalance} eth Bonus`, mochaAsync(async () => {
         let userPostData = genData(faker, models.users.normal_register('687678i678im' + Math.floor(Math.random() * 60) + 18, app.id, {
             username: '678im67im' + Random(10000, 23409234235463456), birthday: "1998-01-02", country: "Brazil", country_acronym: "BR"
         }));
         var res = await registerUser(userPostData);
         user = res.data.message;
         let balance = user.wallet.find(c => new String(c.currency.ticker).toString().toLowerCase() == 'eth');
-        expect(balance.playBalance).to.be.equal(valueBalance);
+        expect(balance.bonusAmount).to.be.equal(valueBalance);
         expect(res.data.status).to.equal(200);
     }));
 });

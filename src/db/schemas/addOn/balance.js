@@ -10,6 +10,7 @@ BalanceSchema.prototype.schema =  {
     initialBalanceList : [{
         currency       : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
         initialBalance : { type: Number, required : true, default : 0},
+        multiplier     : { type: Number, default : 10},
     }]
 }
 

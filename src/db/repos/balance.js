@@ -43,13 +43,14 @@ class BalanceRepository extends MongoComponent{
         });
     }
 
-    updateBalance(_id, currency, initialBalance){
+    updateBalance(_id, currency, initialBalance, multiplier){
         return new Promise( (resolve,reject) => {
             BalanceRepository.prototype.schema.model.updateOne(
                 {_id, "initialBalanceList.currency": currency},
                 {
                     $set: {
-                        "initialBalanceList.$.initialBalance" : parseFloat(initialBalance)
+                        "initialBalanceList.$.initialBalance" : parseFloat(initialBalance),
+                        "initialBalanceList.$.multiplier" : parseFloat(multiplier)
                     }
                 }
             )

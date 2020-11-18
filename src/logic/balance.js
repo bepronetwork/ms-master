@@ -65,7 +65,7 @@ const progressActions = {
         }
     },
     __editAddonBalance: async (params) => {
-        await BalanceRepository.prototype.updateBalance(params.balance_id, params.currency, params.balance);
+        await BalanceRepository.prototype.updateBalance(params.balance_id, params.currency, params.balance, params.multiplier);
         return params;
     }
 }
