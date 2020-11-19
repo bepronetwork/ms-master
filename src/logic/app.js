@@ -1270,7 +1270,7 @@ const processActions = {
 
         const tokenKyc          = (await MatiKYCSingleton.getBearerToken(clientId, clientSecret)).access_token;
         const verificationData  = await MatiKYCSingleton.getData(params.resource, tokenKyc);
-        const idKyc             = verificationData.split("identities/")[1];
+        const idKyc             = params.matiDashboardUrl.split("identities/")[1];
 
         if (!user) { throwError('USER_NOT_EXISTENT') }
         return {...params, dataVerification: verificationData, app: user.app_id, user, idKyc};
