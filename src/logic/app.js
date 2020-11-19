@@ -2426,11 +2426,13 @@ const progressActions = {
         const user_id = params.metadata.id;
 
         // save kyc log
-        await KycLogRepository.prototype.schema.save({
-            user_id: params.user._id,
-            app_id : params.app._id,
-            kyc_id : params.idKyc
-        });
+        await KycLogRepository.prototype.schema.model(
+            {
+                user_id: params.user._id,
+                app_id : params.app._id,
+                kyc_id : params.idKyc
+            }
+        ).save();
 
         if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
