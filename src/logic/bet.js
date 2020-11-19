@@ -372,6 +372,7 @@ const progressActions = {
             await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, -(params.totalBetAmount+incrementBetAmountForBonus));
             await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked));
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, (user_delta+amountBonus));
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(user_delta+amountBonus));
         }
         PerformanceBet.end({id : 'increment'});
 
