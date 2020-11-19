@@ -32,6 +32,7 @@ context('Balance', async () => {
     }));
 
     it('should edit Free Currency', mochaAsync(async () => {
+        console.log("app:: ", app)
         let res = await editFreeCurrency({
             activated: true,
             currency: app.wallet[0].currency._id,
@@ -43,6 +44,7 @@ context('Balance', async () => {
         }, admin.security.bearerToken, { id: admin.id });
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status } = res.data;
+        console.log("res.data:: ", res.data)
         expect(status).to.be.equal(200);
     }));
 
