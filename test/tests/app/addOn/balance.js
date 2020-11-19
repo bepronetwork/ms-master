@@ -31,7 +31,6 @@ context('Balance', async () => {
     }));
 
     it(`should modify balance initial to ${valueBalance} eth`, mochaAsync(async () => {
-        console.log("app:: ", app)
         const res = await editAddonBalance({
             app         : app.id,
             admin       : admin.id,
@@ -41,7 +40,6 @@ context('Balance', async () => {
         }, admin.security.bearerToken , {id : admin.id});
         expect(detectValidationErrors(res)).to.be.equal(false);
         const { status} = res.data;
-        console.log("res.data:: ", res.data)
         expect(status).to.be.equal(200);
     }));
 
