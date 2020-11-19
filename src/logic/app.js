@@ -45,7 +45,7 @@ import {
     MoonPayRepository,
     FreeCurrencyRepository,
     AnalyticsRepository,
-    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, KycLogRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -1270,9 +1270,10 @@ const processActions = {
 
         const tokenKyc          = (await MatiKYCSingleton.getBearerToken(clientId, clientSecret)).access_token;
         const verificationData  = await MatiKYCSingleton.getData(params.resource, tokenKyc);
+        const idKyc             = verificationData.split("identities/")[1];
 
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        return {...params, dataVerification: verificationData, app: user.app_id, user};
+        return {...params, dataVerification: verificationData, app: user.app_id, user, idKyc};
     }
 }
 
@@ -2423,6 +2424,14 @@ const progressActions = {
             return false;
         }
         const user_id = params.metadata.id;
+
+        // save kyc log
+        await KycLogRepository.prototype.schema.save({
+            user_id: params.user._id,
+            app_id : params.app._id,
+            kyc_id : params.idKyc
+        });
+
         if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
             IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "country not allowed"});
