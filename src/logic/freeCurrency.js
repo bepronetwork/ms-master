@@ -106,7 +106,6 @@ const progressActions = {
     __getAddonFreeCurrency: async (params) => {
         try {
             let { freeCurrency, appWallet, userWallet, user, currency, minBetAmountForFreeCurrencyUnlocked } = params;
-            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -freeCurrency.value);
             await WalletsRepository.prototype.updatePlayBalanceBonus(userWallet._id, freeCurrency.value);
             await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(userWallet._id, minBetAmountForFreeCurrencyUnlocked);
             await UsersRepository.prototype.updateLastTimeCurrencyFree(user._id, (new Date()).getTime(), currency);

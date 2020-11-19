@@ -624,10 +624,6 @@ const progressActions = {
                 })).register())._doc._id;
             }));
 
-            for(let app_wallet of app.wallet){
-                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, -getBalancePerCurrency(balanceInitial, app_wallet.currency._id));
-            }
-
             params.lastTimeCurrencyFree = app.wallet.map(w => {
                 return {currency: w.currency._id, date: 0}
             })
