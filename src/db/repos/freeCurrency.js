@@ -51,7 +51,8 @@ class FreeCurrencyRepository extends MongoComponent{
                     $set: {
                         "wallets.$.activated" : params.activated,
                         "wallets.$.time"      : params.time,
-                        "wallets.$.value"     : params.value
+                        "wallets.$.value"     : params.value,
+                        "wallets.$.multiplier": params.multiplier
                     }
                 }
             )
