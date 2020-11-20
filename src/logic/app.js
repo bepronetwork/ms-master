@@ -713,6 +713,13 @@ const processActions = {
             }
         }));
 
+        let isDepositBonus = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                value       : false
+            }
+        }));
+
         let percentage = await Promise.all(arrayCurrency.map( async c => {
             return {
                 currency    : c._id,
@@ -739,7 +746,8 @@ const processActions = {
             percentage,
             max_deposit,
             multiplier,
-            app
+            app,
+            isDepositBonus
         }
 		return res;
     },
@@ -1724,8 +1732,8 @@ const progressActions = {
         return res;
     },
     __addAddonDepositBonus : async (params) => {
-        const { min_deposit, percentage, max_deposit, multiplier, app } = params;
-        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit, multiplier});
+        const { min_deposit, percentage, max_deposit, multiplier, app, isDepositBonus } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit, multiplier, isDepositBonus});
         const depositBonusResult = await depositBonus.register();
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
 		return depositBonusResult;
