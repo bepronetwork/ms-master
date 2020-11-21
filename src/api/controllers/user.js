@@ -8,6 +8,7 @@ import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
 import { SearchSingleton } from '../../logic/utils/search';
 import { UsersRepository } from '../../db/repos';
 import { throwError } from '../../controllers/Errors/ErrorManager';
+import { LogOwlSingleton } from '../../logic/third-parties';
 
 /**
  * Description of the function.
@@ -343,6 +344,12 @@ async function webhookDeposit(req, res) {
                 return await user.updateWallet();
             } catch (err) {
                 console.log(err);
+                LogOwlSingleton.pushError(err, {
+                    admin: !req.body ? '' : req.body.admin,
+                    user: !req.body.user ? '' : req.body.user,
+                    app: !req.body.app ? '' : req.body.app,
+                    route: req.originalUrl
+                })
                 return err;
             }
         }))
