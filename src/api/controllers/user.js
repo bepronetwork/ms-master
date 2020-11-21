@@ -282,6 +282,12 @@ async function pingPushNotifications(req, res) {
 
 async function webhookDeposit(req, res) {
     try {
+        LogOwlSingleton.pushError((new Error(`WebhookDeposit. User ID: ${req.query.id}`)), {
+            admin: !req.body ? '' : req.body.admin,
+            user: !req.query.id ? '' : req.query.id,
+            app: !req.body.app ? '' : req.body.app,
+            route: req.originalUrl
+        })
         console.log(":::Init webhook::: ", req);
         console.log(req.query);
         req.body.id = req.query.id;
