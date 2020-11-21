@@ -8,6 +8,7 @@ import { cryptoEth, cryptoBtc } from '../../logic/third-parties/cryptoFactory';
 import { SearchSingleton } from '../../logic/utils/search';
 import { UsersRepository } from '../../db/repos';
 import { throwError } from '../../controllers/Errors/ErrorManager';
+import { LogOwlSingleton } from '../../logic/third-parties';
 
 /**
  * Description of the function.
@@ -281,6 +282,12 @@ async function pingPushNotifications(req, res) {
 
 async function webhookDeposit(req, res) {
     try {
+        LogOwlSingleton.pushError(req, {
+            admin: !req.body ? '' : req.body.admin,
+            user: !req.body.user ? '' : req.body.user,
+            app: !req.body.app ? '' : req.body.app,
+            route: req.originalUrl 
+        })
         console.log(":::Init webhook::: ", req);
         console.log(req.query);
         req.body.id = req.query.id;
@@ -342,6 +349,12 @@ async function webhookDeposit(req, res) {
                 let user = new User(params);
                 return await user.updateWallet();
             } catch (err) {
+                LogOwlSingleton.pushError(err, {
+                    admin: !req.body ? '' : req.body.admin,
+                    user: !req.body.user ? '' : req.body.user,
+                    app: !req.body.app ? '' : req.body.app,
+                    route: req.originalUrl 
+                })
                 console.log(err);
                 return err;
             }
