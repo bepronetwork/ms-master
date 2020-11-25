@@ -34,17 +34,19 @@ module.exports = {
       for (let freecurrency of freecurrencies) {
         processObj.setProcess(processIndex);
         processIndex--;
-        let wallets = freecurrency.wallets.map((w) => {
-          return {
-            ...w,
-            multiplier: 10
-          }
-        })
-        await db.collection('freecurrencies').updateOne(
-          { _id: freecurrency._id },
-          { $set: { "wallets": wallets } },
-          { new: true }
-        );
+        if (Array.isArray(freecurrency.wallets)) {
+          let wallets = freecurrency.wallets.map((w) => {
+            return {
+              ...w,
+              multiplier: 10
+            }
+          })
+          await db.collection('freecurrencies').updateOne(
+            { _id: freecurrency._id },
+            { $set: { "wallets": wallets } },
+            { new: true }
+          );
+        }
       }
       processObj.destroyProgress();
     }
