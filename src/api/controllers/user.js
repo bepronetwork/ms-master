@@ -356,6 +356,12 @@ async function webhookDeposit(req, res) {
                     route: req.originalUrl 
                 })
                 console.log(err);
+                LogOwlSingleton.pushError(err, {
+                    admin: !req.body ? '' : req.body.admin,
+                    user: !req.body.user ? '' : req.body.user,
+                    app: !req.body.app ? '' : req.body.app,
+                    route: req.originalUrl
+                })
                 return err;
             }
         }))
