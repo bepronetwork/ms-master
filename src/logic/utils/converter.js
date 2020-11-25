@@ -24,11 +24,11 @@ class Converter{
     }
     convertAmountProviderBigger = (ticker, value) => {
         let tickers = JSON_CONVERT_VALUE;
-        return (!tickers[ticker]) ? (value*100) : (value * tickers[ticker]);
+        return (!tickers[ticker]) ? value : (value * tickers[ticker]);
     }
     convertAmountProviderSmaller = (ticker, value) => {
         let tickers = JSON_CONVERT_VALUE;
-        return (!tickers[ticker]) ? (value/100) :(value/tickers[ticker]);
+        return (!tickers[ticker]) ? value :(value/tickers[ticker]);
     }
     convertCountry = (data) => {
         return IS_DEVELOPMENT ? [] : data;
