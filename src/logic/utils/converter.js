@@ -19,15 +19,15 @@ class Converter{
     }
     convertTickerProvider = (ticker) => {
         let tickers = JSON_CONVERT_TICKER;
-        return tickers[ticker];
+        return (!tickers[ticker]) ? String(ticker).toUpperCase() : tickers[ticker];
     }
     convertAmountProviderBigger = (ticker, value) => {
         let tickers = JSON_CONVERT_VALUE;
-        return (value * tickers[ticker]);
+        return (!tickers[ticker]) ? value : (value * tickers[ticker]);
     }
     convertAmountProviderSmaller = (ticker, value) => {
         let tickers = JSON_CONVERT_VALUE;
-        return (value/tickers[ticker]);
+        return (!tickers[ticker]) ? value :(value/tickers[ticker]);
     }
 }
 
