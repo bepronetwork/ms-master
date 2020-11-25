@@ -34,17 +34,19 @@ module.exports = {
       for (let balance of balances) {
         processObj.setProcess(processIndex);
         processIndex--;
-        let initialBalanceList = balance.initialBalanceList.map((b) => {
-          return {
-            ...b,
-            multiplier: 10
-          }
-        })
-        await db.collection('balances').updateOne(
-          { _id: balance._id },
-          { $set: { "initialBalanceList": initialBalanceList } },
-          { new: true }
-        );
+        if (Array.isArray(balance.initialBalanceList)) {
+          let initialBalanceList = balance.initialBalanceList.map((b) => {
+            return {
+              ...b,
+              multiplier: 10
+            }
+          })
+          await db.collection('balances').updateOne(
+            { _id: balance._id },
+            { $set: { "initialBalanceList": initialBalanceList } },
+            { new: true }
+          );
+        }
       }
       processObj.destroyProgress();
     }
