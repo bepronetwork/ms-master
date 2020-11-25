@@ -67,6 +67,7 @@ import TopUpRepository from "./topUp";
 import ComplianceFileRepository from "./complianceFile";
 import LanguageEcoRepository from "./ecosystem/language";
 import LanguageRepository from "./language";
+import KycLogRepository from "./kycLog";
 
 export {
     LanguageRepository,
@@ -141,4 +142,5 @@ export {
     KycRepository,
     FreeCurrencyRepository,
     ComplianceFileRepository,
+    KycLogRepository,
 }

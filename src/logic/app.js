@@ -45,7 +45,7 @@ import {
     MoonPayRepository,
     FreeCurrencyRepository,
     AnalyticsRepository,
-    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, KycLogRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
@@ -71,6 +71,7 @@ import { TopTabSchema } from '../db/schemas';
 import { IS_DEVELOPMENT } from '../config'
 import MiddlewareSingleton from '../api/helpers/middleware';
 import ConverterSingleton from './utils/converter';
+import {IOSingleton} from './utils/io';
 let error = new ErrorManager();
 let perf = new PerfomanceMonitor({id : 'app'});
 const axios = require('axios');
@@ -78,7 +79,8 @@ var md5 = require('md5');
 import PusherSingleton from './third-parties/pusher';
 import SocialLinkRepository from '../db/repos/socialLink';
 import TopUp from '../models/topUp';
-
+import Mailer from './services/mailer';
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 // Private fields
 let self; // eslint-disable-line no-unused-vars
@@ -617,7 +619,8 @@ const processActions = {
                     currency  : c._id,
                     activated : false,
                     time      : 3600000,
-                    value     : 0
+                    value     : 0,
+                    multiplier: 10
                 }
             }));
             let res = {
@@ -640,6 +643,7 @@ const processActions = {
                 return {
                     currency        : c._id,
                     initialBalance  : 0,
+                    multiplier      : 10
                 }
             }));
             let res = {
@@ -709,6 +713,13 @@ const processActions = {
             }
         }));
 
+        let isDepositBonus = await Promise.all(arrayCurrency.map( async c => {
+            return {
+                currency    : c._id,
+                value       : false
+            }
+        }));
+
         let percentage = await Promise.all(arrayCurrency.map( async c => {
             return {
                 currency    : c._id,
@@ -726,7 +737,7 @@ const processActions = {
         let multiplier = await Promise.all(arrayCurrency.map( async c => {
             return {
                 currency    : c._id,
-                multiple      : 0
+                multiple      : 10
             }
         }));
 
@@ -735,7 +746,8 @@ const processActions = {
             percentage,
             max_deposit,
             multiplier,
-            app
+            app,
+            isDepositBonus
         }
 		return res;
     },
@@ -1268,9 +1280,10 @@ const processActions = {
 
         const tokenKyc          = (await MatiKYCSingleton.getBearerToken(clientId, clientSecret)).access_token;
         const verificationData  = await MatiKYCSingleton.getData(params.resource, tokenKyc);
+        const idKyc             = (!params.matiDashboardUrl) ? null : params.matiDashboardUrl.split("identities/")[1];
 
         if (!user) { throwError('USER_NOT_EXISTENT') }
-        return {...params, dataVerification: verificationData, app: user.app_id, user};
+        return {...params, dataVerification: verificationData, app: user.app_id, user, idKyc};
     }
 }
 
@@ -1475,7 +1488,13 @@ const progressActions = {
     },
     __editRestrictedCountries : async (params) => {
         try {
-            const {app, countries} = params;
+            let {app, countries} = params;
+            for(let country of fixRestrictCountry){
+                let index = countries.indexOf(country);
+                if(index>=0){
+                    countries.splice(index, 1);
+                }
+            }
             await AppRepository.prototype.setCountries(app, countries);
             return true;
         } catch(err) {
@@ -1713,8 +1732,8 @@ const progressActions = {
         return res;
     },
     __addAddonDepositBonus : async (params) => {
-        const { min_deposit, percentage, max_deposit, multiplier, app } = params;
-        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit, multiplier});
+        const { min_deposit, percentage, max_deposit, multiplier, app, isDepositBonus } = params;
+        let depositBonus = new DepositBonus({app, min_deposit, percentage, max_deposit, multiplier, isDepositBonus});
         const depositBonusResult = await depositBonus.register();
         await addOnRepository.prototype.addAddonDepositBonus(app.addOn, depositBonusResult._doc._id);
 		return depositBonusResult;
@@ -2415,25 +2434,43 @@ const progressActions = {
             return false;
         }
         const user_id = params.metadata.id;
-        if(params.app.restrictedCountries.indexOf(params.dataVerification.documents[0].country)!=-1) {
+
+        // save kyc log
+        await KycLogRepository.prototype.schema.model(
+            {
+                user_id: params.user._id,
+                app_id : params.app._id,
+                kyc_id : params.idKyc
+            }
+        ).save();
+
+        if([...params.app.restrictedCountries, ...fixRestrictCountry].indexOf(params.dataVerification.documents[0].country)!=-1) {
             await UsersRepository.prototype.editKycStatus(user_id, "country not allowed");
+            IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "country not allowed"});
             return;
         }
         if(params.user.birthday!=undefined && params.user.country_acronym!=undefined) {
             if(params.user.country_acronym!=null && params.dataVerification.documents[0].country.toUpperCase()!=params.user.country_acronym.toUpperCase()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "country other than registration");
+                IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "country other than registration"});
                 return;
             }
-            if(params.user.birthday!=null && (new Date(params.user.birthday)).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
+            if(params.user.birthday!=null && (new Date(params.user.birthday.toISOString().split("T")[0])).getTime() != (new Date(params.dataVerification.documents[0].fields.dateOfBirth.value)).getTime()) {
                 await UsersRepository.prototype.editKycStatus(user_id, "different birthday data");
+                IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: "different birthday data"});
                 return;
             }
         }
         if(params.identityStatus=="verified") {
             await UsersRepository.prototype.editKycNeeded(user_id, false);
+            let attributes = {
+                TEXT: `Your KYC was approved`
+            };
+			(new Mailer()).sendEmail({app_id : params.app._id, user: params.user, action : 'USER_NOTIFICATION', attributes});
         }
         if(params.identityStatus!=null) {
             await UsersRepository.prototype.editKycStatus(user_id, params.identityStatus);
+            IOSingleton.getIO().to(`Auth/${user_id}`).emit("updateKYC", {status: params.identityStatus});
         }
         return true;
     }

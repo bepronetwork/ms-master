@@ -1,3 +1,4 @@
+import ConverterSingleton from "../../../logic/utils/converter";
 import { currencies_object } from "../Structures";
 
 let self;
@@ -9,7 +10,7 @@ let self;
  * @default 1Level Tier Object
  */
 
-
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../../config/restrictedCountries.config.json"));
 
 let outputs = {
     register: (object) => {
@@ -28,7 +29,7 @@ let outputs = {
             "withdraws": !object.withdraws ? [] : object.withdraws.map(withdraw_id => withdraw_id),
             "typography": object.typography ? { name: object.typography.name, url: object.typography.url} : object.typography,
             "countriesAvailable": !object.countriesAvailable ? [] : object.countriesAvailable.map(country_available_id => country_available_id),
-            "restrictedCountries": !object.restrictedCountries ? [] : object.restrictedCountries,
+            "restrictedCountries": [...(!object.restrictedCountries ? [] : object.restrictedCountries), ...fixRestrictCountry],
             "licensesId": !object.licensesId ? [] : object.licensesId.map(license_id => license_id),
             "isWithdrawing": object.isWithdrawing,
             "name": object.name,

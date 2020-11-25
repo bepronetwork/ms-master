@@ -12,6 +12,7 @@ FreeCurrencySchema.prototype.schema =  {
         currency  : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency'},
         time      : { type: Number, default : 3600000},
         value     : { type: Number, default : 0},
+        multiplier: { type: Number, default : 10},
     }]
 }
 

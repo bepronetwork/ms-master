@@ -25,11 +25,13 @@ import Mailer from './services/mailer';
 import { GenerateLink } from '../helpers/generateLink';
 import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
 
-import {getBalancePerCurrency} from './utils/getBalancePerCurrency';
+import {getBalancePerCurrency, getMultiplierBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL, ETH_FEE_VARIABLE } from "../config";
 import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
 import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
+import ConverterSingleton from './utils/converter';
+const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 
 let error = new ErrorManager();
 
@@ -269,7 +271,7 @@ const processActions = {
         let app = await AppRepository.prototype.findAppById(params.app, "simple");
         if (!app) { throwError('APP_NOT_EXISTENT') }
         if(app.restrictedCountries.length != 0){
-            const countryAvailable = app.restrictedCountries.find(c => new String(c).toLowerCase() == new String(params.country_acronym).toLowerCase());
+            const countryAvailable = [...app.restrictedCountries, ...fixRestrictCountry].find(c => new String(c).toLowerCase() == new String(params.country_acronym).toLowerCase());
             if(countryAvailable){throwError('COUNTRY_RESTRICTED')} 
         }
         if(app.wallet.length<=0) {throwError("REGISTER_NOT_CURRENCY_ADDED");}
@@ -617,7 +619,9 @@ const progressActions = {
             params.wallet = await Promise.all(app.wallet.map(async w => {
                 return (await (new Wallet({
                     currency : w.currency,
-                    playBalance : getBalancePerCurrency(balanceInitial, w.currency._id)
+                    playBalance : 0,
+                    bonusAmount : getBalancePerCurrency(balanceInitial, w.currency._id),
+                    minBetAmountForBonusUnlocked : getMultiplierBalancePerCurrency(balanceInitial, w.currency._id),
                 })).register())._doc._id;
             }));
 

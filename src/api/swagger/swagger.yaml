@@ -6535,6 +6535,7 @@ definitions:
       - currency
       - time
       - value
+      - multiplier
     properties:
       app :
         type : string
@@ -6569,6 +6570,12 @@ definitions:
         example: 1
         description: |
           value
+      multiplier :
+        type : number
+        format: number
+        example: 1
+        description: |
+          multiplier
 
   getAddonFreeCurrencyRequest :
     type: object
@@ -6603,6 +6610,7 @@ definitions:
       - admin
       - balance
       - currency
+      - multiplier
     properties:
       app :
         type : string
@@ -6622,6 +6630,12 @@ definitions:
         example: 1
         description: |
           Balance Initial
+      multiplier :
+        type : number
+        format: number
+        example: 1
+        description: |
+          Multiplier
       currency :
         type : string
         format: name

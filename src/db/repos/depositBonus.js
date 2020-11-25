@@ -33,6 +33,10 @@ class DepositBonusRepository extends MongoComponent{
             DepositBonusRepository.prototype.schema.model.update(
                 {_id},
                 { $push: {
+                    isDepositBonus: {
+                        currency             : currency,
+                        value                : false,
+                    },
                     min_deposit : {
                         currency             : currency,
                         amount               : 0,

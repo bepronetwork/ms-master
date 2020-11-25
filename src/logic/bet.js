@@ -334,21 +334,31 @@ const progressActions = {
         PerformanceBet.end({id : 'bet.register'});
 
         PerformanceBet.start({id : 'isWon.virtual'});
-        // Logic for when the APP is not virtual
+        // if the user wins the bet but the app is virtual
         if(isWon && !virtual){
+            // if there is a bonus then use the bonus amount on the bet and increase the minimum money for the money to leave the bonus for the real wallet
             if(amountBonus>0){
                 await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, user_delta);
                 await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
+            // if there is no bonus
             }else{
+                // updates the app and user playbalance
                 await WalletsRepository.prototype.updatePlayBalance(wallet._id, user_delta);
                 await WalletsRepository.prototype.updatePlayBalance(appWallet._id, app_delta);
             }
+        // if the user loses the bet and the app is not virtual
         } else if(!isWon && !virtual) {
+            // if you have bonuses
             if(amountBonus>0){
+                // increment the incrementBetAmountForBonus
                 await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, params.totalBetAmount);
             }
+            // if totalBetAmount> = playBalance then it means that the user's money has run out. In this case, you have to start taking out the bonus, so this part of the code does this: take what is missing from the bonus playbalance
             await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, params.totalBetAmount >= playBalance ? (playBalance-params.totalBetAmount) : 0);
+            // app_delta is Math.abs(totalBetAmount - totalAffiliateReturn);
+            //the app only earns money that was not a bonus
             await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (params.totalBetAmount >= playBalance ? playBalance : app_delta));
+            // if totalBetAmount> playBalance the user loses all the money he has in playbalance, otherwise he loses the total valueBetAmount
             await WalletsRepository.prototype.updatePlayBalance(wallet._id, ( params.totalBetAmount >= playBalance ? -playBalance : -params.totalBetAmount));
         }
         PerformanceBet.end({id : 'isWon.virtual'});
@@ -366,12 +376,13 @@ const progressActions = {
         }
         PerformanceBet.start({id : 'increment'});
 
-        // if the increment of the bonus bet is greater than the minimum for the bonus to be unlocked, and the bonus is greater than then: Then the bonus owner is sent to playbalance.
+        // incrementBetAmountForBonus> = minBetAmountForBonusUnlocked is the condition that serves as a trigger to pass the bonus money to the user's playbalance
         if( incrementBetAmountForBonus >= minBetAmountForBonusUnlocked && amountBonus > 0 && !virtual) {
-            await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, -(user_delta+amountBonus));
-            await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, -(params.totalBetAmount+incrementBetAmountForBonus));
-            await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked));
-            await WalletsRepository.prototype.updatePlayBalance(wallet._id, (user_delta+amountBonus));
+            await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, -(user_delta+amountBonus)); //this zero the user's bonus
+            await WalletsRepository.prototype.updateIncrementBetAmountForBonus(wallet._id, -(params.totalBetAmount+incrementBetAmountForBonus)); //that zero the IncrementBetAmountForBonus
+            await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, -(minBetAmountForBonusUnlocked)); //that zero the minBetAmountForBonusUnlocked
+            await WalletsRepository.prototype.updatePlayBalance(wallet._id, (user_delta+amountBonus)); //send the bonus money to playbalance
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(user_delta+amountBonus)); //remove from app the bonus money
         }
         PerformanceBet.end({id : 'increment'});
 

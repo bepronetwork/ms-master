@@ -56,6 +56,7 @@ import { AnalyticsSchema } from "./analytics";
 import { TopUpSchema } from "./topUp";
 import { ComplianceFileSchema } from "./complianceFile";
 import { LanguageSchema } from "./customization/language";
+import { KYCLogSchema } from "./kycLog";
 
 export {
     LanguageSchema,
@@ -115,5 +116,6 @@ export {
     ProviderTokenSchema,
     KycSchema,
     FreeCurrencySchema,
-    ComplianceFileSchema
+    ComplianceFileSchema,
+    KYCLogSchema
 }
