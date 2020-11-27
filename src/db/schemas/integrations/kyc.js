@@ -9,7 +9,7 @@ KycSchema.prototype.schema =  {
     clientId      : { type : String},
     flowId        : { type : String},
     client_secret : { type : String},
-    isActive      : { type : Boolean},
+    isActive      : { type : Boolean, default: true},
     link          : { type : String, default : 'https://getmati.com'},
     name          : { type : String, default : 'Kyc'},
     metaName      : { type : String, default : 'kyc'},
