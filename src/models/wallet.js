@@ -1,7 +1,7 @@
 import {WalletLogic} from '../logic';
 import {WalletsRepository} from '../db/repos';
 import ModelComponent from './modelComponent';
-import { MapperUpdateMaxDepositSingleton, MapperEditVirtualCurrencySingleton } from "../controllers/Mapper";
+import { MapperUpdateMaxDepositSingleton, MapperEditVirtualCurrencySingleton, UpdateMaxWithdrawSingleton } from "../controllers/Mapper";
 
 class Wallet extends ModelComponent{
 
@@ -33,6 +33,15 @@ class Wallet extends ModelComponent{
         try{
             let res = await this.process('EditVirtualCurrency');
             return MapperEditVirtualCurrencySingleton.output('EditVirtualCurrency',res);
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async setMaxWithdraw(){
+        try {
+            let res = await this.process('UpdateMaxWithdraw');
+            return UpdateMaxWithdrawSingleton.output('UpdateMaxWithdraw', res);
         }catch(err){
             throw err;
         }

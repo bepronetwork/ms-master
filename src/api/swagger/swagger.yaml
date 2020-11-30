@@ -3680,6 +3680,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /withdraw/max/set :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Set max withdraw
+      operationId: setMaxWithdraw
+      description: Set max withdraw Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: withdraw
+          description: Set max withdraw
+          required: true
+          schema:
+            $ref: '#/definitions/SetMaxWithdraw'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /status/post:
     x-swagger-router-controller: ping
     post:
@@ -3739,6 +3767,25 @@ definitions:
         example: 1
         description: |
           Max value for deposit
+  SetMaxWithdraw :
+    type: object
+    required:
+      - wallet_id
+      - amount
+      - app
+    properties:
+      wallet_id:
+        type : string
+        description: |
+          Unique identifier of the wallet
+      amount:
+        type : number
+        description: |
+          Max value for withdraw
+      app:
+        type : string
+        description: |
+          ID app
   AdminRegisterRequest :
     type: object
     required:

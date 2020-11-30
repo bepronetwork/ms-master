@@ -116,7 +116,25 @@ const processActions = {
 		}catch(err){
 			throw err;
 		}
-	}
+	},
+	__updateMaxWithdraw : async (params) => {
+		try{
+			const app = await AppRepository.prototype.findAppById(params.app);
+			if(!app){
+				throwError('APP_NOT_EXISTENT');
+			}
+			const wallet = app.wallet.find( w => new String(w._id).toString() == new String(params.wallet_id).toString());
+			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
+
+			let normalized = {
+				wallet_id	: {_id: params.wallet_id},
+				amount 		: params.amount
+			}
+			return normalized;
+		}catch(err){
+			throw err;
+		}
+	},
 }
 
 /**
@@ -173,7 +191,14 @@ const progressActions = {
 			params.amount
 		);
 		return wallet;
-	}
+	},
+	__updateMaxWithdraw : async (params) => {
+		let wallet = await WalletsRepository.prototype.updateMaxWithdraw(
+			params.wallet_id,
+			params.amount
+		);
+		return wallet;
+	},
 }
 
 /**
@@ -230,6 +255,9 @@ class WalletLogic extends LogicComponent {
 				case 'ConfirmDeposit' : {
 					return await library.process.__confirmDeposit(params);
 				};
+				case 'UpdateMaxWithdraw' : {
+					return await library.process.__updateMaxWithdraw(params);
+				};
 				case 'UpdateMaxDeposit' : {
 					return await library.process.__updateMaxDeposit(params);
 				}
@@ -269,6 +297,9 @@ class WalletLogic extends LogicComponent {
 				case 'ConfirmDeposit' : {
 					return await library.progress.__confirmDeposit(params);
 				}
+				case 'UpdateMaxWithdraw' : {
+					return await library.progress.__updateMaxWithdraw(params);
+				};
 				case 'UpdateMaxDeposit' : {
 					return await library.progress.__updateMaxDeposit(params);
 				}

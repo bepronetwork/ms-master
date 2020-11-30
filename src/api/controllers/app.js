@@ -386,6 +386,18 @@ async function editAddonDepositBonus(req, res) {
     }
 }
 
+async function setMaxWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.setMaxWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try {
@@ -1269,6 +1281,7 @@ async function getCompliance(req, res) {
 
 
 export {
+    setMaxWithdraw,
     getDeposit,
     editLanguage,
     addLanguage,

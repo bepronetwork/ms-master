@@ -83,7 +83,10 @@ import {
 
 import {
     MapperUpdateMaxDepositSingleton,
-    MapperEditVirtualCurrencySingleton
+    MapperEditVirtualCurrencySingleton,
+    UpdateMaxWithdrawSingleton,
+    UpdateMinWithdrawSingleton,
+    UpdateAffiliateMinWithdrawSingleton
 } from "./Wallet";
 
 import {
@@ -91,6 +94,9 @@ import {
 } from "./Jackpot";
 
 export {
+    UpdateMaxWithdrawSingleton,
+    UpdateMinWithdrawSingleton,
+    UpdateAffiliateMinWithdrawSingleton,
     MapperGetPotJackpotSingleton,
     MapperGetBetSingleton,
     MapperRegisterUserSingleton,
