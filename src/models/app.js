@@ -44,7 +44,7 @@ import {
     MapperEditBackgroundSingleton,
     MapperSummaryOneGamesSingleton
 } from '../controllers/Mapper';
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton } from '../controllers/Mapper/App';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton, RequestWithdrawAppSingleton, GetUsersWithdrawsSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
 
 class App extends ModelComponent {
@@ -92,6 +92,34 @@ class App extends ModelComponent {
             /* If app is virtual - add virtual currency*/
             return MapperRegisterSingleton.output('Register', app);
         } catch (err) {
+            throw err;
+        }
+    }
+
+    async requestWithdraw(){
+        const { app } = this.self.params;
+        try{
+            /* Close Mutex */
+            await AppRepository.prototype.changeWithdrawPosition(app, true);
+            let res = await this.process('RequestWithdraw');
+            /* Open Mutex */
+            await AppRepository.prototype.changeWithdrawPosition(app, false);
+            return RequestWithdrawAppSingleton.output('RequestWithdrawApp', res);
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not withdrawing atm */
+                /* Open Mutex */
+                await AppRepository.prototype.changeWithdrawPosition(app, false);
+            }
+            throw err;
+        }
+    }
+
+    async getUserWithdraws(){
+        try{
+            let res = await this.process('GetUsersWithdraws');
+            return GetUsersWithdrawsSingleton.output('GetUsersWithdraws', res);
+        }catch(err){
             throw err;
         }
     }

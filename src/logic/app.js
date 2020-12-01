@@ -45,11 +45,11 @@ import {
     MoonPayRepository,
     FreeCurrencyRepository,
     AnalyticsRepository,
-    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, KycLogRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, KycLogRepository, WithdrawRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, Wallet, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language, Withdraw } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
@@ -100,6 +100,54 @@ let __private = {};
 
   
 const processActions = {
+    __getUsersWithdraws : async (params) => {
+        return params;
+    },
+    __requestWithdraw : async (params) => {
+        var app;
+        try{
+            const { currency, address } = params;
+            if(params.tokenAmount <= 0){throwError('INVALID_AMOUNT')}
+
+            /* Get App Id */
+            app = await AppRepository.prototype.findAppById(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            const wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+
+            let amount = parseFloat(Math.abs(params.tokenAmount));
+            let appBalance = parseFloat(wallet.playBalance);
+
+            /* Get list ownerAddress */
+            let listAddress = app.whitelistedAddresses.find(w => new String(w.currency).toString() == new String(currency).toString());
+            listAddress = (!listAddress) ? [] : listAddress.addresses;
+            /* Get All Users Balance */
+            let allUsersBalance = (await UsersRepository.prototype.getAllUsersBalance({app : app._id, currency : wallet.currency._id})).balance;
+            if(typeof allUsersBalance != 'number'){throwError('UNKNOWN')}
+            /* Verify if App has Enough Balance for Withdraw */
+            let hasEnoughBalance = (amount <= appBalance);
+
+            let res = {
+                max_withdraw: (!wallet.max_withdraw) ? 0 : wallet.max_withdraw,
+                min_withdraw: (!wallet.min_withdraw) ? 0 : wallet.min_withdraw,
+                listAddress,
+                allUsersBalance,
+                appBalance,
+                hasEnoughBalance,
+                wallet : wallet,
+                currency : wallet.currency,
+                withdrawAddress : address,
+                amount : amount,
+                playBalanceDelta : parseFloat(-Math.abs(amount)),
+                app         : app,
+                nonce       : params.nonce,
+            }
+
+            return res;
+        }catch(err){
+            throw err;
+        }
+    },
     __providerAuthorization : async (params) => {
         try {
             let user     = await UsersRepository.prototype.findUserByExternalId(params.player_id);
@@ -1299,6 +1347,34 @@ const processActions = {
 
   
 const progressActions = {
+    __getUsersWithdraws : async (params) => {
+        let res = await WithdrawRepository.prototype.getAppFiltered(params);
+        return res;
+    },
+    __requestWithdraw : async (params) => {
+
+        /* Add Withdraw to user */
+        var withdraw = new Withdraw({
+            app                     : params.app,
+            creation_timestamp      : new Date(),                    
+            address                 : params.withdrawAddress,                         // Deposit Address 
+            currency                : params.currency._id,
+            amount                  : params.amount,
+            nonce                   : params.nonce,
+        })
+
+        /* Save Deposit Data */
+        var withdrawSaveObject = await withdraw.createWithdraw();
+
+        /* Update App Wallet in the Platform */
+        await WalletsRepository.prototype.updatePlayBalance(params.wallet._id, params.playBalanceDelta);
+
+        /* Add Withdraw to App */
+        await AppRepository.prototype.addWithdraw(params.app._id, withdrawSaveObject._id);
+
+        return withdrawSaveObject;
+        
+    },
     __providerAuthorization : async (params) => {
         console.log("Auth ", params);
         return params;
@@ -2764,6 +2840,9 @@ class AppLogic extends LogicComponent{
                 case 'GetCompliance' : {
                     return await library.process.__getCompliance(params); break;
                 };
+                case 'RequestWithdraw' : {
+					return await library.process.__requestWithdraw(params); 
+                };
 			}
 		}catch(error){
 			throw error
@@ -3030,7 +3109,9 @@ class AppLogic extends LogicComponent{
                 case 'GetCompliance' : {
                     return await library.progress.__getCompliance(params); break;
                 };
-                
+                case 'RequestWithdraw' : {
+					return await library.progress.__requestWithdraw(params); 
+                };
 			}
 		}catch(error){
 			throw error;

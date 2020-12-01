@@ -37,6 +37,45 @@ class User extends ModelComponent {
         );
     }
 
+    async requesAffiliatetWithdraw(){
+        // Output = Null
+        const { user } = this.self.params;
+        try{
+            /* Close Mutex */
+            await UsersRepository.prototype.changeWithdrawPosition(user, true);
+            let res = await this.process('RequestAffiliateWithdraw');
+            /* Open Mutex */
+            await UsersRepository.prototype.changeWithdrawPosition(user, false);
+            return res;
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not withdrawing atm */
+                /* Open Mutex */
+                await UsersRepository.prototype.changeWithdrawPosition(user, false);
+            }
+            throw err;
+        }
+    }
+
+    async cancelWithdraw(){
+        const { app } = this.self.params;
+        try{
+            /* Close Mutex */
+            await AppRepository.prototype.changeWithdrawPosition(app, true);
+            // Output = Boolean
+            let res = await this.process('CancelWithdraw');
+            /* Open Mutex */
+            await AppRepository.prototype.changeWithdrawPosition(app, false);
+            return res;
+        }catch(err){
+            if(parseInt(err.code) != 14){
+                /* If not withdrawing atm */
+                /* Open Mutex */
+                await AppRepository.prototype.changeWithdrawPosition(app, false);
+            }
+            throw err;
+        }
+    }
 
     async providerToken() {
         try {

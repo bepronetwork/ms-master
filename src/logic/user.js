@@ -12,9 +12,10 @@ import {
     AffiliateRepository,
     SecurityRepository,
     TokenRepository,
-    ProviderTokenRepository
+    ProviderTokenRepository,
+    WithdrawRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken, Withdraw } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
@@ -55,8 +56,94 @@ let __private = {};
 
 
 const processActions = {
+    __requestAffiliateWithdraw : async (params) => {
+        var user;
+        try{
+            const { currency } = params;
+            if(params.tokenAmount <= 0){throwError('INVALID_AMOUNT')}
+            /* Get User Id */
+            user = await UsersRepository.prototype.findUserById(params.user);
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            if(!user){throwError('USER_NOT_EXISTENT')};
+            if(app.integrations &&  app.integrations.kyc && app.integrations.kyc.isActive) {
+                if(!app.virtual && user.kyc_needed){throwError('KYC_NEEDED')}
+            } else {
+                throwError('KYC_NEEDED')
+            }
+            /* Get User and App Wallets */
+            const userWallet = user.affiliate.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!userWallet || !userWallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
 
+            const wallet = app.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+            /* Get Amount of Withdraw */
+            let amount = parseFloat(Math.abs(params.tokenAmount));
+            /* User Current Balance */
+            let currentBalance = parseFloat(userWallet.playBalance);
+            /* Verify if User has Enough Balance for Withdraw */
+            let hasEnoughBalance = (amount <= currentBalance);
 
+            /* Verify if User is in App */
+            let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
+
+            /* Verify if Withdraw position is already opened in the Smart-Contract */
+            let res = {
+                affiliate_min_withdraw: (!wallet.affiliate_min_withdraw) ? 0 : wallet.affiliate_min_withdraw,
+                hasEnoughBalance,
+                user_in_app,
+                currency      : userWallet.currency,
+                withdrawAddress : params.address,
+                userWallet : userWallet,
+                amount,
+                playBalanceDelta : parseFloat(-Math.abs(amount)),
+                user : user,
+                app : app,
+                nonce : params.nonce,
+                isAlreadyWithdrawingAPI : user.isWithdrawing
+            }
+            return res;
+        }catch(err){ 
+            throw err;
+        }
+    },
+    __cancelWithdraw : async (params) => {
+        try{
+            const { currency } = params;
+
+            /* Get User Id */
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            let app = await AppRepository.prototype.findAppById(params.app);
+            if(!app){throwError('APP_NOT_EXISTENT')}
+            if(!user){throwError('USER_NOT_EXISTENT')}
+            const wallet = user.wallet.find( w => new String(w.currency._id).toString() == new String(currency).toString());
+            if(!wallet || !wallet.currency){throwError('CURRENCY_NOT_EXISTENT')};
+
+            /* Verify if User is in App */
+            let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
+
+            let withdraw = await WithdrawRepository.prototype.findWithdrawById(params.withdraw_id);
+            let withdrawExists = withdraw ? true : false;
+            let wasAlreadyAdded = withdraw ? withdraw.done : false;
+
+            // let transactionIsValid = true;
+
+            let res = {
+                wallet_id: wallet._id,
+                amount: withdraw.amount,
+                note: params.note,
+                user_in_app,
+                withdrawExists,
+                withdraw_id : params.withdraw_id,
+                wasAlreadyAdded,
+                app,
+                user
+            }
+            return res;
+        }catch(err){
+            throw err;
+        }
+    },
     __providerToken: async (params) => {
         let token    = MiddlewareSingleton.generateTokenByJson({user:params.user, ticker:params.ticker});
         let resToken = await ProviderTokenRepository.prototype.findByToken(token);
@@ -538,6 +625,42 @@ const processActions = {
 
 
 const progressActions = {
+    __requestAffiliateWithdraw :  async (params) => {
+        /* Add Withdraw to user */
+        var withdraw = new Withdraw({
+           user                    : params.user._id,
+           app                     : params.app,
+           creation_timestamp      : new Date(),                    
+           address                 : params.withdrawAddress,                         // Deposit Address 
+           currency                : params.currency,
+           amount                  : params.amount,
+           nonce                   : params.nonce,
+           isAffiliate             : true
+       })
+   
+       /* Save Deposit Data */
+       var withdrawSaveObject = await withdraw.createWithdraw();
+
+        /* Update User Wallet in the Platform */
+        await WalletsRepository.prototype.updatePlayBalance(params.userWallet._id, params.playBalanceDelta);
+        
+        /* Add Deposit to user */
+        await UsersRepository.prototype.addWithdraw(params.user._id, withdrawSaveObject._id);
+        return null;
+    },
+    __cancelWithdraw : async (params) => {
+        try {
+            /* Add Cancel Withdraw to user */
+            await WithdrawRepository.prototype.cancelWithdraw(params.withdraw_id, {
+                last_update_timestamp   :   new Date(),
+                note: params.note
+            });
+            await WalletsRepository.prototype.updatePlayBalance(params.wallet_id, params.amount);
+            return true;
+        } catch(err) {
+            throw err;
+        }
+    },
     __providerToken: async (params) => {
         let {tokenIsNotInDB, token} = params;
         if(tokenIsNotInDB){
@@ -1002,6 +1125,12 @@ class UserLogic extends LogicComponent {
                 case 'EditKycNeeded': {
                     return await library.process.__editKycNeeded(params); break;
                 }
+                case 'CancelWithdraw' : {
+                    return await library.process.__cancelWithdraw(params);
+                };
+                case 'RequestAffiliateWithdraw' : {
+                    return await library.process.__requestAffiliateWithdraw(params); 
+                }
             }
         } catch (err) {
             throw err;
@@ -1082,6 +1211,12 @@ class UserLogic extends LogicComponent {
                 case 'EditKycNeeded': {
                     return await library.progress.__editKycNeeded(params); break;
                 };
+                case 'CancelWithdraw' : {
+					return await library.progress.__cancelWithdraw(params);
+                };
+                case 'RequestAffiliateWithdraw' : {
+                    return await library.progress.__requestAffiliateWithdraw(params); 
+                }
             }
         } catch (err) {
             throw err;

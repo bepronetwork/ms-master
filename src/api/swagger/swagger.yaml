@@ -2367,6 +2367,126 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/users/withdraws:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Request for User Withdraw
+      operationId: getUserWithdraws
+      description: Get User Withdraws
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/GetAllUsersAppWithdraws'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /app/requestWithdraw: 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Request for User Withdraw
+      operationId: requestAppWithdraw
+      description: Update Wallet Amount for the User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: App Information
+          required: true
+          schema:
+            $ref: '#/definitions/AppRequestWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/affiliate/requestWithdraw:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Request for User Withdraw
+      operationId: requestAffiliateWithdraw
+      description: Update Wallet Amount for the User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/cancelWithdraw:
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Request for User Cancel Withdraw
+      operationId: cancelWithdraw
+      description: Request Cancel Withdraw
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserCancelWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /user/webhookDeposit:
     x-swagger-router-controller: user
     post:
@@ -6525,7 +6645,106 @@ definitions:
         example: '[101, 201]'
         description: |
          Services ID
-  
+  GetAllUsersAppWithdraws : 
+    type: object
+    required:
+      - app
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      size :
+        type : number
+      user :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User Id
+      offset :
+        type : number
+      status :
+        type : string
+        example : "Queue"
+  AppRequestWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - address
+      - tokenAmount
+      - nonce
+      - currency
+    properties:
+      tokenAmount : 
+        type : number
+        example: 203
+        description: |
+          Amount of Tokens to be Withdraw
+      nonce:
+        type : number
+        example: 3245
+        description: |
+          Use Nonce
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      address :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      currency :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+  UserCancelWithdrawRequest :
+    type: object
+    required:
+      - app
+      - user
+      - withdraw_id
+      - currency
+      - note
+    properties:
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34"
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example : "5cuedgq7e6t334t34"
+        description: |
+          User ID
+      withdraw_id :
+        type : string
+        format: name
+        example: "65f76st8vdsb3181"
+        description: |
+            Withdraw Id
+      currency :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      note :
+        type : string
+        format: name
+        example: "Test Test"
+        description: |
+          Note text
   editAddonFreeCurrencyRequest: 
     type: object
     required:

@@ -1128,6 +1128,30 @@ async function getUsers(req, res) {
     }
 }
 
+async function requestAppWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.requestWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getUserWithdraws(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "withdraw"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getUserWithdraws();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function kycWebhook(req, res) {
     try {
         let params = req.body;
@@ -1352,5 +1376,7 @@ export {
     kycWebhook,
     addAddonFreeCurrency,
     editAddonFreeCurrency,
-    getCompliance
+    getCompliance,
+    requestAppWithdraw,
+    getUserWithdraws
 };

@@ -274,6 +274,30 @@ async function pingPushNotifications(req, res) {
     }
 }
 
+async function requestAffiliateWithdraw (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'user', req});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.requesAffiliatetWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
+async function cancelWithdraw (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'admin', req, permissions: ["super_admin"]});
+        let params = req.body;
+		let user = new User(params);
+        let data = await user.cancelWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 /**
  *
  * @param {*} req
@@ -407,5 +431,7 @@ export {
     userGetBets,
     getPotJackpot,
     providerToken,
-    getAddonFreeCurrency
+    getAddonFreeCurrency,
+    cancelWithdraw,
+    requestAffiliateWithdraw
 }

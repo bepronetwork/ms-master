@@ -22,21 +22,23 @@ let __private = {};
 
 
 const processActions = {
-    __createWithdraw : async (params) => {
-        
+	__createWithdraw : async (params) => {
         let entityType = params.user ? 'user' : 'app';
 
         let normalized = {
+            app                     : params.app,
 			[entityType]			: params[entityType],
             entityType				: entityType,
             creation_timestamp      : params.creation_timestamp,                        
             last_update_timestamp   : params.last_update_timestamp,                      
             address                 : params.address,                       
             currency                : params.currency,
+            logId                   : params.logId,
             transactionHash         : params.transactionHash,
             amount                  : params.amount,
             confirmations           : params.confirmations || 0,
-            maxConfirmations        : params.maxConfirmations || 0,
+			maxConfirmations        : params.maxConfirmations || 0,
+			link_url				: params.link_url,
             ...params
 		}
 		return normalized;
