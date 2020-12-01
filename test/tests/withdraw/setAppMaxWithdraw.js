@@ -29,6 +29,7 @@ context('Withdraw Max', async () => {
             wallet_id: appWallet._id,
             amount: 20,
         }, admin.bearerToken, { id: admin.id });
+        console.log("dataMaxDeposit:: ", dataMaxDeposit)
         expect(dataMaxDeposit.data.status).to.be.equal(200);
         expect(dataMaxDeposit.data.status).to.not.be.null;
     }));
