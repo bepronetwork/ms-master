@@ -1,4 +1,4 @@
-import { mochaAsync } from '../../../utils';
+import { mochaAsync } from '../../utils';
 import { getAppAuth, setAffiliateMinWithdraw } from "../../methods";
 import chai from 'chai';
 const expect = chai.expect;
