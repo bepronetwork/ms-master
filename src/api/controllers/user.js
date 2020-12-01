@@ -386,8 +386,21 @@ async function getAddonFreeCurrency(req, res) {
     }
 }
 
+async function requestWithdraw (req, res) {
+    try{
+        SecuritySingleton.verify({type : 'user', req});
+        let params = req.body;
+        let user = new User(params);
+        let data = await user.requestWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+	}catch(err){
+        MiddlewareSingleton.respondError(res, err);
+	}
+}
+
 
 export {
+    requestWithdraw,
     webhookDeposit,
     registUser,
     loginUser,

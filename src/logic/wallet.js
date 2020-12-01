@@ -135,6 +135,44 @@ const processActions = {
 			throw err;
 		}
 	},
+	__updateMinWithdraw : async (params) => {
+		try{
+			const app = await AppRepository.prototype.findAppById(params.app);
+			if(!app){
+				throwError('APP_NOT_EXISTENT');
+			}
+            const wallet = app.wallet.find( w => new String(w._id).toString() == new String(params.wallet_id).toString());
+            
+
+			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
+
+			let normalized = {
+				wallet_id	: {_id: params.wallet_id},
+				amount 		: params.amount
+			}
+			return normalized;
+		}catch(err){
+			throw err;
+		}
+	},
+	__updateAffiliateMinWithdraw : async (params) => {
+		try{
+			const app = await AppRepository.prototype.findAppById(params.app);
+			if(!app){
+				throwError('APP_NOT_EXISTENT');
+			}
+			const wallet = app.wallet.find( w => new String(w._id).toString() == new String(params.wallet_id).toString());
+			if(!wallet){throwError('CURRENCY_NOT_EXISTENT')};
+
+			let normalized = {
+				wallet_id	: {_id: params.wallet_id},
+				amount 		: params.amount
+			}
+			return normalized;
+		}catch(err){
+			throw err;
+		}
+	},
 }
 
 /**
@@ -199,6 +237,20 @@ const progressActions = {
 		);
 		return wallet;
 	},
+	__updateMinWithdraw : async (params) => {
+		let wallet = await WalletsRepository.prototype.updateMinWithdraw(
+			params.wallet_id,
+			params.amount
+		);
+		return wallet;
+	},
+	__updateAffiliateMinWithdraw : async (params) => {
+		let wallet = await WalletsRepository.prototype.updateAffliateMinWithdraw(
+			params.wallet_id,
+			params.amount
+		);
+		return wallet;
+	}
 }
 
 /**
@@ -261,6 +313,12 @@ class WalletLogic extends LogicComponent {
 				case 'UpdateMaxDeposit' : {
 					return await library.process.__updateMaxDeposit(params);
 				}
+				case 'UpdateMinWithdraw' : {
+					return await library.process.__updateMinWithdraw(params);
+				};
+				case 'UpdateAffiliateMinWithdraw' : {
+					return await library.process.__updateAffiliateMinWithdraw(params);
+				};
 				case 'EditVirtualCurrency' : {
 					return await library.process.__editVirtualCurrency(params);
 				}
@@ -303,6 +361,12 @@ class WalletLogic extends LogicComponent {
 				case 'UpdateMaxDeposit' : {
 					return await library.progress.__updateMaxDeposit(params);
 				}
+				case 'UpdateMinWithdraw' : {
+					return await library.progress.__updateMinWithdraw(params);
+				};
+				case 'UpdateAffiliateMinWithdraw' : {
+					return await library.progress.__updateAffiliateMinWithdraw(params);
+				};
 				case 'EditVirtualCurrency' : {
 					return await library.progress.__editVirtualCurrency(params);
 				}

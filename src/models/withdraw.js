@@ -19,6 +19,15 @@ class Withdraw extends ModelComponent{
             );
     }
 
+    async createWithdraw(){
+        try{
+            let response = await this.process('CreateWithdraw')
+            return response;
+        }catch(err){
+            throw err;
+        } 
+    }
+
 }
 
 export default Withdraw;

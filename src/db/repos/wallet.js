@@ -137,6 +137,30 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    updateMinWithdraw(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                min_withdraw: amount
+            })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateAffliateMinWithdraw(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                affiliate_min_withdraw: amount
+            })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     addCurrencyDepositToVirtualCurrency(virtual_wallet_id, currency_id){
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findOneAndUpdate( 

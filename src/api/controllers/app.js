@@ -398,6 +398,30 @@ async function setMaxWithdraw(req, res) {
     }
 }
 
+async function setMinWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.setMinWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function setAffiliateMinWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.setAffiliateMinWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try {
@@ -1281,6 +1305,8 @@ async function getCompliance(req, res) {
 
 
 export {
+    setAffiliateMinWithdraw,
+    setMinWithdraw,
     setMaxWithdraw,
     getDeposit,
     editLanguage,

@@ -1,13 +1,21 @@
+
+
+
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 
 let error = new ErrorManager();
 
+const config = {
+    headers : {
+        "Content-Type" : "application/json"
+    }
+}
+
 // Private fields
 let self; // eslint-disable-line no-unused-vars
 let library;
-let modules;
 
 let __private = {};
 
@@ -27,16 +35,19 @@ const processActions = {
         let entityType = params.user ? 'user' : 'app';
 
         let normalized = {
+            app                     : params.app,
 			[entityType]			: params[entityType],
             entityType				: entityType,
             creation_timestamp      : params.creation_timestamp,                        
             last_update_timestamp   : params.last_update_timestamp,                      
             address                 : params.address,                       
             currency                : params.currency,
+            logId                   : params.logId,
             transactionHash         : params.transactionHash,
             amount                  : params.amount,
             confirmations           : params.confirmations || 0,
-            maxConfirmations        : params.maxConfirmations || 0,
+			maxConfirmations        : params.maxConfirmations || 0,
+			link_url				: params.link_url,
             ...params
 		}
 		return normalized;
