@@ -23,6 +23,9 @@ context('Withdraw Max', async () => {
 
     it('should set max for ETH success', mochaAsync(async () => {
         app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
+        console.log("app.id:: ", app.id)
+        console.log("admin.id:: ", admin.id)
+        console.log("appWallet._id:: ", appWallet._id)
         let dataMaxDeposit = await setAppMaxWithdraw({
             app: app.id,
             admin: admin.id,
