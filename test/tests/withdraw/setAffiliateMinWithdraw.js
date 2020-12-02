@@ -21,9 +21,8 @@ context('Withdraw Min - Affiliate', async () => {
     });
 
     it('should set Min for ETH success', mochaAsync(async () => {
-        app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
         let res = await setAffiliateMinWithdraw({
-            app: app._id,
+            app: app.id,
             admin: admin.id,
             wallet_id: appWallet._id,
             amount: 0.00002,
@@ -33,10 +32,9 @@ context('Withdraw Min - Affiliate', async () => {
     }));
 
     it('should set Min for ETH not auth', mochaAsync(async () => {
-        app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
         let res = await setAffiliateMinWithdraw({
             admin: admin.id,
-            app: app._id,
+            app: app.id,
             wallet_id: appWallet._id,
             amount: 0.00002,
         }, null, { id: admin.id });

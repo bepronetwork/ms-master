@@ -22,12 +22,11 @@ context('Withdraw Max', async () => {
     });
 
     it('should set max for ETH success', mochaAsync(async () => {
-        app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
-        console.log("app.id:: ", app._id)
+        console.log("app.id:: ", app.id)
         console.log("admin.id:: ", admin.id)
         console.log("appWallet._id:: ", appWallet._id)
         let dataMaxDeposit = await setAppMaxWithdraw({
-            app: app._id,
+            app: app.id,
             admin: admin.id,
             wallet_id: appWallet._id,
             amount: 20,
@@ -38,10 +37,9 @@ context('Withdraw Max', async () => {
     }));
 
     it('should set max for ETH not auth', mochaAsync(async () => {
-        app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
         let dataMaxDeposit = await setAppMaxWithdraw({
             admin: admin.id,
-            app: app._id,
+            app: app.id,
             wallet_id: appWallet._id,
             amount: 20,
         }, null, { id: admin.id });
