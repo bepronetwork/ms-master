@@ -24,7 +24,7 @@ context('Withdraw Min', async () => {
     it('should set Min for ETH success', mochaAsync(async () => {
         app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
         let res = await setAppMinWithdraw({
-            app: app.id,
+            app: app._id,
             admin: admin.id,
             wallet_id: appWallet._id,
             amount: 0.00002,
@@ -37,7 +37,7 @@ context('Withdraw Min', async () => {
         app = (await getAppAuth({ app: app.id, admin: admin.id }, admin.bearerToken, { id: admin.id })).data.message;
         let res = await setAppMinWithdraw({
             admin: admin.id,
-            app: app.id,
+            app: app._id,
             wallet_id: appWallet._id,
             amount: 0.00002,
         }, null, { id: admin.id });
