@@ -18,7 +18,7 @@ import {
     AddOnRepository,
     AutoWithdrawRepository
 } from '../db/repos';
-import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken, Withdraw } from '../models';
+import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
