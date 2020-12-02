@@ -1,6 +1,7 @@
 import { mochaAsync } from '../../utils';
 import { getAppAuth, setAppMinWithdraw } from "../../methods";
 import chai from 'chai';
+import { isUndefined } from 'lodash';
 const expect = chai.expect;
 
 var appWallet;
@@ -38,7 +39,7 @@ context('Withdraw Min', async () => {
             app: app.id,
             wallet_id: appWallet._id,
             amount: 0.00002,
-        }, null, { id: admin.id });
+        }, null, { id: null });
         expect(res.data.status).to.be.equal(304);
         expect(res.data.status).to.not.be.null;
     }));

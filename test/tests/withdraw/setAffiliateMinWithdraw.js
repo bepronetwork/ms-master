@@ -37,7 +37,7 @@ context('Withdraw Min - Affiliate', async () => {
             app: app.id,
             wallet_id: appWallet._id,
             amount: 0.00002,
-        }, null, { id: admin.id });
+        }, null, { id: null });
         expect(res.data.status).to.be.equal(304);
         expect(res.data.status).to.not.be.null;
     }));

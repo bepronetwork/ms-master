@@ -42,7 +42,7 @@ context('Withdraw Max', async () => {
             app: app.id,
             wallet_id: appWallet._id,
             amount: 20,
-        }, null, { id: admin.id });
+        }, null, { id: null });
         expect(dataMaxDeposit.data.status).to.be.equal(304);
         expect(dataMaxDeposit.data.status).to.not.be.null;
     }));
