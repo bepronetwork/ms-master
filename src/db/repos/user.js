@@ -492,9 +492,8 @@ class UsersRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 UsersRepository.prototype.schema.model.findByIdAndUpdate(
-                    { _id: _id },
-                    { $set: { "isWithdrawing" : state} })
-                    .lean() 
+                    _id,
+                    { $set: { "isWithdrawing" : state} }) 
                     .exec( (err, item) => {
                         if(err){reject(err)}
                         try{

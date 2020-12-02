@@ -480,6 +480,33 @@ module.exports = {
         .then(res => detectServerError(res))
         
     },
+    async setAppMaxWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/withdraw/max/set')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
+    async setAppMinWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/withdraw/min/set')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
+    async setAffiliateMinWithdraw(params, bearerToken, payload) {
+        return request(global.server)
+        .post('/api/affiliate/withdraw/min/set')
+        .set("authorization", "Bearer " + bearerToken)
+        .set("payload", getPayloadString(payload))
+        .send(params)
+        .then(res => detectServerError(res))
+        
+    },
     async getAppSummary(params, bearerToken, payload) {
         return request(global.server)
         .post('/api/app/summary')

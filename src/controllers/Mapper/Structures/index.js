@@ -13,8 +13,10 @@ import { edit_game_object } from "./editGame";
 import { get_object } from "./get";
 import { tx_fee_object } from "./txFee";
 import { deposit_bonus_object } from "./depositBonus";
+import { wallet_update_object } from "./wallet_update";
 
 export{
+    wallet_update_object,
     deposit_bonus_object,
     tx_fee_object,
     app_object,

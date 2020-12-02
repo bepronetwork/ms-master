@@ -3800,6 +3800,120 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /withdraw/max/set :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Set max withdraw
+      operationId: setMaxWithdraw
+      description: Set max withdraw Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: withdraw
+          description: Set max withdraw
+          required: true
+          schema:
+            $ref: '#/definitions/SetMaxWithdraw'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /withdraw/min/set :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Set Min withdraw
+      operationId: setMinWithdraw
+      description: Set Min withdraw Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: withdraw
+          description: Set Min withdraw
+          required: true
+          schema:
+            $ref: '#/definitions/SetMinWithdraw'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /affiliate/withdraw/min/set :
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Set Affiliate Min withdraw
+      operationId: setAffiliateMinWithdraw
+      description: Set Affiliate Min withdraw Data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: withdraw
+          description: Set Affiliate Min withdraw
+          required: true
+          schema:
+            $ref: '#/definitions/SetAffiliateMinWithdraw'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/requestWithdraw: 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Request for User Withdraw
+      operationId: requestWithdraw
+      description: Update Wallet Amount for the User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /status/post:
     x-swagger-router-controller: ping
     post:
@@ -3859,6 +3973,107 @@ definitions:
         example: 1
         description: |
           Max value for deposit
+  SetMaxWithdraw :
+    type: object
+    required:
+      - wallet_id
+      - amount
+      - app
+    properties:
+      wallet_id:
+        type : string
+        description: |
+          Unique identifier of the wallet
+      amount:
+        type : number
+        description: |
+          Max value for withdraw
+      app:
+        type : string
+        description: |
+          ID app
+  SetMinWithdraw :
+    type: object
+    required:
+      - wallet_id
+      - amount
+      - app
+    properties:
+      wallet_id:
+        type : string
+        description: |
+          Unique identifier of the wallet
+      amount:
+        type : number
+        description: |
+          Max value for withdraw
+      app:
+        type : string
+        description: |
+          ID app
+  SetAffiliateMinWithdraw :
+    type: object
+    required:
+      - wallet_id
+      - amount
+      - app
+    properties:
+      wallet_id:
+        type : string
+        description: |
+          Unique identifier of the wallet
+      amount:
+        type : number
+        description: |
+          Max value for withdraw
+      app:
+        type : string
+        description: |
+          ID app
+  UserWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - user
+      - address
+      - tokenAmount
+      - nonce
+      - currency
+    properties:
+      tokenAmount : 
+        type : number
+        example: 203
+        description: |
+          Amount of Tokens to be Withdraw
+      nonce:
+        type : number
+        example: 3245
+        description: |
+          Use Nonce
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User ID
+      address :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      currency :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
   AdminRegisterRequest :
     type: object
     required:

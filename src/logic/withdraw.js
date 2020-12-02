@@ -1,13 +1,21 @@
+
+
+
 const _ = require('lodash');
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 
 let error = new ErrorManager();
 
+const config = {
+    headers : {
+        "Content-Type" : "application/json"
+    }
+}
+
 // Private fields
 let self; // eslint-disable-line no-unused-vars
 let library;
-let modules;
 
 let __private = {};
 
