@@ -386,6 +386,42 @@ async function editAddonDepositBonus(req, res) {
     }
 }
 
+async function setMaxWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.setMaxWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function setMinWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.setMinWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function setAffiliateMinWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let wallet = new Wallet(params);
+        let data = await wallet.setAffiliateMinWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 // JSON WebToken Security Functions
 async function addCurrencyWallet(req, res) {
     try {
@@ -1128,6 +1164,30 @@ async function getUsers(req, res) {
     }
 }
 
+async function requestAppWithdraw(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.requestWithdraw();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getUserWithdraws(req, res) {
+    try {
+        SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "withdraw"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.getUserWithdraws();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function kycWebhook(req, res) {
     try {
         let params = req.body;
@@ -1269,6 +1329,9 @@ async function getCompliance(req, res) {
 
 
 export {
+    setAffiliateMinWithdraw,
+    setMinWithdraw,
+    setMaxWithdraw,
     getDeposit,
     editLanguage,
     addLanguage,
@@ -1352,5 +1415,7 @@ export {
     kycWebhook,
     addAddonFreeCurrency,
     editAddonFreeCurrency,
-    getCompliance
+    getCompliance,
+    requestAppWithdraw,
+    getUserWithdraws
 };

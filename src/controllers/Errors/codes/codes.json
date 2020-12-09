@@ -338,5 +338,33 @@
     "084" : {
         "key"      : "COUNTRY_RESTRICTED",
         "message"   : "Currently we dont operate in your country"
+    },
+    "085" : {
+        "key" : "MIN_WITHDRAW_NOT_PASSED",
+        "message"   : "Mininum Withdrawal was not passed"
+    },
+    "086" : {
+        "key": "MAX_WITHDRAW",
+        "message"   : "Withdrawal amount greater than the maximum allowed"
+    },
+    "087" : {
+        "key": "EMAIL_NOT_CONFIRMED",
+        "message"   : "Unconfirmed Email"
+    },
+    "088" : {
+        "key": "MIN_WITHDRAW",
+        "message"   : "Withdrawal amount less than the minimum allowed"
+    },
+    "089" : {
+        "key": "WITHDRAW_FEE",
+        "message"   : "Withdraw less than Fee"
+    },
+    "090" : {
+        "key": "HAS_BONUS_YET",
+        "message"   : "The balance still has a bonus to be played"
+    },
+    "091" : {
+        "key": "KYC_NEEDED",
+        "message"   : "It is necessary to confirm your identity"
     }
 }
