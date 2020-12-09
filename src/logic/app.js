@@ -2843,6 +2843,9 @@ class AppLogic extends LogicComponent{
                 case 'RequestWithdraw' : {
 					return await library.process.__requestWithdraw(params); 
                 };
+                case 'GetUsersWithdraws' : {
+					return await library.process.__getUsersWithdraws(params); 
+                };
 			}
 		}catch(error){
 			throw error
@@ -3111,6 +3114,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'RequestWithdraw' : {
 					return await library.progress.__requestWithdraw(params); 
+                };
+                case 'GetUsersWithdraws' : {
+					return await library.progress.__getUsersWithdraws(params); 
                 };
 			}
 		}catch(error){

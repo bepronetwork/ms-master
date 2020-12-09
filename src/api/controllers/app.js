@@ -1184,7 +1184,7 @@ async function getUserWithdraws(req, res) {
         let data = await app.getUserWithdraws();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
-        MiddlewareSingleton.respondError(res, err);
+        MiddlewareSingleton.respondError(res, err, req);
     }
 }
 
