@@ -661,6 +661,15 @@ class App extends ModelComponent {
         }
     }
 
+    async updateBalanceApp() {
+        try {
+            let app = await this.process('UpdateBalanceApp');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
     * @param {String} 
     * @return {bool || Exception}  

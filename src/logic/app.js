@@ -100,6 +100,17 @@ let __private = {};
 
   
 const processActions = {
+    __updateBalanceApp : async (params) => {
+        let { app, currency, increase_amount } = params;
+
+        app = await AppRepository.prototype.findAppById(app, 'simple');
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        const app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        return {
+            app_wallet,
+            increase_amount
+        };
+    },
     __getUsersWithdraws : async (params) => {
         return params;
     },
@@ -1347,6 +1358,14 @@ const processActions = {
 
   
 const progressActions = {
+    __updateBalanceApp : async (params) => {
+        let { app_wallet, increase_amount } = params;
+        await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, increase_amount);
+        const walletUpdated = await WalletsRepository.prototype.findById(app_wallet._id);
+        return {
+            updatedPlayBalance : walletUpdated.playBalance
+        };
+    },
     __getUsersWithdraws : async (params) => {
         let res = await WithdrawRepository.prototype.getAppFiltered(params);
         return res;
@@ -2600,6 +2619,9 @@ class AppLogic extends LogicComponent{
 	async objectNormalize(params, processAction) {
 		try{			
 			switch(processAction) {
+                case 'UpdateBalanceApp' : {
+					return await library.process.__updateBalanceApp(params);
+				};
 				case 'Register' : {
 					return await library.process.__register(params); break;
 				};
@@ -2871,6 +2893,9 @@ class AppLogic extends LogicComponent{
 	async progress(params, progressAction){
 		try{
 			switch(progressAction) {
+                case 'UpdateBalanceApp' : {
+					return await library.progress.__updateBalanceApp(params);
+				};
 				case 'Register' : {
 					return await library.progress.__register(params); break;
                 };

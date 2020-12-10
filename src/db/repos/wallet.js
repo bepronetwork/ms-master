@@ -58,6 +58,17 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    findById(_id) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findById(_id)
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updateIsPending(_id, isPending) {
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(_id,
