@@ -3914,6 +3914,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/update/balance: 
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: Update Balance From App
+      operationId: updateBalanceApp
+      description: Update Balance From App
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: app
+          description: Update Balance From App
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateBalanceApp'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /status/post:
     x-swagger-router-controller: ping
     post:
@@ -4030,6 +4060,37 @@ definitions:
         type : string
         description: |
           ID app
+  UpdateBalanceApp : 
+    type: object
+    required:
+      - admin
+      - app
+      - increase_amount
+      - currency
+    properties:
+      admin :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          Admin ID
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      increase_amount :
+        type : number
+        example: 203
+        description: |
+          Amount to be added to the App balance
+      currency :
+        type : string
+        format: name
+        example: "5cuedgq7e6t334t34"
+        description: |
+          Currency ID
   UserWithdrawRequest : 
     type: object
     required:
