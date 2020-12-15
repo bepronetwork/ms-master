@@ -659,6 +659,15 @@ class App extends ModelComponent {
         }
     }
 
+    async addCurrencyWallet() {
+        try {
+            let app = await this.process('AddCurrencyWallet');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
    * @param {String} 
    * @return {bool || Exception}  

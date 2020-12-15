@@ -39,11 +39,11 @@ import {
     IconsRepository,
     MoonPayRepository,
     AnalyticsRepository,
-    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, KycLogRepository, WithdrawRepository
+    ComplianceFileRepository, LanguageEcoRepository, LanguageRepository, KycLogRepository, WithdrawRepository, JackpotRepository, BalanceRepository, FreeCurrencyRepository, AffiliateRepository
 } from '../db/repos';
 import LogicComponent from './logicComponent';
 import { getServices } from './services/services';
-import { Game, Jackpot, Deposit, AffiliateSetup, Link, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language } from '../models';
+import { Game, Jackpot, Deposit, AffiliateSetup, Link, AutoWithdraw, Balance, DepositBonus, Address, PointSystem, FreeCurrency, Language, Wallet } from '../models';
 import { fromPeriodicityToDates } from './utils/date';
 import { verifyKYC } from './utils/integrations';
 import GamesEcoRepository from '../db/repos/ecosystem/game';
@@ -94,6 +94,16 @@ let __private = {};
 
   
 const processActions = {
+    __addCurrencyWallet : async (params) => {
+        var { currency_id, app } = params;
+        app = await AppRepository.prototype.findAppByIdAddCurrencyWallet(app);
+        if(!app){throwError('APP_NOT_EXISTENT')}
+        let currency = await CurrencyRepository.prototype.findById(currency_id);
+        return  {
+            currency,
+            app : app
+        }
+    },
     __updateBalanceApp : async (params) => {
         let { app, currency, increase_amount } = params;
 
@@ -1244,6 +1254,86 @@ const processActions = {
 
   
 const progressActions = {
+    __addCurrencyWallet : async (params) => {
+        const { currency, app } = params;
+        var wallet;
+        if(currency.virtual){
+            /* Save Wallet on DB */
+            wallet = (await (new Wallet({
+                currency : currency._id,
+                virtual : true,
+                price : app.currencies.map( c => {
+                    return {
+                        currency : c._id,
+                        amount : PRICE_VIRTUAL_CURRENCY_GLOBAL
+                    }
+                })
+            })).register())._doc;
+        }else{
+            if(currency.erc20){
+                let wallet_eth = app.wallet.find( w => w.currency.ticker == 'ETH');
+                /* No Eth Wallet was created */
+                if(!wallet_eth){throwError('NO_ETH_WALLET')};
+                /* Save Wallet on DB */
+                wallet = (await (new Wallet({
+                    currency : currency._id,
+                    virtual : false
+                })).register())._doc;
+            }else{
+                wallet = (await (new Wallet({
+                    currency : currency._id,
+                    virtual : false
+                })).register())._doc;
+            }
+            let virtualWallet = app.wallet.find( w => w.currency.virtual == true);
+            if(virtualWallet){
+                /* Add Deposit Currency to Virtual Currency */
+                await WalletsRepository.prototype.addCurrencyDepositToVirtualCurrency(virtualWallet._id, currency._id);
+            }
+        }
+
+        /* Add Currency to Platform */
+        await AppRepository.prototype.addCurrency(app._id, currency._id);
+        await AppRepository.prototype.addCurrencyWallet(app._id, wallet);
+
+        /* Add LimitTable to all Games */
+        if(app.games!=undefined) {
+            for(let game of app.games) {
+                await GamesRepository.prototype.addTableLimitWallet({
+                    game    : game._id,
+                    wallet  : wallet._id
+                });
+            }
+        }
+
+        /* add currencies in addons */
+        if(app.addOn.jackpot)         await JackpotRepository.prototype.pushNewCurrency(app.addOn.jackpot._id, currency._id);
+        if(app.addOn.pointSystem)     await PointSystemRepository.prototype.pushNewCurrency(app.addOn.pointSystem._id, currency._id);
+        if(app.addOn.autoWithdraw)    await AutoWithdrawRepository.prototype.pushNewCurrency(app.addOn.autoWithdraw._id, currency._id);
+        if(app.addOn.txFee)           await TxFeeRepository.prototype.pushNewCurrency(app.addOn.txFee._id, currency._id);
+        if(app.addOn.balance)         await BalanceRepository.prototype.pushNewCurrency(app.addOn.balance._id, currency._id);
+        if(app.addOn.depositBonus)    await DepositBonusRepository.prototype.pushNewCurrency(app.addOn.depositBonus._id, currency._id);
+        if(app.addOn.freeCurrency)    await FreeCurrencyRepository.prototype.pushNewCurrency(app.addOn.freeCurrency._id, currency._id);
+        console.log("setting user")
+
+        /* Add Wallet to all Users */
+        await Promise.all(await app.users.map( async u => {
+            let w = (await (new Wallet({
+                currency : currency._id,
+            })).register())._doc;
+            await UsersRepository.prototype.addCurrencyWallet(u._id, w);
+
+            let wAffiliate = (await (new Wallet({
+                currency : currency._id,
+            })).register())._doc;
+            await AffiliateRepository.prototype.addCurrencyWallet(u.affiliate, wAffiliate);
+        }));
+        
+
+        return {
+            currency_id : currency._id
+        }
+    },
     __updateBalanceApp : async (params) => {
         let { app_wallet, increase_amount } = params;
         await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, increase_amount);
@@ -2285,6 +2375,9 @@ class AppLogic extends LogicComponent{
 	async objectNormalize(params, processAction) {
 		try{			
 			switch(processAction) {
+                case 'AddCurrencyWallet' : {
+					return await library.process.__addCurrencyWallet(params);
+                };
                 case 'UpdateBalanceApp' : {
 					return await library.process.__updateBalanceApp(params);
 				};
@@ -2547,6 +2640,9 @@ class AppLogic extends LogicComponent{
 	async progress(params, progressAction){
 		try{
 			switch(progressAction) {
+                case 'AddCurrencyWallet' : {
+					return await library.progress.__addCurrencyWallet(params);
+                };
                 case 'UpdateBalanceApp' : {
 					return await library.progress.__updateBalanceApp(params);
 				};

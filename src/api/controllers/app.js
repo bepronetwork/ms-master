@@ -1258,8 +1258,21 @@ async function getCompliance(req, res) {
 	}
 }
 
+async function addCurrencyWallet(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["super_admin", "financials"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.addCurrencyWallet();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 
 export {
+    addCurrencyWallet,
     updateBalanceApp,
     setAffiliateMinWithdraw,
     setMinWithdraw,
