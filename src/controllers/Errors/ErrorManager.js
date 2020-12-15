@@ -95,25 +95,6 @@ class ErrorManager {
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_USER));
                     break;
                 };
-                case 'UpdateWallet': {
-                    // Verify deposit not overflow
-                    if(parseFloat(object.maxDeposit) < parseFloat(object.amount)) {
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.OVERFLOW_DEPOSIT));
-                    }
-                    // Verify User
-                    if(typeof object == 'undefined' || Object.is(object, null))
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
-                    // Verify User is in App
-                    if(!object.user_in_app)
-                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
-                    // Verify Deposit was already inserted
-                    if(object.wasAlreadyAdded)
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION));
-                    // Verify if Deposit is Valid
-                    if(!object.isValid)
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID));
-                    break;
-                };
 
                 case 'RequestWithdraw' : {
                     // Verify User
@@ -256,29 +237,6 @@ class ErrorManager {
                     // Verify if Admin has already an App
                     if(object.hasAppAlready){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_ALREADY_EXISTENT)); break; 
-                    }
-                    break;
-                };
-                case 'UpdateWallet': {
-                    // Verify User
-                    if(typeof object == 'undefined' || Object.is(object, null)){
-                        console.log("1", "APP_NOT_EXISTENT")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
-                    }
-                    // Verify Deposit was already inserted
-                    if(object.wasAlreadyAdded){
-                        console.log("2", "ALREADY_EXISTING_DEPOSIT_TRANSACTION")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION)); break; 
-                    }
-                    // Verify if Deposit is Valid
-                    if(!object.isValid){
-                        console.log("2", "DEPOSIT_TRANSACTION_NOT_VALID")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID)); break;   
-                    }
-                    // Verify if App is Mentioned
-                    if(!object.app || _.isEmpty(object.app)){
-                        console.log("2", "APP_NOT_EXISTENT")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
                     }
                     break;
                 };

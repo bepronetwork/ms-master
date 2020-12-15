@@ -7,6 +7,7 @@ class WalletSchema{};
 WalletSchema.prototype.name = 'Wallet';
 
 WalletSchema.prototype.schema = {
+    subWalletId                 : { type: String },
     playBalance                 : { type: Number, required : true, default : 0},
     currency                    : { type : mongoose.Schema.Types.ObjectId, ref: 'Currency', required : true },
     max_deposit                 : { type: Number, default: 1},
@@ -14,8 +15,6 @@ WalletSchema.prototype.schema = {
     min_withdraw                : { type: Number, default: 0.000001},
     affiliate_min_withdraw      : { type: Number, default: 0.000001},
     bank_address                : { type: String},
-    bank_address_not_webhook    : { type: String},
-    bitgo_id                    : { type: String},
     depositAddresses            : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Address'}],
     hashed_passphrase           : { type: String},
     link_url                    : { type: String, default : null},
@@ -38,9 +37,7 @@ WalletSchema.prototype.schema = {
     }],
     bonusAmount                  : { type : Number, default : 0, required : true},
     minBetAmountForBonusUnlocked : { type : Number, default : 0, required : true},
-    incrementBetAmountForBonus   : { type : Number, default : 0, required : true},
-    isPending                    : { type : Boolean, default: false},
-    bitgo_id_not_webhook         : { type : String}
+    incrementBetAmountForBonus   : { type : Number, default : 0, required : true}
 }
 
 WalletSchema.prototype.model = db.model(WalletSchema.prototype.name, new db.Schema(WalletSchema.prototype.schema));

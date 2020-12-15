@@ -44,7 +44,6 @@ const processActions = {
 			bonusAmount : (params.bonusAmount == undefined) ? 0 : params.bonusAmount,
 			minBetAmountForBonusUnlocked : (params.minBetAmountForBonusUnlocked == undefined) ? 0 : params.minBetAmountForBonusUnlocked,
             currency : params.currency,
-            bitgo_id : params.bitgo_id,
             price    : params.price ? params.price.map( p => { return {
                 amount : p.amount,
                 currency : p.currency
