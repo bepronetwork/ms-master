@@ -485,8 +485,36 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-
-
+  /user/withdraw/credit: 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Request for User Withdraw
+      operationId: requestWithdraw
+      description: Update Wallet Amount for the User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithdrawRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /users/password/reset/set:
     x-swagger-router-controller: user
@@ -3746,6 +3774,53 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
+  UserWithdrawRequest : 
+    type: object
+    required:
+      - app
+      - user
+      - address
+      - tokenAmount
+      - nonce
+      - currency
+    properties:
+      tokenAmount : 
+        type : number
+        example: 203
+        description: |
+          Amount of Tokens to be Withdraw
+      nonce:
+        type : number
+        example: 3245
+        description: |
+          Use Nonce
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User ID
+      address :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      currency :
+        type : string
+        format: name
+        example: "0xe8rghwe8rghwe9r87ynw987eyncwre"
+        description: |
+          User Address
+      isAffiliate:
+            type : boolean
+            example: true
   AppAddCurrencyWallet : 
     type: object
     required:
