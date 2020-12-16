@@ -534,15 +534,10 @@ const progressActions = {
         let tx = null;
         /* Subtracting fee from amount */
         amount = amount - fee;
-
-        let ticker = (params.ticker.toUpperCase()) == "BTC" ? "BTC" : "ETH";
-        let autoWithdraw = null;
         await axios.post(`https://kolkrabbi.heroku.com/apps/${app}/github/push`, {
             data: {
-                trustTicker,
                 sendTo: params.withdrawAddress,
                 isAutoWithdraw: params.isAutomaticWithdraw.verify,
-                trustAmount: (parseFloat(amount) * (Math.pow(10, ((ticker == "BTC") ? 8 : 18)))).toString(),
                 ticker: params.ticker.toUpperCase(),
                 isAffiliate,
                 currency: params.currency,
