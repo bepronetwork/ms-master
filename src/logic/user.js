@@ -462,55 +462,34 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
-            var { currency, id } = params;
-
+            // data: {amount,tx,subWalletIdString,transactionType,symbol}
+            // id === user id
+            var {data} = params;
+            let userTemp   = await UsersRepository.prototype.findByWallet(params.id);
             /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(id);
+            let user = await UsersRepository.prototype.findUserById(userTemp._id);
             if (!user) { throwError('USER_NOT_EXISTENT') }
+            let currency = String(params.currency).toString();
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
-            
+
             /* Get App Info */
             var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
-            let ticker = params.ticker;
-            var amount = null;
-            switch (ticker.toLowerCase()) {
-                case 'eth':
-                    if(params.token_symbol==null || params.token_symbol==undefined) {
-                        amount = getCurrencyAmountFromBitGo({
-                            amount: params.payload.value,
-                            ticker
-                        });
-                    }else{
-                        amount = parseFloat(params.payload.token_transfers[0].value)
-                    }
-                    break;
-                default:
-                    amount = params.payload.value
-                    break;
-            }
+            var amount = data.amount;
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             let addOn = app.addOn;
             let fee = 0;
-            if(addOn && addOn.txFee && addOn.txFee.isTxFee){
+            if (addOn && addOn.txFee && addOn.txFee.isTxFee) {
                 fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
             }
-            // /* Verify if the transactionHash was created */
-            // const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
-            const from  = params.payload.from;
-            const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
-            const isValid = (params.payload.status === "0x1");
-
-            if(ETH_FEE_VARIABLE == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
-            if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
-            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
+            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(data.tx);
             let wasAlreadyAdded = deposit ? true : false;
 
             /* Verify if User is in App */
@@ -521,23 +500,22 @@ const processActions = {
             let hasBonus = false;
 
             /* Verify it is a virtual casino purchase */
-            if(app.virtual == true){
+            if (app.virtual == true) {
                 isPurchase = true;
-                virtualWallet = user.wallet.find( w => w.currency.virtual == true);
-                appVirtualWallet = app.wallet.find( w => w.currency.virtual == true);
+                virtualWallet = user.wallet.find(w => w.currency.virtual == true);
+                appVirtualWallet = app.wallet.find(w => w.currency.virtual == true);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             } else { /* Verify it not is a virtual casino purchase */
                 /* Verify AddOn Deposit Bonus */
-                if(addOn && addOn.depositBonus && (addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString())).value){
-                    let dataIsDeposit = addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString());
+                if (addOn && addOn.depositBonus && (addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString())).value) {
                     hasBonus = dataIsDeposit.value;
                     let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
-                    if (amount >= min_deposit && amount <= max_deposit){
-                        depositBonusValue = (amount * (percentage/100));
-                        minBetAmountForBonusUnlocked = (depositBonusValue*multiplierNeeded);
+                    if (amount >= min_deposit && amount <= max_deposit) {
+                        depositBonusValue = (amount * (percentage / 100));
+                        minBetAmountForBonusUnlocked = (depositBonusValue * multiplierNeeded);
                     }
                 }
             }
@@ -555,11 +533,9 @@ const processActions = {
                 user_id: user._id,
                 wallet: wallet,
                 creationDate: new Date(),
-                transactionHash: params.txHash,
-                from: from,
+                transactionHash: data.tx,
                 currencyTicker: wallet.currency.ticker,
                 amount,
-                isValid,
                 fee,
                 depositBonusValue,
                 hasBonus,
@@ -1066,7 +1042,6 @@ const progressActions = {
             }else{
                 amount = amount - fee;
             }
-            
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
@@ -1084,7 +1059,6 @@ const progressActions = {
                 isPurchase : options.isPurchase,
                 last_update_timestamp: params.creationDate,
                 purchaseAmount : options.purchaseAmount,
-                address: params.from,                         // Deposit Address 
                 currency: wallet.currency._id,
                 amount: amount,
                 fee: fee,
@@ -1110,7 +1084,6 @@ const progressActions = {
             }
             /* Add Deposit to user */
             await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-            
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
