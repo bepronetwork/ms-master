@@ -109,9 +109,6 @@ class ErrorManager {
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded)
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION));
-                    // Verify if Deposit is Valid
-                    if(!object.isValid)
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID));
                     break;
                 };
 

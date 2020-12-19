@@ -308,7 +308,7 @@ async function webhookDeposit(req, res) {
     try {
         SecuritySingleton.verifyServeToServe(req);
         let user = new User(req.body);
-        let res = await user.updateWallet();
+        let data = await user.updateWallet();
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
         MiddlewareSingleton.respondError(res, err, req);

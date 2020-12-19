@@ -465,9 +465,9 @@ const processActions = {
             // data: {amount,tx,subWalletIdString,transactionType,symbol}
             // id === user id
             var {data} = params;
-            let userTemp   = await UsersRepository.prototype.findByWallet(params.id);
+            console.log(params);
             /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(userTemp._id);
+            let user = await UsersRepository.prototype.findUserById(params.id);
             if (!user) { throwError('USER_NOT_EXISTENT') }
             let currency = String(params.currency).toString();
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
@@ -489,8 +489,8 @@ const processActions = {
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
 
             /* Verify if this transactionHashs was already added */
-            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(data.tx);
-            let wasAlreadyAdded = deposit ? true : false;
+            // let deposit = await DepositRepository.prototype.getDepositByTransactionHash(data.tx);
+            let wasAlreadyAdded = false;
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x.toString() == user._id.toString())) > -1);
@@ -1051,23 +1051,23 @@ const progressActions = {
                 isPurchase : isPurchase,
             }
 
-            /* Create Deposit Object */
-            let deposit = new Deposit({
-                user: params.user_id,
-                transactionHash: params.transactionHash,
-                creation_timestamp: params.creationDate,
-                isPurchase : options.isPurchase,
-                last_update_timestamp: params.creationDate,
-                purchaseAmount : options.purchaseAmount,
-                currency: wallet.currency._id,
-                amount: amount,
-                fee: fee,
-                hasBonus: hasBonus,
-                bonusAmount: depositBonusValue
-            })
+            // /* Create Deposit Object */
+            // let deposit = new Deposit({
+            //     user: params.user_id,
+            //     transactionHash: params.transactionHash,
+            //     creation_timestamp: params.creationDate,
+            //     isPurchase : options.isPurchase,
+            //     last_update_timestamp: params.creationDate,
+            //     purchaseAmount : options.purchaseAmount,
+            //     currency: wallet.currency._id,
+            //     amount: amount,
+            //     fee: fee,
+            //     hasBonus: hasBonus,
+            //     bonusAmount: depositBonusValue
+            // })
 
-            /* Save Deposit Data */
-            let depositSaveObject = await deposit.createDeposit();
+            // /* Save Deposit Data */
+            // let depositSaveObject = await deposit.createDeposit();
 
             if(isPurchase){
                 /* User Purchase - Virtual */
@@ -1082,8 +1082,6 @@ const progressActions = {
                 await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
                 message = `Deposited ${amount} ${wallet.currency.ticker} in your account`
             }
-            /* Add Deposit to user */
-            await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
