@@ -535,12 +535,12 @@ const progressActions = {
         let tx = null;
         /* Subtracting fee from amount */
         amount = amount - fee;
-        body = {
+        const body = {
             sendTo: params.withdrawAddress,
             isAutoWithdraw: params.isAutomaticWithdraw.verify,
             ticker: params.ticker.toUpperCase(),
             isAffiliate,
-            app: params.app,
+            app: params.app._id,
             user: params.user._id,
             amount: amount,
             nonce: params.nonce,
@@ -549,13 +549,19 @@ const progressActions = {
         }
         const hmac = crypto.createHmac("SHA256", PRIVATE_KEY);
         const hash = hmac.update(JSON.stringify(body)).digest("hex");
-        const requestWithdraw = await axios.post(`${MS_WITHDRAW_URL}/api/user/payment/withdraw`, body, {
-            headers : {
-                "x-sha2-signature": hash,
-                "content-type": "application/json",
-            }
-        }).data;
-        
+        var data = JSON.stringify(body);
+        var config = {
+        method: 'post',
+        url: `${MS_WITHDRAW_URL}/api/user/payment/withdraw`,
+        headers: {
+            'x-sha2-signature': hash,
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+
+        let requestWithdraw = (await axios(config)).data;
+        console.log("requestWithdraw:: ", requestWithdraw)
         if(requestWithdraw.status != 200){
             return throwError('WITHDRAW_ERROR');
         }

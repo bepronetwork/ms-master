@@ -280,6 +280,7 @@ async function requestWithdraw (req, res) {
         let data = await user.requestWithdraw();
         MiddlewareSingleton.respond(res, req, data);
 	}catch(err){
+        console.log("Err:: ",err)
         MiddlewareSingleton.respondError(res, err);
 	}
 }
