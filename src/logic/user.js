@@ -1097,7 +1097,19 @@ const progressActions = {
             };
 
             mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
-            return params;
+            return {
+                    user: params.user_id,
+                    transactionHash: params.transactionHash,
+                    creation_timestamp: params.creationDate,
+                    isPurchase : options.isPurchase,
+                    last_update_timestamp: params.creationDate,
+                    purchaseAmount : options.purchaseAmount,
+                    currency: wallet.currency._id,
+                    amount: amount,
+                    fee: fee,
+                    hasBonus: hasBonus,
+                    bonusAmount: depositBonusValue
+            };
         } catch (err) {
             throw err;
         }
