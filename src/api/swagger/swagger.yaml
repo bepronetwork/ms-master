@@ -515,7 +515,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
+  /user/withdraw/canceled: 
+    x-swagger-router-controller: user
+    post:
+      tags:
+      - user
+      summary: Update Balance User Withdraw Canceled
+      operationId: canceledWithdraw
+      description: Return Funds To User When Withdraw Canceled
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User Information
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithdrawCanceled'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users/password/reset/set:
     x-swagger-router-controller: user
     post:
@@ -3821,6 +3850,36 @@ definitions:
       isAffiliate:
             type : boolean
             example: true
+  UserWithdrawCanceled : 
+    type: object
+    required:
+      - app
+      - user
+      - amount
+      - fee
+    properties:
+      amount : 
+        type : number
+        example: 203
+        description: |
+          Amount to be refunded
+      fee : 
+        type : number
+        example: 203
+        description: |
+          Fee amount to be withdrawn from the APP
+      app :
+        type : string
+        format : name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          App ID
+      user :
+        type : string
+        format: name
+        example : "5cuedgq7e6t334t34" 
+        description: |
+          User ID
   AppAddCurrencyWallet : 
     type: object
     required:

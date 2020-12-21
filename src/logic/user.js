@@ -28,8 +28,10 @@ import { GenerateLink } from '../helpers/generateLink';
 import {getBalancePerCurrency, getMultiplierBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import ConverterSingleton from './utils/converter';
+import { MS_WITHDRAW_URL, PRIVATE_KEY } from '../config';
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 const axios = require('axios');
+import * as crypto from "crypto";
 
 let error = new ErrorManager();
 
@@ -56,8 +58,7 @@ const processActions = {
     __requestWithdraw: async (params) => {
         var user, isAutomaticWithdraw, addOnObject, isAutomaticWithdrawObject;
         try {
-            const { currency, address, tokenAmount } = params;
-            let isAffiliate = false
+            let { currency, address, tokenAmount, isAffiliate } = params;
             if (tokenAmount <= 0) { throwError('INVALID_AMOUNT') }
             /* Get User and App */
             user = await UsersRepository.prototype.findUserById(params.user);
@@ -534,71 +535,30 @@ const progressActions = {
         let tx = null;
         /* Subtracting fee from amount */
         amount = amount - fee;
-        await axios.post(`https://kolkrabbi.heroku.com/apps/${app}/github/push`, {
-            data: {
-                sendTo: params.withdrawAddress,
-                isAutoWithdraw: params.isAutomaticWithdraw.verify,
-                ticker: params.ticker.toUpperCase(),
-                isAffiliate,
-                currency: params.currency,
-                app: params.app,
-                user: params.user._id,
-                amount: amount,
-                nonce: params.nonce,
-                withdrawNotification: params.withdrawNotification,
-                fee: fee,
-            },
-            hash: `Bearer ${HEROKU_API_BEARER_TOKEN}`
-        }, {
+        body = {
+            sendTo: params.withdrawAddress,
+            isAutoWithdraw: params.isAutomaticWithdraw.verify,
+            ticker: params.ticker.toUpperCase(),
+            isAffiliate,
+            app: params.app,
+            user: params.user._id,
+            amount: amount,
+            nonce: params.nonce,
+            withdrawNotification: params.withdrawNotification,
+            fee: fee,
+        }
+        const hmac = crypto.createHmac("SHA256", PRIVATE_KEY);
+        const hash = hmac.update(JSON.stringify(body)).digest("hex");
+        const requestWithdraw = await axios.post(`${MS_WITHDRAW_URL}/api/user/payment/withdraw`, body, {
             headers : {
-                "accept": "application/vnd.heroku+json; version=3",
-                "accept-encoding": "gzip, deflate, br",
-                "content-type": "application/json; charset=UTF-8",
-                "authorization" : `Bearer ${HEROKU_API_BEARER_TOKEN}`
+                "x-sha2-signature": hash,
+                "content-type": "application/json",
             }
-        });
-        // if (params.isAutomaticWithdraw.verify) {
-        //     transaction = await TrustologySingleton.method(ticker).autoSendTransaction(
-        //         params.withdrawAddress,
-        //         (parseFloat(amount) * (Math.pow(10, ((ticker == "BTC") ? 8 : 18)))).toString(),
-        //         ((ticker == "BTC") ? null : params.ticker.toUpperCase()),
-        //     );
-        //     tx = (await TrustologySingleton.method(ticker).getTransaction(transaction)).data.getRequest.transactionHash;
-        //     autoWithdraw = true;
-        // } else {
-        //     transaction = await TrustologySingleton.method(ticker).sendTransaction(
-        //         ((ticker == "BTC") ? params.app_wallet.subWalletId : params.appAddress),
-        //         params.withdrawAddress,
-        //         (parseFloat(amount) * (Math.pow(10, ((ticker == "BTC") ? 8 : 18)))).toString(),
-        //         ((ticker == "BTC") ? null : params.ticker.toUpperCase()),
-        //     );
-        //     autoWithdraw = false;
-        // }
-        // let link_url = setLinkUrl({ ticker: params.currency.ticker, address: tx, isTransactionHash: true })
-        // /* Add Withdraw to user */
-        // var withdraw = new Withdraw({
-        //     app: params.app,
-        //     user: params.user._id,
-        //     creation_timestamp: new Date(),
-        //     address: params.withdrawAddress, // Deposit Address
-        //     currency: params.currency,
-        //     amount: amount,
-        //     nonce: params.nonce,
-        //     withdrawNotification: params.withdrawNotification,
-        //     fee: fee,
-        //     isAffiliate,
-        //     done: true,
-        //     request_id: transaction,
-        //     transactionHash: tx,
-        //     confirmed: true,
-        //     last_update_timestamp: new Date(),
-        //     link_url: link_url,
-        //     status: tx ? 'Processed' : 'Queue',
-        // })
-
-        // /* Save Deposit Data */
-        // var withdrawSaveObject = await withdraw.createWithdraw();
-
+        }).data;
+        
+        if(requestWithdraw.status != 200){
+            return throwError('WITHDRAW_ERROR');
+        }
         /* Update User Wallet in the Platform */
         await WalletsRepository.prototype.updatePlayBalance(params.userWallet._id, playBalanceDelta);
 
@@ -606,7 +566,7 @@ const progressActions = {
         await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
 
         /* Add Deposit to user */
-        await UsersRepository.prototype.addWithdraw(params.user._id, withdrawSaveObject._id);
+        await UsersRepository.prototype.addWithdraw(params.user._id, requestWithdraw.message.withdraw_id);
 
         /* Send Email */
         let mail = new Mailer();
@@ -615,9 +575,9 @@ const progressActions = {
         };
         mail.sendEmail({ app_id: params.app.id, user: params.user, action: 'USER_NOTIFICATION', attributes });
         return{
-            withdraw_id: withdrawSaveObject._id,
-            tx: tx,
-            autoWithdraw
+            withdraw_id: requestWithdraw.message.withdraw_id,
+            tx: requestWithdraw.message.tx,
+            autoWithdraw: requestWithdraw.message.autoWithdraw
         };
     },
     __providerToken: async (params) => {
