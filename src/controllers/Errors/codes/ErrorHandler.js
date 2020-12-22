@@ -105,7 +105,8 @@ ErrorHandler.prototype.KEYS =  {
     'MIN_WITHDRAW'                          : "088",
     'WITHDRAW_FEE'                          : "089",
     'HAS_BONUS_YET'                         : "090",
-    'KYC_NEEDED'                            : "091"
+    'KYC_NEEDED'                            : "091",
+    'WITHDRAW_ERROR'                        : "092"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {

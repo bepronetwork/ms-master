@@ -4,6 +4,8 @@ import { throwError } from "../../controllers/Errors/ErrorManager";
 import ConverterSingleton from "../../logic/utils/converter";
 const geoip = require("geoip-lite");
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../../config/restrictedCountries.config.json"));
+import * as crypto from "crypto";
+import { PRIVATE_KEY } from "../../config";
 
 class Security{
 
@@ -35,6 +37,30 @@ class Security{
             return geo.country;
         }catch(err){
             return 'LH';
+        }
+    }
+
+    checkServeToServe = (request, key) => {
+        try {
+            const hmac = crypto.createHmac("SHA256", key);
+            const computedHashSignature = hmac.update(JSON.stringify(request.body)).digest("hex");
+            const expectedHashSignature = request.headers["x-sha2-signature"];
+            if (computedHashSignature !== expectedHashSignature) {
+                throw new Error("Webhook hash signature mismatch");
+            }
+        } catch(err) {
+            throw err;
+        }
+    }
+
+    verifyServeToServe = (req) => {
+        try {
+            this.checkServeToServe(req, PRIVATE_KEY);
+        } catch(err) {
+            throw {
+                code : 304,
+                messsage : 'Forbidden Access'
+            }
         }
     }
 

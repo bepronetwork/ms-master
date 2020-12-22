@@ -1,15 +1,10 @@
 import { AppLogic } from '../logic';
 import ModelComponent from './modelComponent';
 import { AppRepository, UsersRepository } from '../db/repos';
-import Wallet from './wallet';
 import { AffiliateSetup, Integrations, Customization, Typography, AddOn, Analytics } from '.';
 import {
-    MapperAddCurrencyWalletSingleton,
     MapperAddGameSingleton,
-    MapperEditBannersSingleton,
-    MapperEditSubSectionsSingleton,
     MapperEditColorsSingleton,
-    MapperEditFooterSingleton,
     MapperEditGameBackgroundImageSingleton,
     MapperEditGameEdgeSingleton,
     MapperEditGameImageSingleton,
@@ -17,7 +12,6 @@ import {
     MapperEditLoadingGifSingleton,
     MapperEditLogoSingleton,
     MapperEditMailSenderIntegrationSingleton,
-    MapperEditTopBarSingleton,
     MapperEditTopIconSingleton,
     MapperEditTypographySingleton,
     MapperGetSingleton,
@@ -25,7 +19,6 @@ import {
     MapperGetGamesSingleton,
     MapperGetUsersSingleton,
     MapperRegisterSingleton,
-    MapperUpdateWalletSingleton,
     MapperaddAddonAutoWithdrawSingleton,
     MappereditAddonAutoWithdrawSingleton,
     MapperAppGetBetsSingleton,
@@ -44,7 +37,7 @@ import {
     MapperEditBackgroundSingleton,
     MapperSummaryOneGamesSingleton
 } from '../controllers/Mapper';
-import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton, RequestWithdrawAppSingleton, GetUsersWithdrawsSingleton } from '../controllers/Mapper/App';
+import { MapperaddAddonTxFeeSingleton, MapperEditAddonTxFeeSingleton, MapperEditAddonDepositBonusSingleton, MapperAddAddonDepositBonusSingleton, MapperAppGetBetsEsportsSingleton, MapperAppGetBetInfoEsportsSingleton, GetUsersWithdrawsSingleton } from '../controllers/Mapper/App';
 import { MapperGenerateAddressSingleton } from '../controllers/Mapper/App/MapperGenerateAddresses';
 
 class App extends ModelComponent {
@@ -92,25 +85,6 @@ class App extends ModelComponent {
             /* If app is virtual - add virtual currency*/
             return MapperRegisterSingleton.output('Register', app);
         } catch (err) {
-            throw err;
-        }
-    }
-
-    async requestWithdraw(){
-        const { app } = this.self.params;
-        try{
-            /* Close Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, true);
-            let res = await this.process('RequestWithdraw');
-            /* Open Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, false);
-            return RequestWithdrawAppSingleton.output('RequestWithdrawApp', res);
-        }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not withdrawing atm */
-                /* Open Mutex */
-                await AppRepository.prototype.changeWithdrawPosition(app, false);
-            }
             throw err;
         }
     }
@@ -648,19 +622,6 @@ class App extends ModelComponent {
         }
     }
 
-    /**
-    * @param {String} 
-    * @return {bool || Exception}  
-    */
-    async addCurrencyWallet() {
-        try {
-            let app = await this.process('AddCurrencyWallet');
-            return MapperAddCurrencyWalletSingleton.output('AddCurrencyWallet', app);
-        } catch (err) {
-            throw err;
-        }
-    }
-
     async updateBalanceApp() {
         try {
             let app = await this.process('UpdateBalanceApp');
@@ -687,33 +648,20 @@ class App extends ModelComponent {
     * @param {String} 
     * @return {bool || Exception}  
     */
-    async generateAddresses() {
-
-        const { app } = this.self.params;
-        try {
-            await AppRepository.prototype.changeWithdrawPosition(app, true);
-            let res = await this.process('GenerateAddresses');
-            AppRepository.prototype.changeWithdrawPosition(app, false);
-            return MapperGenerateAddressSingleton.output('GenerateAddresses', res);
-        } catch (err) {
-            if (parseInt(err.code) != 14) {
-                /* If not betting/withdrawing atm */
-                /* Open Mutex */
-                AppRepository.prototype.changeWithdrawPosition(app, false);
-            }
-            throw err;
-        }
-    }
-
-    /**
-    * @param {String} 
-    * @return {bool || Exception}  
-    */
 
     async getTransactions() {
         // No Output
         try {
             let app = await this.process('GetTransactions');
+            return app;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async addCurrencyWallet() {
+        try {
+            let app = await this.process('AddCurrencyWallet');
             return app;
         } catch (err) {
             throw err;
@@ -1258,22 +1206,6 @@ class App extends ModelComponent {
         try {
             let app = await this.process('GetUsers');
             return MapperGetUsersSingleton.output('GetUsers', app);
-        } catch (err) {
-            throw err;
-        }
-    }
-
-
-    /**
-    * @param {String} 
-    * @return {bool || Exception}  
-    */
-
-    async updateWallet() {
-        const { app } = this.self.params;
-        try {
-            let res = await this.process('UpdateWallet');
-            return MapperUpdateWalletSingleton.output('UpdateWallet', res);
         } catch (err) {
             throw err;
         }

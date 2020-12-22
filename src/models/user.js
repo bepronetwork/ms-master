@@ -37,46 +37,6 @@ class User extends ModelComponent {
         );
     }
 
-    async requesAffiliatetWithdraw(){
-        // Output = Null
-        const { user } = this.self.params;
-        try{
-            /* Close Mutex */
-            await UsersRepository.prototype.changeWithdrawPosition(user, true);
-            let res = await this.process('RequestAffiliateWithdraw');
-            /* Open Mutex */
-            await UsersRepository.prototype.changeWithdrawPosition(user, false);
-            return res;
-        }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not withdrawing atm */
-                /* Open Mutex */
-                await UsersRepository.prototype.changeWithdrawPosition(user, false);
-            }
-            throw err;
-        }
-    }
-
-    async cancelWithdraw(){
-        const { app } = this.self.params;
-        try{
-            /* Close Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, true);
-            // Output = Boolean
-            let res = await this.process('CancelWithdraw');
-            /* Open Mutex */
-            await AppRepository.prototype.changeWithdrawPosition(app, false);
-            return res;
-        }catch(err){
-            if(parseInt(err.code) != 14){
-                /* If not withdrawing atm */
-                /* Open Mutex */
-                await AppRepository.prototype.changeWithdrawPosition(app, false);
-            }
-            throw err;
-        }
-    }
-
     async providerToken() {
         try {
             return await this.process('ProviderToken');
@@ -205,6 +165,34 @@ class User extends ModelComponent {
         }
     }
 
+    async canceledWithdraw() {
+        try {
+            let res = await this.process('CanceledWithdraw');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getBets() {
+        try {
+            var res ="";
+            switch (this.self.params.tag) {
+                case "cassino":
+                    res = await this.process('GetBets');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+                case "esports":
+                    res = await this.process('GetBetsEsports');
+                    return MapperGetBetsEsportsSingleton.output('GetBetsEsports', res);
+                default:
+                    res = await this.process('GetBets');
+                    return MapperGetBetsSingleton.output('GetBets', res);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+    
     async getDepositAddress() {
         const { app } = this.self.params;
         /* Mutex In */
@@ -218,22 +206,21 @@ class User extends ModelComponent {
 
     async updateWallet() {
         // No Output
-        const { id } = this.self.params;
-        console.log("UserId:: ", id)
+        // const { id } = this.self.params;
         try {
-            await UsersRepository.prototype.changeDepositPosition(id, true);
+            // await UsersRepository.prototype.changeDepositPosition(id, true);
             let res = await this.process('UpdateWallet');
-            UsersRepository.prototype.changeDepositPosition(id, false);
+            // UsersRepository.prototype.changeDepositPosition(id, false);
             return res;
         } catch (err) {
-            console.log("Error Code: ",err.code)
-            if(parseInt(err.code) != 82){
-                console.log("NO ERROR MUTEX")
-                console.log(err.data)
-                /* If not depositing atm */
-                /* Open Mutex */
-                UsersRepository.prototype.changeDepositPosition(id, false);
-            }
+            // console.log("Error Code: ",err.code)
+            // if(parseInt(err.code) != 82){
+            //     console.log("NO ERROR MUTEX")
+            //     console.log(err.data)
+            //     /* If not depositing atm */
+            //     /* Open Mutex */
+            //     UsersRepository.prototype.changeDepositPosition(id, false);
+            // }
             throw err;
         }
     }
@@ -254,25 +241,6 @@ class User extends ModelComponent {
                 /* Open Mutex */
                 await UsersRepository.prototype.changeWithdrawPosition(user, false);
             }
-            throw err;
-        }
-    }
-
-    async getBets() {
-        try {
-            var res ="";
-            switch (this.self.params.tag) {
-                case "cassino":
-                    res = await this.process('GetBets');
-                    return MapperGetBetsSingleton.output('GetBets', res);
-                case "esports":
-                    res = await this.process('GetBetsEsports');
-                    return MapperGetBetsEsportsSingleton.output('GetBetsEsports', res);
-                default:
-                    res = await this.process('GetBets');
-                    return MapperGetBetsSingleton.output('GetBets', res);
-            }
-        } catch (err) {
             throw err;
         }
     }

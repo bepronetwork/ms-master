@@ -366,5 +366,9 @@
     "091" : {
         "key": "KYC_NEEDED",
         "message"   : "It is necessary to confirm your identity"
+    },
+    "092" : {
+        "key": "WITHDRAW_ERROR",
+        "message"   : "Error on withdrawal, please contact support or try again later!"
     }
 }

@@ -85,7 +85,8 @@ let outputs = {
                     "decimals": currency.decimals,
                     "name": currency.name,
                     "address": currency.address,
-                    "virtual": currency.virtual
+                    "virtual": currency.virtual,
+                    "erc20": (!currency.erc20 ? false : true)
                 })
             }) : object.currencies,
             "external_users": object.external_users ? object.external_users.length : 0,
