@@ -472,6 +472,121 @@ const processActions = {
         });
         return bets;
     },
+    __getDepositAddress: async (params) => {
+        var { currency, id, app } = params;
+        /* Get User Id */
+        let user = await UsersRepository.prototype.findUserById(id);
+        app = await AppRepository.prototype.findAppById(app, "simple");
+        if (!app) { throwError('APP_NOT_EXISTENT') }
+        if (!user) { throwError('USER_NOT_EXISTENT') }
+        if (!user.email_confirmed) { throwError('UNCONFIRMED_EMAIL') }
+        var app_wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        var user_wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+        var erc20 = false;
+        if(user_wallet.currency.erc20){
+            // Is ERC20 Token simulate use of eth wallet
+            user_wallet = user.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toLowerCase());
+            app_wallet  = app.wallet.find(w => new String(w.currency.ticker).toLowerCase() == new String('eth').toString());
+            erc20 = true
+        }
+
+        return {
+            app_wallet,
+            user,
+            app,
+            user_wallet,
+            erc20,
+            currency
+        };
+
+    },
+    __updateWallet: async (params) => {
+        try {
+            // data: {amount,tx,subWalletIdString,transactionType,symbol}
+            // id === user id
+            var {data} = params;
+            console.log(params);
+            /* Get User Info */
+            let user = await UsersRepository.prototype.findUserById(params.id);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            let currency = String(params.currency).toString();
+            const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+
+            /* Get App Info */
+            var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
+            if (!app) { throwError('APP_NOT_EXISTENT') }
+            var amount = data.amount;
+            const app_wallet = app.wallet.find(w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
+            currency = app_wallet.currency._id;
+            if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            let addOn = app.addOn;
+            let fee = 0;
+            if (addOn && addOn.txFee && addOn.txFee.isTxFee) {
+                fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+            }
+
+            var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
+
+            /* Verify if this transactionHashs was already added */
+            // let deposit = await DepositRepository.prototype.getDepositByTransactionHash(data.tx);
+            let wasAlreadyAdded = false;
+
+            /* Verify if User is in App */
+            let user_in_app = (app.users.findIndex(x => (x.toString() == user._id.toString())) > -1);
+
+            let depositBonusValue = 0;
+            let minBetAmountForBonusUnlocked = 0;
+            let hasBonus = false;
+
+            /* Verify it is a virtual casino purchase */
+            if (app.virtual == true) {
+                isPurchase = true;
+                virtualWallet = user.wallet.find(w => w.currency.virtual == true);
+                appVirtualWallet = app.wallet.find(w => w.currency.virtual == true);
+                if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            } else { /* Verify it not is a virtual casino purchase */
+                /* Verify AddOn Deposit Bonus */
+                if (addOn && addOn.depositBonus && (addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString())).value) {
+                    hasBonus = dataIsDeposit.value;
+                    let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+                    let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
+                    if (amount >= min_deposit && amount <= max_deposit) {
+                        depositBonusValue = (amount * (percentage / 100));
+                        minBetAmountForBonusUnlocked = (depositBonusValue * multiplierNeeded);
+                    }
+                }
+            }
+
+            let res = {
+                maxDeposit: (app_wallet.max_deposit == undefined) ? 1 : app_wallet.max_deposit,
+                app,
+                app_wallet,
+                user_in_app,
+                isPurchase,
+                virtualWallet,
+                appVirtualWallet,
+                user: user,
+                wasAlreadyAdded,
+                user_id: user._id,
+                wallet: wallet,
+                creationDate: new Date(),
+                transactionHash: data.tx,
+                currencyTicker: wallet.currency.ticker,
+                amount,
+                fee,
+                depositBonusValue,
+                hasBonus,
+                minBetAmountForBonusUnlocked
+            }
+
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    },
     __getBets: async (params) => {
         let bets = await UsersRepository.prototype.getBets({
             _id: params.user,
@@ -721,6 +836,223 @@ const progressActions = {
     },
     __userGetBets: async (params) => {
         return params;
+    },
+    __getDepositAddress: async (params) => {
+        const { app_wallet, user_wallet, user, app, erc20, currency } = params;
+        try {
+            let walletToAddress2 = await BitGoSingleton.getWallet({ ticker: app_wallet.currency.ticker, id: app_wallet.bitgo_id });
+            let bitgo_address2;
+            if(!app_wallet.bitgo_id_not_webhook) {
+                bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}-second_wallet`});
+                await WalletsRepository.prototype.updateBitgoIdNotWebhook(app_wallet._id, bitgo_address2.id);
+                throwError('WALLET_WAIT');
+            }
+            if(!app_wallet.bank_address_not_webhook) {
+                bitgo_address2 = await BitGoSingleton.generateDepositAddress({ wallet : walletToAddress2, label: `${app._id}-${app_wallet.currency.ticker}-second_wallet`, id: app_wallet.bitgo_id_not_webhook});
+                if(!bitgo_address2.address) throwError('WALLET_WAIT');
+                await WalletsRepository.prototype.updateAddress2(app_wallet._id, bitgo_address2.address)
+                throwError('WALLET_WAIT');
+            }
+
+            let addresses = user_wallet.depositAddresses;
+            let address = addresses.find( a => a.address);
+            if(!address){
+
+
+                // let bitgo_address = await BitGoSingleton.generateDepositAddress({ wallet, label: user._id, id: bitgo_id });
+                var crypto_address = null;
+                switch ((app_wallet.currency.ticker).toLowerCase()) {
+                    case 'btc': {
+                        crypto_address = await cryptoBtc.CryptoBtcSingleton.generateDepositAddress();
+                        /* Import address to HD Wallet */
+                        await cryptoBtc.CryptoBtcSingleton.importAddressAsWallet({
+                            walletName  : `${user._id}-${user_wallet.currency.ticker}`, 
+                            address     : crypto_address.payload.address,
+                            password    : Security.prototype.decryptData(app_wallet.hashed_passphrase),
+                            privateKey  : crypto_address.payload.privateKey
+                        });
+                        /* Record webhooks */
+                        await cryptoBtc.CryptoBtcSingleton.addAppDepositWebhook({
+                            address     : crypto_address.payload.address,
+                            app_id      : user._id,
+                            currency_id : user_wallet.currency._id,
+                            isApp       : false
+                        });
+                        /* Record Payment Forwarding webhooks */
+                        let resCreatePaymentForwarding = await cryptoBtc.CryptoBtcSingleton.createPaymentForwarding({
+                            from: crypto_address.payload.address,
+                            to: app_wallet.bank_address_not_webhook,
+                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                            wallet: `${user._id}-${user_wallet.currency.ticker}`,
+                            password: Security.prototype.decryptData(app_wallet.hashed_passphrase),
+                            confirmations: 3
+                        });
+                        if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                        break;
+                    };
+                    case 'eth': {
+                        crypto_address = await cryptoEth.CryptoEthSingleton.generateDepositAddress();
+                        /* Record webhooks */
+                        await cryptoEth.CryptoEthSingleton.addAppDepositWebhook({
+                            address     : crypto_address.payload.address,
+                            app_id      : user._id,
+                            currency_id : user_wallet.currency._id,
+                            isApp       : false
+                        });
+                        /* Record Payment Forwarding webhooks */
+                        let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwarding({
+                            from: crypto_address.payload.address,
+                            to: app_wallet.bank_address_not_webhook,
+                            callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${user_wallet.currency._id}&isApp=${false}`,
+                            wallet: crypto_address.payload.address,
+                            privateKey: crypto_address.payload.privateKey,
+                            confirmations: 3
+                        });
+                        if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+                        break;
+                    };
+                }
+
+                address = {
+                    address: crypto_address.payload.address,
+                    hashed_private_key: Security.prototype.encryptData(crypto_address.payload.privateKey),
+                    wif: !crypto_address.payload.wif ? '' : crypto_address.payload.wif
+                };
+                // Bitgo has created the address
+                let addressObject = (await (new Address({ currency: user_wallet.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
+                // Add Deposit Address to User Deposit Addresses
+                await WalletsRepository.prototype.addDepositAddress(user_wallet._id, addressObject._id);
+            }else if(erc20){
+                var walletUserErc20 = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+
+                if(!(walletUserErc20.depositAddresses.find( a => a.address))){
+
+                    let addressObject = (await (new Address({ currency: walletUserErc20.currency._id, user: user._id, address: address.address, wif_btc: address.wif, hashed_private_key : address.hashed_private_key})).register())._doc;
+
+                    /* Record ERC-20 webhooks */
+                    await cryptoEth.CryptoEthSingleton.addAppDepositERC20Webhook({
+                        address     : address.address,
+                        app_id      : user._id,
+                        currency_id : walletUserErc20.currency._id,
+                        isApp       : false
+                    });
+                    /* Record Payment Forwarding webhooks */
+                    let resCreatePaymentForwarding = await cryptoEth.CryptoEthSingleton.createPaymentForwardingToken({
+                        from: address.address,
+                        to: app_wallet.bank_address_not_webhook,
+                        callbackURL: `${MS_MASTER_URL}/api/user/paymentForwarding?id=${user._id}&currency=${walletUserErc20.currency._id}&isApp=${false}`,
+                        wallet: address.address,
+                        privateKey: Security.prototype.decryptData(address.hashed_private_key),
+                        confirmations: 3,
+                        token: walletUserErc20.currency.address
+                    });
+                    if(resCreatePaymentForwarding===false) {throwError('WALLET_WAIT');}
+
+                    await WalletsRepository.prototype.addDepositAddress(walletUserErc20._id, addressObject._id);
+                }
+            }
+
+            if (address.address) {
+                //Address Existent
+                return {
+                    address: address.address,
+                    currency: user_wallet.currency.ticker
+                }
+            } else {
+                // Not existent
+                return {
+                    message: 'Waiting for address initialization'
+                }
+            }
+        } catch(err) {
+            throw err;
+        }
+
+    },
+    __updateWallet: async (params) => {
+
+        try {
+            let { virtualWallet, appVirtualWallet, isPurchase, wallet, amount, fee, app_wallet, depositBonusValue, hasBonus, minBetAmountForBonusUnlocked } = params;
+            var message;
+
+            /* Condition to set value of deposit amount and fee */
+            if(amount <= fee){
+                fee = amount;
+                amount = 0;
+            }else{
+                amount = amount - fee;
+            }
+            const options = {
+                purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
+                    currency : wallet.currency,
+                    currencyAmount : amount,
+                    virtualWallet : appVirtualWallet
+                }) : amount,
+                isPurchase : isPurchase,
+            }
+
+            // /* Create Deposit Object */
+            // let deposit = new Deposit({
+            //     user: params.user_id,
+            //     transactionHash: params.transactionHash,
+            //     creation_timestamp: params.creationDate,
+            //     isPurchase : options.isPurchase,
+            //     last_update_timestamp: params.creationDate,
+            //     purchaseAmount : options.purchaseAmount,
+            //     currency: wallet.currency._id,
+            //     amount: amount,
+            //     fee: fee,
+            //     hasBonus: hasBonus,
+            //     bonusAmount: depositBonusValue
+            // })
+
+            // /* Save Deposit Data */
+            // let depositSaveObject = await deposit.createDeposit();
+
+            if(isPurchase){
+                /* User Purchase - Virtual */
+                await WalletsRepository.prototype.updatePlayBalance(virtualWallet, options.purchaseAmount);
+                message = `Bought ${options.purchaseAmount} ${virtualWallet.currency.ticker} in your account with ${amount} ${wallet.currency.ticker}`
+            }else{
+                /* Add bonus amount */
+                await WalletsRepository.prototype.updatePlayBalanceBonus(wallet._id, depositBonusValue);
+                await WalletsRepository.prototype.updateMinBetAmountForBonusUnlocked(wallet._id, minBetAmountForBonusUnlocked);
+                /* User Deposit - Real */
+                await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
+                await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
+                message = `Deposited ${amount} ${wallet.currency.ticker} in your account`
+            }
+            /* Push Webhook Notification */
+            PusherSingleton.trigger({
+                channel_name: params.user_id,
+                isPrivate: true,
+                message,
+                eventType: 'DEPOSIT'
+            });
+
+            /* Send Email */
+            let mail = new Mailer();
+            let attributes = {
+                TEXT: mail.setTextNotification('DEPOSIT', amount, params.wallet.currency.ticker)
+            };
+
+            mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
+            return {
+                    user: params.user_id,
+                    transactionHash: params.transactionHash,
+                    creation_timestamp: params.creationDate,
+                    isPurchase : options.isPurchase,
+                    last_update_timestamp: params.creationDate,
+                    purchaseAmount : options.purchaseAmount,
+                    currency: wallet.currency._id,
+                    amount: amount,
+                    fee: fee,
+                    hasBonus: hasBonus,
+                    bonusAmount: depositBonusValue
+            };
+        } catch (err) {
+            throw err;
+        }
     },
     __getBets: async (params) => {
         return params;

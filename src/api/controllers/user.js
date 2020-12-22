@@ -257,6 +257,22 @@ async function pingPushNotifications(req, res) {
     }
 }
 
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+
+async function webhookDeposit(req, res) {
+    try {
+        SecuritySingleton.verifyServeToServe(req);
+        let user = new User(req.body);
+        let data = await user.updateWallet();
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
 
 async function getAddonFreeCurrency(req, res) {
     try {
@@ -305,5 +321,6 @@ export {
     userGetBets,
     getPotJackpot,
     providerToken,
-    getAddonFreeCurrency
+    getAddonFreeCurrency,
+    webhookDeposit
 }
