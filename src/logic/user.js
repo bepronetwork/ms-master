@@ -675,7 +675,7 @@ const progressActions = {
         data : data
         };
 
-        let requestWithdraw = (await axios(config)).data;
+        let requestWithdraw = (await axios(config)).data.data;
         console.log("requestWithdraw:: ", requestWithdraw)
         if(requestWithdraw.status != 200){
             return throwError('WITHDRAW_ERROR');
@@ -696,7 +696,7 @@ const progressActions = {
         };
         mail.sendEmail({ app_id: params.app.id, user: params.user, action: 'USER_NOTIFICATION', attributes });
         return{
-            withdraw_id: requestWithdraw.message.withdraw_id,
+            request_id: request_id.message.withdraw_id,
             tx: requestWithdraw.message.tx,
             autoWithdraw: requestWithdraw.message.autoWithdraw
         };
