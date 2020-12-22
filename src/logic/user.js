@@ -32,6 +32,7 @@ import { MS_WITHDRAW_URL, PRIVATE_KEY } from '../config';
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 const axios = require('axios');
 import * as crypto from "crypto";
+import PusherSingleton from './third-parties/pusher';
 
 let error = new ErrorManager();
 
@@ -1169,6 +1170,9 @@ class UserLogic extends LogicComponent {
                 case 'EditKycNeeded': {
                     return await library.process.__editKycNeeded(params); break;
                 }
+                case 'UpdateWallet': {
+                    return await library.process.__updateWallet(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -1245,6 +1249,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'EditKycNeeded': {
                     return await library.progress.__editKycNeeded(params); break;
+                };
+                case 'UpdateWallet': {
+                    return await library.progress.__updateWallet(params); break;
                 };
             }
         } catch (err) {
