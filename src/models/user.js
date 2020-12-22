@@ -165,6 +165,15 @@ class User extends ModelComponent {
         }
     }
 
+    async canceledWithdraw() {
+        try {
+            let res = await this.process('CanceledWithdraw');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async getBets() {
         try {
             var res ="";

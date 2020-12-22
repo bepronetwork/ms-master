@@ -188,6 +188,31 @@ const processActions = {
             throw err;
         }
     },
+    __canceledWithdraw: async (params) => {
+        try {
+            let { user, amount, fee, app, ticker } = params;
+            /* Get User and App */
+            user = await UsersRepository.prototype.findUserById(user);
+            app = await AppRepository.prototype.findAppById(app);
+            if (!app) { throwError('APP_NOT_EXISTENT') }
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            /* Get User or Affiliate Wallet */
+            const userWallet = !isAffiliate ? user.wallet.find(w => new String(w.currency.ticker).toUpperCase() == new String(ticker).toUpperCase()) : user.affiliate.wallet.find(w => new String(w.currency.ticker).toUpperCase() == new String(ticker).toUpperCase());
+            if (!userWallet || !userWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            /* Get App Wallet */
+            const appWallet = app.wallet.find(w => new String(w.currency.ticker).toUpperCase() == new String(ticker).toUpperCase());
+            if (!appWallet || !appWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            
+            return {
+                userWallet,
+                appWallet,
+                amount,
+                fee
+            };
+        } catch (err) {
+            throw err;
+        }
+    },
     __providerToken: async (params) => {
         let token    = MiddlewareSingleton.generateTokenByJson({user:params.user, ticker:params.ticker});
         let resToken = await ProviderTokenRepository.prototype.findByToken(token);
@@ -702,6 +727,18 @@ const progressActions = {
             autoWithdraw: requestWithdraw.message.autoWithdraw
         };
     },
+    __canceledWithdraw: async (params) => {
+        try {
+            let { userWallet, appWallet, amount, fee } = params;
+            
+            await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(amount));
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(parseFloat(fee)));
+            
+            return true;
+        } catch (err) {
+            throw err;
+        }
+    },
     __providerToken: async (params) => {
         let {tokenIsNotInDB, token} = params;
         if(tokenIsNotInDB){
@@ -1122,6 +1159,9 @@ class UserLogic extends LogicComponent {
                 case 'RequestWithdraw': {
                     return await library.process.__requestWithdraw(params);
                 };
+                case 'CanceledWithdraw': {
+                    return await library.process.__canceledWithdraw(params);
+                };
                 case 'Login': {
                     return await library.process.__login(params); break;
                 };
@@ -1201,6 +1241,9 @@ class UserLogic extends LogicComponent {
             switch (progressAction) {
                 case 'RequestWithdraw': {
                     return await library.progress.__requestWithdraw(params);
+                };
+                case 'CanceledWithdraw': {
+                    return await library.progress.__canceledWithdraw(params);
                 };
                 case 'Login': {
                     return await library.progress.__login(params);
