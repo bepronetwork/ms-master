@@ -292,10 +292,10 @@ class ErrorManager {
                     if(typeof object == 'undefined' || Object.is(object, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
                     }
-                    // Verify Bank_address
-                    if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null) && !object.currency.virtual){
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
-                    }
+                    // // Verify Bank_address
+                    // if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null) && !object.currency.virtual){
+                    //     libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
+                    // }
                     //Verify Currency exists 
                     if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;
