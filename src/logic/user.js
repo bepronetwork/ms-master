@@ -190,7 +190,7 @@ const processActions = {
     },
     __canceledWithdraw: async (params) => {
         try {
-            let { user, amount, fee, app, ticker } = params;
+            let { user, amount, fee, app, ticker, isAffiliate } = params;
             /* Get User and App */
             user = await UsersRepository.prototype.findUserById(user);
             app = await AppRepository.prototype.findAppById(app);
