@@ -722,7 +722,7 @@ const progressActions = {
         };
         mail.sendEmail({ app_id: params.app.id, user: params.user, action: 'USER_NOTIFICATION', attributes });
         return{
-            request_id: request_id.message.withdraw_id,
+            request_id: requestWithdraw.message.request_id,
             tx: requestWithdraw.message.tx,
             autoWithdraw: requestWithdraw.message.autoWithdraw
         };
