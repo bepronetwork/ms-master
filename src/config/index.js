@@ -93,6 +93,8 @@ export const CHAT_PRIVATE_KEY = process.env.CHAT_PRIVATE_KEY;
 
 export const CHAT_PUBLIC_KEY = process.env.CHAT_PUBLIC_KEY;
 
+export const WEBHOOK_WITHDRAW_URL = process.env.WEBHOOK_WITHDRAW_URL;
+
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
