@@ -28,7 +28,7 @@ import { GenerateLink } from '../helpers/generateLink';
 import {getBalancePerCurrency, getMultiplierBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
 import ConverterSingleton from './utils/converter';
-import { MS_WITHDRAW_URL, PRIVATE_KEY } from '../config';
+import { MS_WITHDRAW_URL, PRIVATE_KEY, WEBHOOK_WITHDRAW_URL } from '../config';
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
 const axios = require('axios');
 import * as crypto from "crypto";
@@ -693,7 +693,7 @@ const progressActions = {
         var data = JSON.stringify(body);
         var config = {
         method: 'post',
-        url: `${MS_WITHDRAW_URL}/api/user/payment/withdraw`,
+        url: WEBHOOK_WITHDRAW_URL,
         headers: {
             'x-sha2-signature': hash,
             'Content-Type': 'application/json'
