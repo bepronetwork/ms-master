@@ -15,8 +15,6 @@ let outputs = {
     userRegister: (object) => {
         return {
             ...bets_object(object),
-            "deposits": object.deposits ? object.deposits.map(deposit_id => { return ({_id: deposit_id }) } ) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => { return ({_id: withdraw_id }) } ) : object.withdraws,
             "isWithdrawing": object.isWithdrawing,
             "_id": object._id,
             "username": object.username,
