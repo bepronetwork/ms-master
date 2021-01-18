@@ -39,26 +39,6 @@ const get_object = (object) => {
         ...currencies_object(object),
         "external_users": object.external_users ? object.external_users.length : 0,
         ...wallet_object(object),
-        "deposits": object.deposits ? object.deposits.map(deposit => {
-            return ({
-                "_id": deposit._id,
-                "confirmations": deposit.confirmations,
-                "maxConfirmations": deposit.maxConfirmations,
-                "confirmed": deposit.confirmed,
-                "link_url": deposit.link_url,
-                "app": deposit.app,
-                "creation_timestamp": deposit.creation_timestamp,
-                "last_update_timestamp": deposit.last_update_timestamp,
-                "address": deposit.address,
-                "currency": deposit.currency,
-                "transactionHash": deposit.transactionHash,
-                "amount": deposit.amount,
-                "fee": deposit.fee,
-                "hasBonus": deposit.hasBonus,
-                "bonusAmount": deposit.bonusAmount
-            })
-        }) : object.deposits,
-        "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => withdraw_id) : object.withdraws,
         "typography": object.typography ? {
             "_id": object.typography._id,
             "name": object.typography.name,

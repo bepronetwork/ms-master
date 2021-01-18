@@ -17,16 +17,6 @@ let outputs = {
             return ({
                 "_id": object._id,
                 "bets": object.bets ? object.bets.map(bet => {return {"_id" : bet}}) : object.bets,
-                "deposits": object.deposits ? object.deposits.map(deposit_id => {
-                    return ({
-                        "_id": deposit_id
-                    })
-                }) : object.deposits,
-                "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => {
-                    return ({
-                        "_id": withdraw_id
-                    })
-                }) : object.withdraws,
                 ...wallet_object(object),
                 "kyc_needed":object.kyc_needed,
                 "kyc_status":object.kyc_status,

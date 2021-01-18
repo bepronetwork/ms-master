@@ -98,8 +98,6 @@ let outputs = {
                 ...u
             }}),
             "customization"         : object.customization,
-            "withdraws"             : object.withdraws,
-            "deposits"              : object.deposits,
             "platformAddress"       : object.platformAddress,
             "platformBlockchain"    : object.platformBlockchain,
             "platformTokenAddress"  : object.platformTokenAddress,
@@ -122,9 +120,7 @@ let outputs = {
             "email_confirmed"   : object.email_confirmed,
             "wallet"            : object.wallet,
             "affiliateWallet"   : object.affiliate.wallet,
-            "withdraws"         : object.withdraws,
             "bearerToken"       : object.bearerToken,
-            "deposits"          : object.deposits,
             "verifiedAccounts"  : object.verifiedAccount,
             "integrations"      : object.integrations,
             "affiliateId"       : object.affiliateLink._id,

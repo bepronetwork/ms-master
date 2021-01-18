@@ -34,8 +34,6 @@ let outputs = {
             } : object.currency,
             "user": {
                 "bets": object.user.bets,
-                "deposits": object.user.deposits ? object.user.deposits.map(deposit_id => { return ({ _id: deposit_id }) }) : object.user.deposits,
-                "withdraws": object.user.withdraws ? object.user.withdraws.map(withdraw_id => { return ({ _id: withdraw_id }) }) : object.user.withdraws,
                 "wallet": object.user.wallet ? object.user.wallet.map(wallet_id => { return ({ _id: wallet_id }) }) : object.user.wallet,
                 "isWithdrawing": object.user.isWithdrawing,
                 "email_confirmed": object.user.email_confirmed,

@@ -18,16 +18,6 @@ let outputs = {
         return ({
             "_id": object._id,
             "bets": object.bets ? object.bets.map(bet => { return { "_id": bet } }) : object.bets,
-            "deposits": object.deposits ? object.deposits.map(deposit_id => {
-                return ({
-                    "_id": deposit_id
-                })
-            }) : object.deposits,
-            "withdraws": object.withdraws ? object.withdraws.map(withdraw_id => {
-                return ({
-                    "_id": withdraw_id
-                })
-            }) : object.withdraws,
             ...wallet_object(object),
             "isWithdrawing": object.isWithdrawing,
             "email_confirmed": object.email_confirmed,
@@ -90,8 +80,6 @@ let outputs = {
                 "users": object.app_id.users,
                 "external_users": object.app_id.external_users.length,
                 "wallet": object.app_id.wallet,
-                "deposits": object.app_id.deposits,
-                "withdraws": object.app_id.withdraws,
                 "countriesAvailable": object.app_id.countriesAvailable,
                 "licensesId": object.app_id.licensesId,
                 "isWithdrawing": object.app_id.isWithdrawing,

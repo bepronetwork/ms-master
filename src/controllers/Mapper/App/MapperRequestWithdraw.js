@@ -64,44 +64,6 @@ let outputs = {
                 "isWithdrawing": object.app.isWithdrawing,
                 "licensesId": object.app.licensesId ? object.app.licensesId.map(license_id => license_id) : object.app.licensesId,
                 "countriesAvailable": object.app.countriesAvailable ? object.app.countriesAvailable.map(countrieAvailable_id => countrieAvailable_id) : object.app.countriesAvailable,
-                "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw => {
-                    return ({
-                        "_id": withdraw._id,
-                        "app": withdraw.app,
-                        "creation_timestamp": withdraw.creation_timestamp,
-                        "address": withdraw.address,
-                        "currency": withdraw.currency,
-                        "amount": withdraw.amount,
-                        "nonce": withdraw.nonce,
-                        "bitgo_id": withdraw.bitgo_id,
-                        "last_update_timestamp": withdraw.last_update_timestamp,
-                        "logId": withdraw.logId,
-                        "transactionHash": withdraw.transactionHash,
-                        "link_url": withdraw.link_url,
-                        "isAffiliate": withdraw.isAffiliate,
-                        "status": withdraw.status,
-                        "done": withdraw.done,
-                        "confirmed": withdraw.confirmed,
-                        "maxConfirmations": withdraw.maxConfirmations,
-                        "confirmations": withdraw.confirmations,
-                    })
-                }) : object.app.withdraws,
-                "deposits": object.app.deposits ? object.app.deposits.map(deposit => {
-                    return ({
-                        "_id": deposit._id,
-                        "link_url": deposit.link_url,
-                        "app": deposit.app,
-                        "creation_timestamp": deposit.creation_timestamp,
-                        "last_update_timestamp": deposit.last_update_timestamp,
-                        "address": deposit.address,
-                        "currency": deposit.currency,
-                        "transactionHash": deposit.transactionHash,
-                        "amount": deposit.amount,
-                        "confirmed": deposit.confirmed,
-                        "maxConfirmations": deposit.maxConfirmations,
-                        "confirmations": deposit.confirmations,
-                    })
-                }) : object.app.deposits,
                 "wallet": object.app.wallet ? object.app.wallet.map(wallet => {
                     return ({
                         "_id": wallet._id,
@@ -148,16 +110,6 @@ let outputs = {
                                 "_id": wallet_id
                             })
                         }) : user.wallet,
-                        "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
-                            return({
-                                "_id": withdraw_id
-                            })
-                        }) : user.withdraws,
-                        "deposits": user.deposits ? user.deposits.map(deposit_id => {
-                            return({
-                                "_id": deposit_id
-                            })
-                        }) : user.deposits,
                         "bets": user.bets ? user.bets.map(bet_id => {
                             return({
                                 "_id": bet_id
