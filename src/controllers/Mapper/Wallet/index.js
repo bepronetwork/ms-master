@@ -1,7 +1,14 @@
 import { MapperUpdateMaxDepositSingleton } from "./MapperUpdateMaxDeposit";
 import { MapperEditVirtualCurrencySingleton } from "./MapperEditVirtualCurrency";
+import { UpdateMaxWithdrawSingleton } from "./MapperUpdateMaxWithdraw";
+import { UpdateMinWithdrawSingleton } from "./MapperUpdateMinWithdraw";
+import { UpdateAffiliateMinWithdrawSingleton } from "./MapperUpdateAffiliateMinWithdraw";
+
 
 export { 
     MapperUpdateMaxDepositSingleton,
-    MapperEditVirtualCurrencySingleton
+    MapperEditVirtualCurrencySingleton,
+    UpdateMaxWithdrawSingleton,
+    UpdateMinWithdrawSingleton,
+    UpdateAffiliateMinWithdrawSingleton
 }

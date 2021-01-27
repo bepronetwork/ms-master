@@ -25,8 +25,6 @@ let outputs = {
             "users": !object.users ? [] : object.users.map(user_id => user_id),
             "external_users": !object.external_users ? 0 : object.external_users.length,
             "wallet": !object.wallet ? [] : object.wallet.map(wallet_id => wallet_id),
-            "deposits": !object.deposits ? [] : object.deposits.map(deposit_id => deposit_id),
-            "withdraws": !object.withdraws ? [] : object.withdraws.map(withdraw_id => withdraw_id),
             "typography": object.typography ? { name: object.typography.name, url: object.typography.url} : object.typography,
             "countriesAvailable": !object.countriesAvailable ? [] : object.countriesAvailable.map(country_available_id => country_available_id),
             "restrictedCountries": [...(!object.restrictedCountries ? [] : object.restrictedCountries), ...fixRestrictCountry],

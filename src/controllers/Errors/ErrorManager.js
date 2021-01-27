@@ -17,6 +17,35 @@ class ErrorManager {
     user = function (object, type){
         try{
             switch(type){
+                case 'RequestWithdraw' : {
+                    // Verify User
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                    // Verify if Withdraw Amount is Positive
+                    if(parseFloat(object.amount) <= 0)
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NEGATIVE_AMOUNT));
+                    // verify amount < max withdraw
+                    if(parseFloat(object.amount) > parseFloat(object.max_withdraw))
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.MAX_WITHDRAW));
+                    // verify if amount is less than min withdraw
+                    if(parseFloat(object.amount) < parseFloat(object.min_withdraw))
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.MIN_WITHDRAW));
+                    // Verify email is confirmed
+                    if(!object.emailConfirmed)
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.EMAIL_NOT_CONFIRMED));
+                    // Verify User is in App
+                    if(!object.user_in_app)
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
+                    // Verify if User does not have enough balance
+                    if(!object.hasEnoughBalance){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WITHDRAW_NOT_ENOUGH_BALANCE));
+                    }
+                    // Verify if Minimum Withdraw was passed
+                    /*if(parseFloat(object.amount) < MIN_WITHDRAW){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.MIN_WITHDRAW_NOT_PASSED));
+                    }      */
+                    break;
+                };
                 case 'Login' : {  
                     // Verify object (Syntax Error)
                     if(typeof object == 'undefined' || Object.is(object, null)){
@@ -109,9 +138,36 @@ class ErrorManager {
                     // Verify Deposit was already inserted
                     if(object.wasAlreadyAdded)
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION));
-                    // Verify if Deposit is Valid
-                    if(!object.isValid)
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID));
+                    break;
+                };
+
+                case 'RequestWithdraw' : {
+                    // Verify User
+                    if(typeof object == 'undefined' || Object.is(object, null))
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT));
+                    // Verify if Withdraw Amount is Positive
+                    if(parseFloat(object.amount) <= 0)
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NEGATIVE_AMOUNT));
+                    // verify amount < max withdraw
+                    if(parseFloat(object.amount) > parseFloat(object.max_withdraw))
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.MAX_WITHDRAW));
+                    // verify if amount is less than min withdraw
+                    if(parseFloat(object.amount) < parseFloat(object.min_withdraw))
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.MIN_WITHDRAW));
+                    // Verify email is confirmed
+                    if(!object.emailConfirmed)
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.EMAIL_NOT_CONFIRMED));
+                    // Verify User is in App
+                    if(!object.user_in_app)
+                        throw libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.USER_NOT_EXISTENT_IN_APP));
+                    // Verify if User does not have enough balance
+                    if(!object.hasEnoughBalance){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.WITHDRAW_NOT_ENOUGH_BALANCE));
+                    }
+                    // Verify if Minimum Withdraw was passed
+                    /*if(parseFloat(object.amount) < MIN_WITHDRAW){
+                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.MIN_WITHDRAW_NOT_PASSED));
+                    }      */
                     break;
                 };
 
@@ -229,29 +285,6 @@ class ErrorManager {
                     }
                     break;
                 };
-                case 'UpdateWallet': {
-                    // Verify User
-                    if(typeof object == 'undefined' || Object.is(object, null)){
-                        console.log("1", "APP_NOT_EXISTENT")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
-                    }
-                    // Verify Deposit was already inserted
-                    if(object.wasAlreadyAdded){
-                        console.log("2", "ALREADY_EXISTING_DEPOSIT_TRANSACTION")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.ALREADY_EXISTING_DEPOSIT_TRANSACTION)); break; 
-                    }
-                    // Verify if Deposit is Valid
-                    if(!object.isValid){
-                        console.log("2", "DEPOSIT_TRANSACTION_NOT_VALID")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.DEPOSIT_TRANSACTION_NOT_VALID)); break;   
-                    }
-                    // Verify if App is Mentioned
-                    if(!object.app || _.isEmpty(object.app)){
-                        console.log("2", "APP_NOT_EXISTENT")
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;   
-                    }
-                    break;
-                };
 
                 case 'AddCurrencyWallet' : {
                     // TO DO : Better Error Management
@@ -259,10 +292,10 @@ class ErrorManager {
                     if(typeof object == 'undefined' || Object.is(object, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.APP_NOT_EXISTENT)); break;
                     }
-                    // Verify Bank_address
-                    if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null) && !object.currency.virtual){
-                        libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
-                    }
+                    // // Verify Bank_address
+                    // if(typeof object.passphrase == 'undefined' || Object.is(object.passphrase, null) && !object.currency.virtual){
+                    //     libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.NO_PASSPHRASE_WALLET)); break;
+                    // }
                     //Verify Currency exists 
                     if(typeof object.currency == 'undefined' || Object.is(object.currency, null)){
                         libraries.throwError(libraries.handler.getError(libraries.handler.KEYS.UNKNOWN)); break;

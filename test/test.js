@@ -154,6 +154,7 @@ const runTests = async () => {
     mocha.addFile('./test/tests/ecosystem');
     mocha.addFile('./test/tests/admin');
     mocha.addFile('./test/tests/app');
+    mocha.addFile('./test/tests/withdraw');
     mocha.addFile('./test/tests/user');
     mocha.addFile('./test/tests/system_gets');
     mocha

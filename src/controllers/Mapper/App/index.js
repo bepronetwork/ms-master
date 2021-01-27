@@ -44,6 +44,8 @@ import { MapperAppGetBetInfoEsportsSingleton } from "./MapperGetBetInfoEsports";
 import { MapperSummaryOneGamesSingleton } from "./MapperGetGameStats";
 import { MapperGetUserInfoSingleton } from "./MapperGetUserInfo";
 import { MapperEditSubSectionsSingleton } from "./MapperEditSubSections";
+import { RequestWithdrawAppSingleton } from "./MapperRequestWithdraw";
+import { GetUsersWithdrawsSingleton } from "./MapperGetUsersWithdraws";
 
 export {
     MapperAppGetBetInfoEsportsSingleton,
@@ -91,5 +93,7 @@ export {
     MapperEditBackgroundSingleton,
     MapperSummaryOneGamesSingleton,
     MapperGetUserInfoSingleton,
-    MapperEditSubSectionsSingleton
+    MapperEditSubSectionsSingleton,
+    RequestWithdrawAppSingleton,
+    GetUsersWithdrawsSingleton
 }

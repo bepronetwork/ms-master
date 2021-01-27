@@ -73,16 +73,6 @@ const app_object = (object) => {
                             "_id": bet_id
                         })
                     }) : user.bets,
-                    "deposits": user.deposits ? user.deposits.map(deposit_id => {
-                        return ({
-                            "_id": deposit_id
-                        })
-                    }) : user.deposits,
-                    "withdraws": user.withdraws ? user.withdraws.map(withdraw_id => {
-                        return ({
-                            "_id": withdraw_id
-                        })
-                    }) : user.withdraws,
                     "wallet": user.wallet ? user.wallet.map(wallet_id => {
                         return ({
                             "_id": wallet_id
@@ -130,16 +120,6 @@ const app_object = (object) => {
                     "bank_address": wallet.bank_address
                 })
             }) : object.app.wallet,
-            "deposits": object.app.deposits ? object.app.deposits.map(deposit_id => {
-                return ({
-                    "_id": deposit_id
-                })
-            }) : object.app.deposits,
-            "withdraws": object.app.withdraws ? object.app.withdraws.map(withdraw_id => {
-                return ({
-                    "_id": withdraw_id
-                })
-            }) : object.app.withdraws,
             "typography": !object.app.typography ? object.app.typography : (object.app.typography.name && object.app.typography.url) == undefined ? object.app.typography._id : {
                 name: object.app.typography.name,
                 url: object.app.typography.url,

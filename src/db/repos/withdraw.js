@@ -1,6 +1,7 @@
 import MongoComponent from './MongoComponent';
 import { WithdrawSchema } from '../schemas/withdraw';
 import { pipeline_transactions_app } from './pipelines/transactions';
+import { userWithdrawsFiltered } from './pipelines/withdraws';
 
 /**
  * Accounts database interaction class.
@@ -29,6 +30,17 @@ class WithdrawRepository extends MongoComponent{
 
     setModel = (Withdraw) => {
         return WithdrawRepository.prototype.schema.model(Withdraw)
+    }
+
+    async getAppFiltered({size=20, offset=0, app, user, status}){
+        return new Promise( (resolve,reject) => {
+            WithdrawRepository.prototype.schema.model
+            .aggregate(userWithdrawsFiltered({size, offset, app, user, status}))
+            .exec( (err, docs) => {
+                if(err){reject(err)}
+                resolve(docs);
+            })
+        })
     }
     
     findWithdrawById(_id){ 
@@ -60,6 +72,25 @@ class WithdrawRepository extends MongoComponent{
         }catch(err){
             throw err;
         }
+    }
+
+    cancelWithdraw(id, params){
+        return new Promise( (resolve, reject) => {
+            WithdrawRepository.prototype.schema.model.findByIdAndUpdate(id,
+                { $set:
+                    {
+                        done                    : true,
+                        confirmed               : false,
+                        status                  : 'Canceled',
+                        last_update_timestamp   : params.last_update_timestamp,
+                        note                    : params.note
+                }},{ new: true }
+            )
+            .exec( (err, Withdraw) => {
+                if(err) { reject(err)}
+                resolve(Withdraw);
+            });
+        });
     }
 
     getWithdrawByTransactionHash(transactionHash){

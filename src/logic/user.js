@@ -12,26 +12,27 @@ import {
     AffiliateRepository,
     SecurityRepository,
     TokenRepository,
-    ProviderTokenRepository
+    ProviderTokenRepository,
+    WithdrawRepository,
+    CurrencyRepository,
+    AddOnRepository,
+    AutoWithdrawRepository
 } from '../db/repos';
 import { Deposit, AffiliateLink, Wallet, Address, Token, ProviderToken } from '../models';
 import MiddlewareSingleton from '../api/helpers/middleware';
 import { throwError } from '../controllers/Errors/ErrorManager';
 import { getIntegrationsInfo } from './utils/integrations';
 import { fromPeriodicityToDates } from './utils/date';
-import { BitGoSingleton } from './third-parties';
-import PusherSingleton from './third-parties/pusher';
 import Mailer from './services/mailer';
 import { GenerateLink } from '../helpers/generateLink';
-import { getVirtualAmountFromRealCurrency } from '../helpers/virtualWallet';
-
 import {getBalancePerCurrency, getMultiplierBalancePerCurrency} from './utils/getBalancePerCurrency';
 import { resetPassword } from '../api/controllers/user';
-import { IS_DEVELOPMENT, USER_KEY, MS_MASTER_URL, ETH_FEE_VARIABLE } from "../config";
-import { cryptoEth, cryptoBtc } from './third-parties/cryptoFactory';
-import { getCurrencyAmountFromBitGo } from "./third-parties/bitgo/helpers";
 import ConverterSingleton from './utils/converter';
+import { MS_WITHDRAW_URL, PRIVATE_KEY, WEBHOOK_WITHDRAW_URL } from '../config';
 const fixRestrictCountry = ConverterSingleton.convertCountry(require("../config/restrictedCountries.config.json"));
+const axios = require('axios');
+import * as crypto from "crypto";
+import PusherSingleton from './third-parties/pusher';
 
 let error = new ErrorManager();
 
@@ -55,8 +56,163 @@ let __private = {};
 
 
 const processActions = {
+    __requestWithdraw: async (params) => {
+        var user, isAutomaticWithdraw, addOnObject, isAutomaticWithdrawObject;
+        try {
+            let { currency, address, tokenAmount, isAffiliate } = params;
+            if (tokenAmount <= 0) { throwError('INVALID_AMOUNT') }
+            /* Get User and App */
+            user = await UsersRepository.prototype.findUserById(params.user);
+            var app = await AppRepository.prototype.findAppById(params.app);
+            if (!app) { throwError('APP_NOT_EXISTENT') }
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            /* Get User or Affiliate Wallet */
+            const userWallet = !isAffiliate ? user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString()) : user.affiliate.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if (!userWallet || !userWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            /* Get App Wallet */
+            const wallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
+            if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            const appAddress = wallet.bank_address;
+            const ticker = wallet.currency.ticker;
 
+            /* Just Make Request If haven't Bonus Amount on Wallet */
+            let bonusAmount = userWallet.bonusAmount
+            let whatsLeftBetAmountForBonus = userWallet.minBetAmountForBonusUnlocked - userWallet.incrementBetAmountForBonus
+            let currencyObject = await CurrencyRepository.prototype.findById(currency);
+            if (bonusAmount > 0) { throwError('HAS_BONUS_YET', `, ${whatsLeftBetAmountForBonus} ${currencyObject.ticker} left before there can be a withdrawal`) }
+            /* Get Amount of Withdraw */
+            let amount = parseFloat(Math.abs(tokenAmount));
+            /* Just Make Withdraw If KYC verified */
+            if (!app.integrations || !app.integrations.kyc || !app.integrations.kyc.isActive) {
+                throwError('KYC_NEEDED');
+            }
+            if (!app.virtual && user.kyc_needed) { throwError('KYC_NEEDED') }
 
+            /* Verifying AddOn and set Fee */
+            let addOn = app.addOn;
+            let fee = 0;
+            if (addOn && addOn.txFee && addOn.txFee.isTxFee) {
+                fee = addOn.txFee.withdraw_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
+            }
+
+            /* Verify if amount less than fee */
+            if (amount <= fee) { throwError('WITHDRAW_FEE') }
+
+            /* User Current Balance */
+            let currentBalance = parseFloat(userWallet.playBalance);
+
+            /* Verify if User has Enough Balance for Withdraw */
+            let hasEnoughBalance = (amount <= currentBalance);
+
+            /* Verify if User is in App */
+            let user_in_app = (app.users.findIndex(x => (x._id.toString() == user._id.toString())) > -1);
+
+            /* Verify If Exists AutoWithdraw */
+            if (app.addOn) {
+                addOnObject = await AddOnRepository.prototype.findById(app.addOn);
+                if (addOnObject.autoWithdraw) {
+                    isAutomaticWithdrawObject = await AutoWithdrawRepository.prototype.findById(addOnObject.autoWithdraw);
+                    isAutomaticWithdraw = isAutomaticWithdrawObject.isAutoWithdraw
+                    isAutomaticWithdraw = { verify: isAutomaticWithdraw, textError: isAutomaticWithdraw ? "success" : "Automatic withdrawal set to false" };
+                } else {
+                    isAutomaticWithdraw = { verify: false, textError: "AutoWithdraw as Undefined" };
+                }
+            } else {
+                isAutomaticWithdraw = { verify: false, textError: "AddOn as Undefined" };
+            }
+
+            /* Verify if Email is Confirmed */
+            if (isAutomaticWithdraw.verify) {
+                isAutomaticWithdraw = { verify: user.email_confirmed, textError: user.email_confirmed ? "success" : "Email Not Verified" };
+            }
+
+            /* Verify if Max Withdraw Amount Cumulative was reached */
+            if (isAutomaticWithdraw.verify) {
+                let withdrawPerCurrency = user.withdraws.filter(c => c.currency.toString() == params.currency.toString())
+                let withdrawAcumulative = withdrawPerCurrency.reduce(
+                    (acumulative, withdrawValue) => acumulative + withdrawValue.amount
+                    , 0
+                );
+                withdrawAcumulative = parseFloat(params.tokenAmount + withdrawAcumulative).toFixed(6);
+                let maxWithdrawAmountCumulativePerCurrency = isAutomaticWithdrawObject.maxWithdrawAmountCumulative.find(c => c.currency.toString() == params.currency.toString())
+                if (withdrawAcumulative <= maxWithdrawAmountCumulativePerCurrency.amount) {
+                    isAutomaticWithdraw = { verify: true, textError: "success" };
+                } else {
+                    isAutomaticWithdraw = { verify: false, textError: "Amount accumulated withdrawal greater than the maximum allowed" };
+                }
+            }
+
+            /* Verify if Max Withdraw Per Transaction was reached */
+            if (isAutomaticWithdraw.verify) {
+                let maxWithdrawAmountPerTransactionPerCurrency = isAutomaticWithdrawObject.maxWithdrawAmountPerTransaction.find(c => c.currency.toString() == params.currency.toString())
+                if (params.tokenAmount <= maxWithdrawAmountPerTransactionPerCurrency.amount) {
+                    isAutomaticWithdraw = { verify: true, textError: "success" };
+                } else {
+                    isAutomaticWithdraw = { verify: false, textError: "Amount withdrawal greater than the maximum allowed" };
+                }
+            }
+            /* Verify if Min Withdraw is Affiliate or not */
+            let min_withdraw = null;
+            if(isAffiliate){
+                min_withdraw = !wallet.affiliate_min_withdraw ? 0 : wallet.affiliate_min_withdraw;
+            } else {
+                min_withdraw = !wallet.min_withdraw ? 0 : wallet.min_withdraw;
+            } 
+
+            /* Verify if Withdraw position is already opened in the Smart-Contract */
+            var res = {
+                withdrawNotification: isAutomaticWithdraw.textError,
+                max_withdraw: (!wallet.max_withdraw) ? 0 : wallet.max_withdraw,
+                min_withdraw,
+                hasEnoughBalance,
+                user_in_app,
+                currency: userWallet.currency,
+                withdrawAddress: address,
+                userWallet: userWallet,
+                amount,
+                playBalanceDelta: parseFloat(-Math.abs(amount)),
+                user: user,
+                app: app,
+                nonce: params.nonce,
+                isAlreadyWithdrawingAPI: user.isWithdrawing,
+                emailConfirmed: (user.email_confirmed != undefined && user.email_confirmed === true),
+                isAutomaticWithdraw,
+                fee,
+                app_wallet: wallet,
+                isAffiliate,
+                appAddress,
+                ticker
+            }
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    },
+    __canceledWithdraw: async (params) => {
+        try {
+            let { user, amount, fee, app, ticker, isAffiliate } = params;
+            /* Get User and App */
+            user = await UsersRepository.prototype.findUserById(user);
+            app = await AppRepository.prototype.findAppById(app);
+            if (!app) { throwError('APP_NOT_EXISTENT') }
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            /* Get User or Affiliate Wallet */
+            const userWallet = !isAffiliate ? user.wallet.find(w => new String(w.currency.ticker).toUpperCase() == new String(ticker).toUpperCase()) : user.affiliate.wallet.find(w => new String(w.currency.ticker).toUpperCase() == new String(ticker).toUpperCase());
+            if (!userWallet || !userWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            /* Get App Wallet */
+            const appWallet = app.wallet.find(w => new String(w.currency.ticker).toUpperCase() == new String(ticker).toUpperCase());
+            if (!appWallet || !appWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
+            
+            return {
+                userWallet,
+                appWallet,
+                amount,
+                fee
+            };
+        } catch (err) {
+            throw err;
+        }
+    },
     __providerToken: async (params) => {
         let token    = MiddlewareSingleton.generateTokenByJson({user:params.user, ticker:params.ticker});
         let resToken = await ProviderTokenRepository.prototype.findByToken(token);
@@ -372,56 +528,35 @@ const processActions = {
     },
     __updateWallet: async (params) => {
         try {
-            var { currency, id } = params;
-
+            // data: {amount,tx,subWalletIdString,transactionType,symbol}
+            // id === user id
+            var {data} = params;
+            console.log(params);
             /* Get User Info */
-            let user = await UsersRepository.prototype.findUserById(id);
+            let user = await UsersRepository.prototype.findUserById(params.id);
             if (!user) { throwError('USER_NOT_EXISTENT') }
+            let currency = String(params.currency).toString();
             const wallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(currency).toString());
             if (!wallet || !wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
-            
+
             /* Get App Info */
             var app = await AppRepository.prototype.findAppById(user.app_id._id, "simple");
             if (!app) { throwError('APP_NOT_EXISTENT') }
-            let ticker = params.ticker;
-            var amount = null;
-            switch (ticker.toLowerCase()) {
-                case 'eth':
-                    if(params.token_symbol==null || params.token_symbol==undefined) {
-                        amount = getCurrencyAmountFromBitGo({
-                            amount: params.payload.value,
-                            ticker
-                        });
-                    }else{
-                        amount = parseFloat(params.payload.token_transfers[0].value)
-                    }
-                    break;
-                default:
-                    amount = params.payload.value
-                    break;
-            }
+            var amount = data.amount;
             const app_wallet = app.wallet.find(w => new String(w.currency._id).toLowerCase() == new String(currency).toLowerCase());
             currency = app_wallet.currency._id;
             if (!app_wallet || !app_wallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             let addOn = app.addOn;
             let fee = 0;
-            if(addOn && addOn.txFee && addOn.txFee.isTxFee){
+            if (addOn && addOn.txFee && addOn.txFee.isTxFee) {
                 fee = addOn.txFee.deposit_fee.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
             }
-            // /* Verify if the transactionHash was created */
-            // const { state, entries, value: amount, type, txid: transactionHash, wallet: bitgo_id, label } = wBT;
 
-            const from  = params.payload.from;
-            const to    = params.payload.to;
             var isPurchase = false, virtualWallet = null, appVirtualWallet = null;
-            const isValid = (params.payload.status === "0x1");
-
-            if(ETH_FEE_VARIABLE == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
-            if(wallet.depositAddresses.find(c => new String(c.currency).toString() == new String(currency).toString()).address == from){throwError('PAYMENT_FORWARDING_TRANSACTION')}
 
             /* Verify if this transactionHashs was already added */
-            let deposit = await DepositRepository.prototype.getDepositByTransactionHash(params.txHash);
-            let wasAlreadyAdded = deposit ? true : false;
+            // let deposit = await DepositRepository.prototype.getDepositByTransactionHash(data.tx);
+            let wasAlreadyAdded = false;
 
             /* Verify if User is in App */
             let user_in_app = (app.users.findIndex(x => (x.toString() == user._id.toString())) > -1);
@@ -431,23 +566,22 @@ const processActions = {
             let hasBonus = false;
 
             /* Verify it is a virtual casino purchase */
-            if(app.virtual == true){
+            if (app.virtual == true) {
                 isPurchase = true;
-                virtualWallet = user.wallet.find( w => w.currency.virtual == true);
-                appVirtualWallet = app.wallet.find( w => w.currency.virtual == true);
+                virtualWallet = user.wallet.find(w => w.currency.virtual == true);
+                appVirtualWallet = app.wallet.find(w => w.currency.virtual == true);
                 if (!virtualWallet || !virtualWallet.currency) { throwError('CURRENCY_NOT_EXISTENT') };
             } else { /* Verify it not is a virtual casino purchase */
                 /* Verify AddOn Deposit Bonus */
-                if(addOn && addOn.depositBonus && (addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString())).value){
-                    let dataIsDeposit = addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString());
+                if (addOn && addOn.depositBonus && (addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString())).value) {
                     hasBonus = dataIsDeposit.value;
                     let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let multiplierNeeded = addOn.depositBonus.multiplier.find(c => new String(c.currency).toString() == new String(currency).toString()).multiple;
-                    if (amount >= min_deposit && amount <= max_deposit){
-                        depositBonusValue = (amount * (percentage/100));
-                        minBetAmountForBonusUnlocked = (depositBonusValue*multiplierNeeded);
+                    if (amount >= min_deposit && amount <= max_deposit) {
+                        depositBonusValue = (amount * (percentage / 100));
+                        minBetAmountForBonusUnlocked = (depositBonusValue * multiplierNeeded);
                     }
                 }
             }
@@ -465,11 +599,9 @@ const processActions = {
                 user_id: user._id,
                 wallet: wallet,
                 creationDate: new Date(),
-                transactionHash: params.txHash,
-                from: from,
+                transactionHash: data.tx,
                 currencyTicker: wallet.currency.ticker,
                 amount,
-                isValid,
                 fee,
                 depositBonusValue,
                 hasBonus,
@@ -523,7 +655,7 @@ const processActions = {
         let admin = app.listAdmins.find(_id => _id == params.admin);
         if(admin==null || admin==undefined) { throwError('USER_NOT_EXISTENT')}
         return params;
-    }
+    },
 }
 
 
@@ -538,6 +670,75 @@ const processActions = {
 
 
 const progressActions = {
+    __requestWithdraw: async (params) => {
+        let { amount, app_wallet, fee, playBalanceDelta, isAffiliate } = params;
+        let transaction = null;
+        let tx = null;
+        /* Subtracting fee from amount */
+        amount = amount - fee;
+        const body = {
+            sendTo: params.withdrawAddress,
+            isAutoWithdraw: params.isAutomaticWithdraw.verify,
+            ticker: params.ticker.toUpperCase(),
+            isAffiliate,
+            app: params.app._id,
+            user: params.user._id,
+            amount: amount,
+            nonce: params.nonce,
+            withdrawNotification: params.withdrawNotification,
+            fee: fee,
+        }
+        const hmac = crypto.createHmac("SHA256", PRIVATE_KEY);
+        const hash = hmac.update(JSON.stringify(body)).digest("hex");
+        var data = JSON.stringify(body);
+        var config = {
+        method: 'post',
+        url: WEBHOOK_WITHDRAW_URL,
+        headers: {
+            'x-sha2-signature': hash,
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+
+        let requestWithdraw = (await axios(config)).data.data;
+        console.log("requestWithdraw:: ", requestWithdraw)
+        if(requestWithdraw.status != 200){
+            return throwError('WITHDRAW_ERROR');
+        }
+        /* Update User Wallet in the Platform */
+        await WalletsRepository.prototype.updatePlayBalance(params.userWallet._id, playBalanceDelta);
+
+        /* Update App Wallet in the Platform */
+        await WalletsRepository.prototype.updatePlayBalance(app_wallet._id, fee);
+
+        /* Add Deposit to user */
+        await UsersRepository.prototype.addWithdraw(params.user._id, requestWithdraw.message.withdraw_id);
+
+        /* Send Email */
+        let mail = new Mailer();
+        let attributes = {
+            TEXT: mail.setTextNotification('WITHDRAW', params.amount, params.currency.ticker)
+        };
+        mail.sendEmail({ app_id: params.app.id, user: params.user, action: 'USER_NOTIFICATION', attributes });
+        return{
+            request_id: requestWithdraw.message.request_id,
+            tx: requestWithdraw.message.tx,
+            autoWithdraw: requestWithdraw.message.autoWithdraw
+        };
+    },
+    __canceledWithdraw: async (params) => {
+        try {
+            let { userWallet, appWallet, amount, fee } = params;
+            
+            await WalletsRepository.prototype.updatePlayBalance(userWallet._id, parseFloat(amount));
+            await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(parseFloat(fee)));
+            
+            return true;
+        } catch (err) {
+            throw err;
+        }
+    },
     __providerToken: async (params) => {
         let {tokenIsNotInDB, token} = params;
         if(tokenIsNotInDB){
@@ -819,7 +1020,6 @@ const progressActions = {
             }else{
                 amount = amount - fee;
             }
-            
             const options = {
                 purchaseAmount : isPurchase ? getVirtualAmountFromRealCurrency({
                     currency : wallet.currency,
@@ -829,24 +1029,23 @@ const progressActions = {
                 isPurchase : isPurchase,
             }
 
-            /* Create Deposit Object */
-            let deposit = new Deposit({
-                user: params.user_id,
-                transactionHash: params.transactionHash,
-                creation_timestamp: params.creationDate,
-                isPurchase : options.isPurchase,
-                last_update_timestamp: params.creationDate,
-                purchaseAmount : options.purchaseAmount,
-                address: params.from,                         // Deposit Address 
-                currency: wallet.currency._id,
-                amount: amount,
-                fee: fee,
-                hasBonus: hasBonus,
-                bonusAmount: depositBonusValue
-            })
+            // /* Create Deposit Object */
+            // let deposit = new Deposit({
+            //     user: params.user_id,
+            //     transactionHash: params.transactionHash,
+            //     creation_timestamp: params.creationDate,
+            //     isPurchase : options.isPurchase,
+            //     last_update_timestamp: params.creationDate,
+            //     purchaseAmount : options.purchaseAmount,
+            //     currency: wallet.currency._id,
+            //     amount: amount,
+            //     fee: fee,
+            //     hasBonus: hasBonus,
+            //     bonusAmount: depositBonusValue
+            // })
 
-            /* Save Deposit Data */
-            let depositSaveObject = await deposit.createDeposit();
+            // /* Save Deposit Data */
+            // let depositSaveObject = await deposit.createDeposit();
 
             if(isPurchase){
                 /* User Purchase - Virtual */
@@ -861,9 +1060,6 @@ const progressActions = {
                 await WalletsRepository.prototype.updatePlayBalance(wallet._id, amount);
                 message = `Deposited ${amount} ${wallet.currency.ticker} in your account`
             }
-            /* Add Deposit to user */
-            await UsersRepository.prototype.addDeposit(params.user_id, depositSaveObject._id);
-            
             /* Push Webhook Notification */
             PusherSingleton.trigger({
                 channel_name: params.user_id,
@@ -879,7 +1075,19 @@ const progressActions = {
             };
 
             mail.sendEmail({app_id : params.app.id, user : params.user, action : 'USER_NOTIFICATION', attributes});
-            return params;
+            return {
+                    user: params.user_id,
+                    transactionHash: params.transactionHash,
+                    creation_timestamp: params.creationDate,
+                    isPurchase : options.isPurchase,
+                    last_update_timestamp: params.creationDate,
+                    purchaseAmount : options.purchaseAmount,
+                    currency: wallet.currency._id,
+                    amount: amount,
+                    fee: fee,
+                    hasBonus: hasBonus,
+                    bonusAmount: depositBonusValue
+            };
         } catch (err) {
             throw err;
         }
@@ -897,7 +1105,7 @@ const progressActions = {
         await UsersRepository.prototype.editKycNeeded(params.user, params.kyc_needed);
         await UsersRepository.prototype.editKycStatus(params.user, "no kyc");
         return true;
-    }
+    },
 }
 
 /**
@@ -948,6 +1156,12 @@ class UserLogic extends LogicComponent {
     async objectNormalize(params, processAction) {
         try {
             switch (processAction) {
+                case 'RequestWithdraw': {
+                    return await library.process.__requestWithdraw(params);
+                };
+                case 'CanceledWithdraw': {
+                    return await library.process.__canceledWithdraw(params);
+                };
                 case 'Login': {
                     return await library.process.__login(params); break;
                 };
@@ -968,12 +1182,6 @@ class UserLogic extends LogicComponent {
                 };
                 case 'UserGetBets': {
                     return await library.process.__userGetBets(params); break;
-                };
-                case 'GetDepositAddress': {
-                    return await library.process.__getDepositAddress(params);
-                };
-                case 'UpdateWallet': {
-                    return await library.process.__updateWallet(params);
                 };
                 case 'GetBets': {
                     return await library.process.__getBets(params); break;
@@ -1002,6 +1210,9 @@ class UserLogic extends LogicComponent {
                 case 'EditKycNeeded': {
                     return await library.process.__editKycNeeded(params); break;
                 }
+                case 'UpdateWallet': {
+                    return await library.process.__updateWallet(params); break;
+                }
             }
         } catch (err) {
             throw err;
@@ -1028,6 +1239,12 @@ class UserLogic extends LogicComponent {
     async progress(params, progressAction) {
         try {
             switch (progressAction) {
+                case 'RequestWithdraw': {
+                    return await library.progress.__requestWithdraw(params);
+                };
+                case 'CanceledWithdraw': {
+                    return await library.progress.__canceledWithdraw(params);
+                };
                 case 'Login': {
                     return await library.progress.__login(params);
                 };
@@ -1048,12 +1265,6 @@ class UserLogic extends LogicComponent {
                 };
                 case 'UserGetBets': {
                     return await library.progress.__userGetBets(params); break;
-                };
-                case 'GetDepositAddress': {
-                    return await library.progress.__getDepositAddress(params);
-                };
-                case 'UpdateWallet': {
-                    return await library.progress.__updateWallet(params);
                 };
                 case 'GetBets': {
                     return await library.progress.__getBets(params); break;
@@ -1081,6 +1292,9 @@ class UserLogic extends LogicComponent {
                 };
                 case 'EditKycNeeded': {
                     return await library.progress.__editKycNeeded(params); break;
+                };
+                case 'UpdateWallet': {
+                    return await library.progress.__updateWallet(params); break;
                 };
             }
         } catch (err) {

@@ -58,6 +58,17 @@ class WalletsRepository extends MongoComponent{
         });
     }
 
+    findById(_id) {
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findById(_id)
+            .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
     updateIsPending(_id, isPending) {
         return new Promise( (resolve, reject) => {
             WalletsRepository.prototype.schema.model.findByIdAndUpdate(_id,
@@ -130,6 +141,30 @@ class WalletsRepository extends MongoComponent{
                 max_deposit: amount
             })
             .lean()
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateMinWithdraw(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                min_withdraw: amount
+            })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
+        });
+    }
+
+    updateAffliateMinWithdraw(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                affiliate_min_withdraw: amount
+            })
             .exec( (err, wallet) => {
                 if(err) { reject(err)}
                 resolve(wallet);
@@ -283,6 +318,18 @@ class WalletsRepository extends MongoComponent{
                     resolve(true);
                 }
             )
+        });
+    }
+
+    updateMaxWithdraw(wallet_id, amount){
+        return new Promise( (resolve, reject) => {
+            WalletsRepository.prototype.schema.model.findByIdAndUpdate(wallet_id, {
+                max_withdraw: amount
+            })
+            .exec( (err, wallet) => {
+                if(err) { reject(err)}
+                resolve(wallet);
+            });
         });
     }
 

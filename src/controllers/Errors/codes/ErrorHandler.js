@@ -98,7 +98,15 @@ ErrorHandler.prototype.KEYS =  {
     'LANGUAGE_NOT_EXISTENT'                 : "081",
     'DEPOSIT_MODE_IN_API'                   : "082",
     'INSUFFICIENT_AGE'                      : "083",
-    'COUNTRY_RESTRICTED'                    : "084"
+    'COUNTRY_RESTRICTED'                    : "084",
+    'MIN_WITHDRAW_NOT_PASSED'               : "085",
+    'MAX_WITHDRAW'                          : "086",
+    'EMAIL_NOT_CONFIRMED'                   : "087",
+    'MIN_WITHDRAW'                          : "088",
+    'WITHDRAW_FEE'                          : "089",
+    'HAS_BONUS_YET'                         : "090",
+    'KYC_NEEDED'                            : "091",
+    'WITHDRAW_ERROR'                        : "092"
 };
 
 ErrorHandler.prototype.KEYS_PROVIDER =  {
