@@ -574,7 +574,7 @@ const processActions = {
             } else { /* Verify it not is a virtual casino purchase */
                 /* Verify AddOn Deposit Bonus */
                 if (addOn && addOn.depositBonus && (addOn.depositBonus.isDepositBonus.find(w => new String(w.currency).toString() == new String(currency).toString())).value) {
-                    hasBonus = dataIsDeposit.value;
+                    hasBonus = addOn.depositBonus.isDepositBonus.value;
                     let min_deposit = addOn.depositBonus.min_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let percentage = addOn.depositBonus.percentage.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
                     let max_deposit = addOn.depositBonus.max_deposit.find(c => new String(c.currency).toString() == new String(currency).toString()).amount;
