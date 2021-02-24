@@ -102,7 +102,8 @@ export function usersFromAppFiltered({ size, offset, app, user, username, email 
                     'deposits': true,
                     'bets': true,
                     'kyc_needed': true,
-                    'kyc_status': true
+                    'kyc_status': true,
+                    'isWithdrawing': true,
                 }
             }
         ]
