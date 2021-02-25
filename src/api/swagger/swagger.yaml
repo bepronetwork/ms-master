@@ -60,6 +60,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /app/process/confirm:
+    x-swagger-router-controller: app
+    post:
+      tags:
+      - app
+      summary: confirm app
+      operationId: processConfirm
+      description: Process Confirm
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Admin object to submit to the network
+          required: true
+          schema:
+            $ref: '#/definitions/ProcessConfirmRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /app/admins/add:
     x-swagger-router-controller: admin
     post:
@@ -7063,6 +7093,24 @@ definitions:
               type: number
             value :
               type: number
+  ProcessConfirmRequest:
+    type: object
+    required:
+      - user
+      - admin
+    properties:
+      admin:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          Admin Id
+      user:
+        type: string
+        format: string
+        example: "we23v3934ng9341"
+        description: |
+          User Id
   AddAdminRequest:
     type: object
     required:

@@ -112,6 +112,19 @@ class App extends ModelComponent {
         }
     }
 
+    /**
+    * @param {String} 
+    * @return {bool || Exception}  
+    */
+    async processConfirm() {
+        // output Boolean
+        try {
+            let res = await this.process('ProcessConfirm');
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
 
     /**
     * @param {String} 

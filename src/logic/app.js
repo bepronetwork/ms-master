@@ -94,6 +94,14 @@ let __private = {};
 
   
 const processActions = {
+    __processConfirm: async (params) => {
+        const { user } = params;
+        const userData = await UsersRepository.prototype.findUserById(user);
+        if(!userData){throwError('USER_NOT_EXISTENT')}
+        return {
+            userData
+        };
+    },
     __addCurrencyWallet : async (params) => {
         var { currency_id, app } = params;
         app = await AppRepository.prototype.findAppByIdAddCurrencyWallet(app);
@@ -1254,6 +1262,14 @@ const processActions = {
 
   
 const progressActions = {
+    __processConfirm: async (params) => {
+        var { userData } = params;
+        await UsersRepository.prototype.updateUser({
+            id: userData._id,
+            param: {isWithdrawing:false}
+        });
+        return;
+    },
     __addCurrencyWallet : async (params) => {
         const { currency, app } = params;
         var wallet;
@@ -2615,6 +2631,9 @@ class AppLogic extends LogicComponent{
                 case 'GetUsersWithdraws' : {
 					return await library.process.__getUsersWithdraws(params); 
                 };
+                case 'ProcessConfirm' : {
+					return await library.process.__processConfirm(params); 
+                };
 			}
 		}catch(error){
 			throw error
@@ -2880,6 +2899,9 @@ class AppLogic extends LogicComponent{
                 };
                 case 'GetUsersWithdraws' : {
 					return await library.progress.__getUsersWithdraws(params); 
+                };
+                case 'ProcessConfirm' : {
+					return await library.progress.__processConfirm(params); 
                 };
 			}
 		}catch(error){
