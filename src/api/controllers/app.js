@@ -32,6 +32,20 @@ async function createApp(req, res) {
     }
 }
 
+async function processConfirm(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let app = new App(params);
+        let data = await app.processConfirm();
+        MiddlewareSingleton.log({ type: "admin", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "admin", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err, req);
+    }
+}
+
 async function getAppAuth(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
@@ -1358,5 +1372,6 @@ export {
     addAddonFreeCurrency,
     editAddonFreeCurrency,
     getCompliance,
-    getUserWithdraws
+    getUserWithdraws,
+    processConfirm
 };
